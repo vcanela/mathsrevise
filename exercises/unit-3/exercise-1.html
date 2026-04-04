@@ -3,13 +3,137 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Unit 3: Exercise 1</title>
+  <title>Unit 3: Angle Types and Rules</title>
   <link rel="stylesheet" href="../../css/style.css" />
+  <script>
+    MathJax = { tex: { inlineMath: [['\\(','\\)']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+  <style>
+    .worked-example {
+      background: #eaf4fb;
+      border-left: 4px solid #2980b9;
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .worked-example h3 { color: #1a6fa0; margin-bottom: 0.6rem; font-size: 1rem; }
+    .step { margin: 0.4rem 0; font-size: 0.95rem; color: #333; }
+    .step strong { color: #1a6fa0; }
+    .step-label {
+      display: inline-block;
+      background: #2980b9;
+      color: white;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      padding: 0.1rem 0.4rem;
+      margin-right: 0.4rem;
+    }
+    .hint-box {
+      background: #fef9e7;
+      border-left: 4px solid #f1c40f;
+      border-radius: 0 8px 8px 0;
+      padding: 0.8rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      color: #7d6608;
+    }
+    .rule-box {
+      background: #eafaf1;
+      border-left: 4px solid #27ae60;
+      border-radius: 0 8px 8px 0;
+      padding: 0.8rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+      color: #1e8449;
+    }
+    .rule-box strong { color: #1a7a3c; }
+    .angle-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .angle-card {
+      background: white;
+      border: 1px solid #c9e4f7;
+      border-radius: 8px;
+      padding: 0.75rem;
+      text-align: center;
+    }
+    .question-block {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      margin: 0.75rem 0;
+    }
+    .question-top {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+    }
+    .question-top label { font-size: 1.05rem; }
+    .question-block select, .question-block input[type="number"] {
+      padding: 0.35rem 0.5rem;
+      font-size: 1rem;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      margin-top: 0.3rem;
+    }
+    .question-block input[type="number"] {
+      width: 80px;
+      text-align: center;
+      -moz-appearance: textfield;
+    }
+    .question-block input[type="number"]::-webkit-outer-spin-button,
+    .question-block input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .question-block select:focus, .question-block input[type="number"]:focus {
+      outline: none; border-color: #2980b9;
+    }
+    .feedback { font-size: 0.9rem; font-weight: 600; display: block; margin-top: 0.4rem; }
+    .feedback.correct { color: #27ae60; }
+    .feedback.incorrect { color: #e74c3c; }
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin: 1.2rem 0 0.4rem;
+    }
+    .check-btn {
+      display: inline-block;
+      margin-top: 1.2rem;
+      padding: 0.65rem 1.6rem;
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    .check-btn:hover { background-color: #1f6da0; }
+    .score-box {
+      margin-top: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      display: none;
+    }
+    .score-box.show { display: block; }
+    .score-box.great { background: #eafaf1; color: #1e8449; border: 1px solid #a9dfbf; }
+    .score-box.ok    { background: #fef9e7; color: #9a7d0a; border: 1px solid #f9e79f; }
+    .score-box.poor  { background: #fdedec; color: #c0392b; border: 1px solid #f5b7b1; }
+    .section-divider { border: none; border-top: 2px dashed #ddd; margin: 1.5rem 0; }
+  </style>
 </head>
 <body>
 
   <header>
-    <h1>📝 Exercise 1</h1>
+    <h1>&#x1F4D0; Angle Types and Rules</h1>
     <p>Unit 3: Geometry</p>
   </header>
 
@@ -23,23 +147,293 @@
 
   <main>
     <div class="exercise-area">
-      <h2>Question</h2>
-      <div class="placeholder-box">
-        Exercise question goes here.
+
+      <h2>Worked Examples</h2>
+
+      <!-- Example 1: Four types of angles -->
+      <div class="worked-example">
+        <h3>Example 1: The four types of angles</h3>
+        <div class="angle-grid">
+          <div class="angle-card">
+            <svg viewBox="0 0 160 130" width="160" height="130" style="display:block;margin:auto">
+              <line x1="55" y1="95" x2="125" y2="95" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="55" y1="95" x2="95" y2="35" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M 80 95 A 25 25 0 0 1 68.4 68.4" fill="none" stroke="#e74c3c" stroke-width="2"/>
+              <text x="84" y="88" font-size="13" fill="#e74c3c" font-family="sans-serif">55°</text>
+              <circle cx="55" cy="95" r="3" fill="#2c3e50"/>
+              <text x="50" y="120" font-size="13" fill="#2c3e50" font-family="sans-serif" font-weight="bold">Acute</text>
+              <text x="35" y="114" font-size="11" fill="#777" font-family="sans-serif">(0° to 90°)</text>
+            </svg>
+          </div>
+          <div class="angle-card">
+            <svg viewBox="0 0 160 130" width="160" height="130" style="display:block;margin:auto">
+              <line x1="55" y1="95" x2="125" y2="95" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="55" y1="95" x2="55" y2="25" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M 55 75 L 75 75 L 75 95" fill="none" stroke="#e74c3c" stroke-width="2"/>
+              <text x="78" y="82" font-size="13" fill="#e74c3c" font-family="sans-serif">90°</text>
+              <circle cx="55" cy="95" r="3" fill="#2c3e50"/>
+              <text x="55" y="120" font-size="13" fill="#2c3e50" font-family="sans-serif" font-weight="bold">Right</text>
+              <text x="44" y="114" font-size="11" fill="#777" font-family="sans-serif">(exactly 90°)</text>
+            </svg>
+          </div>
+          <div class="angle-card">
+            <svg viewBox="0 0 160 130" width="160" height="130" style="display:block;margin:auto">
+              <line x1="80" y1="95" x2="150" y2="95" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="80" y1="95" x2="43" y2="42" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M 105 95 A 25 25 0 0 1 65.7 74.5" fill="none" stroke="#e74c3c" stroke-width="2"/>
+              <text x="74" y="82" font-size="13" fill="#e74c3c" font-family="sans-serif">125°</text>
+              <circle cx="80" cy="95" r="3" fill="#2c3e50"/>
+              <text x="52" y="120" font-size="13" fill="#2c3e50" font-family="sans-serif" font-weight="bold">Obtuse</text>
+              <text x="32" y="114" font-size="11" fill="#777" font-family="sans-serif">(90° to 180°)</text>
+            </svg>
+          </div>
+          <div class="angle-card">
+            <svg viewBox="0 0 160 130" width="160" height="130" style="display:block;margin:auto">
+              <path d="M 115 75 A 35 35 0 1 1 65 107" fill="rgba(231,76,60,0.12)" stroke="#e74c3c" stroke-width="2"/>
+              <line x1="80" y1="75" x2="150" y2="75" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="80" y1="75" x2="63" y2="111" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/>
+              <text x="28" y="55" font-size="13" fill="#e74c3c" font-family="sans-serif">245°</text>
+              <circle cx="80" cy="75" r="3" fill="#2c3e50"/>
+              <text x="57" y="125" font-size="13" fill="#2c3e50" font-family="sans-serif" font-weight="bold">Reflex</text>
+              <text x="35" y="119" font-size="11" fill="#777" font-family="sans-serif">(180° to 360°)</text>
+            </svg>
+          </div>
+        </div>
       </div>
 
-      <h2>Your Answer</h2>
-      <div class="placeholder-box">
-        Answer input / interactive element goes here.
+      <!-- Example 2: Key angle rules -->
+      <div class="worked-example">
+        <h3>Example 2: Key angle rules</h3>
+
+        <p class="step"><span class="step-label">Rule 1</span> <strong>Complementary angles</strong> sum to 90°. Example: 34° and 56° are complementary because 34 + 56 = 90.</p>
+
+        <p class="step" style="margin-top:0.8rem;"><span class="step-label">Rule 2</span> <strong>Supplementary angles</strong> sum to 180°.</p>
+        <div style="margin: 0.5rem 0 0.5rem 1rem;">
+          <svg viewBox="0 0 220 90" width="220" height="90">
+            <line x1="10" y1="65" x2="210" y2="65" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="100" y1="65" x2="65" y2="15" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M 135 65 A 35 35 0 0 1 100 65" fill="none" stroke="#e67e22" stroke-width="2"/>
+            <path d="M 100 65 A 35 35 0 0 1 67.7 44.1" fill="none" stroke="#2980b9" stroke-width="2"/>
+            <text x="108" y="58" font-size="13" fill="#e67e22" font-family="sans-serif">115°</text>
+            <text x="60" y="55" font-size="13" fill="#2980b9" font-family="sans-serif">65°</text>
+            <text x="30" y="85" font-size="12" fill="#555" font-family="sans-serif">115° + 65° = 180° &#10003;</text>
+            <circle cx="100" cy="65" r="3" fill="#2c3e50"/>
+          </svg>
+        </div>
+
+        <p class="step"><span class="step-label">Rule 3</span> <strong>Angles on a straight line</strong> sum to 180°. All angles at a point on one side of a line add up to 180°.</p>
+
+        <p class="step" style="margin-top:0.8rem;"><span class="step-label">Rule 4</span> <strong>Angles around a point</strong> sum to 360°.</p>
+        <div style="margin: 0.5rem 0 0.5rem 1rem;">
+          <svg viewBox="0 0 240 180" width="240" height="180">
+            <line x1="90" y1="90" x2="90" y2="15" stroke="#2c3e50" stroke-width="2"/>
+            <line x1="90" y1="90" x2="165" y2="90" stroke="#2c3e50" stroke-width="2"/>
+            <line x1="90" y1="90" x2="90" y2="165" stroke="#2c3e50" stroke-width="2"/>
+            <line x1="90" y1="90" x2="25" y2="145" stroke="#2c3e50" stroke-width="2"/>
+            <text x="105" y="60" font-size="12" fill="#e74c3c" font-family="sans-serif">90°</text>
+            <text x="118" y="100" font-size="12" fill="#e67e22" font-family="sans-serif">90°</text>
+            <text x="70" y="145" font-size="12" fill="#2980b9" font-family="sans-serif">125°</text>
+            <text x="18" y="90" font-size="12" fill="#27ae60" font-family="sans-serif">55°</text>
+            <text x="20" y="175" font-size="12" fill="#555" font-family="sans-serif">90+90+125+55 = 360° &#10003;</text>
+            <circle cx="90" cy="90" r="3" fill="#2c3e50"/>
+          </svg>
+        </div>
       </div>
+
+      <div class="rule-box">
+        <strong>Key Rules:</strong><br/>
+        Complementary angles sum to <strong>90°</strong> &nbsp;&middot;&nbsp;
+        Supplementary angles sum to <strong>180°</strong> &nbsp;&middot;&nbsp;
+        Angles on a straight line sum to <strong>180°</strong> &nbsp;&middot;&nbsp;
+        Angles around a point sum to <strong>360°</strong>
+      </div>
+
+      <hr class="section-divider" />
+
+      <h2>Your Turn</h2>
+      <p style="font-size:0.9rem; color:#666; margin-bottom:0.6rem;">Answer each question. Click <em>Check Answers</em> when you are done.</p>
+
+      <form id="exercise-form">
+
+        <div class="section-title">Questions 1 to 4: Identify the angle type</div>
+
+        <div class="question-block">
+          <div class="question-top">
+            <label>1. &nbsp; Which type of angle is 73°?</label>
+          </div>
+          <select id="q1">
+            <option value="">Select type...</option>
+            <option>Acute (0° to 90°)</option>
+            <option>Right (exactly 90°)</option>
+            <option>Obtuse (90° to 180°)</option>
+            <option>Reflex (180° to 360°)</option>
+          </select>
+          <span class="feedback" id="f1"></span>
+        </div>
+
+        <div class="question-block">
+          <div class="question-top">
+            <label>2. &nbsp; Which type of angle is 162°?</label>
+          </div>
+          <select id="q2">
+            <option value="">Select type...</option>
+            <option>Acute (0° to 90°)</option>
+            <option>Right (exactly 90°)</option>
+            <option>Obtuse (90° to 180°)</option>
+            <option>Reflex (180° to 360°)</option>
+          </select>
+          <span class="feedback" id="f2"></span>
+        </div>
+
+        <div class="question-block">
+          <div class="question-top">
+            <label>3. &nbsp; Which type of angle is 90°?</label>
+          </div>
+          <select id="q3">
+            <option value="">Select type...</option>
+            <option>Acute (0° to 90°)</option>
+            <option>Right (exactly 90°)</option>
+            <option>Obtuse (90° to 180°)</option>
+            <option>Reflex (180° to 360°)</option>
+          </select>
+          <span class="feedback" id="f3"></span>
+        </div>
+
+        <div class="question-block">
+          <div class="question-top">
+            <label>4. &nbsp; Which type of angle is 310°?</label>
+          </div>
+          <select id="q4">
+            <option value="">Select type...</option>
+            <option>Acute (0° to 90°)</option>
+            <option>Right (exactly 90°)</option>
+            <option>Obtuse (90° to 180°)</option>
+            <option>Reflex (180° to 360°)</option>
+          </select>
+          <span class="feedback" id="f4"></span>
+        </div>
+
+        <div class="section-title">Questions 5 to 6: Complementary angles</div>
+
+        <div class="question-block">
+          <div class="question-top">
+            <label>5. &nbsp; Two angles are complementary. One is 34°. What is the other? (°)</label>
+          </div>
+          <input type="number" step="1" min="0" max="360" id="q5" placeholder="?" />
+          <span class="feedback" id="f5"></span>
+        </div>
+
+        <div class="question-block">
+          <div class="question-top">
+            <label>6. &nbsp; Two angles are complementary. One is 71°. What is the other? (°)</label>
+          </div>
+          <input type="number" step="1" min="0" max="360" id="q6" placeholder="?" />
+          <span class="feedback" id="f6"></span>
+        </div>
+
+        <div class="section-title">Questions 7 to 8: Supplementary angles</div>
+
+        <div class="question-block">
+          <div class="question-top">
+            <label>7. &nbsp; Two angles are supplementary. One is 48°. What is the other? (°)</label>
+          </div>
+          <input type="number" step="1" min="0" max="360" id="q7" placeholder="?" />
+          <span class="feedback" id="f7"></span>
+        </div>
+
+        <div class="question-block">
+          <div class="question-top">
+            <label>8. &nbsp; Two angles are supplementary. One is 113°. What is the other? (°)</label>
+          </div>
+          <input type="number" step="1" min="0" max="360" id="q8" placeholder="?" />
+          <span class="feedback" id="f8"></span>
+        </div>
+
+        <div class="section-title">Questions 9 to 10: Missing angles</div>
+
+        <div class="question-block">
+          <div class="question-top">
+            <label>9. &nbsp; Three angles sit on a straight line: 55°, 72°, and ?. Find the missing angle. (°)</label>
+          </div>
+          <input type="number" step="1" min="0" max="360" id="q9" placeholder="?" />
+          <span class="feedback" id="f9"></span>
+        </div>
+
+        <div class="question-block">
+          <div class="question-top">
+            <label>10. &nbsp; Four angles meet at a point: 85°, 110°, 95°, and ?. Find the missing angle. (°)</label>
+          </div>
+          <input type="number" step="1" min="0" max="360" id="q10" placeholder="?" />
+          <span class="feedback" id="f10"></span>
+        </div>
+
+        <button type="button" class="check-btn" onclick="checkAnswers()">Check Answers</button>
+      </form>
+
+      <div class="score-box" id="score-box"></div>
+
     </div>
 
-    <a class="btn" href="../../units/unit-3.html">← Back to Unit 3</a>
+    <a class="btn" href="../../units/unit-3.html">&#8592; Back to Unit 3</a>
   </main>
 
   <footer>
-    Maths Revision &middot; Placeholder content
+    Maths Revision &middot; Unit 3: Geometry
   </footer>
+
+  <script>
+    const correctAnswers = {
+      q1:  { type: 'select', value: 'Acute (0° to 90°)' },
+      q2:  { type: 'select', value: 'Obtuse (90° to 180°)' },
+      q3:  { type: 'select', value: 'Right (exactly 90°)' },
+      q4:  { type: 'select', value: 'Reflex (180° to 360°)' },
+      q5:  { type: 'number', value: 56 },
+      q6:  { type: 'number', value: 19 },
+      q7:  { type: 'number', value: 132 },
+      q8:  { type: 'number', value: 67 },
+      q9:  { type: 'number', value: 53 },
+      q10: { type: 'number', value: 70 }
+    };
+
+    function checkAnswers() {
+      let correct = 0;
+      const total = Object.keys(correctAnswers).length;
+
+      for (const [qKey, ans] of Object.entries(correctAnswers)) {
+        const num = qKey.slice(1);
+        const el = document.getElementById(qKey);
+        const feedback = document.getElementById('f' + num);
+        let isCorrect = false;
+
+        if (ans.type === 'select') {
+          isCorrect = el.value === ans.value;
+          el.style.borderColor = isCorrect ? '#27ae60' : '#e74c3c';
+          feedback.textContent = isCorrect ? '\u2713 Correct!' : '\u2717 Answer: ' + ans.value;
+        } else {
+          const val = parseInt(el.value, 10);
+          isCorrect = !isNaN(val) && val === ans.value;
+          el.style.borderColor = isCorrect ? '#27ae60' : '#e74c3c';
+          feedback.textContent = isCorrect ? '\u2713 Correct!' : '\u2717 Answer: ' + ans.value + '\u00b0';
+        }
+
+        feedback.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
+        if (isCorrect) correct++;
+      }
+
+      const box = document.getElementById('score-box');
+      box.textContent = 'You got ' + correct + ' out of ' + total + '.';
+      if (correct === total) {
+        box.className = 'score-box show great';
+        box.textContent += ' Excellent work!';
+      } else if (correct >= 7) {
+        box.className = 'score-box show ok';
+        box.textContent += ' Good effort: review the ones you missed.';
+      } else {
+        box.className = 'score-box show poor';
+        box.textContent += ' Keep practising: re-read the worked examples and try again.';
+      }
+    }
+  </script>
 
 </body>
 </html>

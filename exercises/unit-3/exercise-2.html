@@ -3,13 +3,124 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Unit 3: Exercise 2</title>
+  <title>Unit 3: Angles in Triangles</title>
   <link rel="stylesheet" href="../../css/style.css" />
+  <script>
+    MathJax = { tex: { inlineMath: [['\\(','\\)']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+  <style>
+    .worked-example {
+      background: #eaf4fb;
+      border-left: 4px solid #2980b9;
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .worked-example h3 { color: #1a6fa0; margin-bottom: 0.6rem; font-size: 1rem; }
+    .step { margin: 0.4rem 0; font-size: 0.95rem; color: #333; }
+    .step strong { color: #1a6fa0; }
+    .step-label {
+      display: inline-block;
+      background: #2980b9;
+      color: white;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      padding: 0.1rem 0.4rem;
+      margin-right: 0.4rem;
+    }
+    .hint-box {
+      background: #fef9e7;
+      border-left: 4px solid #f1c40f;
+      border-radius: 0 8px 8px 0;
+      padding: 0.8rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      color: #7d6608;
+    }
+    .rule-box {
+      background: #eafaf1;
+      border-left: 4px solid #27ae60;
+      border-radius: 0 8px 8px 0;
+      padding: 0.8rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+      color: #1e8449;
+    }
+    .rule-box strong { color: #1a7a3c; }
+    .question-block {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      margin: 0.75rem 0;
+    }
+    .question-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+    }
+    .question-top label { font-size: 1.05rem; flex: 1; }
+    .question-block input[type="number"] {
+      width: 80px;
+      padding: 0.35rem 0.4rem;
+      font-size: 1rem;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      text-align: center;
+      -moz-appearance: textfield;
+      display: block;
+      margin-top: 0.4rem;
+    }
+    .question-block input[type="number"]::-webkit-outer-spin-button,
+    .question-block input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .question-block input[type="number"]:focus { outline: none; border-color: #2980b9; }
+    .feedback { font-size: 0.9rem; font-weight: 600; display: block; margin-top: 0.4rem; }
+    .feedback.correct { color: #27ae60; }
+    .feedback.incorrect { color: #e74c3c; }
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin: 1.2rem 0 0.4rem;
+    }
+    .check-btn {
+      display: inline-block;
+      margin-top: 1.2rem;
+      padding: 0.65rem 1.6rem;
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    .check-btn:hover { background-color: #1f6da0; }
+    .score-box {
+      margin-top: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      display: none;
+    }
+    .score-box.show { display: block; }
+    .score-box.great { background: #eafaf1; color: #1e8449; border: 1px solid #a9dfbf; }
+    .score-box.ok    { background: #fef9e7; color: #9a7d0a; border: 1px solid #f9e79f; }
+    .score-box.poor  { background: #fdedec; color: #c0392b; border: 1px solid #f5b7b1; }
+    .section-divider { border: none; border-top: 2px dashed #ddd; margin: 1.5rem 0; }
+    .q-inner { display: flex; gap: 1.2rem; align-items: flex-start; flex-wrap: wrap; }
+    .q-inner svg { flex-shrink: 0; }
+    .q-text { flex: 1; min-width: 180px; }
+  </style>
 </head>
 <body>
 
   <header>
-    <h1>📝 Exercise 2</h1>
+    <h1>&#x1F53A; Angles in Triangles</h1>
     <p>Unit 3: Geometry</p>
   </header>
 
@@ -23,23 +134,328 @@
 
   <main>
     <div class="exercise-area">
-      <h2>Question</h2>
-      <div class="placeholder-box">
-        Exercise question goes here.
+
+      <h2>Worked Examples</h2>
+
+      <!-- Example 1: Angles sum to 180° -->
+      <div class="worked-example">
+        <h3>Example 1: Angles in a triangle sum to 180°</h3>
+        <div style="text-align:center; margin: 0.8rem 0;">
+          <svg viewBox="0 0 280 200" width="280" height="200">
+            <polygon points="40,170 240,170 140,30" fill="rgba(41,128,185,0.08)" stroke="#2c3e50" stroke-width="2.5"/>
+            <path d="M 65 170 A 25 25 0 0 1 55.9 148.5" fill="none" stroke="#e74c3c" stroke-width="2"/>
+            <path d="M 215 170 A 25 25 0 0 0 229 149" fill="none" stroke="#27ae60" stroke-width="2"/>
+            <path d="M 126.5 52.5 A 25 25 0 0 1 153.5 52.5" fill="none" stroke="#e67e22" stroke-width="2"/>
+            <text x="65" y="162" font-size="15" fill="#e74c3c" font-family="sans-serif" font-weight="bold">50°</text>
+            <text x="196" y="162" font-size="15" fill="#27ae60" font-family="sans-serif" font-weight="bold">70°</text>
+            <text x="127" y="68" font-size="15" fill="#e67e22" font-family="sans-serif" font-weight="bold">60°</text>
+            <text x="60" y="195" font-size="13" fill="#555" font-family="sans-serif">50° + 70° + 60° = 180° &#10003;</text>
+          </svg>
+        </div>
+        <p class="step">The three interior angles of any triangle always add up to <strong>180°</strong>.</p>
       </div>
 
-      <h2>Your Answer</h2>
-      <div class="placeholder-box">
-        Answer input / interactive element goes here.
+      <!-- Example 2: Finding missing angle -->
+      <div class="worked-example">
+        <h3>Example 2: Finding the missing angle in a triangle</h3>
+        <p class="step">A triangle has angles 65° and 80°. Find the third angle.</p>
+        <div style="text-align:center; margin: 0.8rem 0;">
+          <svg viewBox="0 0 260 190" width="260" height="190">
+            <polygon points="40,160 220,160 130,25" fill="rgba(231,76,60,0.07)" stroke="#2c3e50" stroke-width="2.5"/>
+            <path d="M 62 160 A 22 22 0 0 1 53.5 140" fill="none" stroke="#e74c3c" stroke-width="2"/>
+            <path d="M 197 160 A 22 22 0 0 0 209 142" fill="none" stroke="#27ae60" stroke-width="2"/>
+            <text x="63" y="153" font-size="14" fill="#e74c3c" font-family="sans-serif" font-weight="bold">65°</text>
+            <text x="190" y="153" font-size="14" fill="#27ae60" font-family="sans-serif" font-weight="bold">80°</text>
+            <text x="118" y="55" font-size="18" fill="#e67e22" font-family="sans-serif" font-weight="bold">?</text>
+          </svg>
+        </div>
+        <p class="step"><span class="step-label">Step 1</span> Angles in a triangle sum to 180°.</p>
+        <p class="step"><span class="step-label">Step 2</span> Third angle = 180° \(-\) 65° \(-\) 80° = <strong>35°</strong></p>
       </div>
+
+      <!-- Example 3: Vertically opposite -->
+      <div class="worked-example">
+        <h3>Example 3: Vertically opposite angles</h3>
+        <p class="step">When two straight lines cross, the angles opposite each other are equal.</p>
+        <div style="text-align:center; margin: 0.8rem 0;">
+          <svg viewBox="0 0 220 180" width="220" height="180">
+            <line x1="20" y1="160" x2="200" y2="20" stroke="#2c3e50" stroke-width="2.5"/>
+            <line x1="20" y1="20" x2="200" y2="160" stroke="#2c3e50" stroke-width="2.5"/>
+            <text x="125" y="80" font-size="15" fill="#e74c3c" font-family="sans-serif" font-weight="bold">a</text>
+            <text x="85" y="108" font-size="15" fill="#e74c3c" font-family="sans-serif" font-weight="bold">a</text>
+            <text x="120" y="108" font-size="15" fill="#2980b9" font-family="sans-serif" font-weight="bold">b</text>
+            <text x="85" y="80" font-size="15" fill="#2980b9" font-family="sans-serif" font-weight="bold">b</text>
+            <circle cx="110" cy="90" r="3" fill="#2c3e50"/>
+            <text x="10" y="175" font-size="12" fill="#555" font-family="sans-serif">Vertically opposite angles are equal: a = a, b = b</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="rule-box">
+        <strong>Vertically opposite angles</strong> (formed when two straight lines cross) are always equal.
+      </div>
+
+      <div class="hint-box">
+        <strong>Hint:</strong> For the missing angle in a triangle, subtract the two known angles from 180°.
+      </div>
+
+      <hr class="section-divider" />
+
+      <h2>Your Turn</h2>
+      <p style="font-size:0.9rem; color:#666; margin-bottom:0.6rem;">Find each missing angle. Click <em>Check Answers</em> when you are done.</p>
+
+      <form id="exercise-form">
+
+        <div class="section-title">Questions 1 to 7: Missing angle in a triangle</div>
+
+        <!-- Q1 -->
+        <div class="question-block">
+          <div class="q-inner">
+            <svg viewBox="0 0 200 160" width="180" height="145">
+              <polygon points="30,135 170,135 100,20" fill="rgba(41,128,185,0.07)" stroke="#2c3e50" stroke-width="2"/>
+              <path d="M 50 135 A 20 20 0 0 1 42 116" fill="none" stroke="#e74c3c" stroke-width="1.5"/>
+              <path d="M 149 135 A 20 20 0 0 0 160 117" fill="none" stroke="#27ae60" stroke-width="1.5"/>
+              <text x="52" y="128" font-size="13" fill="#e74c3c" font-family="sans-serif" font-weight="bold">60°</text>
+              <text x="138" y="128" font-size="13" fill="#27ae60" font-family="sans-serif" font-weight="bold">80°</text>
+              <text x="90" y="38" font-size="16" fill="#e67e22" font-family="sans-serif" font-weight="bold">?</text>
+            </svg>
+            <div class="q-text">
+              <label>1. &nbsp; A triangle has angles 60° and 80°. Find the missing angle. (°)</label>
+              <input type="number" step="1" min="0" max="180" id="q1" placeholder="?" />
+              <span class="feedback" id="f1"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="question-block">
+          <div class="q-inner">
+            <svg viewBox="0 0 200 160" width="180" height="145">
+              <polygon points="30,135 170,135 100,20" fill="rgba(41,128,185,0.07)" stroke="#2c3e50" stroke-width="2"/>
+              <path d="M 30 115 L 50 115 L 50 135" fill="none" stroke="#e74c3c" stroke-width="1.5"/>
+              <path d="M 149 135 A 20 20 0 0 0 160 117" fill="none" stroke="#27ae60" stroke-width="1.5"/>
+              <text x="55" y="128" font-size="13" fill="#e74c3c" font-family="sans-serif" font-weight="bold">90°</text>
+              <text x="138" y="128" font-size="13" fill="#27ae60" font-family="sans-serif" font-weight="bold">45°</text>
+              <text x="90" y="38" font-size="16" fill="#e67e22" font-family="sans-serif" font-weight="bold">?</text>
+            </svg>
+            <div class="q-text">
+              <label>2. &nbsp; A right-angled triangle has angles 90° and 45°. Find the missing angle. (°)</label>
+              <input type="number" step="1" min="0" max="180" id="q2" placeholder="?" />
+              <span class="feedback" id="f2"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="question-block">
+          <div class="q-inner">
+            <svg viewBox="0 0 200 160" width="180" height="145">
+              <polygon points="30,135 170,135 100,20" fill="rgba(41,128,185,0.07)" stroke="#2c3e50" stroke-width="2"/>
+              <path d="M 50 135 A 20 20 0 0 1 42 116" fill="none" stroke="#e74c3c" stroke-width="1.5"/>
+              <path d="M 149 135 A 20 20 0 0 0 160 117" fill="none" stroke="#27ae60" stroke-width="1.5"/>
+              <text x="52" y="128" font-size="13" fill="#e74c3c" font-family="sans-serif" font-weight="bold">35°</text>
+              <text x="138" y="128" font-size="13" fill="#27ae60" font-family="sans-serif" font-weight="bold">75°</text>
+              <text x="90" y="38" font-size="16" fill="#e67e22" font-family="sans-serif" font-weight="bold">?</text>
+            </svg>
+            <div class="q-text">
+              <label>3. &nbsp; A triangle has angles 35° and 75°. Find the missing angle. (°)</label>
+              <input type="number" step="1" min="0" max="180" id="q3" placeholder="?" />
+              <span class="feedback" id="f3"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="question-block">
+          <div class="q-inner">
+            <svg viewBox="0 0 200 160" width="180" height="145">
+              <polygon points="30,135 170,135 100,20" fill="rgba(41,128,185,0.07)" stroke="#2c3e50" stroke-width="2"/>
+              <path d="M 50 135 A 20 20 0 0 1 42 116" fill="none" stroke="#e74c3c" stroke-width="1.5"/>
+              <path d="M 149 135 A 20 20 0 0 0 160 117" fill="none" stroke="#27ae60" stroke-width="1.5"/>
+              <text x="52" y="128" font-size="13" fill="#e74c3c" font-family="sans-serif" font-weight="bold">50°</text>
+              <text x="138" y="128" font-size="13" fill="#27ae60" font-family="sans-serif" font-weight="bold">65°</text>
+              <text x="90" y="38" font-size="16" fill="#e67e22" font-family="sans-serif" font-weight="bold">?</text>
+            </svg>
+            <div class="q-text">
+              <label>4. &nbsp; A triangle has angles 50° and 65°. Find the missing angle. (°)</label>
+              <input type="number" step="1" min="0" max="180" id="q4" placeholder="?" />
+              <span class="feedback" id="f4"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="question-block">
+          <div class="q-inner">
+            <svg viewBox="0 0 200 160" width="180" height="145">
+              <polygon points="30,135 170,135 100,20" fill="rgba(41,128,185,0.07)" stroke="#2c3e50" stroke-width="2"/>
+              <path d="M 30 115 L 50 115 L 50 135" fill="none" stroke="#e74c3c" stroke-width="1.5"/>
+              <path d="M 149 135 A 20 20 0 0 0 160 117" fill="none" stroke="#27ae60" stroke-width="1.5"/>
+              <text x="55" y="128" font-size="13" fill="#e74c3c" font-family="sans-serif" font-weight="bold">90°</text>
+              <text x="138" y="128" font-size="13" fill="#27ae60" font-family="sans-serif" font-weight="bold">52°</text>
+              <text x="90" y="38" font-size="16" fill="#e67e22" font-family="sans-serif" font-weight="bold">?</text>
+            </svg>
+            <div class="q-text">
+              <label>5. &nbsp; A right-angled triangle has angles 90° and 52°. Find the missing angle. (°)</label>
+              <input type="number" step="1" min="0" max="180" id="q5" placeholder="?" />
+              <span class="feedback" id="f5"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="question-block">
+          <div class="q-inner">
+            <svg viewBox="0 0 220 160" width="200" height="145">
+              <polygon points="20,135 190,135 60,30" fill="rgba(231,76,60,0.07)" stroke="#2c3e50" stroke-width="2"/>
+              <path d="M 36 135 A 20 20 0 0 1 20 116" fill="none" stroke="#e74c3c" stroke-width="1.5"/>
+              <path d="M 169 135 A 20 20 0 0 0 180 117" fill="none" stroke="#27ae60" stroke-width="1.5"/>
+              <text x="38" y="128" font-size="13" fill="#e74c3c" font-family="sans-serif" font-weight="bold">110°</text>
+              <text x="158" y="128" font-size="13" fill="#27ae60" font-family="sans-serif" font-weight="bold">30°</text>
+              <text x="50" y="42" font-size="16" fill="#e67e22" font-family="sans-serif" font-weight="bold">?</text>
+            </svg>
+            <div class="q-text">
+              <label>6. &nbsp; An obtuse triangle has angles 110° and 30°. Find the missing angle. (°)</label>
+              <input type="number" step="1" min="0" max="180" id="q6" placeholder="?" />
+              <span class="feedback" id="f6"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="question-block">
+          <div class="q-inner">
+            <svg viewBox="0 0 200 160" width="180" height="145">
+              <polygon points="30,135 170,135 100,20" fill="rgba(41,128,185,0.07)" stroke="#2c3e50" stroke-width="2"/>
+              <path d="M 50 135 A 20 20 0 0 1 42 116" fill="none" stroke="#e74c3c" stroke-width="1.5"/>
+              <path d="M 149 135 A 20 20 0 0 0 160 117" fill="none" stroke="#27ae60" stroke-width="1.5"/>
+              <text x="52" y="128" font-size="13" fill="#e74c3c" font-family="sans-serif" font-weight="bold">40°</text>
+              <text x="138" y="128" font-size="13" fill="#27ae60" font-family="sans-serif" font-weight="bold">40°</text>
+              <text x="90" y="38" font-size="16" fill="#e67e22" font-family="sans-serif" font-weight="bold">?</text>
+            </svg>
+            <div class="q-text">
+              <label>7. &nbsp; An isosceles triangle has two angles of 40° each. Find the missing angle. (°)</label>
+              <input type="number" step="1" min="0" max="180" id="q7" placeholder="?" />
+              <span class="feedback" id="f7"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">Questions 8 to 10: Vertically opposite angles</div>
+
+        <!-- Q8 -->
+        <div class="question-block">
+          <div class="q-inner">
+            <svg viewBox="0 0 180 140" width="160" height="125">
+              <line x1="20" y1="120" x2="160" y2="20" stroke="#2c3e50" stroke-width="2"/>
+              <line x1="20" y1="20" x2="160" y2="120" stroke="#2c3e50" stroke-width="2"/>
+              <circle cx="90" cy="70" r="3" fill="#2c3e50"/>
+              <text x="105" y="62" font-size="13" fill="#e67e22" font-family="sans-serif" font-weight="bold">47°</text>
+              <text x="62" y="86" font-size="16" fill="#2980b9" font-family="sans-serif" font-weight="bold">?</text>
+            </svg>
+            <div class="q-text">
+              <label>8. &nbsp; Two lines cross. One angle is 47°. What is the vertically opposite angle? (°)</label>
+              <input type="number" step="1" min="0" max="360" id="q8" placeholder="?" />
+              <span class="feedback" id="f8"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q9 -->
+        <div class="question-block">
+          <div class="q-inner">
+            <svg viewBox="0 0 180 140" width="160" height="125">
+              <line x1="20" y1="120" x2="160" y2="20" stroke="#2c3e50" stroke-width="2"/>
+              <line x1="20" y1="20" x2="160" y2="120" stroke="#2c3e50" stroke-width="2"/>
+              <circle cx="90" cy="70" r="3" fill="#2c3e50"/>
+              <text x="105" y="62" font-size="13" fill="#e67e22" font-family="sans-serif" font-weight="bold">68°</text>
+              <text x="62" y="62" font-size="16" fill="#2980b9" font-family="sans-serif" font-weight="bold">?</text>
+            </svg>
+            <div class="q-text">
+              <label>9. &nbsp; Two lines cross. One angle is 68°. What is the angle on a straight line from it (supplementary)? (°)</label>
+              <input type="number" step="1" min="0" max="360" id="q9" placeholder="?" />
+              <span class="feedback" id="f9"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q10 -->
+        <div class="question-block">
+          <div class="q-inner">
+            <svg viewBox="0 0 180 140" width="160" height="125">
+              <line x1="20" y1="120" x2="160" y2="20" stroke="#2c3e50" stroke-width="2"/>
+              <line x1="20" y1="20" x2="160" y2="120" stroke="#2c3e50" stroke-width="2"/>
+              <circle cx="90" cy="70" r="3" fill="#2c3e50"/>
+              <text x="95" y="90" font-size="13" fill="#e67e22" font-family="sans-serif" font-weight="bold">124°</text>
+              <text x="55" y="58" font-size="16" fill="#2980b9" font-family="sans-serif" font-weight="bold">?</text>
+            </svg>
+            <div class="q-text">
+              <label>10. &nbsp; Two lines cross. One angle is 124°. What is the vertically opposite angle? (°)</label>
+              <input type="number" step="1" min="0" max="360" id="q10" placeholder="?" />
+              <span class="feedback" id="f10"></span>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="check-btn" onclick="checkAnswers()">Check Answers</button>
+      </form>
+
+      <div class="score-box" id="score-box"></div>
+
     </div>
 
-    <a class="btn" href="../../units/unit-3.html">← Back to Unit 3</a>
+    <a class="btn" href="../../units/unit-3.html">&#8592; Back to Unit 3</a>
   </main>
 
   <footer>
-    Maths Revision &middot; Placeholder content
+    Maths Revision &middot; Unit 3: Geometry
   </footer>
+
+  <script>
+    const correctAnswers = {
+      q1:  40,
+      q2:  45,
+      q3:  70,
+      q4:  65,
+      q5:  38,
+      q6:  40,
+      q7:  100,
+      q8:  47,
+      q9:  112,
+      q10: 124
+    };
+
+    function checkAnswers() {
+      let correct = 0;
+      const total = Object.keys(correctAnswers).length;
+
+      for (const [qKey, expected] of Object.entries(correctAnswers)) {
+        const num = qKey.slice(1);
+        const el = document.getElementById(qKey);
+        const feedback = document.getElementById('f' + num);
+        const val = parseInt(el.value, 10);
+        const isCorrect = !isNaN(val) && val === expected;
+
+        el.style.borderColor = isCorrect ? '#27ae60' : '#e74c3c';
+        feedback.textContent = isCorrect ? '\u2713 Correct!' : '\u2717 Answer: ' + expected + '\u00b0';
+        feedback.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
+        if (isCorrect) correct++;
+      }
+
+      const box = document.getElementById('score-box');
+      box.textContent = 'You got ' + correct + ' out of ' + total + '.';
+      if (correct === total) {
+        box.className = 'score-box show great';
+        box.textContent += ' Excellent work!';
+      } else if (correct >= 7) {
+        box.className = 'score-box show ok';
+        box.textContent += ' Good effort: review the ones you missed.';
+      } else {
+        box.className = 'score-box show poor';
+        box.textContent += ' Keep practising: re-read the worked examples and try again.';
+      }
+    }
+  </script>
 
 </body>
 </html>

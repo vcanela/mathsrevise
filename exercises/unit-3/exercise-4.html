@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unit 3: Parts of a Circle</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+  <script>
+    MathJax = { tex: { inlineMath: [['\\(','\\)']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+  <style>
+    .worked-example {
+      background: #eaf4fb;
+      border-left: 4px solid #2980b9;
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .worked-example h3 { color: #1a6fa0; margin-bottom: 0.6rem; font-size: 1rem; }
+    .step { margin: 0.4rem 0; font-size: 0.95rem; color: #333; }
+    .step strong { color: #1a6fa0; }
+    .hint-box {
+      background: #fef9e7;
+      border-left: 4px solid #f1c40f;
+      border-radius: 0 8px 8px 0;
+      padding: 0.8rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      color: #7d6608;
+    }
+    .rule-box {
+      background: #eafaf1;
+      border-left: 4px solid #27ae60;
+      border-radius: 0 8px 8px 0;
+      padding: 0.8rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+      color: #1e8449;
+    }
+    .parts-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    .parts-table th {
+      background: #2c3e50;
+      color: white;
+      padding: 0.5rem 0.8rem;
+      text-align: left;
+    }
+    .parts-table td {
+      padding: 0.45rem 0.8rem;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .parts-table tr:nth-child(even) td { background: #f8f9fa; }
+    .question-block {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      margin: 0.75rem 0;
+    }
+    .q-inner { display: flex; gap: 1.2rem; align-items: flex-start; flex-wrap: wrap; }
+    .q-inner svg { flex-shrink: 0; }
+    .q-text { flex: 1; min-width: 180px; }
+    .radio-group { display: flex; flex-direction: column; gap: 0.3rem; margin-top: 0.5rem; }
+    .radio-group label { font-size: 0.95rem; display: flex; align-items: center; gap: 0.4rem; cursor: pointer; }
+    .radio-group input[type="radio"] { cursor: pointer; }
+    .question-block input[type="number"] {
+      width: 80px;
+      padding: 0.35rem 0.4rem;
+      font-size: 1rem;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      text-align: center;
+      -moz-appearance: textfield;
+      display: block;
+      margin-top: 0.4rem;
+    }
+    .question-block input[type="number"]::-webkit-outer-spin-button,
+    .question-block input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .question-block input[type="number"]:focus { outline: none; border-color: #2980b9; }
+    .feedback { font-size: 0.9rem; font-weight: 600; display: block; margin-top: 0.4rem; }
+    .feedback.correct { color: #27ae60; }
+    .feedback.incorrect { color: #e74c3c; }
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin: 1.2rem 0 0.4rem;
+    }
+    .check-btn {
+      display: inline-block;
+      margin-top: 1.2rem;
+      padding: 0.65rem 1.6rem;
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    .check-btn:hover { background-color: #1f6da0; }
+    .score-box {
+      margin-top: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      display: none;
+    }
+    .score-box.show { display: block; }
+    .score-box.great { background: #eafaf1; color: #1e8449; border: 1px solid #a9dfbf; }
+    .score-box.ok    { background: #fef9e7; color: #9a7d0a; border: 1px solid #f9e79f; }
+    .score-box.poor  { background: #fdedec; color: #c0392b; border: 1px solid #f5b7b1; }
+    .section-divider { border: none; border-top: 2px dashed #ddd; margin: 1.5rem 0; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>&#x2B55; Parts of a Circle</h1>
+    <p>Unit 3: Geometry</p>
+  </header>
+
+  <nav class="breadcrumb">
+    <a href="../../index.html">Home</a>
+    <span>›</span>
+    <a href="../../units/unit-3.html">Unit 3</a>
+    <span>›</span>
+    Exercise 4
+  </nav>
+
+  <main>
+    <div class="exercise-area">
+
+      <h2>Worked Examples</h2>
+
+      <div class="worked-example">
+        <h3>Example 1: All parts of a circle</h3>
+        <div style="text-align:center; margin: 1rem 0;">
+          <svg viewBox="0 0 420 380" width="100%" style="max-width:420px;display:block;margin:auto">
+            <!-- Sector shading (from 0° to 70°) -->
+            <path d="M 180 180 L 310 180 A 130 130 0 0 0 224.5 57.5 Z" fill="rgba(41,128,185,0.12)" stroke="none"/>
+            <!-- Main circle -->
+            <circle cx="180" cy="180" r="130" fill="none" stroke="#2c3e50" stroke-width="2.5"/>
+            <!-- Diameter (horizontal through center) -->
+            <line x1="50" y1="180" x2="310" y2="180" stroke="#e74c3c" stroke-width="2" stroke-dasharray="6,3"/>
+            <!-- Radius (from center to top-right, ~45°) -->
+            <line x1="180" y1="180" x2="272" y2="88" stroke="#27ae60" stroke-width="2.5"/>
+            <!-- Chord (not through center) -->
+            <line x1="80" y1="120" x2="280" y2="250" stroke="#8e44ad" stroke-width="2"/>
+            <!-- Tangent line (touching at rightmost point 310,180) -->
+            <line x1="310" y1="80" x2="310" y2="280" stroke="#e67e22" stroke-width="2"/>
+            <circle cx="310" cy="180" r="4" fill="#e67e22"/>
+            <!-- Centre point -->
+            <circle cx="180" cy="180" r="5" fill="#2c3e50"/>
+            <text x="183" y="176" font-size="13" fill="#2c3e50" font-weight="bold" font-family="sans-serif">O</text>
+            <!-- Labels with leader lines -->
+            <line x1="180" y1="180" x2="130" y2="220" stroke="#aaa" stroke-width="1" stroke-dasharray="3,2"/>
+            <text x="60" y="235" font-size="13" fill="#2c3e50" font-family="sans-serif" font-weight="bold">Centre</text>
+            <line x1="226" y1="134" x2="280" y2="90" stroke="#27ae60" stroke-width="1" stroke-dasharray="3,2"/>
+            <text x="282" y="88" font-size="13" fill="#27ae60" font-family="sans-serif" font-weight="bold">Radius</text>
+            <line x1="180" y1="180" x2="180" y2="240" stroke="#e74c3c" stroke-width="1" stroke-dasharray="3,2"/>
+            <text x="135" y="260" font-size="13" fill="#e74c3c" font-family="sans-serif" font-weight="bold">Diameter</text>
+            <text x="275" y="268" font-size="13" fill="#8e44ad" font-family="sans-serif" font-weight="bold">Chord</text>
+            <text x="315" y="90" font-size="13" fill="#e67e22" font-family="sans-serif" font-weight="bold">Tangent</text>
+            <text x="50" y="100" font-size="12" fill="#2c3e50" font-family="sans-serif" font-weight="bold">Circumference</text>
+            <line x1="105" y1="96" x2="110" y2="90" stroke="#aaa" stroke-width="1"/>
+            <circle cx="110" cy="90" r="3" fill="#2c3e50"/>
+            <text x="215" y="145" font-size="12" fill="#2980b9" font-family="sans-serif" font-weight="bold">Sector</text>
+            <text x="300" y="125" font-size="12" fill="#16a085" font-family="sans-serif" font-weight="bold">Arc</text>
+            <line x1="296" y1="120" x2="272" y2="105" stroke="#aaa" stroke-width="1"/>
+          </svg>
+        </div>
+
+        <table class="parts-table">
+          <thead>
+            <tr><th>Part</th><th>Description</th><th>Key fact</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Centre</strong></td><td>Middle point of the circle</td><td>Label it O</td></tr>
+            <tr><td><strong>Radius</strong></td><td>Line from centre to edge</td><td>radius = diameter ÷ 2</td></tr>
+            <tr><td><strong>Diameter</strong></td><td>Line through centre, edge to edge</td><td>diameter = 2 × radius</td></tr>
+            <tr><td><strong>Chord</strong></td><td>Line joining two points on the edge (not through centre)</td><td>Always shorter than diameter</td></tr>
+            <tr><td><strong>Arc</strong></td><td>Part of the circumference</td><td>A semicircle is half the circumference</td></tr>
+            <tr><td><strong>Sector</strong></td><td>Pie-slice region bounded by two radii and an arc</td><td>Like a pizza slice</td></tr>
+            <tr><td><strong>Circumference</strong></td><td>The perimeter (total boundary) of the circle</td><td>\(C = \pi \times \text{diameter}\)</td></tr>
+            <tr><td><strong>Tangent</strong></td><td>Line that touches the circle at exactly one point</td><td>Always perpendicular to the radius at that point</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr class="section-divider" />
+
+      <h2>Your Turn</h2>
+      <p style="font-size:0.9rem; color:#666; margin-bottom:0.6rem;">Identify the highlighted part of each circle. Click <em>Check Answers</em> when done.</p>
+
+      <form id="exercise-form">
+
+        <div class="section-title">Questions 1 to 8: Name the highlighted part</div>
+
+        <!-- Q1: Radius -->
+        <div class="question-block">
+          <div class="q-inner">
+            <svg viewBox="0 0 160 160" width="140" height="140">
+              <circle cx="80" cy="80" r="60" fill="none" stroke="#bbb" stroke-width="1.5"/>
+              <line x1="80" y1="80" x2="122" y2="38" stroke="#27ae60" stroke-width="3"/>
+              <circle cx="80" cy="80" r="4" fill="#2c3e50"/>
+            </svg>
+            <div class="q-text">
+              <label>1. &nbsp; What is the highlighted green line called?</label>
+              <div class="radio-group" id="rg1">
+                <label><input type="radio" name="q1" value="Centre" /> Centre</label>
+                <label><input type="radio" name="q1" value="Radius" /> Radius</label>
+                <label><input type="radio" name="q1" value="Diameter" /> Diameter</label>
+                <label><input type="radio" name="q1" value="Chord" /> Chord</label>
+                <label><input type="radio" name="q1" value="Arc" /> Arc</label>
+                <label><input type="radio" name="q1" value="Sector" /> Sector</label>
+                <label><input type="radio" name="q1" value="Circumference" /> Circumference</label>
+                <label><input type="radio" name="q1" value="Tangent" /> Tangent</label>
+              </div>
+              <span class="feedback" id="f1"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q2: Circumference -->
+        <div class="question-block">
+          <div class="q-inner">
+            <svg viewBox="0 0 160 160" width="140" height="140">
+              <circle cx="80" cy="80" r="60" fill="none" stroke="#2c3e50" stroke-width="3.5"/>
+              <circle cx="80" cy="80" r="4" fill="#2c3e50"/>
+            </svg>
+            <div class="q-text">
+              <label>2. &nbsp; What is the highlighted outer boundary called?</label>
+              <div class="radio-group" id="rg2">
+                <label><input type="radio" name="q2" value="Centre" /> Centre</label>
+                <label><input type="radio" name="q2" value="Radius" /> Radius</label>
+                <label><input type="radio" name="q2" value="Diameter" /> Diameter</label>
+                <label><input type="radio" name="q2" value="Chord" /> Chord</label>
+                <label><input type="radio" name="q2" value="Arc" /> Arc</label>
+                <label><input type="radio" name="q2" value="Sector" /> Sector</label>
+                <label><input type="radio" name="q2" value="Circumference" /> Circumference</label>
+                <label><input type="radio" name="q2" value="Tangent" /> Tangent</label>
+              </div>
+              <span class="feedback" id="f2"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q3: Diameter -->
+        <div class="question-block">
+          <div class="q-inner">
+            <svg viewBox="0 0 160 160" width="140" height="140">
+              <circle cx="80" cy="80" r="60" fill="none" stroke="#bbb" stroke-width="1.5"/>
+              <line x1="20" y1="80" x2="140" y2="80" stroke="#e74c3c" stroke-width="3"/>
+              <circle cx="80" cy="80" r="4" fill="#2c3e50"/>
+            </svg>
+            <div class="q-text">
+              <label>3. &nbsp; What is the highlighted red line called?</label>
+              <div class="radio-group" id="rg3">
+                <label><input type="radio" name="q3" value="Centre" /> Centre</label>
+                <label><input type="radio" name="q3" value="Radius" /> Radius</label>
+                <label><input type="radio" name="q3" value="Diameter" /> Diameter</label>
+                <label><input type="radio" name="q3" value="Chord" /> Chord</label>
+                <label><input type="radio" name="q3" value="Arc" /> Arc</label>
+                <label><input type="radio" name="q3" value="Sector" /> Sector</label>
+                <label><input type="radio" name="q3" value="Circumference" /> Circumference</label>
+                <label><input type="radio" name="q3" value="Tangent" /> Tangent</label>
+              </div>
+              <span class="feedback" id="f3"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q4: Sector -->
+        <div class="question-block">
+          <div class="q-inner">
+            <svg viewBox="0 0 160 160" width="140" height="140">
+              <circle cx="80" cy="80" r="60" fill="none" stroke="#bbb" stroke-width="1.5"/>
+              <path d="M 80 80 L 140 80 A 60 60 0 0 0 80 20 Z" fill="rgba(41,128,185,0.35)" stroke="#2980b9" stroke-width="2"/>
+              <circle cx="80" cy="80" r="4" fill="#2c3e50"/>
+            </svg>
+            <div class="q-text">
+              <label>4. &nbsp; What is the highlighted blue shaded region called?</label>
+              <div class="radio-group" id="rg4">
+                <label><input type="radio" name="q4" value="Centre" /> Centre</label>
+                <label><input type="radio" name="q4" value="Radius" /> Radius</label>
+                <label><input type="radio" name="q4" value="Diameter" /> Diameter</label>
+                <label><input type="radio" name="q4" value="Chord" /> Chord</label>
+                <label><input type="radio" name="q4" value="Arc" /> Arc</label>
+                <label><input type="radio" name="q4" value="Sector" /> Sector</label>
+                <label><input type="radio" name="q4" value="Circumference" /> Circumference</label>
+                <label><input type="radio" name="q4" value="Tangent" /> Tangent</label>
+              </div>
+              <span class="feedback" id="f4"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q5: Chord -->
+        <div class="question-block">
+          <div class="q-inner">
+            <svg viewBox="0 0 160 160" width="140" height="140">
+              <circle cx="80" cy="80" r="60" fill="none" stroke="#bbb" stroke-width="1.5"/>
+              <line x1="30" y1="55" x2="135" y2="115" stroke="#8e44ad" stroke-width="3"/>
+              <circle cx="80" cy="80" r="4" fill="#2c3e50"/>
+            </svg>
+            <div class="q-text">
+              <label>5. &nbsp; What is the highlighted purple line called?</label>
+              <div class="radio-group" id="rg5">
+                <label><input type="radio" name="q5" value="Centre" /> Centre</label>
+                <label><input type="radio" name="q5" value="Radius" /> Radius</label>
+                <label><input type="radio" name="q5" value="Diameter" /> Diameter</label>
+                <label><input type="radio" name="q5" value="Chord" /> Chord</label>
+                <label><input type="radio" name="q5" value="Arc" /> Arc</label>
+                <label><input type="radio" name="q5" value="Sector" /> Sector</label>
+                <label><input type="radio" name="q5" value="Circumference" /> Circumference</label>
+                <label><input type="radio" name="q5" value="Tangent" /> Tangent</label>
+              </div>
+              <span class="feedback" id="f5"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q6: Tangent -->
+        <div class="question-block">
+          <div class="q-inner">
+            <svg viewBox="0 0 160 160" width="140" height="140">
+              <circle cx="80" cy="80" r="60" fill="none" stroke="#bbb" stroke-width="1.5"/>
+              <line x1="140" y1="20" x2="140" y2="140" stroke="#e67e22" stroke-width="3"/>
+              <circle cx="140" cy="80" r="4" fill="#e67e22"/>
+              <circle cx="80" cy="80" r="4" fill="#2c3e50"/>
+            </svg>
+            <div class="q-text">
+              <label>6. &nbsp; What is the highlighted orange vertical line called?</label>
+              <div class="radio-group" id="rg6">
+                <label><input type="radio" name="q6" value="Centre" /> Centre</label>
+                <label><input type="radio" name="q6" value="Radius" /> Radius</label>
+                <label><input type="radio" name="q6" value="Diameter" /> Diameter</label>
+                <label><input type="radio" name="q6" value="Chord" /> Chord</label>
+                <label><input type="radio" name="q6" value="Arc" /> Arc</label>
+                <label><input type="radio" name="q6" value="Sector" /> Sector</label>
+                <label><input type="radio" name="q6" value="Circumference" /> Circumference</label>
+                <label><input type="radio" name="q6" value="Tangent" /> Tangent</label>
+              </div>
+              <span class="feedback" id="f6"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q7: Arc -->
+        <div class="question-block">
+          <div class="q-inner">
+            <svg viewBox="0 0 160 160" width="140" height="140">
+              <circle cx="80" cy="80" r="60" fill="none" stroke="#bbb" stroke-width="1.5"/>
+              <path d="M 140 80 A 60 60 0 0 1 80 20" fill="none" stroke="#16a085" stroke-width="4"/>
+              <circle cx="80" cy="80" r="4" fill="#2c3e50"/>
+            </svg>
+            <div class="q-text">
+              <label>7. &nbsp; What is the highlighted teal curved portion called?</label>
+              <div class="radio-group" id="rg7">
+                <label><input type="radio" name="q7" value="Centre" /> Centre</label>
+                <label><input type="radio" name="q7" value="Radius" /> Radius</label>
+                <label><input type="radio" name="q7" value="Diameter" /> Diameter</label>
+                <label><input type="radio" name="q7" value="Chord" /> Chord</label>
+                <label><input type="radio" name="q7" value="Arc" /> Arc</label>
+                <label><input type="radio" name="q7" value="Sector" /> Sector</label>
+                <label><input type="radio" name="q7" value="Circumference" /> Circumference</label>
+                <label><input type="radio" name="q7" value="Tangent" /> Tangent</label>
+              </div>
+              <span class="feedback" id="f7"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q8: Centre -->
+        <div class="question-block">
+          <div class="q-inner">
+            <svg viewBox="0 0 160 160" width="140" height="140">
+              <circle cx="80" cy="80" r="60" fill="none" stroke="#bbb" stroke-width="1.5"/>
+              <circle cx="80" cy="80" r="8" fill="#e74c3c"/>
+              <text x="86" y="76" font-size="13" fill="white" font-weight="bold" font-family="sans-serif">O</text>
+            </svg>
+            <div class="q-text">
+              <label>8. &nbsp; What is the highlighted red dot at the middle called?</label>
+              <div class="radio-group" id="rg8">
+                <label><input type="radio" name="q8" value="Centre" /> Centre</label>
+                <label><input type="radio" name="q8" value="Radius" /> Radius</label>
+                <label><input type="radio" name="q8" value="Diameter" /> Diameter</label>
+                <label><input type="radio" name="q8" value="Chord" /> Chord</label>
+                <label><input type="radio" name="q8" value="Arc" /> Arc</label>
+                <label><input type="radio" name="q8" value="Sector" /> Sector</label>
+                <label><input type="radio" name="q8" value="Circumference" /> Circumference</label>
+                <label><input type="radio" name="q8" value="Tangent" /> Tangent</label>
+              </div>
+              <span class="feedback" id="f8"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">Questions 9 to 10: Radius and diameter calculations</div>
+
+        <div class="question-block">
+          <label>9. &nbsp; A circle has a diameter of 18 cm. What is its radius? (cm)</label>
+          <input type="number" step="1" min="0" id="q9" placeholder="?" />
+          <span class="feedback" id="f9"></span>
+        </div>
+
+        <div class="question-block">
+          <label>10. &nbsp; A circle has a radius of 7 cm. What is its diameter? (cm)</label>
+          <input type="number" step="1" min="0" id="q10" placeholder="?" />
+          <span class="feedback" id="f10"></span>
+        </div>
+
+        <button type="button" class="check-btn" onclick="checkAnswers()">Check Answers</button>
+      </form>
+
+      <div class="score-box" id="score-box"></div>
+
+    </div>
+
+    <a class="btn" href="../../units/unit-3.html">&#8592; Back to Unit 3</a>
+  </main>
+
+  <footer>
+    Maths Revision &middot; Unit 3: Geometry
+  </footer>
+
+  <script>
+    const radioAnswers = {
+      q1: 'Radius',
+      q2: 'Circumference',
+      q3: 'Diameter',
+      q4: 'Sector',
+      q5: 'Chord',
+      q6: 'Tangent',
+      q7: 'Arc',
+      q8: 'Centre'
+    };
+    const numberAnswers = {
+      q9: 9,
+      q10: 14
+    };
+
+    function checkAnswers() {
+      let correct = 0;
+      const total = 10;
+
+      // Radio questions
+      for (const [qKey, expected] of Object.entries(radioAnswers)) {
+        const num = qKey.slice(1);
+        const feedback = document.getElementById('f' + num);
+        const selected = document.querySelector('input[name="' + qKey + '"]:checked');
+        const isCorrect = selected && selected.value === expected;
+
+        feedback.textContent = isCorrect ? '\u2713 Correct!' : '\u2717 Answer: ' + expected;
+        feedback.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
+        if (isCorrect) correct++;
+      }
+
+      // Number questions
+      for (const [qKey, expected] of Object.entries(numberAnswers)) {
+        const num = qKey.slice(1);
+        const el = document.getElementById(qKey);
+        const feedback = document.getElementById('f' + num);
+        const val = parseInt(el.value, 10);
+        const isCorrect = !isNaN(val) && val === expected;
+
+        el.style.borderColor = isCorrect ? '#27ae60' : '#e74c3c';
+        feedback.textContent = isCorrect ? '\u2713 Correct!' : '\u2717 Answer: ' + expected + ' cm';
+        feedback.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
+        if (isCorrect) correct++;
+      }
+
+      const box = document.getElementById('score-box');
+      box.textContent = 'You got ' + correct + ' out of ' + total + '.';
+      if (correct === total) {
+        box.className = 'score-box show great';
+        box.textContent += ' Excellent work!';
+      } else if (correct >= 7) {
+        box.className = 'score-box show ok';
+        box.textContent += ' Good effort: review the ones you missed.';
+      } else {
+        box.className = 'score-box show poor';
+        box.textContent += ' Keep practising: re-read the worked examples and try again.';
+      }
+    }
+  </script>
+
+</body>
+</html>

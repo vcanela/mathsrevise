@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unit 3: Nets and Scale Factors</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+  <script>
+    MathJax = { tex: { inlineMath: [['\\(','\\)']] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+  <style>
+    .worked-example {
+      background: #eaf4fb;
+      border-left: 4px solid #2980b9;
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .worked-example h3 { color: #1a6fa0; margin-bottom: 0.6rem; font-size: 1rem; }
+    .step { margin: 0.4rem 0; font-size: 0.95rem; color: #333; }
+    .step strong { color: #1a6fa0; }
+    .step-label {
+      display: inline-block;
+      background: #2980b9;
+      color: white;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      padding: 0.1rem 0.4rem;
+      margin-right: 0.4rem;
+    }
+    .hint-box {
+      background: #fef9e7;
+      border-left: 4px solid #f1c40f;
+      border-radius: 0 8px 8px 0;
+      padding: 0.8rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      color: #7d6608;
+    }
+    .rule-box {
+      background: #eafaf1;
+      border-left: 4px solid #27ae60;
+      border-radius: 0 8px 8px 0;
+      padding: 0.8rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+      color: #1e8449;
+    }
+    .rule-box strong { color: #1a7a3c; }
+    .net-fold-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 0.8rem 0;
+    }
+    .question-block {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      margin: 0.75rem 0;
+    }
+    .q-inner { display: flex; gap: 1.2rem; align-items: flex-start; flex-wrap: wrap; }
+    .q-inner svg { flex-shrink: 0; }
+    .q-text { flex: 1; min-width: 180px; }
+    .radio-group { display: flex; flex-direction: column; gap: 0.3rem; margin-top: 0.5rem; }
+    .radio-group label { font-size: 0.95rem; display: flex; align-items: center; gap: 0.4rem; cursor: pointer; }
+    .radio-group input[type="radio"] { cursor: pointer; }
+    .question-block input[type="number"] {
+      width: 80px;
+      padding: 0.35rem 0.4rem;
+      font-size: 1rem;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      text-align: center;
+      -moz-appearance: textfield;
+      display: block;
+      margin-top: 0.4rem;
+    }
+    .question-block input[type="number"]::-webkit-outer-spin-button,
+    .question-block input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .question-block input[type="number"]:focus { outline: none; border-color: #2980b9; }
+    .feedback { font-size: 0.9rem; font-weight: 600; display: block; margin-top: 0.4rem; }
+    .feedback.correct { color: #27ae60; }
+    .feedback.incorrect { color: #e74c3c; }
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin: 1.2rem 0 0.4rem;
+    }
+    .check-btn {
+      display: inline-block;
+      margin-top: 1.2rem;
+      padding: 0.65rem 1.6rem;
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    .check-btn:hover { background-color: #1f6da0; }
+    .score-box {
+      margin-top: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      display: none;
+    }
+    .score-box.show { display: block; }
+    .score-box.great { background: #eafaf1; color: #1e8449; border: 1px solid #a9dfbf; }
+    .score-box.ok    { background: #fef9e7; color: #9a7d0a; border: 1px solid #f9e79f; }
+    .score-box.poor  { background: #fdedec; color: #c0392b; border: 1px solid #f5b7b1; }
+    .section-divider { border: none; border-top: 2px dashed #ddd; margin: 1.5rem 0; }
+    .net-label {
+      font-size: 0.85rem;
+      color: #555;
+      text-align: center;
+      margin-top: 0.3rem;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>&#x1F4E6; Nets and Scale Factors</h1>
+    <p>Unit 3: Geometry</p>
+  </header>
+
+  <nav class="breadcrumb">
+    <a href="../../index.html">Home</a>
+    <span>›</span>
+    <a href="../../units/unit-3.html">Unit 3</a>
+    <span>›</span>
+    Exercise 5
+  </nav>
+
+  <main>
+    <div class="exercise-area">
+
+      <h2>Worked Examples</h2>
+
+      <!-- Part A: Nets -->
+      <div class="worked-example">
+        <h3>Example 1: What is a net?</h3>
+        <p class="step">A <strong>net</strong> is a flat 2D shape that can be folded up to make a 3D shape. Every face of the 3D shape appears as a flat panel in the net.</p>
+        <p class="step">For example, a cube has 6 square faces. Its net is a cross of 6 squares:</p>
+        <div class="net-fold-row">
+          <div>
+            <svg viewBox="0 0 220 230" width="200" height="210">
+              <!-- Cross-shaped cube net -->
+              <rect x="85" y="10" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
+              <rect x="10" y="60" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
+              <rect x="60" y="60" width="50" height="50" fill="rgba(41,128,185,0.22)" stroke="#2980b9" stroke-width="2"/>
+              <rect x="110" y="60" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
+              <rect x="160" y="60" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
+              <rect x="60" y="110" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
+              <rect x="60" y="160" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
+              <text x="38" y="220" font-size="14" fill="#2c3e50" font-family="sans-serif" font-weight="bold">Net of a Cube</text>
+            </svg>
+            <div class="net-label">(6 equal square faces)</div>
+          </div>
+          <div style="font-size:2rem; color:#555;">&#8594;</div>
+          <div>
+            <svg viewBox="0 0 120 100" width="120" height="100">
+              <polygon points="20,80 80,80 80,30 20,30" fill="rgba(41,128,185,0.2)" stroke="#2980b9" stroke-width="2"/>
+              <polygon points="20,30 80,30 100,10 40,10" fill="rgba(41,128,185,0.35)" stroke="#2980b9" stroke-width="2"/>
+              <polygon points="80,80 100,60 100,10 80,30" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
+              <text x="22" y="95" font-size="12" fill="#2c3e50" font-family="sans-serif" font-weight="bold">Cube</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part B: Scale factors -->
+      <div class="worked-example">
+        <h3>Example 2: Scale factors</h3>
+        <p class="step">A <strong>scale factor</strong> tells you how much bigger (or smaller) a shape has become. Multiply every length by the scale factor to find the new dimensions.</p>
+        <p class="step"><span class="step-label">Step 1</span> Identify the scale factor: scale factor = new length ÷ original length.</p>
+        <p class="step"><span class="step-label">Step 2</span> Multiply all lengths by the scale factor to get the enlarged shape.</p>
+        <div style="margin: 0.8rem 0;">
+          <svg viewBox="0 0 320 140" width="320" height="140">
+            <rect x="10" y="40" width="80" height="60" fill="rgba(231,76,60,0.15)" stroke="#e74c3c" stroke-width="2"/>
+            <text x="35" y="76" font-size="13" fill="#e74c3c" font-family="sans-serif">4 cm</text>
+            <text x="2" y="68" font-size="10" fill="#e74c3c" font-family="sans-serif" transform="rotate(-90,2,68)">3 cm</text>
+            <text x="20" y="115" font-size="12" fill="#555" font-family="sans-serif">Original</text>
+            <text x="105" y="75" font-size="18" fill="#555" font-family="sans-serif">&#x2192;</text>
+            <text x="100" y="60" font-size="11" fill="#555" font-family="sans-serif">&#xD7;2</text>
+            <rect x="135" y="10" width="160" height="120" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
+            <text x="195" y="76" font-size="13" fill="#2980b9" font-family="sans-serif">8 cm</text>
+            <text x="126" y="73" font-size="10" fill="#2980b9" font-family="sans-serif" transform="rotate(-90,126,73)">6 cm</text>
+            <text x="185" y="140" font-size="12" fill="#555" font-family="sans-serif">Enlarged (&#xD7;2)</text>
+          </svg>
+        </div>
+        <div class="rule-box">
+          <strong>Scale factor = new length ÷ original length</strong><br/>
+          To enlarge: multiply all lengths by the scale factor.<br/>
+          To reduce: scale factor is less than 1.
+        </div>
+      </div>
+
+      <hr class="section-divider" />
+
+      <h2>Your Turn</h2>
+      <p style="font-size:0.9rem; color:#666; margin-bottom:0.6rem;">Answer each question. Click <em>Check Answers</em> when you are done.</p>
+
+      <form id="exercise-form">
+
+        <div class="section-title">Part A: Questions 1 to 5: What 3D shape does each net make?</div>
+
+        <!-- Q1: Cube net -->
+        <div class="question-block">
+          <div class="q-inner">
+            <div>
+              <svg viewBox="0 0 220 230" width="190" height="200">
+                <rect x="85" y="10" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
+                <rect x="10" y="60" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
+                <rect x="60" y="60" width="50" height="50" fill="rgba(41,128,185,0.22)" stroke="#2980b9" stroke-width="2"/>
+                <rect x="110" y="60" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
+                <rect x="160" y="60" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
+                <rect x="60" y="110" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
+                <rect x="60" y="160" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
+                <text x="68" y="222" font-size="12" fill="#777" font-family="sans-serif" font-style="italic">Net A</text>
+              </svg>
+            </div>
+            <div class="q-text">
+              <label>1. &nbsp; What 3D shape does Net A fold into?</label>
+              <div class="radio-group" id="rg1">
+                <label><input type="radio" name="q1" value="Cube" /> Cube</label>
+                <label><input type="radio" name="q1" value="Triangular Prism" /> Triangular Prism</label>
+                <label><input type="radio" name="q1" value="Square Pyramid" /> Square Pyramid</label>
+                <label><input type="radio" name="q1" value="Cylinder" /> Cylinder</label>
+                <label><input type="radio" name="q1" value="Cuboid" /> Cuboid</label>
+              </div>
+              <span class="feedback" id="f1"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q2: Triangular prism net -->
+        <div class="question-block">
+          <div class="q-inner">
+            <div>
+              <svg viewBox="0 0 220 200" width="190" height="175">
+                <!-- 3 rectangles in a row: 60×40 each -->
+                <rect x="20" y="70" width="60" height="40" fill="rgba(231,76,60,0.12)" stroke="#e74c3c" stroke-width="2"/>
+                <rect x="80" y="70" width="60" height="40" fill="rgba(231,76,60,0.18)" stroke="#e74c3c" stroke-width="2"/>
+                <rect x="140" y="70" width="60" height="40" fill="rgba(231,76,60,0.12)" stroke="#e74c3c" stroke-width="2"/>
+                <!-- Triangle on top of middle rect -->
+                <polygon points="80,70 140,70 110,25" fill="rgba(231,76,60,0.22)" stroke="#e74c3c" stroke-width="2"/>
+                <!-- Triangle on bottom of middle rect -->
+                <polygon points="80,110 140,110 110,155" fill="rgba(231,76,60,0.22)" stroke="#e74c3c" stroke-width="2"/>
+                <text x="78" y="185" font-size="12" fill="#777" font-family="sans-serif" font-style="italic">Net B</text>
+              </svg>
+            </div>
+            <div class="q-text">
+              <label>2. &nbsp; What 3D shape does Net B fold into?</label>
+              <div class="radio-group" id="rg2">
+                <label><input type="radio" name="q2" value="Cube" /> Cube</label>
+                <label><input type="radio" name="q2" value="Triangular Prism" /> Triangular Prism</label>
+                <label><input type="radio" name="q2" value="Square Pyramid" /> Square Pyramid</label>
+                <label><input type="radio" name="q2" value="Cylinder" /> Cylinder</label>
+                <label><input type="radio" name="q2" value="Cuboid" /> Cuboid</label>
+              </div>
+              <span class="feedback" id="f2"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q3: Square pyramid net -->
+        <div class="question-block">
+          <div class="q-inner">
+            <div>
+              <svg viewBox="0 0 220 220" width="190" height="190">
+                <!-- Centre square -->
+                <rect x="80" y="80" width="60" height="60" fill="rgba(39,174,96,0.18)" stroke="#27ae60" stroke-width="2"/>
+                <!-- Triangle top -->
+                <polygon points="80,80 140,80 110,30" fill="rgba(39,174,96,0.12)" stroke="#27ae60" stroke-width="2"/>
+                <!-- Triangle bottom -->
+                <polygon points="80,140 140,140 110,190" fill="rgba(39,174,96,0.12)" stroke="#27ae60" stroke-width="2"/>
+                <!-- Triangle left -->
+                <polygon points="80,80 80,140 30,110" fill="rgba(39,174,96,0.12)" stroke="#27ae60" stroke-width="2"/>
+                <!-- Triangle right -->
+                <polygon points="140,80 140,140 190,110" fill="rgba(39,174,96,0.12)" stroke="#27ae60" stroke-width="2"/>
+                <text x="78" y="212" font-size="12" fill="#777" font-family="sans-serif" font-style="italic">Net C</text>
+              </svg>
+            </div>
+            <div class="q-text">
+              <label>3. &nbsp; What 3D shape does Net C fold into?</label>
+              <div class="radio-group" id="rg3">
+                <label><input type="radio" name="q3" value="Cube" /> Cube</label>
+                <label><input type="radio" name="q3" value="Triangular Prism" /> Triangular Prism</label>
+                <label><input type="radio" name="q3" value="Square Pyramid" /> Square Pyramid</label>
+                <label><input type="radio" name="q3" value="Cylinder" /> Cylinder</label>
+                <label><input type="radio" name="q3" value="Cuboid" /> Cuboid</label>
+              </div>
+              <span class="feedback" id="f3"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q4: Cylinder net -->
+        <div class="question-block">
+          <div class="q-inner">
+            <div>
+              <svg viewBox="0 0 200 210" width="180" height="188">
+                <!-- Rectangle in middle -->
+                <rect x="20" y="60" width="160" height="60" fill="rgba(142,68,173,0.15)" stroke="#8e44ad" stroke-width="2"/>
+                <!-- Circle on top -->
+                <ellipse cx="100" cy="60" rx="30" ry="25" fill="rgba(142,68,173,0.12)" stroke="#8e44ad" stroke-width="2"/>
+                <!-- Circle on bottom -->
+                <ellipse cx="100" cy="120" rx="30" ry="25" fill="rgba(142,68,173,0.12)" stroke="#8e44ad" stroke-width="2"/>
+                <text x="68" y="168" font-size="12" fill="#777" font-family="sans-serif" font-style="italic">Net D</text>
+              </svg>
+            </div>
+            <div class="q-text">
+              <label>4. &nbsp; What 3D shape does Net D fold into?</label>
+              <div class="radio-group" id="rg4">
+                <label><input type="radio" name="q4" value="Cube" /> Cube</label>
+                <label><input type="radio" name="q4" value="Triangular Prism" /> Triangular Prism</label>
+                <label><input type="radio" name="q4" value="Square Pyramid" /> Square Pyramid</label>
+                <label><input type="radio" name="q4" value="Cylinder" /> Cylinder</label>
+                <label><input type="radio" name="q4" value="Cuboid" /> Cuboid</label>
+              </div>
+              <span class="feedback" id="f4"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q5: Cuboid net -->
+        <div class="question-block">
+          <div class="q-inner">
+            <div>
+              <svg viewBox="0 0 230 220" width="200" height="192">
+                <!-- Cross of 6 rectangles of two different sizes -->
+                <!-- Top: 70×40 -->
+                <rect x="70" y="10" width="70" height="40" fill="rgba(230,126,34,0.15)" stroke="#e67e22" stroke-width="2"/>
+                <!-- Row 2: left (50×40), middle (70×40), right (50×40) -->
+                <rect x="20" y="50" width="50" height="40" fill="rgba(230,126,34,0.12)" stroke="#e67e22" stroke-width="2"/>
+                <rect x="70" y="50" width="70" height="40" fill="rgba(230,126,34,0.2)" stroke="#e67e22" stroke-width="2"/>
+                <rect x="140" y="50" width="50" height="40" fill="rgba(230,126,34,0.12)" stroke="#e67e22" stroke-width="2"/>
+                <!-- Row 3: 70×40 -->
+                <rect x="70" y="90" width="70" height="40" fill="rgba(230,126,34,0.15)" stroke="#e67e22" stroke-width="2"/>
+                <!-- Bottom: 70×40 -->
+                <rect x="70" y="130" width="70" height="40" fill="rgba(230,126,34,0.12)" stroke="#e67e22" stroke-width="2"/>
+                <text x="78" y="190" font-size="12" fill="#777" font-family="sans-serif" font-style="italic">Net E</text>
+              </svg>
+            </div>
+            <div class="q-text">
+              <label>5. &nbsp; What 3D shape does Net E fold into?</label>
+              <div class="radio-group" id="rg5">
+                <label><input type="radio" name="q5" value="Cube" /> Cube</label>
+                <label><input type="radio" name="q5" value="Triangular Prism" /> Triangular Prism</label>
+                <label><input type="radio" name="q5" value="Square Pyramid" /> Square Pyramid</label>
+                <label><input type="radio" name="q5" value="Cylinder" /> Cylinder</label>
+                <label><input type="radio" name="q5" value="Cuboid" /> Cuboid</label>
+              </div>
+              <span class="feedback" id="f5"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">Part B: Questions 6 to 10: Scale factors</div>
+
+        <div class="question-block">
+          <label>6. &nbsp; A rectangle is 5 cm long. It is enlarged with scale factor 3. What is the new length? (cm)</label>
+          <input type="number" step="0.1" min="0" id="q6" placeholder="?" />
+          <span class="feedback" id="f6"></span>
+        </div>
+
+        <div class="question-block">
+          <label>7. &nbsp; A shape has a side of 12 cm. It is reduced with scale factor 0.5. What is the new length? (cm)</label>
+          <input type="number" step="0.1" min="0" id="q7" placeholder="?" />
+          <span class="feedback" id="f7"></span>
+        </div>
+
+        <div class="question-block">
+          <label>8. &nbsp; Original length = 4 cm, new length = 20 cm. What is the scale factor?</label>
+          <input type="number" step="0.1" min="0" id="q8" placeholder="?" />
+          <span class="feedback" id="f8"></span>
+        </div>
+
+        <div class="question-block">
+          <label>9. &nbsp; A square has side 8 cm. It is enlarged by scale factor 4. What is the perimeter of the new square? (cm)</label>
+          <input type="number" step="0.1" min="0" id="q9" placeholder="?" />
+          <span class="feedback" id="f9"></span>
+        </div>
+
+        <div class="question-block">
+          <label>10. &nbsp; Original length = 30 cm, new length = 6 cm. What is the scale factor? (enter as a decimal)</label>
+          <input type="number" step="0.1" min="0" id="q10" placeholder="?" />
+          <span class="feedback" id="f10"></span>
+        </div>
+
+        <button type="button" class="check-btn" onclick="checkAnswers()">Check Answers</button>
+      </form>
+
+      <div class="score-box" id="score-box"></div>
+
+    </div>
+
+    <a class="btn" href="../../units/unit-3.html">&#8592; Back to Unit 3</a>
+  </main>
+
+  <footer>
+    Maths Revision &middot; Unit 3: Geometry
+  </footer>
+
+  <script>
+    const radioAnswers = {
+      q1: 'Cube',
+      q2: 'Triangular Prism',
+      q3: 'Square Pyramid',
+      q4: 'Cylinder',
+      q5: 'Cuboid'
+    };
+    const floatAnswers = {
+      q6:  15,
+      q7:  6,
+      q8:  5,
+      q9:  128,
+      q10: 0.2
+    };
+
+    function checkAnswers() {
+      let correct = 0;
+      const total = 10;
+
+      // Radio questions Q1-Q5
+      for (const [qKey, expected] of Object.entries(radioAnswers)) {
+        const num = qKey.slice(1);
+        const feedback = document.getElementById('f' + num);
+        const selected = document.querySelector('input[name="' + qKey + '"]:checked');
+        const isCorrect = selected && selected.value === expected;
+
+        feedback.textContent = isCorrect ? '\u2713 Correct!' : '\u2717 Answer: ' + expected;
+        feedback.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
+        if (isCorrect) correct++;
+      }
+
+      // Float questions Q6-Q10
+      for (const [qKey, expected] of Object.entries(floatAnswers)) {
+        const num = qKey.slice(1);
+        const el = document.getElementById(qKey);
+        const feedback = document.getElementById('f' + num);
+        const val = parseFloat(el.value);
+        const isCorrect = !isNaN(val) && Math.abs(val - expected) < 0.001;
+
+        el.style.borderColor = isCorrect ? '#27ae60' : '#e74c3c';
+        feedback.textContent = isCorrect ? '\u2713 Correct!' : '\u2717 Answer: ' + expected;
+        feedback.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
+        if (isCorrect) correct++;
+      }
+
+      const box = document.getElementById('score-box');
+      box.textContent = 'You got ' + correct + ' out of ' + total + '.';
+      if (correct === total) {
+        box.className = 'score-box show great';
+        box.textContent += ' Excellent work!';
+      } else if (correct >= 7) {
+        box.className = 'score-box show ok';
+        box.textContent += ' Good effort: review the ones you missed.';
+      } else {
+        box.className = 'score-box show poor';
+        box.textContent += ' Keep practising: re-read the worked examples and try again.';
+      }
+    }
+  </script>
+
+</body>
+</html>
