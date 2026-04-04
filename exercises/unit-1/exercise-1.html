@@ -13,16 +13,8 @@
       padding: 1.2rem 1.5rem;
       margin: 1rem 0 1.5rem;
     }
-    .worked-example h3 {
-      color: #1a6fa0;
-      margin-bottom: 0.6rem;
-      font-size: 1rem;
-    }
-    .step {
-      margin: 0.4rem 0;
-      font-size: 0.95rem;
-      color: #333;
-    }
+    .worked-example h3 { color: #1a6fa0; margin-bottom: 0.6rem; font-size: 1rem; }
+    .step { margin: 0.4rem 0; font-size: 0.95rem; color: #333; }
     .step strong { color: #1a6fa0; }
     .step-label {
       display: inline-block;
@@ -57,11 +49,7 @@
       gap: 1rem;
       flex-wrap: wrap;
     }
-    .question-block label {
-      font-size: 1.05rem;
-      flex: 1;
-      min-width: 180px;
-    }
+    .question-block label { font-size: 1.05rem; flex: 1; min-width: 180px; }
     .question-block input[type="text"] {
       width: 90px;
       padding: 0.4rem 0.6rem;
@@ -70,14 +58,8 @@
       border-radius: 6px;
       text-align: center;
     }
-    .question-block input[type="text"]:focus {
-      outline: none;
-      border-color: #2980b9;
-    }
-    .feedback {
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
+    .question-block input[type="text"]:focus { outline: none; border-color: #2980b9; }
+    .feedback { font-size: 0.9rem; font-weight: 600; }
     .feedback.correct { color: #27ae60; }
     .feedback.incorrect { color: #e74c3c; }
     .check-btn {
@@ -105,18 +87,14 @@
     .score-box.great { background: #eafaf1; color: #1e8449; border: 1px solid #a9dfbf; }
     .score-box.ok    { background: #fef9e7; color: #9a7d0a; border: 1px solid #f9e79f; }
     .score-box.poor  { background: #fdedec; color: #c0392b; border: 1px solid #f5b7b1; }
-    .section-divider {
-      border: none;
-      border-top: 2px dashed #ddd;
-      margin: 1.5rem 0;
-    }
+    .section-divider { border: none; border-top: 2px dashed #ddd; margin: 1.5rem 0; }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>➕ Adding & Subtracting Decimals</h1>
-    <p>Unit 1: Number & Arithmetic</p>
+    <h1>➕ Adding &amp; Subtracting Decimals</h1>
+    <p>Unit 1: Number &amp; Arithmetic</p>
   </header>
 
   <nav class="breadcrumb">
@@ -130,7 +108,6 @@
   <main>
     <div class="exercise-area">
 
-      <!-- WORKED EXAMPLES -->
       <h2>Worked Examples</h2>
 
       <div class="worked-example">
@@ -159,7 +136,6 @@
 
       <hr class="section-divider" />
 
-      <!-- EXERCISES -->
       <h2>Your Turn</h2>
       <p style="font-size:0.9rem; color:#666; margin-bottom:1rem;">Work out each answer and type it in. Click <em>Check Answers</em> when you're done.</p>
 
@@ -195,6 +171,36 @@
           <span class="feedback" id="f5"></span>
         </div>
 
+        <div class="question-block">
+          <label>6. &nbsp; 9.37 − 5.18 = </label>
+          <input type="text" id="q6" placeholder="?" autocomplete="off" />
+          <span class="feedback" id="f6"></span>
+        </div>
+
+        <div class="question-block">
+          <label>7. &nbsp; 0.75 + 0.68 = </label>
+          <input type="text" id="q7" placeholder="?" autocomplete="off" />
+          <span class="feedback" id="f7"></span>
+        </div>
+
+        <div class="question-block">
+          <label>8. &nbsp; 14.20 − 6.85 = </label>
+          <input type="text" id="q8" placeholder="?" autocomplete="off" />
+          <span class="feedback" id="f8"></span>
+        </div>
+
+        <div class="question-block">
+          <label>9. &nbsp; 3.07 + 8.94 = </label>
+          <input type="text" id="q9" placeholder="?" autocomplete="off" />
+          <span class="feedback" id="f9"></span>
+        </div>
+
+        <div class="question-block">
+          <label>10. &nbsp; 25.50 − 17.73 = </label>
+          <input type="text" id="q10" placeholder="?" autocomplete="off" />
+          <span class="feedback" id="f10"></span>
+        </div>
+
         <button type="button" class="check-btn" onclick="checkAnswers()">Check Answers</button>
       </form>
 
@@ -206,7 +212,7 @@
   </main>
 
   <footer>
-    Maths Revision &mdash; Unit 1: Number & Arithmetic
+    Maths Revision &mdash; Unit 1: Number &amp; Arithmetic
   </footer>
 
   <script>
@@ -215,7 +221,12 @@
       q2: 4.41,
       q3: 21.30,
       q4: 6.33,
-      q5: 10.01
+      q5: 10.01,
+      q6: 4.19,
+      q7: 1.43,
+      q8: 7.35,
+      q9: 12.01,
+      q10: 7.77
     };
 
     function checkAnswers() {
@@ -224,7 +235,8 @@
 
       for (const [id, answer] of Object.entries(answers)) {
         const input = document.getElementById(id);
-        const feedback = document.getElementById('f' + id.slice(1));
+        const num = id.slice(1);
+        const feedback = document.getElementById('f' + num);
         const val = parseFloat(input.value.trim());
 
         if (!isNaN(val) && Math.abs(val - answer) < 0.001) {
@@ -241,9 +253,9 @@
 
       const box = document.getElementById('score-box');
       box.textContent = `You got ${correct} out of ${total}.`;
-      box.className = 'score-box show ' + (correct === total ? 'great' : correct >= 3 ? 'ok' : 'poor');
+      box.className = 'score-box show ' + (correct === total ? 'great' : correct >= 7 ? 'ok' : 'poor');
       if (correct === total) box.textContent += ' Excellent work! 🎉';
-      else if (correct >= 3) box.textContent += ' Good effort — review the ones you missed.';
+      else if (correct >= 7) box.textContent += ' Good effort — review the ones you missed.';
       else box.textContent += ' Keep practising — re-read the worked examples and try again.';
     }
   </script>
