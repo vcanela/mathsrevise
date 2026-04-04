@@ -3,13 +3,192 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Unit 2 – Exercise 1</title>
+  <title>Unit 2 – Collecting Like Terms</title>
   <link rel="stylesheet" href="../../css/style.css" />
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+  <style>
+    .worked-example {
+      background: #eaf4fb;
+      border-left: 4px solid #2980b9;
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .worked-example h3 { color: #1a6fa0; margin-bottom: 0.6rem; font-size: 1rem; }
+    .step { margin: 0.4rem 0; font-size: 0.95rem; color: #333; }
+    .step strong { color: #1a6fa0; }
+    .step-label {
+      display: inline-block;
+      background: #2980b9;
+      color: white;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      padding: 0.1rem 0.4rem;
+      margin-right: 0.4rem;
+    }
+    .hint-box {
+      background: #fef9e7;
+      border-left: 4px solid #f1c40f;
+      border-radius: 0 8px 8px 0;
+      padding: 0.8rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      color: #7d6608;
+    }
+
+    /* Algebra chip diagram */
+    .chip-diagram {
+      background: white;
+      border: 1px solid #c9e4f7;
+      border-radius: 8px;
+      padding: 0.9rem 1.1rem;
+      margin: 0.7rem 0;
+    }
+    .chip-label {
+      font-size: 0.82rem;
+      color: #666;
+      font-style: italic;
+      margin-bottom: 0.5rem;
+    }
+    .chip-row {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: white;
+    }
+    .chip.a-chip { background-color: #2980b9; }
+    .chip.b-chip { background-color: #e67e22; }
+    .chip-plus {
+      font-size: 1.2rem;
+      color: #555;
+      font-weight: bold;
+      padding: 0 0.15rem;
+    }
+    .chip-group-sep {
+      width: 2px;
+      height: 38px;
+      background: #bbb;
+      border-radius: 2px;
+      margin: 0 0.35rem;
+    }
+
+    /* Color-coded like terms in example 2 */
+    .term-p { color: #2980b9; font-weight: 700; }
+    .term-q { color: #e67e22; font-weight: 700; }
+
+    .question-block {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      margin: 0.75rem 0;
+    }
+    .question-top {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+    }
+    .question-top label { font-size: 1.05rem; }
+    .answer-template {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+      font-size: 1rem;
+      color: #333;
+    }
+    .answer-template input[type="number"] {
+      width: 62px;
+      padding: 0.35rem 0.4rem;
+      font-size: 1rem;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      text-align: center;
+      -moz-appearance: textfield;
+    }
+    .answer-template input[type="number"]::-webkit-outer-spin-button,
+    .answer-template input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .answer-template input[type="number"]:focus { outline: none; border-color: #2980b9; }
+    .answer-template .var-label { font-style: italic; }
+    .answer-template .sep { color: #888; font-size: 0.95rem; }
+    .feedback { font-size: 0.9rem; font-weight: 600; display: block; margin-top: 0.4rem; }
+    .feedback.correct { color: #27ae60; }
+    .feedback.incorrect { color: #e74c3c; }
+    .challenge-label {
+      font-size: 0.78rem;
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffc107;
+      border-radius: 12px;
+      padding: 0.15rem 0.55rem;
+      white-space: nowrap;
+    }
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin: 1.2rem 0 0.4rem;
+    }
+    .instructions-note {
+      font-size: 0.88rem;
+      color: #555;
+      background: #f8f9fa;
+      border-radius: 6px;
+      padding: 0.5rem 0.8rem;
+      margin: 0.5rem 0 0.9rem;
+      border: 1px solid #e0e0e0;
+    }
+    .check-btn {
+      display: inline-block;
+      margin-top: 1.2rem;
+      padding: 0.65rem 1.6rem;
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    .check-btn:hover { background-color: #1f6da0; }
+    .score-box {
+      margin-top: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      display: none;
+    }
+    .score-box.show { display: block; }
+    .score-box.great { background: #eafaf1; color: #1e8449; border: 1px solid #a9dfbf; }
+    .score-box.ok    { background: #fef9e7; color: #9a7d0a; border: 1px solid #f9e79f; }
+    .score-box.poor  { background: #fdedec; color: #c0392b; border: 1px solid #f5b7b1; }
+    .section-divider { border: none; border-top: 2px dashed #ddd; margin: 1.5rem 0; }
+  </style>
 </head>
 <body>
 
   <header>
-    <h1>📝 Exercise 1</h1>
+    <h1>Collecting Like Terms</h1>
     <p>Unit 2: Algebra</p>
   </header>
 
@@ -23,23 +202,329 @@
 
   <main>
     <div class="exercise-area">
-      <h2>Question</h2>
-      <div class="placeholder-box">
-        Exercise question goes here.
+
+      <h2>Worked Examples</h2>
+
+      <!-- Example 1: chip diagram -->
+      <div class="worked-example">
+        <h3>Example 1 &mdash; \(3a + 2b + 2a + b = 5a + 3b\)</h3>
+
+        <p class="step"><span class="step-label">Step 1</span> Lay out all terms as coloured chips.</p>
+        <div class="chip-diagram">
+          <div class="chip-label">All terms laid out in original order</div>
+          <div class="chip-row">
+            <span class="chip a-chip">a</span>
+            <span class="chip a-chip">a</span>
+            <span class="chip a-chip">a</span>
+            <span class="chip-plus">+</span>
+            <span class="chip b-chip">b</span>
+            <span class="chip b-chip">b</span>
+            <span class="chip-plus">+</span>
+            <span class="chip a-chip">a</span>
+            <span class="chip a-chip">a</span>
+            <span class="chip-plus">+</span>
+            <span class="chip b-chip">b</span>
+          </div>
+        </div>
+
+        <p class="step"><span class="step-label">Step 2</span> Re-arrange: group chips of the same colour together.</p>
+        <div class="chip-diagram">
+          <div class="chip-label">Grouped by colour (blue = <em>a</em>, orange = <em>b</em>)</div>
+          <div class="chip-row">
+            <span class="chip a-chip">a</span>
+            <span class="chip a-chip">a</span>
+            <span class="chip a-chip">a</span>
+            <span class="chip a-chip">a</span>
+            <span class="chip a-chip">a</span>
+            <span class="chip-group-sep"></span>
+            <span class="chip b-chip">b</span>
+            <span class="chip b-chip">b</span>
+            <span class="chip b-chip">b</span>
+          </div>
+        </div>
+
+        <p class="step"><span class="step-label">Step 3</span> Count each group to get the result.</p>
+        <p class="step"><strong>Answer: \(5a + 3b\)</strong></p>
       </div>
 
-      <h2>Your Answer</h2>
-      <div class="placeholder-box">
-        Answer input / interactive element goes here.
+      <!-- Example 2: algebraic with colour-coded like terms -->
+      <div class="worked-example">
+        <h3>Example 2 &mdash; \(7p - 3q - 2p + 5q\)</h3>
+
+        <p class="step">
+          <span class="step-label">Step 1</span>
+          Identify like terms &mdash;
+          <span class="term-p">\(p\)-terms: \(7p\) and \(-2p\)</span>&nbsp;&nbsp;
+          <span class="term-q">\(q\)-terms: \(-3q\) and \(+5q\)</span>
+        </p>
+
+        <p class="step">
+          <span class="step-label">Step 2</span>
+          Rearrange by grouping like terms:
+          \(\bigl(\)<span class="term-p">\(7p - 2p\)</span>\(\bigr) + \bigl(\)<span class="term-q">\(-3q + 5q\)</span>\(\bigr)\)
+        </p>
+
+        <p class="step">
+          <span class="step-label">Step 3</span>
+          Collect: \(5p + 2q\)
+        </p>
+        <p class="step"><strong>Answer: \(5p + 2q\)</strong></p>
       </div>
+
+      <div class="hint-box">
+        <strong>Hint:</strong> Only combine terms with the same variable. Constants (plain numbers) can also be collected together.
+      </div>
+
+      <hr class="section-divider" />
+
+      <h2>Your Turn</h2>
+      <p style="font-size:0.9rem; color:#666; margin-bottom:0.6rem;">Fill in the missing coefficients. Click <em>Check Answers</em> when you are done.</p>
+
+      <div class="instructions-note">
+        For questions 6&ndash;10, use negative numbers where needed (e.g. type &minus;3 as <code>-3</code>). The + signs in the template are separators only.
+      </div>
+
+      <form id="exercise-form">
+
+        <div class="section-title">Questions 1&ndash;5</div>
+
+        <!-- Q1: 3a + 2a = 5a -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>1. &nbsp; \(3a + 2a\)</label>
+          </div>
+          <div class="answer-template">
+            <span>=</span>
+            <input type="number" step="1" id="q1a" placeholder="?" />
+            <span class="var-label">\(a\)</span>
+          </div>
+          <span class="feedback" id="f1"></span>
+        </div>
+
+        <!-- Q2: 4b + 3b − 2b = 5b -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>2. &nbsp; \(4b + 3b - 2b\)</label>
+          </div>
+          <div class="answer-template">
+            <span>=</span>
+            <input type="number" step="1" id="q2a" placeholder="?" />
+            <span class="var-label">\(b\)</span>
+          </div>
+          <span class="feedback" id="f2"></span>
+        </div>
+
+        <!-- Q3: 5p + 3q + 2p = 7p + 3q -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>3. &nbsp; \(5p + 3q + 2p\)</label>
+          </div>
+          <div class="answer-template">
+            <span>=</span>
+            <input type="number" step="1" id="q3a" placeholder="?" />
+            <span class="var-label">\(p\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q3b" placeholder="?" />
+            <span class="var-label">\(q\)</span>
+          </div>
+          <span class="feedback" id="f3"></span>
+        </div>
+
+        <!-- Q4: 6m + 2n + 3m + 5n = 9m + 7n -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>4. &nbsp; \(6m + 2n + 3m + 5n\)</label>
+          </div>
+          <div class="answer-template">
+            <span>=</span>
+            <input type="number" step="1" id="q4a" placeholder="?" />
+            <span class="var-label">\(m\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q4b" placeholder="?" />
+            <span class="var-label">\(n\)</span>
+          </div>
+          <span class="feedback" id="f4"></span>
+        </div>
+
+        <!-- Q5: 4t + 3u + 2t + u = 6t + 4u -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>5. &nbsp; \(4t + 3u + 2t + u\)</label>
+          </div>
+          <div class="answer-template">
+            <span>=</span>
+            <input type="number" step="1" id="q5a" placeholder="?" />
+            <span class="var-label">\(t\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q5b" placeholder="?" />
+            <span class="var-label">\(u\)</span>
+          </div>
+          <span class="feedback" id="f5"></span>
+        </div>
+
+        <div class="section-title">Challenge Questions &#11088;</div>
+
+        <!-- Q6: 8a − 3b − 2a + b = 6a − 2b -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>6. &nbsp; \(8a - 3b - 2a + b\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label>
+          </div>
+          <div class="answer-template">
+            <span>=</span>
+            <input type="number" step="1" id="q6a" placeholder="?" />
+            <span class="var-label">\(a\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q6b" placeholder="?" />
+            <span class="var-label">\(b\)</span>
+          </div>
+          <span class="feedback" id="f6"></span>
+        </div>
+
+        <!-- Q7: 5p − 2q − 3p − q = 2p − 3q -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>7. &nbsp; \(5p - 2q - 3p - q\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label>
+          </div>
+          <div class="answer-template">
+            <span>=</span>
+            <input type="number" step="1" id="q7a" placeholder="?" />
+            <span class="var-label">\(p\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q7b" placeholder="?" />
+            <span class="var-label">\(q\)</span>
+          </div>
+          <span class="feedback" id="f7"></span>
+        </div>
+
+        <!-- Q8: 4m + 7n − 6m + 3n = −2m + 10n -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>8. &nbsp; \(4m + 7n - 6m + 3n\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label>
+          </div>
+          <div class="answer-template">
+            <span>=</span>
+            <input type="number" step="1" id="q8a" placeholder="?" />
+            <span class="var-label">\(m\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q8b" placeholder="?" />
+            <span class="var-label">\(n\)</span>
+          </div>
+          <span class="feedback" id="f8"></span>
+        </div>
+
+        <!-- Q9: 3r − 4s + 5r − 2s − r = 7r − 6s -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>9. &nbsp; \(3r - 4s + 5r - 2s - r\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label>
+          </div>
+          <div class="answer-template">
+            <span>=</span>
+            <input type="number" step="1" id="q9a" placeholder="?" />
+            <span class="var-label">\(r\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q9b" placeholder="?" />
+            <span class="var-label">\(s\)</span>
+          </div>
+          <span class="feedback" id="f9"></span>
+        </div>
+
+        <!-- Q10: 9k − 5j + 2k − 3j − 4k = 7k − 8j -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>10. &nbsp; \(9k - 5j + 2k - 3j - 4k\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label>
+          </div>
+          <div class="answer-template">
+            <span>=</span>
+            <input type="number" step="1" id="q10a" placeholder="?" />
+            <span class="var-label">\(k\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q10b" placeholder="?" />
+            <span class="var-label">\(j\)</span>
+          </div>
+          <span class="feedback" id="f10"></span>
+        </div>
+
+        <button type="button" class="check-btn" onclick="checkAnswers()">Check Answers</button>
+      </form>
+
+      <div class="score-box" id="score-box"></div>
+
     </div>
 
-    <a class="btn" href="../../units/unit-2.html">← Back to Unit 2</a>
+    <a class="btn" href="../../units/unit-2.html">&#8592; Back to Unit 2</a>
   </main>
 
   <footer>
-    Maths Revision &mdash; Placeholder content
+    Maths Revision &mdash; Unit 2: Algebra
   </footer>
+
+  <script>
+    // Each entry: array of correct coefficients matching the inputs for that question
+    const answers = {
+      q1:  [5],
+      q2:  [5],
+      q3:  [7, 3],
+      q4:  [9, 7],
+      q5:  [6, 4],
+      q6:  [6, -2],
+      q7:  [2, -3],
+      q8:  [-2, 10],
+      q9:  [7, -6],
+      q10: [7, -8]
+    };
+
+    const inputIds = {
+      q1:  ['q1a'],
+      q2:  ['q2a'],
+      q3:  ['q3a', 'q3b'],
+      q4:  ['q4a', 'q4b'],
+      q5:  ['q5a', 'q5b'],
+      q6:  ['q6a', 'q6b'],
+      q7:  ['q7a', 'q7b'],
+      q8:  ['q8a', 'q8b'],
+      q9:  ['q9a', 'q9b'],
+      q10: ['q10a', 'q10b']
+    };
+
+    function checkAnswers() {
+      let correct = 0;
+      const total = Object.keys(answers).length;
+
+      for (const [qKey, expected] of Object.entries(answers)) {
+        const num = qKey.slice(1);
+        const ids = inputIds[qKey];
+        const feedback = document.getElementById('f' + num);
+        let qCorrect = true;
+
+        for (let i = 0; i < ids.length; i++) {
+          const input = document.getElementById(ids[i]);
+          const val = parseInt(input.value, 10);
+          if (isNaN(val) || val !== expected[i]) {
+            qCorrect = false;
+            input.style.borderColor = '#e74c3c';
+          } else {
+            input.style.borderColor = '#27ae60';
+          }
+        }
+
+        if (qCorrect) {
+          feedback.textContent = '\u2713 Correct!';
+          feedback.className = 'feedback correct';
+          correct++;
+        } else {
+          feedback.textContent = '\u2717 Answer: [' + expected.join(', ') + ']';
+          feedback.className = 'feedback incorrect';
+        }
+      }
+
+      const box = document.getElementById('score-box');
+      box.textContent = 'You got ' + correct + ' out of ' + total + '.';
+      box.className = 'score-box show ' + (correct === total ? 'great' : correct >= 7 ? 'ok' : 'poor');
+      if (correct === total) box.textContent += ' Excellent work!';
+      else if (correct >= 7) box.textContent += ' Good effort \u2014 review the ones you missed.';
+      else box.textContent += ' Keep practising \u2014 re-read the worked examples and try again.';
+    }
+  </script>
 
 </body>
 </html>

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unit 2 – Factorising</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+  <style>
+    .worked-example {
+      background: #eaf4fb;
+      border-left: 4px solid #2980b9;
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .worked-example h3 { color: #1a6fa0; margin-bottom: 0.6rem; font-size: 1rem; }
+    .step { margin: 0.4rem 0; font-size: 0.95rem; color: #333; }
+    .step strong { color: #1a6fa0; }
+    .step-label {
+      display: inline-block;
+      background: #2980b9;
+      color: white;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      padding: 0.1rem 0.4rem;
+      margin-right: 0.4rem;
+    }
+    .rule-box {
+      background: #eaf7ea;
+      border-left: 4px solid #27ae60;
+      border-radius: 0 8px 8px 0;
+      padding: 0.8rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      color: #1e5e2e;
+    }
+
+    /* Reverse arrow diagram */
+    .reverse-diagram {
+      background: white;
+      border: 1px solid #c9e4f7;
+      border-radius: 8px;
+      padding: 0.9rem 1.3rem;
+      margin: 0.8rem 0;
+      display: inline-block;
+    }
+    .rev-row {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-size: 1rem;
+      color: #2c3e50;
+    }
+    .rev-arrow-expand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.75rem;
+      color: #2980b9;
+      gap: 0.1rem;
+    }
+    .rev-arrow-factorise {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.75rem;
+      color: #e67e22;
+      gap: 0.1rem;
+    }
+    .rev-arrow-expand .arrow-shaft,
+    .rev-arrow-factorise .arrow-shaft {
+      width: 60px;
+      height: 2px;
+      background: currentColor;
+      position: relative;
+    }
+    .rev-arrow-expand .arrow-shaft::after {
+      content: '';
+      position: absolute;
+      right: -1px;
+      top: -4px;
+      border-left: 8px solid currentColor;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+    }
+    .rev-arrow-factorise .arrow-shaft::before {
+      content: '';
+      position: absolute;
+      left: -1px;
+      top: -4px;
+      border-right: 8px solid currentColor;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+    }
+
+    .question-block {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      margin: 0.75rem 0;
+    }
+    .question-top {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+    }
+    .question-top label { font-size: 1.05rem; }
+    .answer-template {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+      font-size: 1rem;
+      color: #333;
+    }
+    .answer-template input[type="number"] {
+      width: 56px;
+      padding: 0.35rem 0.4rem;
+      font-size: 1rem;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      text-align: center;
+      -moz-appearance: textfield;
+    }
+    .answer-template input[type="number"]::-webkit-outer-spin-button,
+    .answer-template input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .answer-template input[type="number"]:focus { outline: none; border-color: #2980b9; }
+    .answer-template .var-label { font-style: italic; }
+    .answer-template .sep { color: #888; font-size: 0.95rem; }
+    .answer-template .paren { font-size: 1.2rem; color: #555; }
+    .feedback { font-size: 0.9rem; font-weight: 600; display: block; margin-top: 0.4rem; }
+    .feedback.correct { color: #27ae60; }
+    .feedback.incorrect { color: #e74c3c; }
+    .challenge-label {
+      font-size: 0.78rem;
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffc107;
+      border-radius: 12px;
+      padding: 0.15rem 0.55rem;
+      white-space: nowrap;
+    }
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin: 1.2rem 0 0.4rem;
+    }
+    .instructions-note {
+      font-size: 0.88rem;
+      color: #555;
+      background: #f8f9fa;
+      border-radius: 6px;
+      padding: 0.5rem 0.8rem;
+      margin: 0.5rem 0 0.9rem;
+      border: 1px solid #e0e0e0;
+    }
+    .check-btn {
+      display: inline-block;
+      margin-top: 1.2rem;
+      padding: 0.65rem 1.6rem;
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    .check-btn:hover { background-color: #1f6da0; }
+    .score-box {
+      margin-top: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      display: none;
+    }
+    .score-box.show { display: block; }
+    .score-box.great { background: #eafaf1; color: #1e8449; border: 1px solid #a9dfbf; }
+    .score-box.ok    { background: #fef9e7; color: #9a7d0a; border: 1px solid #f9e79f; }
+    .score-box.poor  { background: #fdedec; color: #c0392b; border: 1px solid #f5b7b1; }
+    .section-divider { border: none; border-top: 2px dashed #ddd; margin: 1.5rem 0; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Factorising</h1>
+    <p>Unit 2: Algebra</p>
+  </header>
+
+  <nav class="breadcrumb">
+    <a href="../../index.html">Home</a>
+    <span>›</span>
+    <a href="../../units/unit-2.html">Unit 2</a>
+    <span>›</span>
+    Exercise 3
+  </nav>
+
+  <main>
+    <div class="exercise-area">
+
+      <h2>Worked Examples</h2>
+
+      <div class="rule-box">
+        <strong>Rule:</strong> Factorising is the reverse of expanding. We look for the <strong>Highest Common Factor (HCF)</strong> of all terms and take it outside a bracket.
+      </div>
+
+      <!-- Visual: reverse arrow diagram -->
+      <div class="reverse-diagram">
+        <div class="rev-row">
+          <span>\(a(b + c)\)</span>
+          <div class="rev-arrow-expand">
+            <div class="arrow-shaft"></div>
+            <span>Expanding</span>
+          </div>
+          <span>\(ab + ac\)</span>
+        </div>
+        <div class="rev-row" style="margin-top:0.5rem;">
+          <span>\(a(b + c)\)</span>
+          <div class="rev-arrow-factorise">
+            <div class="arrow-shaft"></div>
+            <span>Factorising</span>
+          </div>
+          <span>\(ab + ac\)</span>
+        </div>
+      </div>
+
+      <!-- Example 1 -->
+      <div class="worked-example">
+        <h3>Example 1 &mdash; \(6a + 9\)</h3>
+
+        <p class="step"><span class="step-label">Step 1</span>
+          List factors of 6: 1, 2, 3, 6. &nbsp; List factors of 9: 1, 3, 9. &nbsp; <strong>HCF = 3</strong>
+        </p>
+        <p class="step"><span class="step-label">Step 2</span>
+          Rewrite each term as a multiple of 3: &nbsp; \(6a + 9 = 3 \times 2a + 3 \times 3\)
+        </p>
+        <p class="step"><span class="step-label">Step 3</span>
+          Take the HCF outside: &nbsp; \(= 3(2a + 3)\)
+        </p>
+        <p class="step"><span class="step-label">Check</span>
+          Expand to verify: \(3(2a + 3) = 6a + 9\) &#10003;
+        </p>
+        <p class="step"><strong>Answer: \(3(2a + 3)\)</strong></p>
+      </div>
+
+      <!-- Example 2 -->
+      <div class="worked-example">
+        <h3>Example 2 &mdash; \(12p - 8\)</h3>
+
+        <p class="step"><span class="step-label">Step 1</span>
+          HCF of 12 and 8 = <strong>4</strong>
+        </p>
+        <p class="step"><span class="step-label">Step 2</span>
+          \(12p - 8 = 4 \times 3p - 4 \times 2 = 4(3p - 2)\)
+        </p>
+        <p class="step"><strong>Answer: \(4(3p - 2)\)</strong></p>
+      </div>
+
+      <!-- Example 3: two variables -->
+      <div class="worked-example">
+        <h3>Example 3 &mdash; Two variables: \(15m + 10n\)</h3>
+
+        <p class="step"><span class="step-label">Step 1</span>
+          HCF of 15 and 10 = <strong>5</strong>
+        </p>
+        <p class="step"><span class="step-label">Step 2</span>
+          \(15m + 10n = 5 \times 3m + 5 \times 2n = 5(3m + 2n)\)
+        </p>
+        <p class="step"><strong>Answer: \(5(3m + 2n)\)</strong></p>
+      </div>
+
+      <hr class="section-divider" />
+
+      <h2>Your Turn</h2>
+      <p style="font-size:0.9rem; color:#666; margin-bottom:0.6rem;">Find the HCF and the terms inside the bracket. Fill in all three boxes per question, then click <em>Check Answers</em>.</p>
+
+      <div class="instructions-note">
+        Use negative numbers for subtraction terms inside the bracket (e.g. for \(6b - 9 = 3(2b - 3)\), enter HCF&nbsp;=&nbsp;3, first term&nbsp;=&nbsp;2, second term&nbsp;=&nbsp;&minus;3). Equivalent factorisations with the same HCF &times; terms will also be accepted.
+      </div>
+
+      <form id="exercise-form">
+
+        <div class="section-title">Questions 1&ndash;5: Single Variable</div>
+
+        <!-- Q1: 4a + 8 = 4(a + 2) -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>1. &nbsp; \(4a + 8\)</label>
+          </div>
+          <div class="answer-template">
+            <input type="number" step="1" id="q1h" placeholder="HCF" style="width:56px;" />
+            <span class="paren">(</span>
+            <input type="number" step="1" id="q1c" placeholder="?" />
+            <span class="var-label">\(a\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q1k" placeholder="?" />
+            <span class="paren">)</span>
+          </div>
+          <span class="feedback" id="f1"></span>
+        </div>
+
+        <!-- Q2: 6b − 9 = 3(2b − 3) -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>2. &nbsp; \(6b - 9\)</label>
+          </div>
+          <div class="answer-template">
+            <input type="number" step="1" id="q2h" placeholder="HCF" style="width:56px;" />
+            <span class="paren">(</span>
+            <input type="number" step="1" id="q2c" placeholder="?" />
+            <span class="var-label">\(b\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q2k" placeholder="?" />
+            <span class="paren">)</span>
+          </div>
+          <span class="feedback" id="f2"></span>
+        </div>
+
+        <!-- Q3: 10m + 15 = 5(2m + 3) -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>3. &nbsp; \(10m + 15\)</label>
+          </div>
+          <div class="answer-template">
+            <input type="number" step="1" id="q3h" placeholder="HCF" style="width:56px;" />
+            <span class="paren">(</span>
+            <input type="number" step="1" id="q3c" placeholder="?" />
+            <span class="var-label">\(m\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q3k" placeholder="?" />
+            <span class="paren">)</span>
+          </div>
+          <span class="feedback" id="f3"></span>
+        </div>
+
+        <!-- Q4: 12p − 8 = 4(3p − 2) -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>4. &nbsp; \(12p - 8\)</label>
+          </div>
+          <div class="answer-template">
+            <input type="number" step="1" id="q4h" placeholder="HCF" style="width:56px;" />
+            <span class="paren">(</span>
+            <input type="number" step="1" id="q4c" placeholder="?" />
+            <span class="var-label">\(p\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q4k" placeholder="?" />
+            <span class="paren">)</span>
+          </div>
+          <span class="feedback" id="f4"></span>
+        </div>
+
+        <!-- Q5: 7t + 14 = 7(t + 2) -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>5. &nbsp; \(7t + 14\)</label>
+          </div>
+          <div class="answer-template">
+            <input type="number" step="1" id="q5h" placeholder="HCF" style="width:56px;" />
+            <span class="paren">(</span>
+            <input type="number" step="1" id="q5c" placeholder="?" />
+            <span class="var-label">\(t\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q5k" placeholder="?" />
+            <span class="paren">)</span>
+          </div>
+          <span class="feedback" id="f5"></span>
+        </div>
+
+        <div class="section-title">Challenge: Two Variables &#11088;</div>
+
+        <!-- Q6: 15n − 10 = 5(3n − 2) -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>6. &nbsp; \(15n - 10\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label>
+          </div>
+          <div class="answer-template">
+            <input type="number" step="1" id="q6h" placeholder="HCF" style="width:56px;" />
+            <span class="paren">(</span>
+            <input type="number" step="1" id="q6c" placeholder="?" />
+            <span class="var-label">\(n\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q6k" placeholder="?" />
+            <span class="paren">)</span>
+          </div>
+          <span class="feedback" id="f6"></span>
+        </div>
+
+        <!-- Q7: 9x + 12y = 3(3x + 4y) -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>7. &nbsp; \(9x + 12y\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label>
+          </div>
+          <div class="answer-template">
+            <input type="number" step="1" id="q7h" placeholder="HCF" style="width:56px;" />
+            <span class="paren">(</span>
+            <input type="number" step="1" id="q7c" placeholder="?" />
+            <span class="var-label">\(x\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q7k" placeholder="?" />
+            <span class="var-label">\(y\)</span>
+            <span class="paren">)</span>
+          </div>
+          <span class="feedback" id="f7"></span>
+        </div>
+
+        <!-- Q8: 8a − 12b = 4(2a − 3b) -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>8. &nbsp; \(8a - 12b\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label>
+          </div>
+          <div class="answer-template">
+            <input type="number" step="1" id="q8h" placeholder="HCF" style="width:56px;" />
+            <span class="paren">(</span>
+            <input type="number" step="1" id="q8c" placeholder="?" />
+            <span class="var-label">\(a\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q8k" placeholder="?" />
+            <span class="var-label">\(b\)</span>
+            <span class="paren">)</span>
+          </div>
+          <span class="feedback" id="f8"></span>
+        </div>
+
+        <!-- Q9: 14m + 21 = 7(2m + 3) -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>9. &nbsp; \(14m + 21\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label>
+          </div>
+          <div class="answer-template">
+            <input type="number" step="1" id="q9h" placeholder="HCF" style="width:56px;" />
+            <span class="paren">(</span>
+            <input type="number" step="1" id="q9c" placeholder="?" />
+            <span class="var-label">\(m\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q9k" placeholder="?" />
+            <span class="paren">)</span>
+          </div>
+          <span class="feedback" id="f9"></span>
+        </div>
+
+        <!-- Q10: 16k − 24j = 8(2k − 3j) -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>10. &nbsp; \(16k - 24j\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label>
+          </div>
+          <div class="answer-template">
+            <input type="number" step="1" id="q10h" placeholder="HCF" style="width:56px;" />
+            <span class="paren">(</span>
+            <input type="number" step="1" id="q10c" placeholder="?" />
+            <span class="var-label">\(k\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q10k" placeholder="?" />
+            <span class="var-label">\(j\)</span>
+            <span class="paren">)</span>
+          </div>
+          <span class="feedback" id="f10"></span>
+        </div>
+
+        <button type="button" class="check-btn" onclick="checkAnswers()">Check Answers</button>
+      </form>
+
+      <div class="score-box" id="score-box"></div>
+
+    </div>
+
+    <a class="btn" href="../../units/unit-2.html">&#8592; Back to Unit 2</a>
+  </main>
+
+  <footer>
+    Maths Revision &mdash; Unit 2: Algebra
+  </footer>
+
+  <script>
+    /*
+      Each question: { term1: coeff of first variable, term2: coeff of second variable/constant }
+      Validation: accept any factorisation where HCF * coeff1 == original coeff1 and HCF * coeff2 == original coeff2
+      i.e. we check that the product reconstructs the original expression, not just the canonical answer.
+    */
+
+    // original coefficients [coeff_var, coeff_const_or_var2]
+    const originals = {
+      q1:  [4, 8],
+      q2:  [6, -9],
+      q3:  [10, 15],
+      q4:  [12, -8],
+      q5:  [7, 14],
+      q6:  [15, -10],
+      q7:  [9, 12],
+      q8:  [8, -12],
+      q9:  [14, 21],
+      q10: [16, -24]
+    };
+
+    // canonical answers for display in feedback [hcf, coeff1, coeff2]
+    const canonical = {
+      q1:  [4, 1, 2],
+      q2:  [3, 2, -3],
+      q3:  [5, 2, 3],
+      q4:  [4, 3, -2],
+      q5:  [7, 1, 2],
+      q6:  [5, 3, -2],
+      q7:  [3, 3, 4],
+      q8:  [4, 2, -3],
+      q9:  [7, 2, 3],
+      q10: [8, 2, -3]
+    };
+
+    const inputIds = {
+      q1:  ['q1h',  'q1c',  'q1k'],
+      q2:  ['q2h',  'q2c',  'q2k'],
+      q3:  ['q3h',  'q3c',  'q3k'],
+      q4:  ['q4h',  'q4c',  'q4k'],
+      q5:  ['q5h',  'q5c',  'q5k'],
+      q6:  ['q6h',  'q6c',  'q6k'],
+      q7:  ['q7h',  'q7c',  'q7k'],
+      q8:  ['q8h',  'q8c',  'q8k'],
+      q9:  ['q9h',  'q9c',  'q9k'],
+      q10: ['q10h', 'q10c', 'q10k']
+    };
+
+    function checkAnswers() {
+      let correct = 0;
+      const total = Object.keys(originals).length;
+
+      for (const [qKey, orig] of Object.entries(originals)) {
+        const num = qKey.slice(1);
+        const ids = inputIds[qKey];
+        const feedback = document.getElementById('f' + num);
+
+        const hEl = document.getElementById(ids[0]);
+        const c1El = document.getElementById(ids[1]);
+        const c2El = document.getElementById(ids[2]);
+
+        const h  = parseInt(hEl.value, 10);
+        const c1 = parseInt(c1El.value, 10);
+        const c2 = parseInt(c2El.value, 10);
+
+        // Valid if: h > 0, h*c1 == orig[0], h*c2 == orig[1]
+        const valid = !isNaN(h) && !isNaN(c1) && !isNaN(c2)
+                      && h > 0
+                      && (h * c1 === orig[0])
+                      && (h * c2 === orig[1]);
+
+        if (valid) {
+          feedback.textContent = '\u2713 Correct!';
+          feedback.className = 'feedback correct';
+          [hEl, c1El, c2El].forEach(el => el.style.borderColor = '#27ae60');
+          correct++;
+        } else {
+          const can = canonical[qKey];
+          feedback.textContent = '\u2717 Expected: ' + can[0] + '(' + can[1] + ' \u00D7 var + ' + can[2] + ')';
+          feedback.className = 'feedback incorrect';
+          [hEl, c1El, c2El].forEach(el => el.style.borderColor = '#e74c3c');
+        }
+      }
+
+      const box = document.getElementById('score-box');
+      box.textContent = 'You got ' + correct + ' out of ' + total + '.';
+      box.className = 'score-box show ' + (correct === total ? 'great' : correct >= 7 ? 'ok' : 'poor');
+      if (correct === total) box.textContent += ' Excellent work!';
+      else if (correct >= 7) box.textContent += ' Good effort \u2014 review the ones you missed.';
+      else box.textContent += ' Keep practising \u2014 re-read the worked examples and try again.';
+    }
+  </script>
+
+</body>
+</html>

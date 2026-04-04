@@ -3,13 +3,195 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Unit 2 – Exercise 2</title>
+  <title>Unit 2 – Expanding Brackets</title>
   <link rel="stylesheet" href="../../css/style.css" />
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+  <style>
+    .worked-example {
+      background: #eaf4fb;
+      border-left: 4px solid #2980b9;
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .worked-example h3 { color: #1a6fa0; margin-bottom: 0.6rem; font-size: 1rem; }
+    .step { margin: 0.4rem 0; font-size: 0.95rem; color: #333; }
+    .step strong { color: #1a6fa0; }
+    .step-label {
+      display: inline-block;
+      background: #2980b9;
+      color: white;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      padding: 0.1rem 0.4rem;
+      margin-right: 0.4rem;
+    }
+    .rule-box {
+      background: #eaf7ea;
+      border-left: 4px solid #27ae60;
+      border-radius: 0 8px 8px 0;
+      padding: 0.8rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      color: #1e5e2e;
+    }
+
+    /* Arrow expansion diagram */
+    .expansion-diagram {
+      background: white;
+      border: 1px solid #c9e4f7;
+      border-radius: 8px;
+      padding: 1rem 1.4rem;
+      margin: 0.8rem 0;
+      display: inline-block;
+      min-width: 240px;
+    }
+    .exp-expression {
+      font-size: 1.3rem;
+      font-family: 'Segoe UI', sans-serif;
+      color: #2c3e50;
+      letter-spacing: 0.03em;
+      position: relative;
+    }
+    .exp-multiplier { color: #8e44ad; font-weight: 700; }
+    .exp-term1 { color: #2980b9; font-weight: 700; }
+    .exp-term2 { color: #e67e22; font-weight: 700; }
+    .exp-arrows {
+      display: flex;
+      gap: 2.5rem;
+      margin: 0.4rem 0 0.2rem 0.5rem;
+    }
+    .exp-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.1rem;
+      font-size: 0.8rem;
+      color: #555;
+    }
+    .arrow-line {
+      width: 2px;
+      height: 22px;
+      background: #aaa;
+    }
+    .arrow-head {
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+    .exp-products {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 0.3rem;
+    }
+    .exp-products .p1 { color: #2980b9; font-weight: 600; }
+    .exp-products .p2 { color: #e67e22; font-weight: 600; }
+
+    /* Color-coded double-bracket terms */
+    .from-bracket1 { color: #2980b9; font-weight: 600; }
+    .from-bracket2 { color: #e67e22; font-weight: 600; }
+
+    .question-block {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      margin: 0.75rem 0;
+    }
+    .question-top {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+    }
+    .question-top label { font-size: 1.05rem; }
+    .answer-template {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+      font-size: 1rem;
+      color: #333;
+    }
+    .answer-template input[type="number"] {
+      width: 62px;
+      padding: 0.35rem 0.4rem;
+      font-size: 1rem;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      text-align: center;
+      -moz-appearance: textfield;
+    }
+    .answer-template input[type="number"]::-webkit-outer-spin-button,
+    .answer-template input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .answer-template input[type="number"]:focus { outline: none; border-color: #2980b9; }
+    .answer-template .var-label { font-style: italic; }
+    .answer-template .sep { color: #888; font-size: 0.95rem; }
+    .feedback { font-size: 0.9rem; font-weight: 600; display: block; margin-top: 0.4rem; }
+    .feedback.correct { color: #27ae60; }
+    .feedback.incorrect { color: #e74c3c; }
+    .challenge-label {
+      font-size: 0.78rem;
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffc107;
+      border-radius: 12px;
+      padding: 0.15rem 0.55rem;
+      white-space: nowrap;
+    }
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin: 1.2rem 0 0.4rem;
+    }
+    .instructions-note {
+      font-size: 0.88rem;
+      color: #555;
+      background: #f8f9fa;
+      border-radius: 6px;
+      padding: 0.5rem 0.8rem;
+      margin: 0.5rem 0 0.9rem;
+      border: 1px solid #e0e0e0;
+    }
+    .check-btn {
+      display: inline-block;
+      margin-top: 1.2rem;
+      padding: 0.65rem 1.6rem;
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    .check-btn:hover { background-color: #1f6da0; }
+    .score-box {
+      margin-top: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      display: none;
+    }
+    .score-box.show { display: block; }
+    .score-box.great { background: #eafaf1; color: #1e8449; border: 1px solid #a9dfbf; }
+    .score-box.ok    { background: #fef9e7; color: #9a7d0a; border: 1px solid #f9e79f; }
+    .score-box.poor  { background: #fdedec; color: #c0392b; border: 1px solid #f5b7b1; }
+    .section-divider { border: none; border-top: 2px dashed #ddd; margin: 1.5rem 0; }
+  </style>
 </head>
 <body>
 
   <header>
-    <h1>📝 Exercise 2</h1>
+    <h1>Expanding Brackets</h1>
     <p>Unit 2: Algebra</p>
   </header>
 
@@ -23,23 +205,317 @@
 
   <main>
     <div class="exercise-area">
-      <h2>Question</h2>
-      <div class="placeholder-box">
-        Exercise question goes here.
+
+      <h2>Worked Examples</h2>
+
+      <div class="rule-box">
+        <strong>Rule:</strong> Each term inside the bracket gets multiplied by the number outside. Be careful with signs!
       </div>
 
-      <h2>Your Answer</h2>
-      <div class="placeholder-box">
-        Answer input / interactive element goes here.
+      <!-- Example 1: single bracket with arrow diagram -->
+      <div class="worked-example">
+        <h3>Example 1 &mdash; Single bracket: \(3(2a + 5)\)</h3>
+
+        <p class="step"><span class="step-label">Step 1</span> The multiplier outside acts on every term inside.</p>
+
+        <div class="expansion-diagram">
+          <div class="exp-expression">
+            <span class="exp-multiplier">3</span>(<span class="exp-term1">2a</span> + <span class="exp-term2">5</span>)
+          </div>
+          <div class="exp-arrows">
+            <div class="exp-arrow">
+              <div class="arrow-line"></div>
+              <div class="arrow-head">&#8595;</div>
+            </div>
+            <div class="exp-arrow" style="margin-left:1.1rem;">
+              <div class="arrow-line"></div>
+              <div class="arrow-head">&#8595;</div>
+            </div>
+          </div>
+          <div class="exp-products">
+            <span class="p1">3 &times; 2a = 6a</span> &nbsp;&nbsp; <span class="p2">3 &times; 5 = 15</span>
+          </div>
+        </div>
+
+        <p class="step"><span class="step-label">Step 2</span> Write the products: \(6a + 15\)</p>
+        <p class="step"><strong>Answer: \(6a + 15\)</strong></p>
       </div>
+
+      <!-- Example 2: negative -->
+      <div class="worked-example">
+        <h3>Example 2 &mdash; With a negative: \(4(3p - 2)\)</h3>
+
+        <p class="step"><span class="step-label">Step 1</span> Multiply each term inside the bracket by 4.</p>
+        <p class="step">\(4 \times 3p = 12p\) &nbsp;&nbsp; \(4 \times (-2) = -8\)</p>
+        <p class="step"><span class="step-label">Step 2</span> Combine the results.</p>
+        <p class="step"><strong>Answer: \(12p - 8\)</strong></p>
+      </div>
+
+      <!-- Example 3: double bracket, expand and collect -->
+      <div class="worked-example">
+        <h3>Example 3 &mdash; Expand and collect: \(2(x + 3) + 3(x - 1)\)</h3>
+
+        <p class="step"><span class="step-label">Step 1</span> Expand each bracket separately, keeping track of which terms come from which bracket.</p>
+        <p class="step">
+          From first bracket:&nbsp; <span class="from-bracket1">\(2 \times x = 2x\)</span>&nbsp; and&nbsp; <span class="from-bracket1">\(2 \times 3 = 6\)</span><br />
+          From second bracket:&nbsp; <span class="from-bracket2">\(3 \times x = 3x\)</span>&nbsp; and&nbsp; <span class="from-bracket2">\(3 \times (-1) = -3\)</span>
+        </p>
+
+        <p class="step"><span class="step-label">Step 2</span>
+          Write them all out:
+          <span class="from-bracket1">\(2x + 6\)</span> + <span class="from-bracket2">\(3x - 3\)</span>
+        </p>
+
+        <p class="step"><span class="step-label">Step 3</span> Collect like terms: \((2x + 3x) + (6 - 3) = 5x + 3\)</p>
+        <p class="step"><strong>Answer: \(5x + 3\)</strong></p>
+      </div>
+
+      <hr class="section-divider" />
+
+      <h2>Your Turn</h2>
+      <p style="font-size:0.9rem; color:#666; margin-bottom:0.6rem;">Fill in the coefficient and constant for each expanded answer. Click <em>Check Answers</em> when you are done.</p>
+
+      <div class="instructions-note">
+        Use negative numbers where the constant is negative (e.g. type <code>-2</code> for &minus;2). The + signs in the template are separators only.
+      </div>
+
+      <form id="exercise-form">
+
+        <div class="section-title">Questions 1&ndash;5: Single Bracket</div>
+
+        <!-- Q1: 3(a + 2) = 3a + 6 -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>1. &nbsp; \(3(a + 2)\)</label>
+          </div>
+          <div class="answer-template">
+            <span>=</span>
+            <input type="number" step="1" id="q1a" placeholder="?" />
+            <span class="var-label">\(a\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q1b" placeholder="?" />
+          </div>
+          <span class="feedback" id="f1"></span>
+        </div>
+
+        <!-- Q2: 2(4b − 1) = 8b − 2 -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>2. &nbsp; \(2(4b - 1)\)</label>
+          </div>
+          <div class="answer-template">
+            <span>=</span>
+            <input type="number" step="1" id="q2a" placeholder="?" />
+            <span class="var-label">\(b\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q2b" placeholder="?" />
+          </div>
+          <span class="feedback" id="f2"></span>
+        </div>
+
+        <!-- Q3: 5(2m + 3) = 10m + 15 -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>3. &nbsp; \(5(2m + 3)\)</label>
+          </div>
+          <div class="answer-template">
+            <span>=</span>
+            <input type="number" step="1" id="q3a" placeholder="?" />
+            <span class="var-label">\(m\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q3b" placeholder="?" />
+          </div>
+          <span class="feedback" id="f3"></span>
+        </div>
+
+        <!-- Q4: 4(t + 5) = 4t + 20 -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>4. &nbsp; \(4(t + 5)\)</label>
+          </div>
+          <div class="answer-template">
+            <span>=</span>
+            <input type="number" step="1" id="q4a" placeholder="?" />
+            <span class="var-label">\(t\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q4b" placeholder="?" />
+          </div>
+          <span class="feedback" id="f4"></span>
+        </div>
+
+        <!-- Q5: 6(3p − 4) = 18p − 24 -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>5. &nbsp; \(6(3p - 4)\)</label>
+          </div>
+          <div class="answer-template">
+            <span>=</span>
+            <input type="number" step="1" id="q5a" placeholder="?" />
+            <span class="var-label">\(p\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q5b" placeholder="?" />
+          </div>
+          <span class="feedback" id="f5"></span>
+        </div>
+
+        <div class="section-title">Challenge: Expand and Collect &#11088;</div>
+
+        <!-- Q6: 2(x + 3) + 4(x + 1) = 6x + 10 -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>6. &nbsp; \(2(x + 3) + 4(x + 1)\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label>
+          </div>
+          <div class="answer-template">
+            <span>=</span>
+            <input type="number" step="1" id="q6a" placeholder="?" />
+            <span class="var-label">\(x\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q6b" placeholder="?" />
+          </div>
+          <span class="feedback" id="f6"></span>
+        </div>
+
+        <!-- Q7: 3(2a + 1) + 2(a + 4) = 8a + 11 -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>7. &nbsp; \(3(2a + 1) + 2(a + 4)\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label>
+          </div>
+          <div class="answer-template">
+            <span>=</span>
+            <input type="number" step="1" id="q7a" placeholder="?" />
+            <span class="var-label">\(a\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q7b" placeholder="?" />
+          </div>
+          <span class="feedback" id="f7"></span>
+        </div>
+
+        <!-- Q8: 5(p − 2) + 3(2p + 1) = 11p − 7 -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>8. &nbsp; \(5(p - 2) + 3(2p + 1)\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label>
+          </div>
+          <div class="answer-template">
+            <span>=</span>
+            <input type="number" step="1" id="q8a" placeholder="?" />
+            <span class="var-label">\(p\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q8b" placeholder="?" />
+          </div>
+          <span class="feedback" id="f8"></span>
+        </div>
+
+        <!-- Q9: 4(3n − 2) − 2(n + 5) = 10n − 18 -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>9. &nbsp; \(4(3n - 2) - 2(n + 5)\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label>
+          </div>
+          <div class="answer-template">
+            <span>=</span>
+            <input type="number" step="1" id="q9a" placeholder="?" />
+            <span class="var-label">\(n\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q9b" placeholder="?" />
+          </div>
+          <span class="feedback" id="f9"></span>
+        </div>
+
+        <!-- Q10: 3(4m − 1) − 2(5m − 3) = 2m + 3 -->
+        <div class="question-block">
+          <div class="question-top">
+            <label>10. &nbsp; \(3(4m - 1) - 2(5m - 3)\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label>
+          </div>
+          <div class="answer-template">
+            <span>=</span>
+            <input type="number" step="1" id="q10a" placeholder="?" />
+            <span class="var-label">\(m\)</span>
+            <span class="sep">+</span>
+            <input type="number" step="1" id="q10b" placeholder="?" />
+          </div>
+          <span class="feedback" id="f10"></span>
+        </div>
+
+        <button type="button" class="check-btn" onclick="checkAnswers()">Check Answers</button>
+      </form>
+
+      <div class="score-box" id="score-box"></div>
+
     </div>
 
-    <a class="btn" href="../../units/unit-2.html">← Back to Unit 2</a>
+    <a class="btn" href="../../units/unit-2.html">&#8592; Back to Unit 2</a>
   </main>
 
   <footer>
-    Maths Revision &mdash; Placeholder content
+    Maths Revision &mdash; Unit 2: Algebra
   </footer>
+
+  <script>
+    // [coeff of variable, constant]
+    const answers = {
+      q1:  [3,   6],
+      q2:  [8,  -2],
+      q3:  [10, 15],
+      q4:  [4,  20],
+      q5:  [18, -24],
+      q6:  [6,  10],
+      q7:  [8,  11],
+      q8:  [11, -7],
+      q9:  [10, -18],
+      q10: [2,   3]
+    };
+
+    const inputIds = {
+      q1:  ['q1a',  'q1b'],
+      q2:  ['q2a',  'q2b'],
+      q3:  ['q3a',  'q3b'],
+      q4:  ['q4a',  'q4b'],
+      q5:  ['q5a',  'q5b'],
+      q6:  ['q6a',  'q6b'],
+      q7:  ['q7a',  'q7b'],
+      q8:  ['q8a',  'q8b'],
+      q9:  ['q9a',  'q9b'],
+      q10: ['q10a', 'q10b']
+    };
+
+    function checkAnswers() {
+      let correct = 0;
+      const total = Object.keys(answers).length;
+
+      for (const [qKey, expected] of Object.entries(answers)) {
+        const num = qKey.slice(1);
+        const ids = inputIds[qKey];
+        const feedback = document.getElementById('f' + num);
+        let qCorrect = true;
+
+        for (let i = 0; i < ids.length; i++) {
+          const input = document.getElementById(ids[i]);
+          const val = parseInt(input.value, 10);
+          if (isNaN(val) || val !== expected[i]) {
+            qCorrect = false;
+            input.style.borderColor = '#e74c3c';
+          } else {
+            input.style.borderColor = '#27ae60';
+          }
+        }
+
+        if (qCorrect) {
+          feedback.textContent = '\u2713 Correct!';
+          feedback.className = 'feedback correct';
+          correct++;
+        } else {
+          feedback.textContent = '\u2717 Answer: coefficient = ' + expected[0] + ', constant = ' + expected[1];
+          feedback.className = 'feedback incorrect';
+        }
+      }
+
+      const box = document.getElementById('score-box');
+      box.textContent = 'You got ' + correct + ' out of ' + total + '.';
+      box.className = 'score-box show ' + (correct === total ? 'great' : correct >= 7 ? 'ok' : 'poor');
+      if (correct === total) box.textContent += ' Excellent work!';
+      else if (correct >= 7) box.textContent += ' Good effort \u2014 review the ones you missed.';
+      else box.textContent += ' Keep practising \u2014 re-read the worked examples and try again.';
+    }
+  </script>
 
 </body>
 </html>
