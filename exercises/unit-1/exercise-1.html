@@ -3,13 +3,119 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Unit 1 – Exercise 1</title>
+  <title>Unit 1 – Adding & Subtracting Decimals</title>
   <link rel="stylesheet" href="../../css/style.css" />
+  <style>
+    .worked-example {
+      background: #eaf4fb;
+      border-left: 4px solid #2980b9;
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .worked-example h3 {
+      color: #1a6fa0;
+      margin-bottom: 0.6rem;
+      font-size: 1rem;
+    }
+    .step {
+      margin: 0.4rem 0;
+      font-size: 0.95rem;
+      color: #333;
+    }
+    .step strong { color: #1a6fa0; }
+    .step-label {
+      display: inline-block;
+      background: #2980b9;
+      color: white;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      padding: 0.1rem 0.4rem;
+      margin-right: 0.4rem;
+    }
+    .aligned-calc {
+      font-family: monospace;
+      font-size: 1.05rem;
+      background: white;
+      border: 1px solid #c9e4f7;
+      border-radius: 6px;
+      padding: 0.6rem 1rem;
+      display: inline-block;
+      margin: 0.5rem 0;
+    }
+    .aligned-calc .line { display: block; }
+    .aligned-calc .operator { color: #2980b9; font-weight: bold; }
+    .aligned-calc .result-line { border-top: 2px solid #333; padding-top: 0.2rem; font-weight: bold; }
+    .question-block {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      margin: 0.75rem 0;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .question-block label {
+      font-size: 1.05rem;
+      flex: 1;
+      min-width: 180px;
+    }
+    .question-block input[type="text"] {
+      width: 90px;
+      padding: 0.4rem 0.6rem;
+      font-size: 1rem;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      text-align: center;
+    }
+    .question-block input[type="text"]:focus {
+      outline: none;
+      border-color: #2980b9;
+    }
+    .feedback {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .feedback.correct { color: #27ae60; }
+    .feedback.incorrect { color: #e74c3c; }
+    .check-btn {
+      display: inline-block;
+      margin-top: 1.2rem;
+      padding: 0.65rem 1.6rem;
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    .check-btn:hover { background-color: #1f6da0; }
+    .score-box {
+      margin-top: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      display: none;
+    }
+    .score-box.show { display: block; }
+    .score-box.great { background: #eafaf1; color: #1e8449; border: 1px solid #a9dfbf; }
+    .score-box.ok    { background: #fef9e7; color: #9a7d0a; border: 1px solid #f9e79f; }
+    .score-box.poor  { background: #fdedec; color: #c0392b; border: 1px solid #f5b7b1; }
+    .section-divider {
+      border: none;
+      border-top: 2px dashed #ddd;
+      margin: 1.5rem 0;
+    }
+  </style>
 </head>
 <body>
 
   <header>
-    <h1>📝 Exercise 1</h1>
+    <h1>➕ Adding & Subtracting Decimals</h1>
     <p>Unit 1: Number & Arithmetic</p>
   </header>
 
@@ -23,23 +129,124 @@
 
   <main>
     <div class="exercise-area">
-      <h2>Question</h2>
-      <div class="placeholder-box">
-        Exercise question goes here.
+
+      <!-- WORKED EXAMPLES -->
+      <h2>Worked Examples</h2>
+
+      <div class="worked-example">
+        <h3>Example 1 — Addition: 5.34 + 2.78</h3>
+        <p class="step"><span class="step-label">Step 1</span> Line up the decimal points.</p>
+        <div class="aligned-calc">
+          <span class="line">  5 . 3 4</span>
+          <span class="line"><span class="operator">+</span> 2 . 7 8</span>
+          <span class="line result-line">  8 . 1 2</span>
+        </div>
+        <p class="step"><span class="step-label">Step 2</span> Add each column right to left: 4+8=12 (write 2, carry 1), 3+7+1=11 (write 1, carry 1), 5+2+1=8.</p>
+        <p class="step"><strong>Answer: 8.12</strong></p>
       </div>
 
-      <h2>Your Answer</h2>
-      <div class="placeholder-box">
-        Answer input / interactive element goes here.
+      <div class="worked-example">
+        <h3>Example 2 — Subtraction: 9.61 − 4.37</h3>
+        <p class="step"><span class="step-label">Step 1</span> Line up the decimal points.</p>
+        <div class="aligned-calc">
+          <span class="line">  9 . 6 1</span>
+          <span class="line"><span class="operator">−</span> 4 . 3 7</span>
+          <span class="line result-line">  5 . 2 4</span>
+        </div>
+        <p class="step"><span class="step-label">Step 2</span> Subtract right to left: 1−7 (borrow → 11−7=4), 6−1−3=2, 9−4=5.</p>
+        <p class="step"><strong>Answer: 5.24</strong></p>
       </div>
+
+      <hr class="section-divider" />
+
+      <!-- EXERCISES -->
+      <h2>Your Turn</h2>
+      <p style="font-size:0.9rem; color:#666; margin-bottom:1rem;">Work out each answer and type it in. Click <em>Check Answers</em> when you're done.</p>
+
+      <form id="exercise-form">
+
+        <div class="question-block">
+          <label>1. &nbsp; 3.45 + 2.31 = </label>
+          <input type="text" id="q1" placeholder="?" autocomplete="off" />
+          <span class="feedback" id="f1"></span>
+        </div>
+
+        <div class="question-block">
+          <label>2. &nbsp; 7.82 − 3.41 = </label>
+          <input type="text" id="q2" placeholder="?" autocomplete="off" />
+          <span class="feedback" id="f2"></span>
+        </div>
+
+        <div class="question-block">
+          <label>3. &nbsp; 12.56 + 8.74 = </label>
+          <input type="text" id="q3" placeholder="?" autocomplete="off" />
+          <span class="feedback" id="f3"></span>
+        </div>
+
+        <div class="question-block">
+          <label>4. &nbsp; 20.00 − 13.67 = </label>
+          <input type="text" id="q4" placeholder="?" autocomplete="off" />
+          <span class="feedback" id="f4"></span>
+        </div>
+
+        <div class="question-block">
+          <label>5. &nbsp; 4.08 + 5.93 = </label>
+          <input type="text" id="q5" placeholder="?" autocomplete="off" />
+          <span class="feedback" id="f5"></span>
+        </div>
+
+        <button type="button" class="check-btn" onclick="checkAnswers()">Check Answers</button>
+      </form>
+
+      <div class="score-box" id="score-box"></div>
+
     </div>
 
     <a class="btn" href="../../units/unit-1.html">← Back to Unit 1</a>
   </main>
 
   <footer>
-    Maths Revision &mdash; Placeholder content
+    Maths Revision &mdash; Unit 1: Number & Arithmetic
   </footer>
+
+  <script>
+    const answers = {
+      q1: 5.76,
+      q2: 4.41,
+      q3: 21.30,
+      q4: 6.33,
+      q5: 10.01
+    };
+
+    function checkAnswers() {
+      let correct = 0;
+      const total = Object.keys(answers).length;
+
+      for (const [id, answer] of Object.entries(answers)) {
+        const input = document.getElementById(id);
+        const feedback = document.getElementById('f' + id.slice(1));
+        const val = parseFloat(input.value.trim());
+
+        if (!isNaN(val) && Math.abs(val - answer) < 0.001) {
+          feedback.textContent = '✓ Correct!';
+          feedback.className = 'feedback correct';
+          input.style.borderColor = '#27ae60';
+          correct++;
+        } else {
+          feedback.textContent = `✗ Answer: ${answer}`;
+          feedback.className = 'feedback incorrect';
+          input.style.borderColor = '#e74c3c';
+        }
+      }
+
+      const box = document.getElementById('score-box');
+      box.textContent = `You got ${correct} out of ${total}.`;
+      box.className = 'score-box show ' + (correct === total ? 'great' : correct >= 3 ? 'ok' : 'poor');
+      if (correct === total) box.textContent += ' Excellent work! 🎉';
+      else if (correct >= 3) box.textContent += ' Good effort — review the ones you missed.';
+      else box.textContent += ' Keep practising — re-read the worked examples and try again.';
+    }
+  </script>
 
 </body>
 </html>

@@ -3,13 +3,129 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Unit 1 – Exercise 2</title>
+  <title>Unit 1 – Multiplying Decimals</title>
   <link rel="stylesheet" href="../../css/style.css" />
+  <style>
+    .worked-example {
+      background: #eaf4fb;
+      border-left: 4px solid #2980b9;
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .worked-example h3 {
+      color: #1a6fa0;
+      margin-bottom: 0.6rem;
+      font-size: 1rem;
+    }
+    .step {
+      margin: 0.4rem 0;
+      font-size: 0.95rem;
+      color: #333;
+    }
+    .step strong { color: #1a6fa0; }
+    .step-label {
+      display: inline-block;
+      background: #2980b9;
+      color: white;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      padding: 0.1rem 0.4rem;
+      margin-right: 0.4rem;
+    }
+    .hint-box {
+      background: #fef9e7;
+      border-left: 4px solid #f1c40f;
+      border-radius: 0 8px 8px 0;
+      padding: 0.8rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      color: #7d6608;
+    }
+    .question-block {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      margin: 0.75rem 0;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .question-block label {
+      font-size: 1.05rem;
+      flex: 1;
+      min-width: 180px;
+    }
+    .question-block input[type="text"] {
+      width: 90px;
+      padding: 0.4rem 0.6rem;
+      font-size: 1rem;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      text-align: center;
+    }
+    .question-block input[type="text"]:focus {
+      outline: none;
+      border-color: #2980b9;
+    }
+    .feedback {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .feedback.correct { color: #27ae60; }
+    .feedback.incorrect { color: #e74c3c; }
+    .check-btn {
+      display: inline-block;
+      margin-top: 1.2rem;
+      padding: 0.65rem 1.6rem;
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    .check-btn:hover { background-color: #1f6da0; }
+    .score-box {
+      margin-top: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      display: none;
+    }
+    .score-box.show { display: block; }
+    .score-box.great { background: #eafaf1; color: #1e8449; border: 1px solid #a9dfbf; }
+    .score-box.ok    { background: #fef9e7; color: #9a7d0a; border: 1px solid #f9e79f; }
+    .score-box.poor  { background: #fdedec; color: #c0392b; border: 1px solid #f5b7b1; }
+    .section-divider {
+      border: none;
+      border-top: 2px dashed #ddd;
+      margin: 1.5rem 0;
+    }
+    .tag {
+      display: inline-block;
+      background: #2980b9;
+      color: white;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      padding: 0.1rem 0.5rem;
+      margin-right: 0.3rem;
+    }
+    .dp-count {
+      color: #999;
+      font-size: 0.85rem;
+      margin-left: 0.3rem;
+    }
+  </style>
 </head>
 <body>
 
   <header>
-    <h1>📝 Exercise 2</h1>
+    <h1>✖️ Multiplying Decimals</h1>
     <p>Unit 1: Number & Arithmetic</p>
   </header>
 
@@ -23,23 +139,122 @@
 
   <main>
     <div class="exercise-area">
-      <h2>Question</h2>
-      <div class="placeholder-box">
-        Exercise question goes here.
+
+      <!-- WORKED EXAMPLES -->
+      <h2>Worked Examples</h2>
+
+      <div class="hint-box">
+        💡 <strong>Key idea:</strong> Ignore the decimal points, multiply the whole numbers, then put the decimal point back in. Count the total number of decimal places in the question — your answer needs that many too.
       </div>
 
-      <h2>Your Answer</h2>
-      <div class="placeholder-box">
-        Answer input / interactive element goes here.
+      <div class="worked-example">
+        <h3>Example 1 — 2.4 × 1.5</h3>
+        <p class="step"><span class="step-label">Step 1</span> Remove decimals: treat as <strong>24 × 15</strong>.</p>
+        <p class="step"><span class="step-label">Step 2</span> Multiply: 24 × 15 = <strong>360</strong>.</p>
+        <p class="step"><span class="step-label">Step 3</span> Count decimal places: 2.4 has <strong>1</strong> d.p., 1.5 has <strong>1</strong> d.p. → total <strong>2</strong> d.p.</p>
+        <p class="step"><span class="step-label">Step 4</span> Place the decimal: 360 → <strong>3.60</strong></p>
+        <p class="step"><strong>Answer: 3.60</strong></p>
       </div>
+
+      <div class="worked-example">
+        <h3>Example 2 — 0.3 × 0.7</h3>
+        <p class="step"><span class="step-label">Step 1</span> Remove decimals: treat as <strong>3 × 7</strong>.</p>
+        <p class="step"><span class="step-label">Step 2</span> Multiply: 3 × 7 = <strong>21</strong>.</p>
+        <p class="step"><span class="step-label">Step 3</span> Count decimal places: 0.3 has <strong>1</strong> d.p., 0.7 has <strong>1</strong> d.p. → total <strong>2</strong> d.p.</p>
+        <p class="step"><span class="step-label">Step 4</span> Place the decimal: 21 → <strong>0.21</strong></p>
+        <p class="step"><strong>Answer: 0.21</strong></p>
+      </div>
+
+      <hr class="section-divider" />
+
+      <!-- EXERCISES -->
+      <h2>Your Turn</h2>
+      <p style="font-size:0.9rem; color:#666; margin-bottom:1rem;">Work out each answer and type it in. Click <em>Check Answers</em> when you're done.</p>
+
+      <form id="exercise-form">
+
+        <div class="question-block">
+          <label>1. &nbsp; 1.2 × 3 = </label>
+          <input type="text" id="q1" placeholder="?" autocomplete="off" />
+          <span class="feedback" id="f1"></span>
+        </div>
+
+        <div class="question-block">
+          <label>2. &nbsp; 0.4 × 0.5 = </label>
+          <input type="text" id="q2" placeholder="?" autocomplete="off" />
+          <span class="feedback" id="f2"></span>
+        </div>
+
+        <div class="question-block">
+          <label>3. &nbsp; 2.5 × 1.4 = </label>
+          <input type="text" id="q3" placeholder="?" autocomplete="off" />
+          <span class="feedback" id="f3"></span>
+        </div>
+
+        <div class="question-block">
+          <label>4. &nbsp; 0.8 × 0.9 = </label>
+          <input type="text" id="q4" placeholder="?" autocomplete="off" />
+          <span class="feedback" id="f4"></span>
+        </div>
+
+        <div class="question-block">
+          <label>5. &nbsp; 1.25 × 4 = </label>
+          <input type="text" id="q5" placeholder="?" autocomplete="off" />
+          <span class="feedback" id="f5"></span>
+        </div>
+
+        <button type="button" class="check-btn" onclick="checkAnswers()">Check Answers</button>
+      </form>
+
+      <div class="score-box" id="score-box"></div>
+
     </div>
 
     <a class="btn" href="../../units/unit-1.html">← Back to Unit 1</a>
   </main>
 
   <footer>
-    Maths Revision &mdash; Placeholder content
+    Maths Revision &mdash; Unit 1: Number & Arithmetic
   </footer>
+
+  <script>
+    const answers = {
+      q1: 3.6,
+      q2: 0.20,
+      q3: 3.50,
+      q4: 0.72,
+      q5: 5.00
+    };
+
+    function checkAnswers() {
+      let correct = 0;
+      const total = Object.keys(answers).length;
+
+      for (const [id, answer] of Object.entries(answers)) {
+        const input = document.getElementById(id);
+        const feedback = document.getElementById('f' + id.slice(1));
+        const val = parseFloat(input.value.trim());
+
+        if (!isNaN(val) && Math.abs(val - answer) < 0.001) {
+          feedback.textContent = '✓ Correct!';
+          feedback.className = 'feedback correct';
+          input.style.borderColor = '#27ae60';
+          correct++;
+        } else {
+          feedback.textContent = `✗ Answer: ${answer}`;
+          feedback.className = 'feedback incorrect';
+          input.style.borderColor = '#e74c3c';
+        }
+      }
+
+      const box = document.getElementById('score-box');
+      box.textContent = `You got ${correct} out of ${total}.`;
+      box.className = 'score-box show ' + (correct === total ? 'great' : correct >= 3 ? 'ok' : 'poor');
+      if (correct === total) box.textContent += ' Excellent work! 🎉';
+      else if (correct >= 3) box.textContent += ' Good effort — review the ones you missed.';
+      else box.textContent += ' Keep practising — re-read the worked examples and try again.';
+    }
+  </script>
 
 </body>
 </html>
