@@ -20,15 +20,6 @@
     .worked-example h3 { color: #1a6fa0; margin-bottom: 0.6rem; font-size: 1rem; }
     .step { margin: 0.4rem 0; font-size: 0.95rem; color: #333; }
     .step strong { color: #1a6fa0; }
-    .step-label {
-      display: inline-block;
-      background: #2980b9;
-      color: white;
-      font-size: 0.75rem;
-      border-radius: 4px;
-      padding: 0.1rem 0.4rem;
-      margin-right: 0.4rem;
-    }
     .hint-box {
       background: #fef9e7;
       border-left: 4px solid #f1c40f;
@@ -129,78 +120,36 @@
 
       <h2>Worked Examples</h2>
 
-      <!-- Example 1: Corresponding angles -->
+      <!-- Example 1: Corresponding -->
       <div class="worked-example">
         <h3>Example 1: Corresponding angles (F-shape)</h3>
         <p class="step">When a transversal crosses two parallel lines, corresponding angles are in the same position at each intersection. They are <strong>equal</strong>.</p>
         <div style="text-align:center; margin: 0.8rem 0;">
-          <svg viewBox="0 0 280 210" width="280" height="210">
-            <line x1="20" y1="60" x2="260" y2="60" stroke="#2c3e50" stroke-width="2"/>
-            <line x1="20" y1="150" x2="260" y2="150" stroke="#2c3e50" stroke-width="2"/>
-            <text x="200" y="55" font-size="14" fill="#2c3e50" font-family="sans-serif">&#xBB;</text>
-            <text x="212" y="55" font-size="14" fill="#2c3e50" font-family="sans-serif">&#xBB;</text>
-            <text x="200" y="145" font-size="14" fill="#2c3e50" font-family="sans-serif">&#xBB;</text>
-            <text x="212" y="145" font-size="14" fill="#2c3e50" font-family="sans-serif">&#xBB;</text>
-            <line x1="60" y1="20" x2="220" y2="190" stroke="#555" stroke-width="2"/>
-            <path d="M 130 60 A 20 20 0 0 0 123.7 41.4" fill="rgba(41,128,185,0.2)" stroke="#2980b9" stroke-width="2"/>
-            <path d="M 190 150 A 20 20 0 0 0 183.7 131.4" fill="rgba(41,128,185,0.2)" stroke="#2980b9" stroke-width="2"/>
-            <text x="132" y="56" font-size="13" fill="#2980b9" font-weight="bold" font-family="sans-serif">55°</text>
-            <text x="192" y="146" font-size="13" fill="#2980b9" font-weight="bold" font-family="sans-serif">55°</text>
-            <text x="50" y="205" font-size="12" fill="#555" font-family="sans-serif">Corresponding angles are equal (F-shape)</text>
-          </svg>
+          <svg id="ex1-corr" viewBox="0 0 290 215" width="290" height="215"></svg>
         </div>
         <div class="rule-box">
           <strong>Corresponding angles</strong> (F-shape): equal. Look for angles in the same position at each parallel line.
         </div>
       </div>
 
-      <!-- Example 2: Alternate angles -->
+      <!-- Example 2: Alternate -->
       <div class="worked-example">
         <h3>Example 2: Alternate angles (Z-shape)</h3>
         <p class="step">Alternate angles are on <strong>opposite sides</strong> of the transversal, between the parallel lines. They are <strong>equal</strong>.</p>
         <div style="text-align:center; margin: 0.8rem 0;">
-          <svg viewBox="0 0 280 210" width="280" height="210">
-            <line x1="20" y1="60" x2="260" y2="60" stroke="#2c3e50" stroke-width="2"/>
-            <line x1="20" y1="150" x2="260" y2="150" stroke="#2c3e50" stroke-width="2"/>
-            <text x="200" y="55" font-size="14" fill="#2c3e50" font-family="sans-serif">&#xBB;</text>
-            <text x="212" y="55" font-size="14" fill="#2c3e50" font-family="sans-serif">&#xBB;</text>
-            <text x="200" y="145" font-size="14" fill="#2c3e50" font-family="sans-serif">&#xBB;</text>
-            <text x="212" y="145" font-size="14" fill="#2c3e50" font-family="sans-serif">&#xBB;</text>
-            <line x1="60" y1="20" x2="220" y2="190" stroke="#555" stroke-width="2"/>
-            <!-- Bottom-left at upper intersection and top-right at lower intersection -->
-            <path d="M 110 60 A 20 20 0 0 1 103.7 78.6" fill="rgba(231,76,60,0.2)" stroke="#e74c3c" stroke-width="2"/>
-            <path d="M 170 150 A 20 20 0 0 0 176.3 131.4" fill="rgba(231,76,60,0.2)" stroke="#e74c3c" stroke-width="2"/>
-            <text x="88" y="76" font-size="13" fill="#e74c3c" font-weight="bold" font-family="sans-serif">55°</text>
-            <text x="178" y="146" font-size="13" fill="#e74c3c" font-weight="bold" font-family="sans-serif">55°</text>
-            <text x="50" y="205" font-size="12" fill="#555" font-family="sans-serif">Alternate angles are equal (Z-shape)</text>
-          </svg>
+          <svg id="ex2-alt" viewBox="0 0 290 215" width="290" height="215"></svg>
         </div>
         <div class="rule-box">
           <strong>Alternate angles</strong> (Z-shape): equal. They are between the parallel lines, on opposite sides of the transversal.
         </div>
       </div>
 
-      <!-- Example 3: Co-interior angles -->
+      <!-- Example 3: Co-interior -->
       <div class="worked-example">
         <h3>Example 3: Co-interior angles (C-shape)</h3>
         <p class="step">Co-interior angles are on the <strong>same side</strong> of the transversal, between the parallel lines. They <strong>sum to 180°</strong>.</p>
         <div style="text-align:center; margin: 0.8rem 0;">
-          <svg viewBox="0 0 280 210" width="280" height="210">
-            <line x1="20" y1="60" x2="260" y2="60" stroke="#2c3e50" stroke-width="2"/>
-            <line x1="20" y1="150" x2="260" y2="150" stroke="#2c3e50" stroke-width="2"/>
-            <text x="200" y="55" font-size="14" fill="#2c3e50" font-family="sans-serif">&#xBB;</text>
-            <text x="212" y="55" font-size="14" fill="#2c3e50" font-family="sans-serif">&#xBB;</text>
-            <text x="200" y="145" font-size="14" fill="#2c3e50" font-family="sans-serif">&#xBB;</text>
-            <text x="212" y="145" font-size="14" fill="#2c3e50" font-family="sans-serif">&#xBB;</text>
-            <line x1="60" y1="20" x2="220" y2="190" stroke="#555" stroke-width="2"/>
-            <!-- Bottom-right at upper intersection -->
-            <path d="M 130 60 A 20 20 0 0 1 136.3 78.6" fill="rgba(231,76,60,0.2)" stroke="#e74c3c" stroke-width="2"/>
-            <!-- Top-right at lower intersection -->
-            <path d="M 190 150 A 20 20 0 0 0 183.7 131.4" fill="rgba(41,128,185,0.2)" stroke="#2980b9" stroke-width="2"/>
-            <text x="138" y="76" font-size="13" fill="#e74c3c" font-weight="bold" font-family="sans-serif">125°</text>
-            <text x="192" y="146" font-size="13" fill="#2980b9" font-weight="bold" font-family="sans-serif">55°</text>
-            <text x="30" y="205" font-size="12" fill="#555" font-family="sans-serif">Co-interior angles sum to 180°: 125° + 55° = 180° &#10003;</text>
-          </svg>
+          <svg id="ex3-coint" viewBox="0 0 290 215" width="290" height="215"></svg>
         </div>
         <div class="rule-box">
           <strong>Co-interior angles</strong> (C-shape, also called allied angles): sum to <strong>180°</strong>. They are on the same side of the transversal.
@@ -220,23 +169,9 @@
 
         <div class="section-title">Questions 1 to 4: Corresponding angles (F-shape, equal)</div>
 
-        <!-- Q1 -->
         <div class="question-block">
           <div class="q-inner">
-            <svg viewBox="0 0 200 175" width="180" height="158">
-              <line x1="15" y1="50" x2="185" y2="50" stroke="#2c3e50" stroke-width="2"/>
-              <line x1="15" y1="125" x2="185" y2="125" stroke="#2c3e50" stroke-width="2"/>
-              <text x="148" y="44" font-size="11" fill="#2c3e50" font-family="sans-serif">&#xBB;&#xBB;</text>
-              <text x="148" y="119" font-size="11" fill="#2c3e50" font-family="sans-serif">&#xBB;&#xBB;</text>
-              <line x1="45" y1="15" x2="165" y2="160" stroke="#555" stroke-width="2"/>
-              <!-- Given: top-right at upper intersection = 70° -->
-              <path d="M 97 50 A 16 16 0 0 0 92 34" fill="rgba(231,76,60,0.2)" stroke="#e67e22" stroke-width="1.5"/>
-              <text x="99" y="46" font-size="12" fill="#e67e22" font-weight="bold" font-family="sans-serif">70°</text>
-              <!-- Unknown: top-right at lower intersection -->
-              <path d="M 137 125 A 16 16 0 0 0 132 109" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="1.5"/>
-              <text x="140" y="121" font-size="14" fill="#2980b9" font-weight="bold" font-family="sans-serif">?</text>
-              <text x="10" y="172" font-size="11" fill="#555" font-family="sans-serif">Corresponding angles</text>
-            </svg>
+            <svg id="q1-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
             <div class="q-text">
               <label>1. &nbsp; The orange angle is 70°. Find the corresponding angle (blue ?). (°)</label>
               <input type="number" step="1" min="0" max="360" id="q1" placeholder="?" />
@@ -245,21 +180,9 @@
           </div>
         </div>
 
-        <!-- Q2 -->
         <div class="question-block">
           <div class="q-inner">
-            <svg viewBox="0 0 200 175" width="180" height="158">
-              <line x1="15" y1="50" x2="185" y2="50" stroke="#2c3e50" stroke-width="2"/>
-              <line x1="15" y1="125" x2="185" y2="125" stroke="#2c3e50" stroke-width="2"/>
-              <text x="148" y="44" font-size="11" fill="#2c3e50" font-family="sans-serif">&#xBB;&#xBB;</text>
-              <text x="148" y="119" font-size="11" fill="#2c3e50" font-family="sans-serif">&#xBB;&#xBB;</text>
-              <line x1="45" y1="15" x2="165" y2="160" stroke="#555" stroke-width="2"/>
-              <path d="M 80 50 A 16 16 0 0 1 85 34" fill="rgba(231,76,60,0.2)" stroke="#e67e22" stroke-width="1.5"/>
-              <text x="60" y="46" font-size="12" fill="#e67e22" font-weight="bold" font-family="sans-serif">115°</text>
-              <path d="M 120 125 A 16 16 0 0 1 125 109" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="1.5"/>
-              <text x="100" y="121" font-size="14" fill="#2980b9" font-weight="bold" font-family="sans-serif">?</text>
-              <text x="10" y="172" font-size="11" fill="#555" font-family="sans-serif">Corresponding angles</text>
-            </svg>
+            <svg id="q2-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
             <div class="q-text">
               <label>2. &nbsp; The orange angle is 115°. Find the corresponding angle (blue ?). (°)</label>
               <input type="number" step="1" min="0" max="360" id="q2" placeholder="?" />
@@ -268,21 +191,9 @@
           </div>
         </div>
 
-        <!-- Q3 -->
         <div class="question-block">
           <div class="q-inner">
-            <svg viewBox="0 0 200 175" width="180" height="158">
-              <line x1="15" y1="50" x2="185" y2="50" stroke="#2c3e50" stroke-width="2"/>
-              <line x1="15" y1="125" x2="185" y2="125" stroke="#2c3e50" stroke-width="2"/>
-              <text x="148" y="44" font-size="11" fill="#2c3e50" font-family="sans-serif">&#xBB;&#xBB;</text>
-              <text x="148" y="119" font-size="11" fill="#2c3e50" font-family="sans-serif">&#xBB;&#xBB;</text>
-              <line x1="45" y1="15" x2="165" y2="160" stroke="#555" stroke-width="2"/>
-              <path d="M 97 50 A 16 16 0 0 0 92 34" fill="rgba(231,76,60,0.2)" stroke="#e67e22" stroke-width="1.5"/>
-              <text x="99" y="46" font-size="12" fill="#e67e22" font-weight="bold" font-family="sans-serif">62°</text>
-              <path d="M 137 125 A 16 16 0 0 0 132 109" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="1.5"/>
-              <text x="140" y="121" font-size="14" fill="#2980b9" font-weight="bold" font-family="sans-serif">?</text>
-              <text x="10" y="172" font-size="11" fill="#555" font-family="sans-serif">Corresponding angles</text>
-            </svg>
+            <svg id="q3-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
             <div class="q-text">
               <label>3. &nbsp; The orange angle is 62°. Find the corresponding angle (blue ?). (°)</label>
               <input type="number" step="1" min="0" max="360" id="q3" placeholder="?" />
@@ -291,21 +202,9 @@
           </div>
         </div>
 
-        <!-- Q4 -->
         <div class="question-block">
           <div class="q-inner">
-            <svg viewBox="0 0 200 175" width="180" height="158">
-              <line x1="15" y1="50" x2="185" y2="50" stroke="#2c3e50" stroke-width="2"/>
-              <line x1="15" y1="125" x2="185" y2="125" stroke="#2c3e50" stroke-width="2"/>
-              <text x="148" y="44" font-size="11" fill="#2c3e50" font-family="sans-serif">&#xBB;&#xBB;</text>
-              <text x="148" y="119" font-size="11" fill="#2c3e50" font-family="sans-serif">&#xBB;&#xBB;</text>
-              <line x1="45" y1="15" x2="165" y2="160" stroke="#555" stroke-width="2"/>
-              <path d="M 80 50 A 16 16 0 0 1 85 66" fill="rgba(231,76,60,0.2)" stroke="#e67e22" stroke-width="1.5"/>
-              <text x="58" y="66" font-size="12" fill="#e67e22" font-weight="bold" font-family="sans-serif">98°</text>
-              <path d="M 120 125 A 16 16 0 0 1 125 141" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="1.5"/>
-              <text x="96" y="141" font-size="14" fill="#2980b9" font-weight="bold" font-family="sans-serif">?</text>
-              <text x="10" y="172" font-size="11" fill="#555" font-family="sans-serif">Corresponding angles</text>
-            </svg>
+            <svg id="q4-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
             <div class="q-text">
               <label>4. &nbsp; The orange angle is 98°. Find the corresponding angle (blue ?). (°)</label>
               <input type="number" step="1" min="0" max="360" id="q4" placeholder="?" />
@@ -316,23 +215,9 @@
 
         <div class="section-title">Questions 5 to 7: Alternate angles (Z-shape, equal)</div>
 
-        <!-- Q5 -->
         <div class="question-block">
           <div class="q-inner">
-            <svg viewBox="0 0 200 175" width="180" height="158">
-              <line x1="15" y1="50" x2="185" y2="50" stroke="#2c3e50" stroke-width="2"/>
-              <line x1="15" y1="125" x2="185" y2="125" stroke="#2c3e50" stroke-width="2"/>
-              <text x="148" y="44" font-size="11" fill="#2c3e50" font-family="sans-serif">&#xBB;&#xBB;</text>
-              <text x="148" y="119" font-size="11" fill="#2c3e50" font-family="sans-serif">&#xBB;&#xBB;</text>
-              <line x1="45" y1="15" x2="165" y2="160" stroke="#555" stroke-width="2"/>
-              <!-- bottom-left at upper -->
-              <path d="M 80 50 A 16 16 0 0 1 85 66" fill="rgba(231,76,60,0.2)" stroke="#e67e22" stroke-width="1.5"/>
-              <text x="58" y="66" font-size="12" fill="#e67e22" font-weight="bold" font-family="sans-serif">55°</text>
-              <!-- top-right at lower -->
-              <path d="M 137 125 A 16 16 0 0 0 132 109" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="1.5"/>
-              <text x="140" y="121" font-size="14" fill="#2980b9" font-weight="bold" font-family="sans-serif">?</text>
-              <text x="10" y="172" font-size="11" fill="#555" font-family="sans-serif">Alternate angles (Z)</text>
-            </svg>
+            <svg id="q5-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
             <div class="q-text">
               <label>5. &nbsp; The orange angle is 55°. Find the alternate angle (blue ?). (°)</label>
               <input type="number" step="1" min="0" max="360" id="q5" placeholder="?" />
@@ -341,21 +226,9 @@
           </div>
         </div>
 
-        <!-- Q6 -->
         <div class="question-block">
           <div class="q-inner">
-            <svg viewBox="0 0 200 175" width="180" height="158">
-              <line x1="15" y1="50" x2="185" y2="50" stroke="#2c3e50" stroke-width="2"/>
-              <line x1="15" y1="125" x2="185" y2="125" stroke="#2c3e50" stroke-width="2"/>
-              <text x="148" y="44" font-size="11" fill="#2c3e50" font-family="sans-serif">&#xBB;&#xBB;</text>
-              <text x="148" y="119" font-size="11" fill="#2c3e50" font-family="sans-serif">&#xBB;&#xBB;</text>
-              <line x1="45" y1="15" x2="165" y2="160" stroke="#555" stroke-width="2"/>
-              <path d="M 97 50 A 16 16 0 0 1 102 66" fill="rgba(231,76,60,0.2)" stroke="#e67e22" stroke-width="1.5"/>
-              <text x="104" y="67" font-size="12" fill="#e67e22" font-weight="bold" font-family="sans-serif">130°</text>
-              <path d="M 120 125 A 16 16 0 0 1 115 109" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="1.5"/>
-              <text x="96" y="109" font-size="14" fill="#2980b9" font-weight="bold" font-family="sans-serif">?</text>
-              <text x="10" y="172" font-size="11" fill="#555" font-family="sans-serif">Alternate angles (Z)</text>
-            </svg>
+            <svg id="q6-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
             <div class="q-text">
               <label>6. &nbsp; The orange angle is 130°. Find the alternate angle (blue ?). (°)</label>
               <input type="number" step="1" min="0" max="360" id="q6" placeholder="?" />
@@ -364,21 +237,9 @@
           </div>
         </div>
 
-        <!-- Q7 -->
         <div class="question-block">
           <div class="q-inner">
-            <svg viewBox="0 0 200 175" width="180" height="158">
-              <line x1="15" y1="50" x2="185" y2="50" stroke="#2c3e50" stroke-width="2"/>
-              <line x1="15" y1="125" x2="185" y2="125" stroke="#2c3e50" stroke-width="2"/>
-              <text x="148" y="44" font-size="11" fill="#2c3e50" font-family="sans-serif">&#xBB;&#xBB;</text>
-              <text x="148" y="119" font-size="11" fill="#2c3e50" font-family="sans-serif">&#xBB;&#xBB;</text>
-              <line x1="45" y1="15" x2="165" y2="160" stroke="#555" stroke-width="2"/>
-              <path d="M 80 50 A 16 16 0 0 1 85 34" fill="rgba(231,76,60,0.2)" stroke="#e67e22" stroke-width="1.5"/>
-              <text x="60" y="46" font-size="12" fill="#e67e22" font-weight="bold" font-family="sans-serif">73°</text>
-              <path d="M 137 125 A 16 16 0 0 1 142 141" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="1.5"/>
-              <text x="144" y="140" font-size="14" fill="#2980b9" font-weight="bold" font-family="sans-serif">?</text>
-              <text x="10" y="172" font-size="11" fill="#555" font-family="sans-serif">Alternate angles (Z)</text>
-            </svg>
+            <svg id="q7-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
             <div class="q-text">
               <label>7. &nbsp; The orange angle is 73°. Find the alternate angle (blue ?). (°)</label>
               <input type="number" step="1" min="0" max="360" id="q7" placeholder="?" />
@@ -389,21 +250,9 @@
 
         <div class="section-title">Questions 8 to 10: Co-interior angles (C-shape, sum to 180°)</div>
 
-        <!-- Q8 -->
         <div class="question-block">
           <div class="q-inner">
-            <svg viewBox="0 0 200 175" width="180" height="158">
-              <line x1="15" y1="50" x2="185" y2="50" stroke="#2c3e50" stroke-width="2"/>
-              <line x1="15" y1="125" x2="185" y2="125" stroke="#2c3e50" stroke-width="2"/>
-              <text x="148" y="44" font-size="11" fill="#2c3e50" font-family="sans-serif">&#xBB;&#xBB;</text>
-              <text x="148" y="119" font-size="11" fill="#2c3e50" font-family="sans-serif">&#xBB;&#xBB;</text>
-              <line x1="45" y1="15" x2="165" y2="160" stroke="#555" stroke-width="2"/>
-              <path d="M 97 50 A 16 16 0 0 1 102 66" fill="rgba(231,76,60,0.2)" stroke="#e67e22" stroke-width="1.5"/>
-              <text x="104" y="67" font-size="12" fill="#e67e22" font-weight="bold" font-family="sans-serif">65°</text>
-              <path d="M 137 125 A 16 16 0 0 0 132 109" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="1.5"/>
-              <text x="140" y="121" font-size="14" fill="#2980b9" font-weight="bold" font-family="sans-serif">?</text>
-              <text x="10" y="172" font-size="11" fill="#555" font-family="sans-serif">Co-interior (sum = 180°)</text>
-            </svg>
+            <svg id="q8-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
             <div class="q-text">
               <label>8. &nbsp; The orange angle is 65°. Find the co-interior angle (blue ?) on the same side. (°)</label>
               <input type="number" step="1" min="0" max="360" id="q8" placeholder="?" />
@@ -412,21 +261,9 @@
           </div>
         </div>
 
-        <!-- Q9 -->
         <div class="question-block">
           <div class="q-inner">
-            <svg viewBox="0 0 200 175" width="180" height="158">
-              <line x1="15" y1="50" x2="185" y2="50" stroke="#2c3e50" stroke-width="2"/>
-              <line x1="15" y1="125" x2="185" y2="125" stroke="#2c3e50" stroke-width="2"/>
-              <text x="148" y="44" font-size="11" fill="#2c3e50" font-family="sans-serif">&#xBB;&#xBB;</text>
-              <text x="148" y="119" font-size="11" fill="#2c3e50" font-family="sans-serif">&#xBB;&#xBB;</text>
-              <line x1="45" y1="15" x2="165" y2="160" stroke="#555" stroke-width="2"/>
-              <path d="M 97 50 A 16 16 0 0 1 102 66" fill="rgba(231,76,60,0.2)" stroke="#e67e22" stroke-width="1.5"/>
-              <text x="104" y="67" font-size="12" fill="#e67e22" font-weight="bold" font-family="sans-serif">120°</text>
-              <path d="M 137 125 A 16 16 0 0 0 132 109" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="1.5"/>
-              <text x="140" y="121" font-size="14" fill="#2980b9" font-weight="bold" font-family="sans-serif">?</text>
-              <text x="10" y="172" font-size="11" fill="#555" font-family="sans-serif">Co-interior (sum = 180°)</text>
-            </svg>
+            <svg id="q9-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
             <div class="q-text">
               <label>9. &nbsp; The orange angle is 120°. Find the co-interior angle (blue ?). (°)</label>
               <input type="number" step="1" min="0" max="360" id="q9" placeholder="?" />
@@ -435,21 +272,9 @@
           </div>
         </div>
 
-        <!-- Q10 -->
         <div class="question-block">
           <div class="q-inner">
-            <svg viewBox="0 0 200 175" width="180" height="158">
-              <line x1="15" y1="50" x2="185" y2="50" stroke="#2c3e50" stroke-width="2"/>
-              <line x1="15" y1="125" x2="185" y2="125" stroke="#2c3e50" stroke-width="2"/>
-              <text x="148" y="44" font-size="11" fill="#2c3e50" font-family="sans-serif">&#xBB;&#xBB;</text>
-              <text x="148" y="119" font-size="11" fill="#2c3e50" font-family="sans-serif">&#xBB;&#xBB;</text>
-              <line x1="45" y1="15" x2="165" y2="160" stroke="#555" stroke-width="2"/>
-              <path d="M 97 50 A 16 16 0 0 1 102 66" fill="rgba(231,76,60,0.2)" stroke="#e67e22" stroke-width="1.5"/>
-              <text x="104" y="67" font-size="12" fill="#e67e22" font-weight="bold" font-family="sans-serif">72°</text>
-              <path d="M 137 125 A 16 16 0 0 0 132 109" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="1.5"/>
-              <text x="140" y="121" font-size="14" fill="#2980b9" font-weight="bold" font-family="sans-serif">?</text>
-              <text x="10" y="172" font-size="11" fill="#555" font-family="sans-serif">Co-interior (sum = 180°)</text>
-            </svg>
+            <svg id="q10-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
             <div class="q-text">
               <label>10. &nbsp; The orange angle is 72°. Find the co-interior angle (blue ?). (°)</label>
               <input type="number" step="1" min="0" max="360" id="q10" placeholder="?" />
@@ -473,49 +298,350 @@
   </footer>
 
   <script>
+    // ── Answer checking ───────────────────────────────────────────────────────
     const correctAnswers = {
-      q1:  70,
-      q2:  115,
-      q3:  62,
-      q4:  98,
-      q5:  55,
-      q6:  130,
-      q7:  73,
-      q8:  115,
-      q9:  60,
-      q10: 108
+      q1: 70, q2: 115, q3: 62, q4: 98,
+      q5: 55, q6: 130, q7: 73,
+      q8: 115, q9: 60, q10: 108
     };
 
     function checkAnswers() {
       let correct = 0;
       const total = Object.keys(correctAnswers).length;
-
       for (const [qKey, expected] of Object.entries(correctAnswers)) {
         const num = qKey.slice(1);
         const el = document.getElementById(qKey);
         const feedback = document.getElementById('f' + num);
         const val = parseInt(el.value, 10);
         const isCorrect = !isNaN(val) && val === expected;
-
         el.style.borderColor = isCorrect ? '#27ae60' : '#e74c3c';
-        feedback.textContent = isCorrect ? '\u2713 Correct!' : '\u2717 Answer: ' + expected + '\u00b0';
+        feedback.textContent = isCorrect ? '✓ Correct!' : '✗ Answer: ' + expected + '°';
         feedback.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
         if (isCorrect) correct++;
       }
-
       const box = document.getElementById('score-box');
       box.textContent = 'You got ' + correct + ' out of ' + total + '.';
-      if (correct === total) {
-        box.className = 'score-box show great';
-        box.textContent += ' Excellent work!';
-      } else if (correct >= 7) {
-        box.className = 'score-box show ok';
-        box.textContent += ' Good effort: review the ones you missed.';
-      } else {
-        box.className = 'score-box show poor';
-        box.textContent += ' Keep practising: re-read the worked examples and try again.';
-      }
+      box.className = 'score-box show ' + (correct === total ? 'great' : correct >= 7 ? 'ok' : 'poor');
+      if (correct === total) box.textContent += ' Excellent work!';
+      else if (correct >= 7) box.textContent += ' Good effort: review the ones you missed.';
+      else box.textContent += ' Keep practising: re-read the worked examples and try again.';
     }
+
+    // ── SVG helpers ───────────────────────────────────────────────────────────
+    const _NS = 'http://www.w3.org/2000/svg';
+    const _r2d = Math.PI / 180;
+
+    function pt(cx, cy, deg, dist) {
+      return [
+        +(cx + dist * Math.cos(deg * _r2d)).toFixed(2),
+        +(cy - dist * Math.sin(deg * _r2d)).toFixed(2)
+      ];
+    }
+
+    function arcD(cx, cy, a1, a2, r) {
+      const [x1, y1] = pt(cx, cy, a1, r);
+      const [x2, y2] = pt(cx, cy, a2, r);
+      const span = ((a2 - a1) % 360 + 360) % 360;
+      return `M ${x1} ${y1} A ${r} ${r} 0 ${span > 180 ? 1 : 0} 0 ${x2} ${y2}`;
+    }
+
+    function mk(tag, attrs, text) {
+      const e = document.createElementNS(_NS, tag);
+      for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+      if (text != null) e.textContent = text;
+      return e;
+    }
+
+    function addLine(svg, x1, y1, x2, y2, color, sw) {
+      svg.appendChild(mk('line', {
+        x1, y1, x2, y2,
+        stroke: color || '#2c3e50', 'stroke-width': sw || 2, 'stroke-linecap': 'round'
+      }));
+    }
+
+    function addArc(svg, cx, cy, a1, a2, r, stroke, fill, sw) {
+      svg.appendChild(mk('path', {
+        d: arcD(cx, cy, a1, a2, r),
+        fill: fill || 'none', stroke: stroke || '#e74c3c', 'stroke-width': sw || 2
+      }));
+    }
+
+    function addFilledArc(svg, cx, cy, a1, a2, r, fill, stroke) {
+      const [x1, y1] = pt(cx, cy, a1, r);
+      const [x2, y2] = pt(cx, cy, a2, r);
+      const span = ((a2 - a1) % 360 + 360) % 360;
+      const d = `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${span > 180 ? 1 : 0} 0 ${x2} ${y2} Z`;
+      svg.appendChild(mk('path', { d, fill: fill || 'rgba(41,128,185,0.2)', stroke: stroke || 'none' }));
+    }
+
+    function angleLabel(svg, cx, cy, deg, dist, text, fill, size) {
+      const [x, y] = pt(cx, cy, deg, dist);
+      svg.appendChild(mk('text', {
+        x, y, fill: fill || '#e74c3c', 'font-size': size || 13,
+        'font-family': 'sans-serif', 'font-weight': 'bold',
+        'text-anchor': 'middle', 'dominant-baseline': 'middle'
+      }, text));
+    }
+
+    function label(svg, x, y, text, fill, size, anchor) {
+      svg.appendChild(mk('text', {
+        x, y, fill: fill || '#555', 'font-size': size || 12,
+        'font-family': 'sans-serif', 'font-weight': 'normal',
+        'text-anchor': anchor || 'middle'
+      }, text));
+    }
+
+    // ── Parallel-line diagram builder ────────────────────────────────────────
+    //
+    // Layout (all diagrams share the same geometry):
+    //   Two horizontal parallel lines at y=L1 and y=L2.
+    //   A transversal at angle TRANS_DEG crosses both.
+    //   The transversal hits line 1 at cx1 and line 2 at cx2.
+    //
+    // Angles at each intersection are measured from the EAST ray of the parallel
+    // line, sweeping CCW (standard maths convention).  The transversal adds
+    // four sectors at each crossing; their angles depend on TRANS_DEG.
+    //
+    // transAngle: angle of transversal measured from East (0°), CCW positive.
+    //   e.g. 55° means the transversal goes up-right at 55° above horizontal.
+    //
+    // At the upper intersection the four sectors (CCW from East) are:
+    //   sector A:  0°          → transAngle        (upper-right, between right parallel & transversal above)
+    //   sector B:  transAngle  → 180°              (upper-left)
+    //   sector C:  180°        → transAngle+180°   (lower-left, = vertically opp. to A)
+    //   sector D:  transAngle+180° → 360°          (lower-right, = vertically opp. to B)
+    //
+    // Corresponding angles: same letter at both intersections.
+    // Alternate angles: opposite-side sectors between the parallels.
+    // Co-interior: same-side sectors between the parallels.
+
+    const L1_Y = 55;   // y of upper parallel line
+    const L2_Y = 130;  // y of lower parallel line
+    const PAR_X1 = 10; // left extent of parallel lines
+    const PAR_X2 = 190;// right extent of parallel lines
+
+    // Compute x of transversal at a given y, given it passes through (cx_base, L1_Y) at transAngle
+    function transX(transAngle, cx_base, y) {
+      // x = cx_base + (y - L1_Y) * cos(transAngle) / sin(transAngle)  [rearranged from parametric]
+      // But careful: in SVG y increases downward, so going "down" from L1 means y increases.
+      // In math terms, a ray at transAngle from (cx_base, L1_Y) reaches y2 > y1 when going at
+      // angle (transAngle) — SVG y is flipped, so the ray going at transAngle in math space
+      // goes in SVG-y direction: dy_svg = -sin(transAngle) * t  (upward in SVG for positive angle)
+      //
+      // We want the intersection at L2_Y (below L1_Y in SVG, i.e. larger y value).
+      // L2_Y > L1_Y, so dy_svg > 0 → need -sin(transAngle)*t > 0 → t < 0
+      // Going backwards along the ray (t<0) reaches L2_Y if transAngle is acute (up-right).
+      // This is equivalent to using transAngle + 180° going forward.
+      //
+      // Simpler: The transversal is a straight line. Use slope:
+      //   slope_svg = -sin(transAngle) / cos(transAngle)  (SVG slope, y increases down)
+      //   x at L2_Y = cx_base + (L2_Y - L1_Y) / slope_svg
+      //             = cx_base + (L2_Y - L1_Y) * cos(transAngle) / (-sin(transAngle))
+      //
+      // Wait — the transversal goes from bottom-left to top-right (visually).  In SVG coords
+      // that means decreasing y (upward) as x increases.  For a transversal at math angle θ:
+      //   Math direction: (cos θ, sin θ)
+      //   SVG direction: (cos θ, -sin θ)   [y flipped]
+      //
+      // Starting at (cx_base, L1_Y), going in SVG direction (cos θ, -sin θ) * t:
+      //   y_svg = L1_Y - sin(θ) * t
+      //   To reach L2_Y:  L2_Y = L1_Y - sin(θ) * t  →  t = (L1_Y - L2_Y) / sin(θ)
+      //
+      // L2_Y > L1_Y (it's below), so (L1_Y - L2_Y) < 0 and sin(θ) > 0 for acute θ → t < 0
+      // x_svg = cx_base + cos(θ) * t
+      //       = cx_base + cos(θ) * (L1_Y - L2_Y) / sin(θ)
+      //       = cx_base - (L2_Y - L1_Y) * cot(θ)
+      const dy = y - L1_Y;
+      const cosT = Math.cos(transAngle * _r2d);
+      const sinT = Math.sin(transAngle * _r2d);
+      // t such that L1_Y - sinT*t = y  →  t = (L1_Y - y) / sinT
+      const t = (L1_Y - y) / sinT;
+      return +(cx_base + cosT * t).toFixed(2);
+    }
+
+    // Draw two parallel lines + transversal, return intersection centres
+    function drawParallels(svg, transAngle, cx1, extendBy) {
+      const ext = extendBy || 65;
+      // Transversal extents (go ext units beyond each parallel in both directions)
+      const cx2 = transX(transAngle, cx1, L2_Y);
+
+      // Compute transversal endpoints (extend past both parallels)
+      const sinT = Math.sin(transAngle * _r2d), cosT = Math.cos(transAngle * _r2d);
+      // Upward extension from cx1,L1_Y
+      const tUp = -ext;   // negative t goes upward along the ray
+      const tx1 = +(cx1 + cosT * tUp).toFixed(2), ty1 = +(L1_Y - sinT * tUp).toFixed(2);
+      // Downward extension from cx2,L2_Y
+      const tDown = ext;
+      const tx2 = +(cx2 + cosT * tDown).toFixed(2), ty2 = +(L2_Y - sinT * tDown).toFixed(2);
+
+      // Parallel lines
+      addLine(svg, PAR_X1, L1_Y, PAR_X2, L1_Y);
+      addLine(svg, PAR_X1, L2_Y, PAR_X2, L2_Y);
+
+      // Parallel markers (»)
+      svg.appendChild(mk('text', { x: PAR_X2 - 32, y: L1_Y - 4, 'font-size': 13, fill: '#2c3e50', 'font-family': 'sans-serif' }, '»'));
+      svg.appendChild(mk('text', { x: PAR_X2 - 32, y: L2_Y - 4, 'font-size': 13, fill: '#2c3e50', 'font-family': 'sans-serif' }, '»'));
+
+      // Transversal
+      addLine(svg, tx1, ty1, tx2, ty2, '#555', 2);
+
+      return { cx1, cy1: L1_Y, cx2, cy2: L2_Y };
+    }
+
+    // Draw angle arc at an intersection, for a given sector.
+    // sectorStart, sectorEnd: angles in degrees (CCW from East, standard math)
+    function markAngle(svg, cx, cy, sectorStart, sectorEnd, r, fill, stroke) {
+      addFilledArc(svg, cx, cy, sectorStart, sectorEnd, r, fill, stroke);
+      addArc(svg, cx, cy, sectorStart, sectorEnd, r, stroke, 'none', 2);
+    }
+
+    // Sector mid-angle
+    function sectorMid(a1, a2) {
+      const span = ((a2 - a1) % 360 + 360) % 360;
+      return a1 + span / 2;
+    }
+
+    // ── Given transversal at angle transAngle, the four sectors at each intersection:
+    //    right  (upper-right) : 0° → transAngle              [= transAngle]
+    //    upper  (upper-left)  : transAngle → 180°            [= 180-transAngle]
+    //    left   (lower-left)  : 180° → transAngle+180°       [= transAngle]
+    //    lower  (lower-right) : transAngle+180° → 360°       [= 180-transAngle]
+    //
+    // Naming the sectors by position at upper intersection (same labels repeat at lower):
+    //   "upper-right"  : a1=0,          a2=transAngle
+    //   "upper-left"   : a1=transAngle, a2=180
+    //   "lower-left"   : a1=180,        a2=transAngle+180
+    //   "lower-right"  : a1=transAngle+180, a2=360
+    //
+    // Corresponding pairs (same position): upper-right@top = upper-right@bottom, etc.
+    // Alternate pairs (between parallels, opposite sides):
+    //   lower-right@top (below L1, right of transversal)  ↔  upper-left@bottom (above L2, left of transversal)
+    //   lower-left@top  (below L1, left of transversal)   ↔  upper-right@bottom (above L2, right of transversal)
+    // Co-interior (between parallels, same side):
+    //   lower-right@top  +  upper-right@bottom  = 180°
+    //   lower-left@top   +  upper-left@bottom   = 180°
+
+    function sectors(transAngle) {
+      const T = transAngle;
+      return {
+        upperRight: [0, T],
+        upperLeft:  [T, 180],
+        lowerLeft:  [180, T + 180],
+        lowerRight: [T + 180, 360]
+      };
+    }
+
+    // ── Build all worked example diagrams ────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', function () {
+
+      const TRANS = 55; // transversal angle for worked examples
+      const CX1 = 120;  // x of transversal at upper parallel
+
+      // ── Example 1: Corresponding (upper-right at both intersections, 55°) ──
+      (function () {
+        const svg = document.getElementById('ex1-corr');
+        const { cx1, cy1, cx2, cy2 } = drawParallels(svg, TRANS, CX1);
+        const s = sectors(TRANS);
+        const R = 22, fillC = 'rgba(41,128,185,0.2)', strokeC = '#2980b9';
+        // Upper-right at top intersection
+        markAngle(svg, cx1, cy1, s.upperRight[0], s.upperRight[1], R, fillC, strokeC);
+        // Upper-right at bottom intersection (corresponding)
+        markAngle(svg, cx2, cy2, s.upperRight[0], s.upperRight[1], R, fillC, strokeC);
+        angleLabel(svg, cx1, cy1, sectorMid(...s.upperRight), R + 12, '55°', '#2980b9', 13);
+        angleLabel(svg, cx2, cy2, sectorMid(...s.upperRight), R + 12, '55°', '#2980b9', 13);
+        label(svg, 10, 205, 'Corresponding angles are equal (F-shape)', '#555', 12, 'start');
+      }());
+
+      // ── Example 2: Alternate (lower-right@top ↔ upper-left@bottom) ──
+      (function () {
+        const svg = document.getElementById('ex2-alt');
+        const { cx1, cy1, cx2, cy2 } = drawParallels(svg, TRANS, CX1);
+        const s = sectors(TRANS);
+        const R = 22;
+        // Lower-right at top (below upper parallel, right of transversal)
+        markAngle(svg, cx1, cy1, s.lowerRight[0], s.lowerRight[1], R, 'rgba(231,76,60,0.2)', '#e74c3c');
+        // Upper-left at bottom (above lower parallel, left of transversal) — the alternate
+        markAngle(svg, cx2, cy2, s.upperLeft[0], s.upperLeft[1], R, 'rgba(231,76,60,0.2)', '#e74c3c');
+        angleLabel(svg, cx1, cy1, sectorMid(...s.lowerRight), R + 12, '55°', '#e74c3c', 13);
+        angleLabel(svg, cx2, cy2, sectorMid(...s.upperLeft),  R + 12, '55°', '#e74c3c', 13);
+        label(svg, 10, 205, 'Alternate angles are equal (Z-shape)', '#555', 12, 'start');
+      }());
+
+      // ── Example 3: Co-interior (lower-right@top + upper-right@bottom = 180°) ──
+      (function () {
+        const svg = document.getElementById('ex3-coint');
+        const { cx1, cy1, cx2, cy2 } = drawParallels(svg, TRANS, CX1);
+        const s = sectors(TRANS);
+        const R = 22;
+        // Lower-right at top
+        markAngle(svg, cx1, cy1, s.lowerRight[0], s.lowerRight[1], R, 'rgba(231,76,60,0.2)', '#e74c3c');
+        // Upper-right at bottom
+        markAngle(svg, cx2, cy2, s.upperRight[0], s.upperRight[1], R, 'rgba(41,128,185,0.2)', '#2980b9');
+        const suppAngle = 180 - TRANS; // co-interior angles: TRANS + (180-TRANS) = 180
+        angleLabel(svg, cx1, cy1, sectorMid(...s.lowerRight), R + 12, suppAngle + '°', '#e74c3c', 13);
+        angleLabel(svg, cx2, cy2, sectorMid(...s.upperRight), R + 12, TRANS + '°', '#2980b9', 13);
+        label(svg, 10, 205, 'Co-interior angles sum to 180°: ' + suppAngle + '° + ' + TRANS + '° = 180° ✓', '#555', 12, 'start');
+      }());
+
+      // ── Question diagrams ─────────────────────────────────────────────────
+      // Each question uses a specific angle and highlights two specific sectors.
+      // Parameters: (svgId, transAngle, cx1, givenAngle, givenSectorFn, unknownSectorFn, type)
+      //   type: 'corr' | 'alt' | 'coint'
+
+      function buildQ(svgId, transAngle, cx1, givenLabel, unknownLabel, givenSectorKey, unknownSectorKey) {
+        const svg = document.getElementById(svgId);
+        const { cx1: icx1, cy1, cx2, cy2 } = drawParallels(svg, transAngle, cx1, 55);
+        const s = sectors(transAngle);
+        const R = 17;
+
+        const gs = s[givenSectorKey];
+        const us = s[unknownSectorKey];
+
+        markAngle(svg, icx1, cy1, gs[0], gs[1], R, 'rgba(230,126,34,0.2)', '#e67e22');
+        markAngle(svg, cx2,  cy2, us[0], us[1], R, 'rgba(41,128,185,0.15)', '#2980b9');
+        angleLabel(svg, icx1, cy1, sectorMid(...gs), R + 11, givenLabel, '#e67e22', 12);
+        angleLabel(svg, cx2,  cy2, sectorMid(...us), R + 11, unknownLabel, '#2980b9', 14);
+      }
+
+      // Corresponding: same sector key at both intersections
+      // — given at top, unknown at bottom (same sector = same position = corresponding)
+      // Q1: 70° corresponding → upper-right at top, upper-right at bottom
+      buildQ('q1-svg',  55, 115, '70°',  '?', 'upperRight', 'upperRight');
+      // Q2: 115° corresponding → upper-left at top, upper-left at bottom
+      buildQ('q2-svg',  55, 115, '115°', '?', 'upperLeft',  'upperLeft');
+      // Q3: 62° corresponding → upper-right at top, upper-right at bottom
+      buildQ('q3-svg',  55, 115, '62°',  '?', 'upperRight', 'upperRight');
+      // Q4: 98° corresponding → lower-right at top, lower-right at bottom
+      // (The obtuse angle 98° corresponds to lowerLeft = transAngle sector: need transAngle=98 for this)
+      // For Q4 we need a transversal where the "given" angle is lower-right (= 180 - transAngle).
+      // If lower-right = 98°, then 180 - transAngle = 98 → transAngle = 82°.
+      buildQ('q4-svg',  82, 115, '98°',  '?', 'lowerRight', 'lowerRight');
+
+      // Alternate: lower-right@top ↔ upper-left@bottom, or lower-left@top ↔ upper-right@bottom
+      // Q5: 55° alternate → lower-left@top ↔ upper-right@bottom
+      buildQ('q5-svg',  55, 115, '55°',  '?', 'lowerLeft',  'upperRight');
+      // Q6: 130° alternate → upper-left@top ↔ lower-right@bottom
+      // If upper-left = 130°, then 180-transAngle = 130 → transAngle = 50°
+      buildQ('q6-svg',  50, 115, '130°', '?', 'upperLeft',  'lowerRight');
+      // Q7: 73° alternate → lower-left@top ↔ upper-right@bottom
+      // lower-left = transAngle = 73° (since lowerLeft spans transAngle degrees)
+      buildQ('q7-svg',  73, 115, '73°',  '?', 'lowerLeft',  'upperRight');
+
+      // Co-interior: lower-right@top + upper-right@bottom = 180°  (right-side)
+      // Q8: 65° co-interior → lower-right@top, upper-right@bottom
+      // lower-right span = 180-transAngle. If 180-transAngle = 65 → transAngle = 115. But transAngle>90 is odd.
+      // Actually lowerRight = [T+180, 360], span = 360-(T+180) = 180-T. So 180-T = 65 → T = 115.
+      // Use T=115: transversal goes at 115° (up-left).
+      buildQ('q8-svg',  115, 80, '65°',  '?', 'lowerRight', 'upperRight');
+      // Q9: 120° co-interior → upper-left@top (span=180-T), upper-right@bottom (span=T)
+      // Using left-side co-interior: lowerLeft@top + upperLeft@bottom = 180°
+      // lowerLeft = T. If T = 120 → transversal at 120°
+      buildQ('q9-svg',  120, 80, '120°', '?', 'lowerLeft',  'upperLeft');
+      // Q10: 72° co-interior
+      // lowerRight span = 180-T = 72 → T = 108°
+      buildQ('q10-svg', 108, 80, '72°',  '?', 'lowerRight', 'upperRight');
+
+    });
   </script>
 
 </body>
