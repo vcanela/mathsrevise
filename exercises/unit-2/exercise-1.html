@@ -41,64 +41,26 @@
       font-size: 0.9rem;
       color: #7d6608;
     }
-
-    /* Algebra chip diagram */
-    .chip-diagram {
-      background: white;
-      border: 1px solid #c9e4f7;
-      border-radius: 8px;
-      padding: 0.9rem 1.1rem;
-      margin: 0.7rem 0;
-    }
-    .chip-label {
-      font-size: 0.82rem;
-      color: #666;
-      font-style: italic;
-      margin-bottom: 0.5rem;
-    }
-    .chip-row {
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      flex-wrap: wrap;
-    }
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 38px;
-      height: 38px;
-      border-radius: 6px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      color: white;
-    }
+    .chip-diagram { background: white; border: 1px solid #c9e4f7; border-radius: 8px; padding: 0.9rem 1.1rem; margin: 0.7rem 0; }
+    .chip-label { font-size: 0.82rem; color: #666; font-style: italic; margin-bottom: 0.5rem; }
+    .chip-row { display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap; }
+    .chip { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; color: white; }
     .chip.a-chip { background-color: #2980b9; }
     .chip.b-chip { background-color: #e67e22; }
-    .chip-plus {
-      font-size: 1.2rem;
-      color: #555;
-      font-weight: bold;
-      padding: 0 0.15rem;
-    }
-    .chip-group-sep {
-      width: 2px;
-      height: 38px;
-      background: #bbb;
-      border-radius: 2px;
-      margin: 0 0.35rem;
-    }
-
-    /* Color-coded like terms in example 2 */
+    .chip-plus { font-size: 1.2rem; color: #555; font-weight: bold; padding: 0 0.15rem; }
+    .chip-group-sep { width: 2px; height: 38px; background: #bbb; border-radius: 2px; margin: 0 0.35rem; }
     .term-p { color: #2980b9; font-weight: 700; }
     .term-q { color: #e67e22; font-weight: 700; }
 
+    /* ── Question block ───────────────────────────────────────────────── */
     .question-block {
+      position: relative;
       background: white;
       border: 1px solid #e0e0e0;
       border-radius: 8px;
       padding: 1rem 1.2rem;
       margin: 0.75rem 0;
+      overflow: hidden;
     }
     .question-top {
       display: flex;
@@ -128,6 +90,7 @@
     .answer-template input[type="number"]::-webkit-outer-spin-button,
     .answer-template input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .answer-template input[type="number"]:focus { outline: none; border-color: #2980b9; }
+    .answer-template input[type="number"]:disabled { opacity: 0.6; cursor: default; }
     .answer-template .var-label { font-style: italic; }
     .answer-template .sep { color: #888; font-size: 0.95rem; }
     .feedback { font-size: 0.9rem; font-weight: 600; display: block; margin-top: 0.4rem; }
@@ -142,12 +105,7 @@
       padding: 0.15rem 0.55rem;
       white-space: nowrap;
     }
-    .section-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #2c3e50;
-      margin: 1.2rem 0 0.4rem;
-    }
+    .section-title { font-size: 1.05rem; font-weight: 700; color: #2c3e50; margin: 1.2rem 0 0.4rem; }
     .instructions-note {
       font-size: 0.88rem;
       color: #555;
@@ -157,32 +115,64 @@
       margin: 0.5rem 0 0.9rem;
       border: 1px solid #e0e0e0;
     }
-    .check-btn {
+    .section-divider { border: none; border-top: 2px dashed #ddd; margin: 1.5rem 0; }
+
+    /* ── Timer bar ────────────────────────────────────────────────────── */
+    .timer-bar-wrap {
+      margin: -1rem -1.2rem 0.75rem;
+      height: 4px;
+      background: #ecf0f1;
+      border-radius: 8px 8px 0 0;
+      overflow: hidden;
+    }
+    .timer-bar-fill { height: 100%; width: 100%; background: #27ae60; border-radius: 8px; }
+
+    /* ── Submit button ────────────────────────────────────────────────── */
+    .submit-q-btn {
       display: inline-block;
-      margin-top: 1.2rem;
-      padding: 0.65rem 1.6rem;
-      background-color: #2980b9;
+      margin-left: 0.5rem;
+      padding: 0.35rem 0.75rem;
+      background: #27ae60;
       color: white;
       border: none;
       border-radius: 6px;
       font-size: 1rem;
       cursor: pointer;
-      transition: background-color 0.15s ease;
+      vertical-align: middle;
+      transition: background 0.15s;
     }
-    .check-btn:hover { background-color: #1f6da0; }
-    .score-box {
-      margin-top: 1rem;
-      padding: 0.8rem 1.2rem;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      display: none;
-    }
-    .score-box.show { display: block; }
-    .score-box.great { background: #eafaf1; color: #1e8449; border: 1px solid #a9dfbf; }
-    .score-box.ok    { background: #fef9e7; color: #9a7d0a; border: 1px solid #f9e79f; }
-    .score-box.poor  { background: #fdedec; color: #c0392b; border: 1px solid #f5b7b1; }
-    .section-divider { border: none; border-top: 2px dashed #ddd; margin: 1.5rem 0; }
+    .submit-q-btn:hover    { background: #1e8449; }
+    .submit-q-btn:disabled { background: #95a5a6; cursor: default; }
+
+    /* ── XP / results / modal ─────────────────────────────────────────── */
+    .xp-popup { position:absolute; right:1rem; top:0.6rem; font-size:1rem; font-weight:800; pointer-events:none; z-index:10; animation:xpFloat 1.4s ease-out forwards; }
+    .xp-popup-pos { color:#27ae60; } .xp-popup-neg { color:#e74c3c; } .xp-popup-zero { color:#95a5a6; }
+    @keyframes xpFloat { 0% { opacity:1; transform:translateY(0); } 60% { opacity:1; transform:translateY(-20px); } 100% { opacity:0; transform:translateY(-32px); } }
+    #xp-header { display:flex; align-items:center; gap:0.75rem; background:#1a252f; border-radius:8px; padding:0.6rem 1rem; margin-bottom:1.4rem; flex-wrap:wrap; }
+    .xp-level-badge { color:#f1c40f; font-weight:700; font-size:0.95rem; white-space:nowrap; }
+    .xp-bar-wrap { flex:1; min-width:100px; background:#34495e; border-radius:99px; height:10px; overflow:hidden; }
+    .xp-bar-fill { height:100%; background:#2ecc71; border-radius:99px; transition:width 0.5s ease; }
+    .xp-label { color:#bdc3c7; font-size:0.85rem; white-space:nowrap; }
+    .xp-label strong { color:#ecf0f1; }
+    .results-panel { background:linear-gradient(135deg,#eafaf1 0%,#d5f5e3 100%); border:2px solid #a9dfbf; border-radius:12px; padding:1.5rem 2rem; margin-top:1.5rem; text-align:center; }
+    .results-stars { font-size:2.4rem; letter-spacing:0.08em; margin-bottom:0.4rem; }
+    .results-score { font-size:1.3rem; font-weight:700; color:#1a7a3c; margin-bottom:0.25rem; }
+    .results-xp { font-size:1rem; color:#1e8449; margin-bottom:1rem; }
+    .results-no-xp { font-size:0.9rem; color:#7f8c8d; margin-bottom:1rem; }
+    .results-btns { display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap; }
+    .results-btns button { padding:0.55rem 1.3rem; background:#2980b9; color:white; border:none; border-radius:6px; font-size:0.95rem; cursor:pointer; }
+    .results-btns button:hover { background:#1f6da0; }
+    .results-btns a { padding:0.55rem 1.3rem; background:#ecf0f1; color:#2c3e50; border-radius:6px; text-decoration:none; font-size:0.95rem; }
+    .results-btns a:hover { background:#d5d8dc; }
+    .levelup-modal { position:fixed; inset:0; background:rgba(0,0,0,0.55); display:none; align-items:center; justify-content:center; z-index:1000; }
+    .levelup-modal.show { display:flex; }
+    .levelup-box { background:white; border-radius:16px; padding:2rem 2.5rem; text-align:center; max-width:340px; width:90%; box-shadow:0 12px 40px rgba(0,0,0,0.25); }
+    .levelup-emoji { font-size:3rem; margin-bottom:0.5rem; }
+    .levelup-box h2 { color:#f39c12; font-size:1.8rem; margin-bottom:0.5rem; }
+    .levelup-box p { color:#555; font-size:1rem; margin-bottom:0.4rem; }
+    .levelup-desc { font-size:0.9rem !important; color:#888 !important; }
+    .levelup-box button { margin-top:1rem; padding:0.6rem 1.8rem; background:#f39c12; color:white; border:none; border-radius:8px; font-size:1rem; font-weight:700; cursor:pointer; }
+    .levelup-box button:hover { background:#d68910; }
   </style>
 </head>
 <body>
@@ -203,71 +193,45 @@
   <main>
     <div class="exercise-area">
 
+      <div id="xp-header"></div>
+
       <h2>Worked Examples</h2>
 
-      <!-- Example 1: chip diagram -->
       <div class="worked-example">
         <h3>Example 1: \(3a + 2b + 2a + b = 5a + 3b\)</h3>
-
         <p class="step"><span class="step-label">Step 1</span> Lay out all terms as coloured chips.</p>
         <div class="chip-diagram">
           <div class="chip-label">All terms laid out in original order</div>
           <div class="chip-row">
-            <span class="chip a-chip">a</span>
-            <span class="chip a-chip">a</span>
-            <span class="chip a-chip">a</span>
+            <span class="chip a-chip">a</span><span class="chip a-chip">a</span><span class="chip a-chip">a</span>
             <span class="chip-plus">+</span>
-            <span class="chip b-chip">b</span>
-            <span class="chip b-chip">b</span>
+            <span class="chip b-chip">b</span><span class="chip b-chip">b</span>
             <span class="chip-plus">+</span>
-            <span class="chip a-chip">a</span>
-            <span class="chip a-chip">a</span>
+            <span class="chip a-chip">a</span><span class="chip a-chip">a</span>
             <span class="chip-plus">+</span>
             <span class="chip b-chip">b</span>
           </div>
         </div>
-
         <p class="step"><span class="step-label">Step 2</span> Re-arrange: group chips of the same colour together.</p>
         <div class="chip-diagram">
           <div class="chip-label">Grouped by colour (blue = <em>a</em>, orange = <em>b</em>)</div>
           <div class="chip-row">
-            <span class="chip a-chip">a</span>
-            <span class="chip a-chip">a</span>
-            <span class="chip a-chip">a</span>
-            <span class="chip a-chip">a</span>
-            <span class="chip a-chip">a</span>
+            <span class="chip a-chip">a</span><span class="chip a-chip">a</span><span class="chip a-chip">a</span><span class="chip a-chip">a</span><span class="chip a-chip">a</span>
             <span class="chip-group-sep"></span>
-            <span class="chip b-chip">b</span>
-            <span class="chip b-chip">b</span>
-            <span class="chip b-chip">b</span>
+            <span class="chip b-chip">b</span><span class="chip b-chip">b</span><span class="chip b-chip">b</span>
           </div>
         </div>
-
         <p class="step"><span class="step-label">Step 3</span> Count each group to get the result.</p>
         <p class="step"><strong>Answer: \(5a + 3b\)</strong></p>
       </div>
 
-      <!-- Example 2: algebraic with colour-coded like terms -->
       <div class="worked-example">
         <h3>Example 2: \(7p - 3q - 2p + 5q\)</h3>
-
-        <p class="step">
-          <span class="step-label">Step 1</span>
-          Identify like terms:
+        <p class="step"><span class="step-label">Step 1</span> Identify like terms:
           <span class="term-p">\(p\)-terms: \(7p\) and \(-2p\)</span>&nbsp;&nbsp;
-          <span class="term-q">\(q\)-terms: \(-3q\) and \(+5q\)</span>
-        </p>
-
-        <p class="step">
-          <span class="step-label">Step 2</span>
-          Rearrange by grouping like terms:
-          \(\bigl(\)<span class="term-p">\(7p - 2p\)</span>\(\bigr) + \bigl(\)<span class="term-q">\(-3q + 5q\)</span>\(\bigr)\)
-        </p>
-
-        <p class="step">
-          <span class="step-label">Step 3</span>
-          Collect: \(5p + 2q\)
-        </p>
+          <span class="term-q">\(q\)-terms: \(-3q\) and \(+5q\)</span></p>
+        <p class="step"><span class="step-label">Step 2</span> Rearrange: \(\bigl(\)<span class="term-p">\(7p - 2p\)</span>\(\bigr) + \bigl(\)<span class="term-q">\(-3q + 5q\)</span>\(\bigr)\)</p>
+        <p class="step"><span class="step-label">Step 3</span> Collect: \(5p + 2q\)</p>
         <p class="step"><strong>Answer: \(5p + 2q\)</strong></p>
       </div>
 
@@ -278,176 +242,171 @@
       <hr class="section-divider" />
 
       <h2>Your Turn</h2>
-      <p style="font-size:0.9rem; color:#666; margin-bottom:0.6rem;">Fill in the missing coefficients. Click <em>Check Answers</em> when you are done.</p>
+      <p style="font-size:0.9rem; color:#666; margin-bottom:0.6rem;">Fill in the missing coefficients. Press &#10003; to submit each question.</p>
 
       <div class="instructions-note">
-        For questions 6&ndash;10, use negative numbers where needed (e.g. type &minus;3 as <code>-3</code>). The + signs in the template are separators only.
+        For questions 6&ndash;10, use negative numbers where needed (e.g. type &minus;3 as <code>-3</code>).
       </div>
 
-      <form id="exercise-form">
+      <div class="section-title">Questions 1&ndash;5</div>
 
-        <div class="section-title">Questions 1&ndash;5</div>
-
-        <!-- Q1: 5c + 3c = 8c -->
-        <div class="question-block">
-          <div class="question-top">
-            <label>1. &nbsp; \(5c + 3c\)</label>
-          </div>
-          <div class="answer-template">
-            <span>=</span>
-            <input type="number" step="1" id="q1c1" placeholder="?" />
-            <span class="var-label">\(c\)</span>
-          </div>
-          <span class="feedback" id="f1"></span>
+      <!-- Q1: 5c + 3c = 8c -->
+      <div class="question-block" id="qb1">
+        <div id="tbw1" class="timer-bar-wrap"><div id="tb1" class="timer-bar-fill"></div></div>
+        <div class="question-top"><label>1. &nbsp; \(5c + 3c\)</label></div>
+        <div class="answer-template">
+          <span>=</span>
+          <input type="number" step="1" id="q1c1" placeholder="?" onfocus="qFocus(1)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerMulti(1)}" />
+          <span class="var-label">\(c\)</span>
+          <button class="submit-q-btn" id="sbtn1" onclick="answerMulti(1)">&#10003;</button>
         </div>
+        <span class="feedback" id="f1"></span>
+      </div>
 
-        <!-- Q2: 7d − 2d + 4d = 9d -->
-        <div class="question-block">
-          <div class="question-top">
-            <label>2. &nbsp; \(7d - 2d + 4d\)</label>
-          </div>
-          <div class="answer-template">
-            <span>=</span>
-            <input type="number" step="1" id="q2c1" placeholder="?" />
-            <span class="var-label">\(d\)</span>
-          </div>
-          <span class="feedback" id="f2"></span>
+      <!-- Q2: 7d − 2d + 4d = 9d -->
+      <div class="question-block" id="qb2">
+        <div id="tbw2" class="timer-bar-wrap"><div id="tb2" class="timer-bar-fill"></div></div>
+        <div class="question-top"><label>2. &nbsp; \(7d - 2d + 4d\)</label></div>
+        <div class="answer-template">
+          <span>=</span>
+          <input type="number" step="1" id="q2c1" placeholder="?" onfocus="qFocus(2)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerMulti(2)}" />
+          <span class="var-label">\(d\)</span>
+          <button class="submit-q-btn" id="sbtn2" onclick="answerMulti(2)">&#10003;</button>
         </div>
+        <span class="feedback" id="f2"></span>
+      </div>
 
-        <!-- Q3: 3f + 5g + 4f = 7f + 5g -->
-        <div class="question-block">
-          <div class="question-top">
-            <label>3. &nbsp; \(3f + 5g + 4f\)</label>
-          </div>
-          <div class="answer-template">
-            <span>=</span>
-            <input type="number" step="1" id="q3c1" placeholder="?" />
-            <span class="var-label">\(f\)</span>
-            <span class="sep">+</span>
-            <input type="number" step="1" id="q3c2" placeholder="?" />
-            <span class="var-label">\(g\)</span>
-          </div>
-          <span class="feedback" id="f3"></span>
+      <!-- Q3: 3f + 5g + 4f = 7f + 5g -->
+      <div class="question-block" id="qb3">
+        <div id="tbw3" class="timer-bar-wrap"><div id="tb3" class="timer-bar-fill"></div></div>
+        <div class="question-top"><label>3. &nbsp; \(3f + 5g + 4f\)</label></div>
+        <div class="answer-template">
+          <span>=</span>
+          <input type="number" step="1" id="q3c1" placeholder="?" onfocus="qFocus(3)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerMulti(3)}" />
+          <span class="var-label">\(f\)</span>
+          <span class="sep">+</span>
+          <input type="number" step="1" id="q3c2" placeholder="?" onfocus="qFocus(3)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerMulti(3)}" />
+          <span class="var-label">\(g\)</span>
+          <button class="submit-q-btn" id="sbtn3" onclick="answerMulti(3)">&#10003;</button>
         </div>
+        <span class="feedback" id="f3"></span>
+      </div>
 
-        <!-- Q4: 8h + 3k + 2h + 4k = 10h + 7k -->
-        <div class="question-block">
-          <div class="question-top">
-            <label>4. &nbsp; \(8h + 3k + 2h + 4k\)</label>
-          </div>
-          <div class="answer-template">
-            <span>=</span>
-            <input type="number" step="1" id="q4c1" placeholder="?" />
-            <span class="var-label">\(h\)</span>
-            <span class="sep">+</span>
-            <input type="number" step="1" id="q4c2" placeholder="?" />
-            <span class="var-label">\(k\)</span>
-          </div>
-          <span class="feedback" id="f4"></span>
+      <!-- Q4: 8h + 3k + 2h + 4k = 10h + 7k -->
+      <div class="question-block" id="qb4">
+        <div id="tbw4" class="timer-bar-wrap"><div id="tb4" class="timer-bar-fill"></div></div>
+        <div class="question-top"><label>4. &nbsp; \(8h + 3k + 2h + 4k\)</label></div>
+        <div class="answer-template">
+          <span>=</span>
+          <input type="number" step="1" id="q4c1" placeholder="?" onfocus="qFocus(4)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerMulti(4)}" />
+          <span class="var-label">\(h\)</span>
+          <span class="sep">+</span>
+          <input type="number" step="1" id="q4c2" placeholder="?" onfocus="qFocus(4)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerMulti(4)}" />
+          <span class="var-label">\(k\)</span>
+          <button class="submit-q-btn" id="sbtn4" onclick="answerMulti(4)">&#10003;</button>
         </div>
+        <span class="feedback" id="f4"></span>
+      </div>
 
-        <!-- Q5: 6v + 2w + v + 5w = 7v + 7w -->
-        <div class="question-block">
-          <div class="question-top">
-            <label>5. &nbsp; \(6v + 2w + v + 5w\)</label>
-          </div>
-          <div class="answer-template">
-            <span>=</span>
-            <input type="number" step="1" id="q5c1" placeholder="?" />
-            <span class="var-label">\(v\)</span>
-            <span class="sep">+</span>
-            <input type="number" step="1" id="q5c2" placeholder="?" />
-            <span class="var-label">\(w\)</span>
-          </div>
-          <span class="feedback" id="f5"></span>
+      <!-- Q5: 6v + 2w + v + 5w = 7v + 7w -->
+      <div class="question-block" id="qb5">
+        <div id="tbw5" class="timer-bar-wrap"><div id="tb5" class="timer-bar-fill"></div></div>
+        <div class="question-top"><label>5. &nbsp; \(6v + 2w + v + 5w\)</label></div>
+        <div class="answer-template">
+          <span>=</span>
+          <input type="number" step="1" id="q5c1" placeholder="?" onfocus="qFocus(5)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerMulti(5)}" />
+          <span class="var-label">\(v\)</span>
+          <span class="sep">+</span>
+          <input type="number" step="1" id="q5c2" placeholder="?" onfocus="qFocus(5)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerMulti(5)}" />
+          <span class="var-label">\(w\)</span>
+          <button class="submit-q-btn" id="sbtn5" onclick="answerMulti(5)">&#10003;</button>
         </div>
+        <span class="feedback" id="f5"></span>
+      </div>
 
-        <div class="section-title">Challenge Questions &#11088;</div>
+      <div class="section-title">Challenge Questions &#11088;</div>
 
-        <!-- Q6: 9x − 4y − 5x + 2y = 4x − 2y -->
-        <div class="question-block">
-          <div class="question-top">
-            <label>6. &nbsp; \(9x - 4y - 5x + 2y\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label>
-          </div>
-          <div class="answer-template">
-            <span>=</span>
-            <input type="number" step="1" id="q6c1" placeholder="?" />
-            <span class="var-label">\(x\)</span>
-            <span class="sep">+</span>
-            <input type="number" step="1" id="q6c2" placeholder="?" />
-            <span class="var-label">\(y\)</span>
-          </div>
-          <span class="feedback" id="f6"></span>
+      <!-- Q6: 9x − 4y − 5x + 2y = 4x − 2y -->
+      <div class="question-block" id="qb6">
+        <div id="tbw6" class="timer-bar-wrap"><div id="tb6" class="timer-bar-fill"></div></div>
+        <div class="question-top"><label>6. &nbsp; \(9x - 4y - 5x + 2y\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label></div>
+        <div class="answer-template">
+          <span>=</span>
+          <input type="number" step="1" id="q6c1" placeholder="?" onfocus="qFocus(6)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerMulti(6)}" />
+          <span class="var-label">\(x\)</span>
+          <span class="sep">+</span>
+          <input type="number" step="1" id="q6c2" placeholder="?" onfocus="qFocus(6)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerMulti(6)}" />
+          <span class="var-label">\(y\)</span>
+          <button class="submit-q-btn" id="sbtn6" onclick="answerMulti(6)">&#10003;</button>
         </div>
+        <span class="feedback" id="f6"></span>
+      </div>
 
-        <!-- Q7: 6r − 3s − 4r − 2s = 2r − 5s -->
-        <div class="question-block">
-          <div class="question-top">
-            <label>7. &nbsp; \(6r - 3s - 4r - 2s\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label>
-          </div>
-          <div class="answer-template">
-            <span>=</span>
-            <input type="number" step="1" id="q7c1" placeholder="?" />
-            <span class="var-label">\(r\)</span>
-            <span class="sep">+</span>
-            <input type="number" step="1" id="q7c2" placeholder="?" />
-            <span class="var-label">\(s\)</span>
-          </div>
-          <span class="feedback" id="f7"></span>
+      <!-- Q7: 6r − 3s − 4r − 2s = 2r − 5s -->
+      <div class="question-block" id="qb7">
+        <div id="tbw7" class="timer-bar-wrap"><div id="tb7" class="timer-bar-fill"></div></div>
+        <div class="question-top"><label>7. &nbsp; \(6r - 3s - 4r - 2s\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label></div>
+        <div class="answer-template">
+          <span>=</span>
+          <input type="number" step="1" id="q7c1" placeholder="?" onfocus="qFocus(7)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerMulti(7)}" />
+          <span class="var-label">\(r\)</span>
+          <span class="sep">+</span>
+          <input type="number" step="1" id="q7c2" placeholder="?" onfocus="qFocus(7)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerMulti(7)}" />
+          <span class="var-label">\(s\)</span>
+          <button class="submit-q-btn" id="sbtn7" onclick="answerMulti(7)">&#10003;</button>
         </div>
+        <span class="feedback" id="f7"></span>
+      </div>
 
-        <!-- Q8: 3c + 8d − 7c + 2d = −4c + 10d -->
-        <div class="question-block">
-          <div class="question-top">
-            <label>8. &nbsp; \(3c + 8d - 7c + 2d\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label>
-          </div>
-          <div class="answer-template">
-            <span>=</span>
-            <input type="number" step="1" id="q8c1" placeholder="?" />
-            <span class="var-label">\(c\)</span>
-            <span class="sep">+</span>
-            <input type="number" step="1" id="q8c2" placeholder="?" />
-            <span class="var-label">\(d\)</span>
-          </div>
-          <span class="feedback" id="f8"></span>
+      <!-- Q8: 3c + 8d − 7c + 2d = −4c + 10d -->
+      <div class="question-block" id="qb8">
+        <div id="tbw8" class="timer-bar-wrap"><div id="tb8" class="timer-bar-fill"></div></div>
+        <div class="question-top"><label>8. &nbsp; \(3c + 8d - 7c + 2d\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label></div>
+        <div class="answer-template">
+          <span>=</span>
+          <input type="number" step="1" id="q8c1" placeholder="?" onfocus="qFocus(8)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerMulti(8)}" />
+          <span class="var-label">\(c\)</span>
+          <span class="sep">+</span>
+          <input type="number" step="1" id="q8c2" placeholder="?" onfocus="qFocus(8)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerMulti(8)}" />
+          <span class="var-label">\(d\)</span>
+          <button class="submit-q-btn" id="sbtn8" onclick="answerMulti(8)">&#10003;</button>
         </div>
+        <span class="feedback" id="f8"></span>
+      </div>
 
-        <!-- Q9: 5e − 3f + 2e − 4f − e = 6e − 7f -->
-        <div class="question-block">
-          <div class="question-top">
-            <label>9. &nbsp; \(5e - 3f + 2e - 4f - e\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label>
-          </div>
-          <div class="answer-template">
-            <span>=</span>
-            <input type="number" step="1" id="q9c1" placeholder="?" />
-            <span class="var-label">\(e\)</span>
-            <span class="sep">+</span>
-            <input type="number" step="1" id="q9c2" placeholder="?" />
-            <span class="var-label">\(f\)</span>
-          </div>
-          <span class="feedback" id="f9"></span>
+      <!-- Q9: 5e − 3f + 2e − 4f − e = 6e − 7f -->
+      <div class="question-block" id="qb9">
+        <div id="tbw9" class="timer-bar-wrap"><div id="tb9" class="timer-bar-fill"></div></div>
+        <div class="question-top"><label>9. &nbsp; \(5e - 3f + 2e - 4f - e\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label></div>
+        <div class="answer-template">
+          <span>=</span>
+          <input type="number" step="1" id="q9c1" placeholder="?" onfocus="qFocus(9)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerMulti(9)}" />
+          <span class="var-label">\(e\)</span>
+          <span class="sep">+</span>
+          <input type="number" step="1" id="q9c2" placeholder="?" onfocus="qFocus(9)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerMulti(9)}" />
+          <span class="var-label">\(f\)</span>
+          <button class="submit-q-btn" id="sbtn9" onclick="answerMulti(9)">&#10003;</button>
         </div>
+        <span class="feedback" id="f9"></span>
+      </div>
 
-        <!-- Q10: 8g − 6h + g − 2h − 3g = 6g − 8h -->
-        <div class="question-block">
-          <div class="question-top">
-            <label>10. &nbsp; \(8g - 6h + g - 2h - 3g\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label>
-          </div>
-          <div class="answer-template">
-            <span>=</span>
-            <input type="number" step="1" id="q10c1" placeholder="?" />
-            <span class="var-label">\(g\)</span>
-            <span class="sep">+</span>
-            <input type="number" step="1" id="q10c2" placeholder="?" />
-            <span class="var-label">\(h\)</span>
-          </div>
-          <span class="feedback" id="f10"></span>
+      <!-- Q10: 8g − 6h + g − 2h − 3g = 6g − 8h -->
+      <div class="question-block" id="qb10">
+        <div id="tbw10" class="timer-bar-wrap"><div id="tb10" class="timer-bar-fill"></div></div>
+        <div class="question-top"><label>10. &nbsp; \(8g - 6h + g - 2h - 3g\) &nbsp;<span class="challenge-label">Challenge &#11088;</span></label></div>
+        <div class="answer-template">
+          <span>=</span>
+          <input type="number" step="1" id="q10c1" placeholder="?" onfocus="qFocus(10)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerMulti(10)}" />
+          <span class="var-label">\(g\)</span>
+          <span class="sep">+</span>
+          <input type="number" step="1" id="q10c2" placeholder="?" onfocus="qFocus(10)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerMulti(10)}" />
+          <span class="var-label">\(h\)</span>
+          <button class="submit-q-btn" id="sbtn10" onclick="answerMulti(10)">&#10003;</button>
         </div>
+        <span class="feedback" id="f10"></span>
+      </div>
 
-        <button type="button" class="check-btn" onclick="checkAnswers()">Check Answers</button>
-      </form>
-
-      <div class="score-box" id="score-box"></div>
+      <div id="results-panel" class="results-panel" style="display:none"></div>
 
     </div>
 
@@ -458,9 +417,22 @@
     Maths Revision &middot; Unit 2: Algebra
   </footer>
 
+  <div id="levelup-modal" class="levelup-modal">
+    <div class="levelup-box">
+      <div class="levelup-emoji">&#127881;</div>
+      <h2>Level Up!</h2>
+      <p>You&rsquo;re now a <strong id="levelup-name"></strong>!</p>
+      <p id="levelup-desc" class="levelup-desc"></p>
+      <button onclick="document.getElementById('levelup-modal').classList.remove('show')">Continue &rarr;</button>
+    </div>
+  </div>
+
+  <script src="../../js/game.js"></script>
+  <script src="../../js/timer.js"></script>
   <script>
-    // Each entry: array of correct coefficients matching the inputs for that question
-    const answers = {
+    'use strict';
+
+    const ANSWERS = {
       q1:  [8],
       q2:  [9],
       q3:  [7, 5],
@@ -473,7 +445,7 @@
       q10: [6, -8]
     };
 
-    const inputIds = {
+    const INPUT_IDS = {
       q1:  ['q1c1'],
       q2:  ['q2c1'],
       q3:  ['q3c1', 'q3c2'],
@@ -486,44 +458,115 @@
       q10: ['q10c1', 'q10c2']
     };
 
-    function checkAnswers() {
-      let correct = 0;
-      const total = Object.keys(answers).length;
+    const TOTAL_QUESTIONS = 10;
+    const MAX_SCORE       = TOTAL_QUESTIONS * 15;
 
-      for (const [qKey, expected] of Object.entries(answers)) {
-        const num = qKey.slice(1);
-        const ids = inputIds[qKey];
-        const feedback = document.getElementById('f' + num);
-        let qCorrect = true;
+    const timers   = {};
+    const answered = new Set();
+    let   runTotal = 0;
 
-        for (let i = 0; i < ids.length; i++) {
-          const input = document.getElementById(ids[i]);
-          const val = parseInt(input.value, 10);
-          if (isNaN(val) || val !== expected[i]) {
-            qCorrect = false;
-            input.style.borderColor = '#e74c3c';
-          } else {
-            input.style.borderColor = '#27ae60';
-          }
-        }
+    function initTimers() {
+      const lvl = MRG.getCurrentLevel();
+      for (let n = 1; n <= TOTAL_QUESTIONS; n++) {
+        timers[n] = new QuestionTimer(document.getElementById('tb' + n), lvl.timerSecs);
+        const wrap = document.getElementById('tbw' + n);
+        if (wrap) wrap.style.display = lvl.timerVisible ? 'block' : 'none';
+      }
+    }
 
-        if (qCorrect) {
-          feedback.textContent = '\u2713 Correct!';
-          feedback.className = 'feedback correct';
-          correct++;
-        } else {
-          feedback.textContent = '\u2717 Answer: [' + expected.join(', ') + ']';
-          feedback.className = 'feedback incorrect';
-        }
+    function qFocus(n) {
+      if (answered.has(n)) return;
+      if (!timers[n].hasStarted()) timers[n].start();
+    }
+
+    function answerMulti(n) {
+      if (answered.has(n)) return;
+      const key      = 'q' + n;
+      const ids      = INPUT_IDS[key];
+      const expected = ANSWERS[key];
+      // Check all inputs are filled
+      for (const id of ids) {
+        if (document.getElementById(id).value === '') return;
+      }
+      const elapsed = timers[n].stop();
+      answered.add(n);
+
+      let allCorrect = true;
+      for (let i = 0; i < ids.length; i++) {
+        const el  = document.getElementById(ids[i]);
+        const val = parseInt(el.value, 10);
+        const ok  = !isNaN(val) && val === expected[i];
+        if (!ok) allCorrect = false;
+        el.style.borderColor = ok ? '#27ae60' : '#e74c3c';
+        el.disabled = true;
       }
 
-      const box = document.getElementById('score-box');
-      box.textContent = 'You got ' + correct + ' out of ' + total + '.';
-      box.className = 'score-box show ' + (correct === total ? 'great' : correct >= 7 ? 'ok' : 'poor');
-      if (correct === total) box.textContent += ' Excellent work!';
-      else if (correct >= 7) box.textContent += ' Good effort \u2014 review the ones you missed.';
-      else box.textContent += ' Keep practising \u2014 re-read the worked examples and try again.';
+      const pts = MRG.scoreQuestion(allCorrect, elapsed);
+      runTotal += pts;
+
+      const btn = document.getElementById('sbtn' + n);
+      if (btn) btn.disabled = true;
+
+      const fb = document.getElementById('f' + n);
+      fb.textContent = allCorrect ? '✓ Correct!' : '✗ Answer: [' + expected.join(', ') + ']';
+      fb.className   = 'feedback ' + (allCorrect ? 'correct' : 'incorrect');
+
+      _showPopup(n, pts);
+      if (answered.size === TOTAL_QUESTIONS) setTimeout(_showResults, 500);
     }
+
+    function _showPopup(n, pts) {
+      const pop = document.createElement('div');
+      pop.className   = 'xp-popup ' + (pts > 0 ? 'xp-popup-pos' : pts < 0 ? 'xp-popup-neg' : 'xp-popup-zero');
+      pop.textContent = pts > 0 ? '+' + pts + ' pts' : pts + ' pts';
+      document.getElementById('qb' + n).appendChild(pop);
+      setTimeout(() => pop.remove(), 1500);
+    }
+
+    function _showResults() {
+      const total  = Math.max(0, runTotal);
+      const result = MRG.finishExercise('u2e1', total, MAX_SCORE);
+      const starStr = '⭐'.repeat(result.stars) + '☆'.repeat(3 - result.stars);
+      let xpHTML;
+      if (result.xpGained > 0) {
+        xpHTML = `<div class="results-xp">+${result.xpGained} XP earned &rarr; Total: ${result.newTotal} XP</div>`;
+      } else if (result.stars === 0) {
+        xpHTML = `<div class="results-no-xp">No XP yet &mdash; reach &#11088; (score &ge; 71&nbsp;pts) to earn XP.</div>`;
+      } else {
+        xpHTML = `<div class="results-no-xp">No new XP &mdash; you&rsquo;ve already matched your personal best.</div>`;
+      }
+      const panel = document.getElementById('results-panel');
+      panel.innerHTML = `
+        <div class="results-stars">${starStr}</div>
+        <div class="results-score">${total} / ${MAX_SCORE} pts</div>
+        ${xpHTML}
+        <div class="results-btns">
+          <button onclick="location.reload()">&#8629; Try Again</button>
+          <a href="../../units/unit-2.html">&larr; Back to Unit 2</a>
+        </div>`;
+      panel.style.display = 'block';
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      renderXPHeader();
+      if (result.leveledUp) setTimeout(() => _showLevelUp(result.newLevel), 700);
+    }
+
+    function _showLevelUp(lvl) {
+      const descs = { 2:'Timers are now active. Wrong answers cost 3 pts.', 3:'The countdown is tighter (15 s).', 4:'Hard mode unlocked!' };
+      document.getElementById('levelup-name').textContent = lvl.name;
+      document.getElementById('levelup-desc').textContent = descs[lvl.level] || '';
+      document.getElementById('levelup-modal').classList.add('show');
+    }
+
+    function renderXPHeader() {
+      const info    = MRG.getLevelInfo();
+      const nextTxt = info.next ? `${info.xpToNext} XP to <strong>${info.next.name}</strong>` : '<strong>Max Level!</strong>';
+      document.getElementById('xp-header').innerHTML = `
+        <span class="xp-level-badge">&#x1F3C5; ${info.current.name}</span>
+        <div class="xp-bar-wrap"><div class="xp-bar-fill" style="width:${info.pct.toFixed(1)}%"></div></div>
+        <span class="xp-label">${info.xp} XP &middot; ${nextTxt}</span>`;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => { initTimers(); renderXPHeader(); });
   </script>
 
 </body>

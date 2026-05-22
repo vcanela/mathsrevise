@@ -49,11 +49,13 @@
     }
     .rule-box strong { color: #1a7a3c; }
     .question-block {
+      position: relative;
       background: white;
       border: 1px solid #e0e0e0;
       border-radius: 8px;
       padding: 1rem 1.2rem;
       margin: 0.75rem 0;
+      overflow: hidden;
     }
     .q-inner { display: flex; gap: 1.2rem; align-items: flex-start; flex-wrap: wrap; }
     .q-inner svg { flex-shrink: 0; }
@@ -66,12 +68,13 @@
       border-radius: 6px;
       text-align: center;
       -moz-appearance: textfield;
-      display: block;
+      display: inline-block;
       margin-top: 0.4rem;
     }
     .question-block input[type="number"]::-webkit-outer-spin-button,
     .question-block input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .question-block input[type="number"]:focus { outline: none; border-color: #2980b9; }
+    .question-block input[type="number"]:disabled { opacity: 0.6; cursor: default; }
     .feedback { font-size: 0.9rem; font-weight: 600; display: block; margin-top: 0.4rem; }
     .feedback.correct { color: #27ae60; }
     .feedback.incorrect { color: #e74c3c; }
@@ -81,32 +84,90 @@
       color: #2c3e50;
       margin: 1.2rem 0 0.4rem;
     }
-    .check-btn {
+    .section-divider { border: none; border-top: 2px dashed #ddd; margin: 1.5rem 0; }
+
+    /* ── Per-question timer bar ───────────────────────────────────── */
+    .timer-bar-wrap {
+      margin: -1rem -1.2rem 0.75rem;
+      height: 4px;
+      background: #ecf0f1;
+      border-radius: 8px 8px 0 0;
+      overflow: hidden;
+    }
+    .timer-bar-fill { height: 100%; width: 100%; background: #27ae60; border-radius: 8px; }
+
+    /* ── Submit button ─────────────────────────────────────────────── */
+    .submit-q-btn {
       display: inline-block;
-      margin-top: 1.2rem;
-      padding: 0.65rem 1.6rem;
-      background-color: #2980b9;
+      margin-left: 0.5rem;
+      padding: 0.35rem 0.75rem;
+      background: #27ae60;
       color: white;
       border: none;
       border-radius: 6px;
       font-size: 1rem;
       cursor: pointer;
-      transition: background-color 0.15s ease;
+      vertical-align: middle;
+      transition: background 0.15s;
     }
-    .check-btn:hover { background-color: #1f6da0; }
-    .score-box {
-      margin-top: 1rem;
-      padding: 0.8rem 1.2rem;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      display: none;
+    .submit-q-btn:hover    { background: #1e8449; }
+    .submit-q-btn:disabled { background: #95a5a6; cursor: default; }
+
+    /* ── Floating XP popup ───────────────────────────────────────── */
+    .xp-popup {
+      position: absolute; right: 1rem; top: 0.6rem;
+      font-size: 1rem; font-weight: 800;
+      pointer-events: none; z-index: 10;
+      animation: xpFloat 1.4s ease-out forwards;
     }
-    .score-box.show { display: block; }
-    .score-box.great { background: #eafaf1; color: #1e8449; border: 1px solid #a9dfbf; }
-    .score-box.ok    { background: #fef9e7; color: #9a7d0a; border: 1px solid #f9e79f; }
-    .score-box.poor  { background: #fdedec; color: #c0392b; border: 1px solid #f5b7b1; }
-    .section-divider { border: none; border-top: 2px dashed #ddd; margin: 1.5rem 0; }
+    .xp-popup-pos  { color: #27ae60; }
+    .xp-popup-neg  { color: #e74c3c; }
+    .xp-popup-zero { color: #95a5a6; }
+    @keyframes xpFloat {
+      0%   { opacity: 1; transform: translateY(0); }
+      60%  { opacity: 1; transform: translateY(-20px); }
+      100% { opacity: 0; transform: translateY(-32px); }
+    }
+
+    /* ── XP header bar ───────────────────────────────────────────── */
+    #xp-header {
+      display: flex; align-items: center; gap: 0.75rem;
+      background: #1a252f; border-radius: 8px;
+      padding: 0.6rem 1rem; margin-bottom: 1.4rem; flex-wrap: wrap;
+    }
+    .xp-level-badge { color: #f1c40f; font-weight: 700; font-size: 0.95rem; white-space: nowrap; }
+    .xp-bar-wrap { flex: 1; min-width: 100px; background: #34495e; border-radius: 99px; height: 10px; overflow: hidden; }
+    .xp-bar-fill { height: 100%; background: #2ecc71; border-radius: 99px; transition: width 0.5s ease; }
+    .xp-label { color: #bdc3c7; font-size: 0.85rem; white-space: nowrap; }
+    .xp-label strong { color: #ecf0f1; }
+
+    /* ── Results panel ───────────────────────────────────────────── */
+    .results-panel {
+      background: linear-gradient(135deg, #eafaf1 0%, #d5f5e3 100%);
+      border: 2px solid #a9dfbf; border-radius: 12px;
+      padding: 1.5rem 2rem; margin-top: 1.5rem; text-align: center;
+    }
+    .results-stars   { font-size: 2.4rem; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+    .results-score   { font-size: 1.3rem; font-weight: 700; color: #1a7a3c; margin-bottom: 0.25rem; }
+    .results-xp      { font-size: 1rem; color: #1e8449; margin-bottom: 1rem; }
+    .results-no-xp   { font-size: 0.9rem; color: #7f8c8d; margin-bottom: 1rem; }
+    .results-btns    { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+    .results-btns button { padding: 0.55rem 1.3rem; background: #2980b9; color: white; border: none; border-radius: 6px; font-size: 0.95rem; cursor: pointer; }
+    .results-btns button:hover { background: #1f6da0; }
+    .results-btns a  { padding: 0.55rem 1.3rem; background: #ecf0f1; color: #2c3e50; border-radius: 6px; text-decoration: none; font-size: 0.95rem; }
+    .results-btns a:hover { background: #d5d8dc; }
+
+    /* ── Level-up modal ──────────────────────────────────────────── */
+    .levelup-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.55); display: none; align-items: center; justify-content: center; z-index: 1000; }
+    .levelup-modal.show { display: flex; }
+    .levelup-box { background: white; border-radius: 16px; padding: 2rem 2.5rem; text-align: center; max-width: 340px; width: 90%; box-shadow: 0 12px 40px rgba(0,0,0,0.25); animation: luPop 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+    @keyframes luPop { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .levelup-emoji { font-size: 3rem; margin-bottom: 0.5rem; }
+    .levelup-box h2 { color: #f39c12; font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .levelup-box p  { color: #555; font-size: 1rem; margin-bottom: 0.4rem; }
+    .levelup-desc   { font-size: 0.9rem !important; color: #888 !important; }
+    .levelup-box button { margin-top: 1rem; padding: 0.6rem 1.8rem; background: #f39c12; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; }
+    .levelup-box button:hover { background: #d68910; }
   </style>
 </head>
 <body>
@@ -126,6 +187,9 @@
 
   <main>
     <div class="exercise-area">
+
+      <!-- XP header — populated by renderXPHeader() -->
+      <div id="xp-header"></div>
 
       <h2>Worked Examples</h2>
 
@@ -166,140 +230,176 @@
       <hr class="section-divider" />
 
       <h2>Your Turn</h2>
-      <p style="font-size:0.9rem; color:#666; margin-bottom:0.6rem;">Find each missing angle. Click <em>Check Answers</em> when you are done.</p>
+      <p style="font-size:0.9rem; color:#666; margin-bottom:0.6rem;">Answer each question — it scores the moment you submit.</p>
 
-      <form id="exercise-form">
+      <div class="section-title">Questions 1 to 7: Missing angle in a triangle</div>
 
-        <div class="section-title">Questions 1 to 7: Missing angle in a triangle</div>
-
-        <!-- Q1 -->
-        <div class="question-block">
-          <div class="q-inner">
-            <svg id="q1-svg" viewBox="0 0 200 155" width="180" height="140"></svg>
-            <div class="q-text">
-              <label>1. &nbsp; A triangle has angles 60° and 80°. Find the missing angle. (°)</label>
-              <input type="number" step="1" min="0" max="180" id="q1" placeholder="?" />
-              <span class="feedback" id="f1"></span>
-            </div>
+      <!-- Q1 -->
+      <div class="question-block" id="qb1">
+        <div id="tbw1" class="timer-bar-wrap"><div id="tb1" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <svg id="q1-svg" viewBox="0 0 200 155" width="180" height="140"></svg>
+          <div class="q-text">
+            <label>1. &nbsp; A triangle has angles 60° and 80°. Find the missing angle. (°)</label>
+            <input type="number" step="1" min="0" max="180" id="q1" placeholder="?"
+              onfocus="qFocus(1)"
+              onkeydown="if(event.key==='Enter'){event.preventDefault();answerNum(1)}" />
+            <button class="submit-q-btn" id="sbtn1" onclick="answerNum(1)">✓</button>
+            <span class="feedback" id="f1"></span>
           </div>
         </div>
+      </div>
 
-        <!-- Q2 -->
-        <div class="question-block">
-          <div class="q-inner">
-            <svg id="q2-svg" viewBox="0 0 200 155" width="180" height="140"></svg>
-            <div class="q-text">
-              <label>2. &nbsp; A right-angled triangle has angles 90° and 45°. Find the missing angle. (°)</label>
-              <input type="number" step="1" min="0" max="180" id="q2" placeholder="?" />
-              <span class="feedback" id="f2"></span>
-            </div>
+      <!-- Q2 -->
+      <div class="question-block" id="qb2">
+        <div id="tbw2" class="timer-bar-wrap"><div id="tb2" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <svg id="q2-svg" viewBox="0 0 200 155" width="180" height="140"></svg>
+          <div class="q-text">
+            <label>2. &nbsp; A right-angled triangle has angles 90° and 45°. Find the missing angle. (°)</label>
+            <input type="number" step="1" min="0" max="180" id="q2" placeholder="?"
+              onfocus="qFocus(2)"
+              onkeydown="if(event.key==='Enter'){event.preventDefault();answerNum(2)}" />
+            <button class="submit-q-btn" id="sbtn2" onclick="answerNum(2)">✓</button>
+            <span class="feedback" id="f2"></span>
           </div>
         </div>
+      </div>
 
-        <!-- Q3 -->
-        <div class="question-block">
-          <div class="q-inner">
-            <svg id="q3-svg" viewBox="0 0 200 155" width="180" height="140"></svg>
-            <div class="q-text">
-              <label>3. &nbsp; A triangle has angles 35° and 75°. Find the missing angle. (°)</label>
-              <input type="number" step="1" min="0" max="180" id="q3" placeholder="?" />
-              <span class="feedback" id="f3"></span>
-            </div>
+      <!-- Q3 -->
+      <div class="question-block" id="qb3">
+        <div id="tbw3" class="timer-bar-wrap"><div id="tb3" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <svg id="q3-svg" viewBox="0 0 200 155" width="180" height="140"></svg>
+          <div class="q-text">
+            <label>3. &nbsp; A triangle has angles 35° and 75°. Find the missing angle. (°)</label>
+            <input type="number" step="1" min="0" max="180" id="q3" placeholder="?"
+              onfocus="qFocus(3)"
+              onkeydown="if(event.key==='Enter'){event.preventDefault();answerNum(3)}" />
+            <button class="submit-q-btn" id="sbtn3" onclick="answerNum(3)">✓</button>
+            <span class="feedback" id="f3"></span>
           </div>
         </div>
+      </div>
 
-        <!-- Q4 -->
-        <div class="question-block">
-          <div class="q-inner">
-            <svg id="q4-svg" viewBox="0 0 200 155" width="180" height="140"></svg>
-            <div class="q-text">
-              <label>4. &nbsp; A triangle has angles 50° and 65°. Find the missing angle. (°)</label>
-              <input type="number" step="1" min="0" max="180" id="q4" placeholder="?" />
-              <span class="feedback" id="f4"></span>
-            </div>
+      <!-- Q4 -->
+      <div class="question-block" id="qb4">
+        <div id="tbw4" class="timer-bar-wrap"><div id="tb4" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <svg id="q4-svg" viewBox="0 0 200 155" width="180" height="140"></svg>
+          <div class="q-text">
+            <label>4. &nbsp; A triangle has angles 50° and 65°. Find the missing angle. (°)</label>
+            <input type="number" step="1" min="0" max="180" id="q4" placeholder="?"
+              onfocus="qFocus(4)"
+              onkeydown="if(event.key==='Enter'){event.preventDefault();answerNum(4)}" />
+            <button class="submit-q-btn" id="sbtn4" onclick="answerNum(4)">✓</button>
+            <span class="feedback" id="f4"></span>
           </div>
         </div>
+      </div>
 
-        <!-- Q5 -->
-        <div class="question-block">
-          <div class="q-inner">
-            <svg id="q5-svg" viewBox="0 0 200 155" width="180" height="140"></svg>
-            <div class="q-text">
-              <label>5. &nbsp; A right-angled triangle has angles 90° and 52°. Find the missing angle. (°)</label>
-              <input type="number" step="1" min="0" max="180" id="q5" placeholder="?" />
-              <span class="feedback" id="f5"></span>
-            </div>
+      <!-- Q5 -->
+      <div class="question-block" id="qb5">
+        <div id="tbw5" class="timer-bar-wrap"><div id="tb5" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <svg id="q5-svg" viewBox="0 0 200 155" width="180" height="140"></svg>
+          <div class="q-text">
+            <label>5. &nbsp; A right-angled triangle has angles 90° and 52°. Find the missing angle. (°)</label>
+            <input type="number" step="1" min="0" max="180" id="q5" placeholder="?"
+              onfocus="qFocus(5)"
+              onkeydown="if(event.key==='Enter'){event.preventDefault();answerNum(5)}" />
+            <button class="submit-q-btn" id="sbtn5" onclick="answerNum(5)">✓</button>
+            <span class="feedback" id="f5"></span>
           </div>
         </div>
+      </div>
 
-        <!-- Q6 -->
-        <div class="question-block">
-          <div class="q-inner">
-            <svg id="q6-svg" viewBox="0 0 220 155" width="200" height="140"></svg>
-            <div class="q-text">
-              <label>6. &nbsp; An obtuse triangle has angles 110° and 30°. Find the missing angle. (°)</label>
-              <input type="number" step="1" min="0" max="180" id="q6" placeholder="?" />
-              <span class="feedback" id="f6"></span>
-            </div>
+      <!-- Q6 -->
+      <div class="question-block" id="qb6">
+        <div id="tbw6" class="timer-bar-wrap"><div id="tb6" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <svg id="q6-svg" viewBox="0 0 220 155" width="200" height="140"></svg>
+          <div class="q-text">
+            <label>6. &nbsp; An obtuse triangle has angles 110° and 30°. Find the missing angle. (°)</label>
+            <input type="number" step="1" min="0" max="180" id="q6" placeholder="?"
+              onfocus="qFocus(6)"
+              onkeydown="if(event.key==='Enter'){event.preventDefault();answerNum(6)}" />
+            <button class="submit-q-btn" id="sbtn6" onclick="answerNum(6)">✓</button>
+            <span class="feedback" id="f6"></span>
           </div>
         </div>
+      </div>
 
-        <!-- Q7 -->
-        <div class="question-block">
-          <div class="q-inner">
-            <svg id="q7-svg" viewBox="0 0 200 155" width="180" height="140"></svg>
-            <div class="q-text">
-              <label>7. &nbsp; An isosceles triangle has two angles of 40° each. Find the missing angle. (°)</label>
-              <input type="number" step="1" min="0" max="180" id="q7" placeholder="?" />
-              <span class="feedback" id="f7"></span>
-            </div>
+      <!-- Q7 -->
+      <div class="question-block" id="qb7">
+        <div id="tbw7" class="timer-bar-wrap"><div id="tb7" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <svg id="q7-svg" viewBox="0 0 200 155" width="180" height="140"></svg>
+          <div class="q-text">
+            <label>7. &nbsp; An isosceles triangle has two angles of 40° each. Find the missing angle. (°)</label>
+            <input type="number" step="1" min="0" max="180" id="q7" placeholder="?"
+              onfocus="qFocus(7)"
+              onkeydown="if(event.key==='Enter'){event.preventDefault();answerNum(7)}" />
+            <button class="submit-q-btn" id="sbtn7" onclick="answerNum(7)">✓</button>
+            <span class="feedback" id="f7"></span>
           </div>
         </div>
+      </div>
 
-        <div class="section-title">Questions 8 to 10: Vertically opposite angles</div>
+      <div class="section-title">Questions 8 to 10: Vertically opposite angles</div>
 
-        <!-- Q8 -->
-        <div class="question-block">
-          <div class="q-inner">
-            <svg id="q8-svg" viewBox="0 0 180 145" width="160" height="128"></svg>
-            <div class="q-text">
-              <label>8. &nbsp; Two lines cross. One angle is 47°. What is the vertically opposite angle? (°)</label>
-              <input type="number" step="1" min="0" max="360" id="q8" placeholder="?" />
-              <span class="feedback" id="f8"></span>
-            </div>
+      <!-- Q8 -->
+      <div class="question-block" id="qb8">
+        <div id="tbw8" class="timer-bar-wrap"><div id="tb8" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <svg id="q8-svg" viewBox="0 0 180 145" width="160" height="128"></svg>
+          <div class="q-text">
+            <label>8. &nbsp; Two lines cross. One angle is 47°. What is the vertically opposite angle? (°)</label>
+            <input type="number" step="1" min="0" max="360" id="q8" placeholder="?"
+              onfocus="qFocus(8)"
+              onkeydown="if(event.key==='Enter'){event.preventDefault();answerNum(8)}" />
+            <button class="submit-q-btn" id="sbtn8" onclick="answerNum(8)">✓</button>
+            <span class="feedback" id="f8"></span>
           </div>
         </div>
+      </div>
 
-        <!-- Q9 -->
-        <div class="question-block">
-          <div class="q-inner">
-            <svg id="q9-svg" viewBox="0 0 180 145" width="160" height="128"></svg>
-            <div class="q-text">
-              <label>9. &nbsp; Two lines cross. One angle is 68°. What is the angle on a straight line from it (supplementary)? (°)</label>
-              <input type="number" step="1" min="0" max="360" id="q9" placeholder="?" />
-              <span class="feedback" id="f9"></span>
-            </div>
+      <!-- Q9 -->
+      <div class="question-block" id="qb9">
+        <div id="tbw9" class="timer-bar-wrap"><div id="tb9" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <svg id="q9-svg" viewBox="0 0 180 145" width="160" height="128"></svg>
+          <div class="q-text">
+            <label>9. &nbsp; Two lines cross. One angle is 68°. What is the angle on a straight line from it (supplementary)? (°)</label>
+            <input type="number" step="1" min="0" max="360" id="q9" placeholder="?"
+              onfocus="qFocus(9)"
+              onkeydown="if(event.key==='Enter'){event.preventDefault();answerNum(9)}" />
+            <button class="submit-q-btn" id="sbtn9" onclick="answerNum(9)">✓</button>
+            <span class="feedback" id="f9"></span>
           </div>
         </div>
+      </div>
 
-        <!-- Q10 -->
-        <div class="question-block">
-          <div class="q-inner">
-            <svg id="q10-svg" viewBox="0 0 180 145" width="160" height="128"></svg>
-            <div class="q-text">
-              <label>10. &nbsp; Two lines cross. One angle is 124°. What is the vertically opposite angle? (°)</label>
-              <input type="number" step="1" min="0" max="360" id="q10" placeholder="?" />
-              <span class="feedback" id="f10"></span>
-            </div>
+      <!-- Q10 -->
+      <div class="question-block" id="qb10">
+        <div id="tbw10" class="timer-bar-wrap"><div id="tb10" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <svg id="q10-svg" viewBox="0 0 180 145" width="160" height="128"></svg>
+          <div class="q-text">
+            <label>10. &nbsp; Two lines cross. One angle is 124°. What is the vertically opposite angle? (°)</label>
+            <input type="number" step="1" min="0" max="360" id="q10" placeholder="?"
+              onfocus="qFocus(10)"
+              onkeydown="if(event.key==='Enter'){event.preventDefault();answerNum(10)}" />
+            <button class="submit-q-btn" id="sbtn10" onclick="answerNum(10)">✓</button>
+            <span class="feedback" id="f10"></span>
           </div>
         </div>
+      </div>
 
-        <button type="button" class="check-btn" onclick="checkAnswers()">Check Answers</button>
-      </form>
+      <!-- Results panel -->
+      <div id="results-panel" class="results-panel" style="display:none"></div>
 
-      <div class="score-box" id="score-box"></div>
-
-    </div>
+    </div><!-- /.exercise-area -->
 
     <a class="btn" href="../../units/unit-3.html">&#8592; Back to Unit 3</a>
   </main>
@@ -308,324 +408,300 @@
     Maths Revision &middot; Unit 3: Geometry
   </footer>
 
-  <script>
-    // ── Answer checking ───────────────────────────────────────────────────────
-    const correctAnswers = {
-      q1: 40, q2: 45, q3: 70, q4: 65,
-      q5: 38, q6: 40, q7: 100,
-      q8: 47, q9: 112, q10: 124
-    };
+  <!-- Level-up modal -->
+  <div id="levelup-modal" class="levelup-modal">
+    <div class="levelup-box">
+      <div class="levelup-emoji">🎉</div>
+      <h2>Level Up!</h2>
+      <p>You&rsquo;re now a <strong id="levelup-name"></strong>!</p>
+      <p id="levelup-desc" class="levelup-desc"></p>
+      <button onclick="document.getElementById('levelup-modal').classList.remove('show')">Continue &rarr;</button>
+    </div>
+  </div>
 
-    function checkAnswers() {
-      let correct = 0;
-      const total = Object.keys(correctAnswers).length;
-      for (const [qKey, expected] of Object.entries(correctAnswers)) {
-        const num = qKey.slice(1);
-        const el = document.getElementById(qKey);
-        const feedback = document.getElementById('f' + num);
-        const val = parseInt(el.value, 10);
-        const isCorrect = !isNaN(val) && val === expected;
-        el.style.borderColor = isCorrect ? '#27ae60' : '#e74c3c';
-        feedback.textContent = isCorrect ? '✓ Correct!' : '✗ Answer: ' + expected + '°';
-        feedback.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
-        if (isCorrect) correct++;
+  <script src="../../js/game.js"></script>
+  <script src="../../js/timer.js"></script>
+  <script>
+    'use strict';
+    // ── Answer key ────────────────────────────────────────────────────────────
+    const ANSWERS = {
+      q1:  40, q2:  45, q3:  70, q4:  65, q5:  38,
+      q6:  40, q7: 100, q8:  47, q9: 112, q10: 124
+    };
+    const TOTAL_QUESTIONS = 10;
+    const MAX_SCORE       = TOTAL_QUESTIONS * 15;  // 150
+
+    // ── Game state ────────────────────────────────────────────────────────────
+    const timers   = {};
+    const answered = new Set();
+    let   runTotal = 0;
+
+    function initTimers() {
+      const lvl = MRG.getCurrentLevel();
+      for (let n = 1; n <= TOTAL_QUESTIONS; n++) {
+        timers[n] = new QuestionTimer(document.getElementById('tb' + n), lvl.timerSecs);
+        const wrap = document.getElementById('tbw' + n);
+        if (wrap) wrap.style.display = lvl.timerVisible ? 'block' : 'none';
       }
-      const box = document.getElementById('score-box');
-      box.textContent = 'You got ' + correct + ' out of ' + total + '.';
-      box.className = 'score-box show ' + (correct === total ? 'great' : correct >= 7 ? 'ok' : 'poor');
-      if (correct === total) box.textContent += ' Excellent work!';
-      else if (correct >= 7) box.textContent += ' Good effort: review the ones you missed.';
-      else box.textContent += ' Keep practising: re-read the worked examples and try again.';
     }
 
-    // ── SVG helpers (same core as Exercise 1) ────────────────────────────────
+    function qFocus(n) {
+      if (answered.has(n)) return;
+      if (!timers[n].hasStarted()) timers[n].start();
+    }
+
+    function answerNum(n) {
+      if (answered.has(n)) return;
+      const el = document.getElementById('q' + n);
+      if (el.value === '') return;
+      const elapsed = timers[n].stop();
+      answered.add(n);
+      const val     = parseInt(el.value, 10);
+      const correct = !isNaN(val) && val === ANSWERS['q' + n];
+      const pts     = MRG.scoreQuestion(correct, elapsed);
+      runTotal += pts;
+      const fb = document.getElementById('f' + n);
+      fb.textContent = correct ? '✓ Correct!' : '✗ ' + ANSWERS['q' + n] + '°';
+      fb.className   = 'feedback ' + (correct ? 'correct' : 'incorrect');
+      el.disabled = true;
+      const btn = document.getElementById('sbtn' + n);
+      if (btn) btn.disabled = true;
+      _showPopup(n, pts);
+      if (answered.size === TOTAL_QUESTIONS) setTimeout(_showResults, 500);
+    }
+
+    function _showPopup(n, pts) {
+      const qb  = document.getElementById('qb' + n);
+      const pop = document.createElement('div');
+      pop.className   = 'xp-popup ' + (pts > 0 ? 'xp-popup-pos' : pts < 0 ? 'xp-popup-neg' : 'xp-popup-zero');
+      pop.textContent = pts > 0 ? '+' + pts + ' pts' : pts + ' pts';
+      qb.appendChild(pop);
+      setTimeout(() => pop.remove(), 1500);
+    }
+
+    function _showResults() {
+      const total  = Math.max(0, runTotal);
+      const result = MRG.finishExercise('u3e2', total, MAX_SCORE);
+      const stars  = result.stars;
+      const starStr = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+      let xpHTML;
+      if (result.xpGained > 0) {
+        xpHTML = `<div class="results-xp">+${result.xpGained} XP earned &rarr; Total: ${result.newTotal} XP</div>`;
+      } else if (stars === 0) {
+        xpHTML = `<div class="results-no-xp">No XP yet — reach ⭐ to earn XP.</div>`;
+      } else {
+        xpHTML = `<div class="results-no-xp">No new XP — you&rsquo;ve already matched your personal best for this exercise.</div>`;
+      }
+      const panel = document.getElementById('results-panel');
+      panel.innerHTML = `
+        <div class="results-stars">${starStr}</div>
+        <div class="results-score">${total} / ${MAX_SCORE} pts</div>
+        ${xpHTML}
+        <div class="results-btns">
+          <button onclick="location.reload()">&#8629; Try Again</button>
+          <a href="../../units/unit-3.html">&larr; Back to Unit 3</a>
+        </div>`;
+      panel.style.display = 'block';
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      renderXPHeader();
+      if (result.leveledUp) setTimeout(() => _showLevelUp(result.newLevel), 700);
+    }
+
+    function _showLevelUp(lvl) {
+      const descs = {
+        2: 'Timers are now active. Wrong answers cost 3 pts.',
+        3: 'The countdown is tighter (15 s). Keep it up!',
+        4: 'Hard mode unlocked — a new question set awaits!'
+      };
+      document.getElementById('levelup-name').textContent = lvl.name;
+      document.getElementById('levelup-desc').textContent = descs[lvl.level] || '';
+      document.getElementById('levelup-modal').classList.add('show');
+    }
+
+    function renderXPHeader() {
+      const info = MRG.getLevelInfo();
+      const nextTxt = info.next
+        ? `${info.xpToNext} XP to <strong>${info.next.name}</strong>`
+        : '<strong>Max Level!</strong>';
+      document.getElementById('xp-header').innerHTML = `
+        <span class="xp-level-badge">&#x1F3C5; ${info.current.name}</span>
+        <div class="xp-bar-wrap"><div class="xp-bar-fill" style="width:${info.pct.toFixed(1)}%"></div></div>
+        <span class="xp-label">${info.xp} XP &middot; ${nextTxt}</span>`;
+    }
+
+    // ── SVG helpers ───────────────────────────────────────────────────────────
     const _NS = 'http://www.w3.org/2000/svg';
     const _r2d = Math.PI / 180;
 
     function pt(cx, cy, deg, dist) {
-      return [
-        +(cx + dist * Math.cos(deg * _r2d)).toFixed(2),
-        +(cy - dist * Math.sin(deg * _r2d)).toFixed(2)
-      ];
+      return [+(cx + dist * Math.cos(deg * _r2d)).toFixed(2), +(cy - dist * Math.sin(deg * _r2d)).toFixed(2)];
     }
-
     function arcD(cx, cy, a1, a2, r) {
-      const [x1, y1] = pt(cx, cy, a1, r);
-      const [x2, y2] = pt(cx, cy, a2, r);
-      const span = ((a2 - a1) % 360 + 360) % 360;
-      return `M ${x1} ${y1} A ${r} ${r} 0 ${span > 180 ? 1 : 0} 0 ${x2} ${y2}`;
+      const [x1,y1] = pt(cx,cy,a1,r), [x2,y2] = pt(cx,cy,a2,r);
+      const span = ((a2-a1)%360+360)%360;
+      return `M ${x1} ${y1} A ${r} ${r} 0 ${span>180?1:0} 0 ${x2} ${y2}`;
     }
-
     function mk(tag, attrs, text) {
       const e = document.createElementNS(_NS, tag);
-      for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+      for (const [k,v] of Object.entries(attrs)) e.setAttribute(k,v);
       if (text != null) e.textContent = text;
       return e;
     }
-
     function arc(svg, cx, cy, a1, a2, r, color, sw) {
-      svg.appendChild(mk('path', {
-        d: arcD(cx, cy, a1, a2, r),
-        fill: 'none', stroke: color || '#e74c3c', 'stroke-width': sw || 2
-      }));
+      svg.appendChild(mk('path', { d: arcD(cx,cy,a1,a2,r), fill:'none', stroke: color||'#e74c3c', 'stroke-width': sw||2 }));
     }
-
     function angleLabel(svg, cx, cy, deg, dist, text, fill, size) {
-      const [x, y] = pt(cx, cy, deg, dist);
-      svg.appendChild(mk('text', {
-        x, y, fill: fill || '#e74c3c', 'font-size': size || 13,
-        'font-family': 'sans-serif', 'font-weight': 'bold',
-        'text-anchor': 'middle', 'dominant-baseline': 'middle'
-      }, text));
+      const [x,y] = pt(cx,cy,deg,dist);
+      svg.appendChild(mk('text', { x,y, fill: fill||'#e74c3c', 'font-size': size||13, 'font-family':'sans-serif', 'font-weight':'bold', 'text-anchor':'middle', 'dominant-baseline':'middle' }, text));
     }
-
     function label(svg, x, y, text, fill, size, bold, anchor) {
-      svg.appendChild(mk('text', {
-        x, y, fill: fill || '#2c3e50', 'font-size': size || 13,
-        'font-family': 'sans-serif', 'font-weight': bold ? 'bold' : 'normal',
-        'text-anchor': anchor || 'middle'
-      }, text));
+      svg.appendChild(mk('text', { x, y, fill: fill||'#2c3e50', 'font-size': size||13, 'font-family':'sans-serif', 'font-weight': bold?'bold':'normal', 'text-anchor': anchor||'middle' }, text));
     }
-
     function dot(svg, cx, cy, r, fill) {
-      svg.appendChild(mk('circle', { cx, cy, r: r || 3, fill: fill || '#2c3e50' }));
+      svg.appendChild(mk('circle', { cx, cy, r: r||3, fill: fill||'#2c3e50' }));
     }
-
-    // ── Triangle helpers ──────────────────────────────────────────────────────
-
-    // Draw a filled triangle from an array of 3 [x,y] vertices
     function drawTri(svg, pts, fill, stroke) {
-      svg.appendChild(mk('polygon', {
-        points: pts.map(p => p.join(',')).join(' '),
-        fill: fill || 'rgba(41,128,185,0.07)',
-        stroke: stroke || '#2c3e50',
-        'stroke-width': 2, 'stroke-linejoin': 'round'
-      }));
+      svg.appendChild(mk('polygon', { points: pts.map(p=>p.join(',')).join(' '), fill: fill||'rgba(41,128,185,0.07)', stroke: stroke||'#2c3e50', 'stroke-width': 2, 'stroke-linejoin':'round' }));
     }
-
-    // Angle (in degrees, 0=East, CCW positive) of the ray from (vx,vy) towards (px,py)
     function _rayAngle(vx, vy, px, py) {
-      return Math.atan2(-(py - vy), px - vx) * 180 / Math.PI;
+      return Math.atan2(-(py-vy), px-vx)*180/Math.PI;
     }
-
-    // Arc marker at vertex index i of triangle pts[], using the triangle's actual side angles
     function triArc(svg, pts, i, r, color) {
-      const [vx, vy] = pts[i];
-      const [p1x, p1y] = pts[(i + 1) % 3];
-      const [p2x, p2y] = pts[(i + 2) % 3];
-      const a1 = _rayAngle(vx, vy, p1x, p1y);
-      const a2 = _rayAngle(vx, vy, p2x, p2y);
-      const span = ((a2 - a1) % 360 + 360) % 360;
-      // Draw the smaller (interior) arc
-      if (span <= 180) {
-        arc(svg, vx, vy, a1, a2, r, color);
-      } else {
-        arc(svg, vx, vy, a2, a1, r, color);
-      }
+      const [vx,vy]=pts[i], [p1x,p1y]=pts[(i+1)%3], [p2x,p2y]=pts[(i+2)%3];
+      const a1=_rayAngle(vx,vy,p1x,p1y), a2=_rayAngle(vx,vy,p2x,p2y);
+      const span=((a2-a1)%360+360)%360;
+      if (span<=180) arc(svg,vx,vy,a1,a2,r,color);
+      else arc(svg,vx,vy,a2,a1,r,color);
     }
-
-    // Small L-shaped right-angle marker at vertex i, aligned to the triangle's sides
     function triRightMark(svg, pts, i, size, color) {
-      const [vx, vy] = pts[i];
-      const [p1x, p1y] = pts[(i + 1) % 3];
-      const [p2x, p2y] = pts[(i + 2) % 3];
-      const d1x = p1x - vx, d1y = p1y - vy, l1 = Math.sqrt(d1x * d1x + d1y * d1y);
-      const d2x = p2x - vx, d2y = p2y - vy, l2 = Math.sqrt(d2x * d2x + d2y * d2y);
-      const u1x = d1x / l1, u1y = d1y / l1;
-      const u2x = d2x / l2, u2y = d2y / l2;
-      const ax = +(vx + size * u1x).toFixed(2), ay = +(vy + size * u1y).toFixed(2);
-      const bx = +(ax + size * u2x).toFixed(2), by = +(ay + size * u2y).toFixed(2);
-      const cx2 = +(vx + size * u2x).toFixed(2), cy2 = +(vy + size * u2y).toFixed(2);
-      svg.appendChild(mk('path', {
-        d: `M ${ax} ${ay} L ${bx} ${by} L ${cx2} ${cy2}`,
-        fill: 'none', stroke: color || '#e74c3c', 'stroke-width': 1.5
-      }));
+      const [vx,vy]=pts[i], [p1x,p1y]=pts[(i+1)%3], [p2x,p2y]=pts[(i+2)%3];
+      const d1x=p1x-vx, d1y=p1y-vy, l1=Math.sqrt(d1x*d1x+d1y*d1y);
+      const d2x=p2x-vx, d2y=p2y-vy, l2=Math.sqrt(d2x*d2x+d2y*d2y);
+      const u1x=d1x/l1, u1y=d1y/l1, u2x=d2x/l2, u2y=d2y/l2;
+      const ax=+(vx+size*u1x).toFixed(2), ay=+(vy+size*u1y).toFixed(2);
+      const bx=+(ax+size*u2x).toFixed(2), by=+(ay+size*u2y).toFixed(2);
+      const cx2=+(vx+size*u2x).toFixed(2), cy2=+(vy+size*u2y).toFixed(2);
+      svg.appendChild(mk('path', { d:`M ${ax} ${ay} L ${bx} ${by} L ${cx2} ${cy2}`, fill:'none', stroke: color||'#e74c3c', 'stroke-width':1.5 }));
     }
-
-    // Place a text label at the midpoint of the arc at vertex i (inside the triangle)
     function triLabel(svg, pts, i, text, fill, arcR, size) {
-      const [vx, vy] = pts[i];
-      const [p1x, p1y] = pts[(i + 1) % 3];
-      const [p2x, p2y] = pts[(i + 2) % 3];
-      const a1 = _rayAngle(vx, vy, p1x, p1y);
-      const a2 = _rayAngle(vx, vy, p2x, p2y);
-      const span = ((a2 - a1) % 360 + 360) % 360;
-      let mid;
-      if (span <= 180) {
-        mid = a1 + span / 2;
-      } else {
-        mid = a2 + (360 - span) / 2;
-      }
-      angleLabel(svg, vx, vy, mid, arcR + 10, text, fill || '#e74c3c', size || 13);
+      const [vx,vy]=pts[i], [p1x,p1y]=pts[(i+1)%3], [p2x,p2y]=pts[(i+2)%3];
+      const a1=_rayAngle(vx,vy,p1x,p1y), a2=_rayAngle(vx,vy,p2x,p2y);
+      const span=((a2-a1)%360+360)%360;
+      const mid = span<=180 ? a1+span/2 : a2+(360-span)/2;
+      angleLabel(svg,vx,vy,mid,arcR+10,text,fill||'#e74c3c',size||13);
     }
-
-    // Two crossing lines through centre (cx,cy): line1 at angle a, line2 at angle b
     function drawCross(svg, cx, cy, a, b, len, color) {
-      const [x1a, y1a] = pt(cx, cy, a, len);
-      const [x2a, y2a] = pt(cx, cy, a + 180, len);
-      const [x1b, y1b] = pt(cx, cy, b, len);
-      const [x2b, y2b] = pt(cx, cy, b + 180, len);
-      svg.appendChild(mk('line', { x1: x1a, y1: y1a, x2: x2a, y2: y2a, stroke: color || '#2c3e50', 'stroke-width': 2.5, 'stroke-linecap': 'round' }));
-      svg.appendChild(mk('line', { x1: x1b, y1: y1b, x2: x2b, y2: y2b, stroke: color || '#2c3e50', 'stroke-width': 2.5, 'stroke-linecap': 'round' }));
-      dot(svg, cx, cy);
+      const [x1a,y1a]=pt(cx,cy,a,len), [x2a,y2a]=pt(cx,cy,a+180,len);
+      const [x1b,y1b]=pt(cx,cy,b,len), [x2b,y2b]=pt(cx,cy,b+180,len);
+      svg.appendChild(mk('line',{x1:x1a,y1:y1a,x2:x2a,y2:y2a,stroke:color||'#2c3e50','stroke-width':2.5,'stroke-linecap':'round'}));
+      svg.appendChild(mk('line',{x1:x1b,y1:y1b,x2:x2b,y2:y2b,stroke:color||'#2c3e50','stroke-width':2.5,'stroke-linecap':'round'}));
+      dot(svg,cx,cy);
     }
 
-    // ── Build diagrams ────────────────────────────────────────────────────────
+    // ── Build diagrams + init game ────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function () {
+      initTimers();
+      renderXPHeader();
 
-      // ── Worked example 1: 50° + 70° + 60° = 180° ──
-      (function () {
+      // Worked example 1: 50° + 70° + 60° = 180°
+      (function() {
         const svg = document.getElementById('ex1-tri');
-        const pts = [[40, 170], [240, 170], [140, 30]];
-        drawTri(svg, pts);
-        triArc(svg, pts, 0, 22, '#e74c3c');
-        triArc(svg, pts, 1, 22, '#27ae60');
-        triArc(svg, pts, 2, 22, '#e67e22');
-        triLabel(svg, pts, 0, '50°', '#e74c3c', 22, 15);
-        triLabel(svg, pts, 1, '70°', '#27ae60', 22, 15);
-        triLabel(svg, pts, 2, '60°', '#e67e22', 22, 15);
-        label(svg, 80, 195, '50° + 70° + 60° = 180° ✓', '#555', 13, false, 'start');
+        const pts = [[40,170],[240,170],[140,30]];
+        drawTri(svg,pts);
+        triArc(svg,pts,0,22,'#e74c3c'); triArc(svg,pts,1,22,'#27ae60'); triArc(svg,pts,2,22,'#e67e22');
+        triLabel(svg,pts,0,'50°','#e74c3c',22,15); triLabel(svg,pts,1,'70°','#27ae60',22,15); triLabel(svg,pts,2,'60°','#e67e22',22,15);
+        label(svg,80,195,'50° + 70° + 60° = 180° ✓','#555',13,false,'start');
       }());
 
-      // ── Worked example 2: 65° + 80° + ? = 180° ──
-      (function () {
+      // Worked example 2: 65° + 80° + ? = 180°
+      (function() {
         const svg = document.getElementById('ex2-tri');
-        const pts = [[40, 160], [220, 160], [130, 25]];
-        drawTri(svg, pts, 'rgba(231,76,60,0.07)');
-        triArc(svg, pts, 0, 20, '#e74c3c');
-        triArc(svg, pts, 1, 20, '#27ae60');
-        triLabel(svg, pts, 0, '65°', '#e74c3c', 20, 14);
-        triLabel(svg, pts, 1, '80°', '#27ae60', 20, 14);
-        triLabel(svg, pts, 2, '?', '#e67e22', 0, 18);
+        const pts = [[40,160],[220,160],[130,25]];
+        drawTri(svg,pts,'rgba(231,76,60,0.07)');
+        triArc(svg,pts,0,20,'#e74c3c'); triArc(svg,pts,1,20,'#27ae60');
+        triLabel(svg,pts,0,'65°','#e74c3c',20,14); triLabel(svg,pts,1,'80°','#27ae60',20,14);
+        triLabel(svg,pts,2,'?','#e67e22',0,18);
       }());
 
-      // ── Worked example 3: vertically opposite ──
-      (function () {
+      // Worked example 3: vertically opposite
+      (function() {
         const svg = document.getElementById('ex3-cross');
-        const cx = 140, cy = 90, len = 92;
-        drawCross(svg, cx, cy, 38, 142, len);
-        // Sector midpoints: East(0°), North(90°), West(180°), South(270°)
-        angleLabel(svg, cx, cy, 0,   28, 'a', '#e74c3c', 15);
-        angleLabel(svg, cx, cy, 180, 28, 'a', '#e74c3c', 15);
-        angleLabel(svg, cx, cy, 90,  28, 'b', '#2980b9', 15);
-        angleLabel(svg, cx, cy, 270, 28, 'b', '#2980b9', 15);
-        label(svg, 10, 170, 'Vertically opposite angles: a = a  and  b = b', '#555', 12, false, 'start');
+        const cx=140,cy=90,len=92;
+        drawCross(svg,cx,cy,38,142,len);
+        angleLabel(svg,cx,cy,0,28,'a','#e74c3c',15); angleLabel(svg,cx,cy,180,28,'a','#e74c3c',15);
+        angleLabel(svg,cx,cy,90,28,'b','#2980b9',15); angleLabel(svg,cx,cy,270,28,'b','#2980b9',15);
+        label(svg,10,170,'Vertically opposite angles: a = a  and  b = b','#555',12,false,'start');
       }());
 
-      // ── Q1: 60° and 80°, standard isosceles shape ──
-      (function () {
-        const svg = document.getElementById('q1-svg');
-        const pts = [[30, 130], [170, 130], [100, 20]];
-        drawTri(svg, pts);
-        triArc(svg, pts, 0, 18, '#e74c3c');
-        triArc(svg, pts, 1, 18, '#27ae60');
-        triLabel(svg, pts, 0, '60°', '#e74c3c', 18, 13);
-        triLabel(svg, pts, 1, '80°', '#27ae60', 18, 13);
-        triLabel(svg, pts, 2, '?', '#e67e22', 0, 16);
+      // Q1: 60° and 80°
+      (function() {
+        const svg=document.getElementById('q1-svg'), pts=[[30,130],[170,130],[100,20]];
+        drawTri(svg,pts); triArc(svg,pts,0,18,'#e74c3c'); triArc(svg,pts,1,18,'#27ae60');
+        triLabel(svg,pts,0,'60°','#e74c3c',18,13); triLabel(svg,pts,1,'80°','#27ae60',18,13); triLabel(svg,pts,2,'?','#e67e22',0,16);
       }());
 
-      // ── Q2: right-angled 90° + 45°, right angle at bottom-left ──
-      (function () {
-        const svg = document.getElementById('q2-svg');
-        const pts = [[30, 125], [155, 125], [30, 20]];
-        drawTri(svg, pts);
-        triRightMark(svg, pts, 0, 14);
-        triArc(svg, pts, 1, 18, '#27ae60');
-        triLabel(svg, pts, 0, '90°', '#e74c3c', 14, 12);
-        triLabel(svg, pts, 1, '45°', '#27ae60', 18, 13);
-        triLabel(svg, pts, 2, '?', '#e67e22', 0, 16);
+      // Q2: 90° + 45°
+      (function() {
+        const svg=document.getElementById('q2-svg'), pts=[[30,125],[155,125],[30,20]];
+        drawTri(svg,pts); triRightMark(svg,pts,0,14); triArc(svg,pts,1,18,'#27ae60');
+        triLabel(svg,pts,0,'90°','#e74c3c',14,12); triLabel(svg,pts,1,'45°','#27ae60',18,13); triLabel(svg,pts,2,'?','#e67e22',0,16);
       }());
 
-      // ── Q3: 35° and 75° ──
-      (function () {
-        const svg = document.getElementById('q3-svg');
-        const pts = [[30, 130], [170, 130], [100, 20]];
-        drawTri(svg, pts);
-        triArc(svg, pts, 0, 18, '#e74c3c');
-        triArc(svg, pts, 1, 18, '#27ae60');
-        triLabel(svg, pts, 0, '35°', '#e74c3c', 18, 13);
-        triLabel(svg, pts, 1, '75°', '#27ae60', 18, 13);
-        triLabel(svg, pts, 2, '?', '#e67e22', 0, 16);
+      // Q3: 35° and 75°
+      (function() {
+        const svg=document.getElementById('q3-svg'), pts=[[30,130],[170,130],[100,20]];
+        drawTri(svg,pts); triArc(svg,pts,0,18,'#e74c3c'); triArc(svg,pts,1,18,'#27ae60');
+        triLabel(svg,pts,0,'35°','#e74c3c',18,13); triLabel(svg,pts,1,'75°','#27ae60',18,13); triLabel(svg,pts,2,'?','#e67e22',0,16);
       }());
 
-      // ── Q4: 50° and 65° ──
-      (function () {
-        const svg = document.getElementById('q4-svg');
-        const pts = [[30, 130], [170, 130], [100, 20]];
-        drawTri(svg, pts);
-        triArc(svg, pts, 0, 18, '#e74c3c');
-        triArc(svg, pts, 1, 18, '#27ae60');
-        triLabel(svg, pts, 0, '50°', '#e74c3c', 18, 13);
-        triLabel(svg, pts, 1, '65°', '#27ae60', 18, 13);
-        triLabel(svg, pts, 2, '?', '#e67e22', 0, 16);
+      // Q4: 50° and 65°
+      (function() {
+        const svg=document.getElementById('q4-svg'), pts=[[30,130],[170,130],[100,20]];
+        drawTri(svg,pts); triArc(svg,pts,0,18,'#e74c3c'); triArc(svg,pts,1,18,'#27ae60');
+        triLabel(svg,pts,0,'50°','#e74c3c',18,13); triLabel(svg,pts,1,'65°','#27ae60',18,13); triLabel(svg,pts,2,'?','#e67e22',0,16);
       }());
 
-      // ── Q5: right-angled 90° + 52° ──
-      (function () {
-        const svg = document.getElementById('q5-svg');
-        const pts = [[30, 125], [155, 125], [30, 20]];
-        drawTri(svg, pts);
-        triRightMark(svg, pts, 0, 14);
-        triArc(svg, pts, 1, 18, '#27ae60');
-        triLabel(svg, pts, 0, '90°', '#e74c3c', 14, 12);
-        triLabel(svg, pts, 1, '52°', '#27ae60', 18, 13);
-        triLabel(svg, pts, 2, '?', '#e67e22', 0, 16);
+      // Q5: 90° + 52°
+      (function() {
+        const svg=document.getElementById('q5-svg'), pts=[[30,125],[155,125],[30,20]];
+        drawTri(svg,pts); triRightMark(svg,pts,0,14); triArc(svg,pts,1,18,'#27ae60');
+        triLabel(svg,pts,0,'90°','#e74c3c',14,12); triLabel(svg,pts,1,'52°','#27ae60',18,13); triLabel(svg,pts,2,'?','#e67e22',0,16);
       }());
 
-      // ── Q6: obtuse 110° at left vertex ──
-      (function () {
-        const svg = document.getElementById('q6-svg');
-        const pts = [[25, 125], [185, 125], [70, 30]];
-        drawTri(svg, pts, 'rgba(231,76,60,0.07)');
-        triArc(svg, pts, 0, 22, '#e74c3c');
-        triArc(svg, pts, 1, 18, '#27ae60');
-        triLabel(svg, pts, 0, '110°', '#e74c3c', 22, 13);
-        triLabel(svg, pts, 1, '30°', '#27ae60', 18, 13);
-        triLabel(svg, pts, 2, '?', '#e67e22', 0, 16);
+      // Q6: obtuse 110° at left vertex
+      (function() {
+        const svg=document.getElementById('q6-svg'), pts=[[25,125],[185,125],[70,30]];
+        drawTri(svg,pts,'rgba(231,76,60,0.07)'); triArc(svg,pts,0,22,'#e74c3c'); triArc(svg,pts,1,18,'#27ae60');
+        triLabel(svg,pts,0,'110°','#e74c3c',22,13); triLabel(svg,pts,1,'30°','#27ae60',18,13); triLabel(svg,pts,2,'?','#e67e22',0,16);
       }());
 
-      // ── Q7: isosceles 40° + 40° ──
-      (function () {
-        const svg = document.getElementById('q7-svg');
-        const pts = [[30, 130], [170, 130], [100, 20]];
-        drawTri(svg, pts);
-        triArc(svg, pts, 0, 18, '#e74c3c');
-        triArc(svg, pts, 1, 18, '#e74c3c');
-        triLabel(svg, pts, 0, '40°', '#e74c3c', 18, 13);
-        triLabel(svg, pts, 1, '40°', '#e74c3c', 18, 13);
-        triLabel(svg, pts, 2, '?', '#e67e22', 0, 16);
+      // Q7: isosceles 40° + 40°
+      (function() {
+        const svg=document.getElementById('q7-svg'), pts=[[30,130],[170,130],[100,20]];
+        drawTri(svg,pts); triArc(svg,pts,0,18,'#e74c3c'); triArc(svg,pts,1,18,'#e74c3c');
+        triLabel(svg,pts,0,'40°','#e74c3c',18,13); triLabel(svg,pts,1,'40°','#e74c3c',18,13); triLabel(svg,pts,2,'?','#e67e22',0,16);
       }());
 
-      // ── Q8: vertically opposite, 47° ──
-      // Horizontal line + line at 47°, centre (90,72)
-      (function () {
-        const svg = document.getElementById('q8-svg');
-        const cx = 90, cy = 72, len = 78;
-        drawCross(svg, cx, cy, 0, 47, len);
-        angleLabel(svg, cx, cy, 23.5, 28, '47°', '#e67e22', 13);
-        angleLabel(svg, cx, cy, 203.5, 28, '?', '#2980b9', 16);
+      // Q8: vertically opposite, 47°
+      (function() {
+        const svg=document.getElementById('q8-svg'), cx=90, cy=72, len=78;
+        drawCross(svg,cx,cy,0,47,len);
+        angleLabel(svg,cx,cy,23.5,28,'47°','#e67e22',13); angleLabel(svg,cx,cy,203.5,28,'?','#2980b9',16);
       }());
 
-      // ── Q9: supplementary to 68° ──
-      // Horizontal line + line at 68°, centre (90,72)
-      (function () {
-        const svg = document.getElementById('q9-svg');
-        const cx = 90, cy = 72, len = 78;
-        drawCross(svg, cx, cy, 0, 68, len);
-        angleLabel(svg, cx, cy, 34, 26, '68°', '#e67e22', 13);
-        angleLabel(svg, cx, cy, 124, 26, '?', '#2980b9', 16);
+      // Q9: supplementary to 68°
+      (function() {
+        const svg=document.getElementById('q9-svg'), cx=90, cy=72, len=78;
+        drawCross(svg,cx,cy,0,68,len);
+        angleLabel(svg,cx,cy,34,26,'68°','#e67e22',13); angleLabel(svg,cx,cy,124,26,'?','#2980b9',16);
       }());
 
-      // ── Q10: vertically opposite, 124° ──
-      // Horizontal line + line at 124°, centre (90,72)
-      (function () {
-        const svg = document.getElementById('q10-svg');
-        const cx = 90, cy = 72, len = 78;
-        drawCross(svg, cx, cy, 0, 124, len);
-        angleLabel(svg, cx, cy, 62, 28, '124°', '#e67e22', 13);
-        angleLabel(svg, cx, cy, 242, 28, '?', '#2980b9', 16);
+      // Q10: vertically opposite, 124°
+      (function() {
+        const svg=document.getElementById('q10-svg'), cx=90, cy=72, len=78;
+        drawCross(svg,cx,cy,0,124,len);
+        angleLabel(svg,cx,cy,62,28,'124°','#e67e22',13); angleLabel(svg,cx,cy,242,28,'?','#2980b9',16);
       }());
-
     });
   </script>
 

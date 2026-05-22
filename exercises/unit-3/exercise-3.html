@@ -40,11 +40,13 @@
     }
     .rule-box strong { color: #1a7a3c; }
     .question-block {
+      position: relative;
       background: white;
       border: 1px solid #e0e0e0;
       border-radius: 8px;
       padding: 1rem 1.2rem;
       margin: 0.75rem 0;
+      overflow: hidden;
     }
     .q-inner { display: flex; gap: 1.2rem; align-items: flex-start; flex-wrap: wrap; }
     .q-inner svg { flex-shrink: 0; }
@@ -57,47 +59,53 @@
       border-radius: 6px;
       text-align: center;
       -moz-appearance: textfield;
-      display: block;
+      display: inline-block;
       margin-top: 0.4rem;
     }
     .question-block input[type="number"]::-webkit-outer-spin-button,
     .question-block input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .question-block input[type="number"]:focus { outline: none; border-color: #2980b9; }
+    .question-block input[type="number"]:disabled { opacity: 0.6; cursor: default; }
     .feedback { font-size: 0.9rem; font-weight: 600; display: block; margin-top: 0.4rem; }
     .feedback.correct { color: #27ae60; }
     .feedback.incorrect { color: #e74c3c; }
-    .section-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #2c3e50;
-      margin: 1.2rem 0 0.4rem;
-    }
-    .check-btn {
-      display: inline-block;
-      margin-top: 1.2rem;
-      padding: 0.65rem 1.6rem;
-      background-color: #2980b9;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.15s ease;
-    }
-    .check-btn:hover { background-color: #1f6da0; }
-    .score-box {
-      margin-top: 1rem;
-      padding: 0.8rem 1.2rem;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      display: none;
-    }
-    .score-box.show { display: block; }
-    .score-box.great { background: #eafaf1; color: #1e8449; border: 1px solid #a9dfbf; }
-    .score-box.ok    { background: #fef9e7; color: #9a7d0a; border: 1px solid #f9e79f; }
-    .score-box.poor  { background: #fdedec; color: #c0392b; border: 1px solid #f5b7b1; }
+    .section-title { font-size: 1.05rem; font-weight: 700; color: #2c3e50; margin: 1.2rem 0 0.4rem; }
     .section-divider { border: none; border-top: 2px dashed #ddd; margin: 1.5rem 0; }
+
+    .timer-bar-wrap { margin: -1rem -1.2rem 0.75rem; height: 4px; background: #ecf0f1; border-radius: 8px 8px 0 0; overflow: hidden; }
+    .timer-bar-fill { height: 100%; width: 100%; background: #27ae60; border-radius: 8px; }
+    .submit-q-btn { display: inline-block; margin-left: 0.5rem; padding: 0.35rem 0.75rem; background: #27ae60; color: white; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; vertical-align: middle; transition: background 0.15s; }
+    .submit-q-btn:hover { background: #1e8449; }
+    .submit-q-btn:disabled { background: #95a5a6; cursor: default; }
+    .xp-popup { position: absolute; right: 1rem; top: 0.6rem; font-size: 1rem; font-weight: 800; pointer-events: none; z-index: 10; animation: xpFloat 1.4s ease-out forwards; }
+    .xp-popup-pos { color: #27ae60; } .xp-popup-neg { color: #e74c3c; } .xp-popup-zero { color: #95a5a6; }
+    @keyframes xpFloat { 0% { opacity:1; transform:translateY(0); } 60% { opacity:1; transform:translateY(-20px); } 100% { opacity:0; transform:translateY(-32px); } }
+    #xp-header { display: flex; align-items: center; gap: 0.75rem; background: #1a252f; border-radius: 8px; padding: 0.6rem 1rem; margin-bottom: 1.4rem; flex-wrap: wrap; }
+    .xp-level-badge { color: #f1c40f; font-weight: 700; font-size: 0.95rem; white-space: nowrap; }
+    .xp-bar-wrap { flex: 1; min-width: 100px; background: #34495e; border-radius: 99px; height: 10px; overflow: hidden; }
+    .xp-bar-fill { height: 100%; background: #2ecc71; border-radius: 99px; transition: width 0.5s ease; }
+    .xp-label { color: #bdc3c7; font-size: 0.85rem; white-space: nowrap; }
+    .xp-label strong { color: #ecf0f1; }
+    .results-panel { background: linear-gradient(135deg,#eafaf1 0%,#d5f5e3 100%); border: 2px solid #a9dfbf; border-radius: 12px; padding: 1.5rem 2rem; margin-top: 1.5rem; text-align: center; }
+    .results-stars { font-size: 2.4rem; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+    .results-score { font-size: 1.3rem; font-weight: 700; color: #1a7a3c; margin-bottom: 0.25rem; }
+    .results-xp { font-size: 1rem; color: #1e8449; margin-bottom: 1rem; }
+    .results-no-xp { font-size: 0.9rem; color: #7f8c8d; margin-bottom: 1rem; }
+    .results-btns { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+    .results-btns button { padding: 0.55rem 1.3rem; background: #2980b9; color: white; border: none; border-radius: 6px; font-size: 0.95rem; cursor: pointer; }
+    .results-btns button:hover { background: #1f6da0; }
+    .results-btns a { padding: 0.55rem 1.3rem; background: #ecf0f1; color: #2c3e50; border-radius: 6px; text-decoration: none; font-size: 0.95rem; }
+    .results-btns a:hover { background: #d5d8dc; }
+    .levelup-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.55); display: none; align-items: center; justify-content: center; z-index: 1000; }
+    .levelup-modal.show { display: flex; }
+    .levelup-box { background: white; border-radius: 16px; padding: 2rem 2.5rem; text-align: center; max-width: 340px; width: 90%; box-shadow: 0 12px 40px rgba(0,0,0,0.25); animation: luPop 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+    @keyframes luPop { from { transform:scale(0.7); opacity:0; } to { transform:scale(1); opacity:1; } }
+    .levelup-emoji { font-size: 3rem; margin-bottom: 0.5rem; }
+    .levelup-box h2 { color: #f39c12; font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .levelup-box p { color: #555; font-size: 1rem; margin-bottom: 0.4rem; }
+    .levelup-desc { font-size: 0.9rem !important; color: #888 !important; }
+    .levelup-box button { margin-top: 1rem; padding: 0.6rem 1.8rem; background: #f39c12; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; }
+    .levelup-box button:hover { background: #d68910; }
   </style>
 </head>
 <body>
@@ -118,9 +126,10 @@
   <main>
     <div class="exercise-area">
 
+      <div id="xp-header"></div>
+
       <h2>Worked Examples</h2>
 
-      <!-- Example 1: Corresponding -->
       <div class="worked-example">
         <h3>Example 1: Corresponding angles (F-shape)</h3>
         <p class="step">When a transversal crosses two parallel lines, corresponding angles are in the same position at each intersection. They are <strong>equal</strong>.</p>
@@ -132,7 +141,6 @@
         </div>
       </div>
 
-      <!-- Example 2: Alternate -->
       <div class="worked-example">
         <h3>Example 2: Alternate angles (Z-shape)</h3>
         <p class="step">Alternate angles are on <strong>opposite sides</strong> of the transversal, between the parallel lines. They are <strong>equal</strong>.</p>
@@ -144,7 +152,6 @@
         </div>
       </div>
 
-      <!-- Example 3: Co-interior -->
       <div class="worked-example">
         <h3>Example 3: Co-interior angles (C-shape)</h3>
         <p class="step">Co-interior angles are on the <strong>same side</strong> of the transversal, between the parallel lines. They <strong>sum to 180°</strong>.</p>
@@ -163,130 +170,155 @@
       <hr class="section-divider" />
 
       <h2>Your Turn</h2>
-      <p style="font-size:0.9rem; color:#666; margin-bottom:0.6rem;">Find the missing angle in each diagram. Click <em>Check Answers</em> when you are done.</p>
+      <p style="font-size:0.9rem; color:#666; margin-bottom:0.6rem;">Answer each question — it scores the moment you submit.</p>
 
-      <form id="exercise-form">
+      <div class="section-title">Questions 1 to 4: Corresponding angles (F-shape, equal)</div>
 
-        <div class="section-title">Questions 1 to 4: Corresponding angles (F-shape, equal)</div>
-
-        <div class="question-block">
-          <div class="q-inner">
-            <svg id="q1-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
-            <div class="q-text">
-              <label>1. &nbsp; The orange angle is 70°. Find the corresponding angle (blue ?). (°)</label>
-              <input type="number" step="1" min="0" max="360" id="q1" placeholder="?" />
-              <span class="feedback" id="f1"></span>
-            </div>
+      <div class="question-block" id="qb1">
+        <div id="tbw1" class="timer-bar-wrap"><div id="tb1" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <svg id="q1-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
+          <div class="q-text">
+            <label>1. &nbsp; The orange angle is 70°. Find the corresponding angle (blue ?). (°)</label>
+            <input type="number" step="1" min="0" max="360" id="q1" placeholder="?"
+              onfocus="qFocus(1)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerNum(1)}" />
+            <button class="submit-q-btn" id="sbtn1" onclick="answerNum(1)">✓</button>
+            <span class="feedback" id="f1"></span>
           </div>
         </div>
+      </div>
 
-        <div class="question-block">
-          <div class="q-inner">
-            <svg id="q2-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
-            <div class="q-text">
-              <label>2. &nbsp; The orange angle is 115°. Find the corresponding angle (blue ?). (°)</label>
-              <input type="number" step="1" min="0" max="360" id="q2" placeholder="?" />
-              <span class="feedback" id="f2"></span>
-            </div>
+      <div class="question-block" id="qb2">
+        <div id="tbw2" class="timer-bar-wrap"><div id="tb2" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <svg id="q2-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
+          <div class="q-text">
+            <label>2. &nbsp; The orange angle is 115°. Find the corresponding angle (blue ?). (°)</label>
+            <input type="number" step="1" min="0" max="360" id="q2" placeholder="?"
+              onfocus="qFocus(2)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerNum(2)}" />
+            <button class="submit-q-btn" id="sbtn2" onclick="answerNum(2)">✓</button>
+            <span class="feedback" id="f2"></span>
           </div>
         </div>
+      </div>
 
-        <div class="question-block">
-          <div class="q-inner">
-            <svg id="q3-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
-            <div class="q-text">
-              <label>3. &nbsp; The orange angle is 62°. Find the corresponding angle (blue ?). (°)</label>
-              <input type="number" step="1" min="0" max="360" id="q3" placeholder="?" />
-              <span class="feedback" id="f3"></span>
-            </div>
+      <div class="question-block" id="qb3">
+        <div id="tbw3" class="timer-bar-wrap"><div id="tb3" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <svg id="q3-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
+          <div class="q-text">
+            <label>3. &nbsp; The orange angle is 62°. Find the corresponding angle (blue ?). (°)</label>
+            <input type="number" step="1" min="0" max="360" id="q3" placeholder="?"
+              onfocus="qFocus(3)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerNum(3)}" />
+            <button class="submit-q-btn" id="sbtn3" onclick="answerNum(3)">✓</button>
+            <span class="feedback" id="f3"></span>
           </div>
         </div>
+      </div>
 
-        <div class="question-block">
-          <div class="q-inner">
-            <svg id="q4-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
-            <div class="q-text">
-              <label>4. &nbsp; The orange angle is 98°. Find the corresponding angle (blue ?). (°)</label>
-              <input type="number" step="1" min="0" max="360" id="q4" placeholder="?" />
-              <span class="feedback" id="f4"></span>
-            </div>
+      <div class="question-block" id="qb4">
+        <div id="tbw4" class="timer-bar-wrap"><div id="tb4" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <svg id="q4-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
+          <div class="q-text">
+            <label>4. &nbsp; The orange angle is 98°. Find the corresponding angle (blue ?). (°)</label>
+            <input type="number" step="1" min="0" max="360" id="q4" placeholder="?"
+              onfocus="qFocus(4)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerNum(4)}" />
+            <button class="submit-q-btn" id="sbtn4" onclick="answerNum(4)">✓</button>
+            <span class="feedback" id="f4"></span>
           </div>
         </div>
+      </div>
 
-        <div class="section-title">Questions 5 to 7: Alternate angles (Z-shape, equal)</div>
+      <div class="section-title">Questions 5 to 7: Alternate angles (Z-shape, equal)</div>
 
-        <div class="question-block">
-          <div class="q-inner">
-            <svg id="q5-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
-            <div class="q-text">
-              <label>5. &nbsp; The orange angle is 55°. Find the alternate angle (blue ?). (°)</label>
-              <input type="number" step="1" min="0" max="360" id="q5" placeholder="?" />
-              <span class="feedback" id="f5"></span>
-            </div>
+      <div class="question-block" id="qb5">
+        <div id="tbw5" class="timer-bar-wrap"><div id="tb5" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <svg id="q5-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
+          <div class="q-text">
+            <label>5. &nbsp; The orange angle is 55°. Find the alternate angle (blue ?). (°)</label>
+            <input type="number" step="1" min="0" max="360" id="q5" placeholder="?"
+              onfocus="qFocus(5)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerNum(5)}" />
+            <button class="submit-q-btn" id="sbtn5" onclick="answerNum(5)">✓</button>
+            <span class="feedback" id="f5"></span>
           </div>
         </div>
+      </div>
 
-        <div class="question-block">
-          <div class="q-inner">
-            <svg id="q6-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
-            <div class="q-text">
-              <label>6. &nbsp; The orange angle is 130°. Find the alternate angle (blue ?). (°)</label>
-              <input type="number" step="1" min="0" max="360" id="q6" placeholder="?" />
-              <span class="feedback" id="f6"></span>
-            </div>
+      <div class="question-block" id="qb6">
+        <div id="tbw6" class="timer-bar-wrap"><div id="tb6" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <svg id="q6-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
+          <div class="q-text">
+            <label>6. &nbsp; The orange angle is 130°. Find the alternate angle (blue ?). (°)</label>
+            <input type="number" step="1" min="0" max="360" id="q6" placeholder="?"
+              onfocus="qFocus(6)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerNum(6)}" />
+            <button class="submit-q-btn" id="sbtn6" onclick="answerNum(6)">✓</button>
+            <span class="feedback" id="f6"></span>
           </div>
         </div>
+      </div>
 
-        <div class="question-block">
-          <div class="q-inner">
-            <svg id="q7-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
-            <div class="q-text">
-              <label>7. &nbsp; The orange angle is 73°. Find the alternate angle (blue ?). (°)</label>
-              <input type="number" step="1" min="0" max="360" id="q7" placeholder="?" />
-              <span class="feedback" id="f7"></span>
-            </div>
+      <div class="question-block" id="qb7">
+        <div id="tbw7" class="timer-bar-wrap"><div id="tb7" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <svg id="q7-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
+          <div class="q-text">
+            <label>7. &nbsp; The orange angle is 73°. Find the alternate angle (blue ?). (°)</label>
+            <input type="number" step="1" min="0" max="360" id="q7" placeholder="?"
+              onfocus="qFocus(7)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerNum(7)}" />
+            <button class="submit-q-btn" id="sbtn7" onclick="answerNum(7)">✓</button>
+            <span class="feedback" id="f7"></span>
           </div>
         </div>
+      </div>
 
-        <div class="section-title">Questions 8 to 10: Co-interior angles (C-shape, sum to 180°)</div>
+      <div class="section-title">Questions 8 to 10: Co-interior angles (C-shape, sum to 180°)</div>
 
-        <div class="question-block">
-          <div class="q-inner">
-            <svg id="q8-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
-            <div class="q-text">
-              <label>8. &nbsp; The orange angle is 65°. Find the co-interior angle (blue ?) on the same side. (°)</label>
-              <input type="number" step="1" min="0" max="360" id="q8" placeholder="?" />
-              <span class="feedback" id="f8"></span>
-            </div>
+      <div class="question-block" id="qb8">
+        <div id="tbw8" class="timer-bar-wrap"><div id="tb8" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <svg id="q8-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
+          <div class="q-text">
+            <label>8. &nbsp; The orange angle is 65°. Find the co-interior angle (blue ?) on the same side. (°)</label>
+            <input type="number" step="1" min="0" max="360" id="q8" placeholder="?"
+              onfocus="qFocus(8)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerNum(8)}" />
+            <button class="submit-q-btn" id="sbtn8" onclick="answerNum(8)">✓</button>
+            <span class="feedback" id="f8"></span>
           </div>
         </div>
+      </div>
 
-        <div class="question-block">
-          <div class="q-inner">
-            <svg id="q9-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
-            <div class="q-text">
-              <label>9. &nbsp; The orange angle is 120°. Find the co-interior angle (blue ?). (°)</label>
-              <input type="number" step="1" min="0" max="360" id="q9" placeholder="?" />
-              <span class="feedback" id="f9"></span>
-            </div>
+      <div class="question-block" id="qb9">
+        <div id="tbw9" class="timer-bar-wrap"><div id="tb9" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <svg id="q9-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
+          <div class="q-text">
+            <label>9. &nbsp; The orange angle is 120°. Find the co-interior angle (blue ?). (°)</label>
+            <input type="number" step="1" min="0" max="360" id="q9" placeholder="?"
+              onfocus="qFocus(9)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerNum(9)}" />
+            <button class="submit-q-btn" id="sbtn9" onclick="answerNum(9)">✓</button>
+            <span class="feedback" id="f9"></span>
           </div>
         </div>
+      </div>
 
-        <div class="question-block">
-          <div class="q-inner">
-            <svg id="q10-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
-            <div class="q-text">
-              <label>10. &nbsp; The orange angle is 72°. Find the co-interior angle (blue ?). (°)</label>
-              <input type="number" step="1" min="0" max="360" id="q10" placeholder="?" />
-              <span class="feedback" id="f10"></span>
-            </div>
+      <div class="question-block" id="qb10">
+        <div id="tbw10" class="timer-bar-wrap"><div id="tb10" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <svg id="q10-svg" viewBox="0 0 200 180" width="180" height="162"></svg>
+          <div class="q-text">
+            <label>10. &nbsp; The orange angle is 72°. Find the co-interior angle (blue ?). (°)</label>
+            <input type="number" step="1" min="0" max="360" id="q10" placeholder="?"
+              onfocus="qFocus(10)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerNum(10)}" />
+            <button class="submit-q-btn" id="sbtn10" onclick="answerNum(10)">✓</button>
+            <span class="feedback" id="f10"></span>
           </div>
         </div>
+      </div>
 
-        <button type="button" class="check-btn" onclick="checkAnswers()">Check Answers</button>
-      </form>
-
-      <div class="score-box" id="score-box"></div>
+      <div id="results-panel" class="results-panel" style="display:none"></div>
 
     </div>
 
@@ -297,350 +329,194 @@
     Maths Revision &middot; Unit 3: Geometry
   </footer>
 
-  <script>
-    // ── Answer checking ───────────────────────────────────────────────────────
-    const correctAnswers = {
-      q1: 70, q2: 115, q3: 62, q4: 98,
-      q5: 55, q6: 130, q7: 73,
-      q8: 115, q9: 60, q10: 108
-    };
+  <div id="levelup-modal" class="levelup-modal">
+    <div class="levelup-box">
+      <div class="levelup-emoji">🎉</div>
+      <h2>Level Up!</h2>
+      <p>You&rsquo;re now a <strong id="levelup-name"></strong>!</p>
+      <p id="levelup-desc" class="levelup-desc"></p>
+      <button onclick="document.getElementById('levelup-modal').classList.remove('show')">Continue &rarr;</button>
+    </div>
+  </div>
 
-    function checkAnswers() {
-      let correct = 0;
-      const total = Object.keys(correctAnswers).length;
-      for (const [qKey, expected] of Object.entries(correctAnswers)) {
-        const num = qKey.slice(1);
-        const el = document.getElementById(qKey);
-        const feedback = document.getElementById('f' + num);
-        const val = parseInt(el.value, 10);
-        const isCorrect = !isNaN(val) && val === expected;
-        el.style.borderColor = isCorrect ? '#27ae60' : '#e74c3c';
-        feedback.textContent = isCorrect ? '✓ Correct!' : '✗ Answer: ' + expected + '°';
-        feedback.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
-        if (isCorrect) correct++;
+  <script src="../../js/game.js"></script>
+  <script src="../../js/timer.js"></script>
+  <script>
+    'use strict';
+    const ANSWERS = {
+      q1:70, q2:115, q3:62, q4:98,
+      q5:55, q6:130, q7:73,
+      q8:115, q9:60, q10:108
+    };
+    const TOTAL_QUESTIONS = 10;
+    const MAX_SCORE = TOTAL_QUESTIONS * 15;
+
+    const timers = {}, answered = new Set();
+    let runTotal = 0;
+
+    function initTimers() {
+      const lvl = MRG.getCurrentLevel();
+      for (let n = 1; n <= TOTAL_QUESTIONS; n++) {
+        timers[n] = new QuestionTimer(document.getElementById('tb' + n), lvl.timerSecs);
+        const wrap = document.getElementById('tbw' + n);
+        if (wrap) wrap.style.display = lvl.timerVisible ? 'block' : 'none';
       }
-      const box = document.getElementById('score-box');
-      box.textContent = 'You got ' + correct + ' out of ' + total + '.';
-      box.className = 'score-box show ' + (correct === total ? 'great' : correct >= 7 ? 'ok' : 'poor');
-      if (correct === total) box.textContent += ' Excellent work!';
-      else if (correct >= 7) box.textContent += ' Good effort: review the ones you missed.';
-      else box.textContent += ' Keep practising: re-read the worked examples and try again.';
+    }
+    function qFocus(n) { if (answered.has(n)) return; if (!timers[n].hasStarted()) timers[n].start(); }
+    function answerNum(n) {
+      if (answered.has(n)) return;
+      const el = document.getElementById('q' + n);
+      if (el.value === '') return;
+      const elapsed = timers[n].stop();
+      answered.add(n);
+      const val = parseInt(el.value, 10);
+      const correct = !isNaN(val) && val === ANSWERS['q' + n];
+      const pts = MRG.scoreQuestion(correct, elapsed);
+      runTotal += pts;
+      const fb = document.getElementById('f' + n);
+      fb.textContent = correct ? '✓ Correct!' : '✗ ' + ANSWERS['q' + n] + '°';
+      fb.className = 'feedback ' + (correct ? 'correct' : 'incorrect');
+      el.disabled = true;
+      const btn = document.getElementById('sbtn' + n); if (btn) btn.disabled = true;
+      _showPopup(n, pts);
+      if (answered.size === TOTAL_QUESTIONS) setTimeout(_showResults, 500);
+    }
+    function _showPopup(n, pts) {
+      const qb = document.getElementById('qb' + n);
+      const pop = document.createElement('div');
+      pop.className = 'xp-popup ' + (pts > 0 ? 'xp-popup-pos' : pts < 0 ? 'xp-popup-neg' : 'xp-popup-zero');
+      pop.textContent = pts > 0 ? '+' + pts + ' pts' : pts + ' pts';
+      qb.appendChild(pop); setTimeout(() => pop.remove(), 1500);
+    }
+    function _showResults() {
+      const total = Math.max(0, runTotal);
+      const result = MRG.finishExercise('u3e3', total, MAX_SCORE);
+      const stars = result.stars;
+      const starStr = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+      let xpHTML;
+      if (result.xpGained > 0) xpHTML = `<div class="results-xp">+${result.xpGained} XP earned &rarr; Total: ${result.newTotal} XP</div>`;
+      else if (stars === 0) xpHTML = `<div class="results-no-xp">No XP yet — reach ⭐ to earn XP.</div>`;
+      else xpHTML = `<div class="results-no-xp">No new XP — you've already matched your personal best for this exercise.</div>`;
+      const panel = document.getElementById('results-panel');
+      panel.innerHTML = `<div class="results-stars">${starStr}</div><div class="results-score">${total} / ${MAX_SCORE} pts</div>${xpHTML}<div class="results-btns"><button onclick="location.reload()">&#8629; Try Again</button><a href="../../units/unit-3.html">&larr; Back to Unit 3</a></div>`;
+      panel.style.display = 'block';
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      renderXPHeader();
+      if (result.leveledUp) setTimeout(() => _showLevelUp(result.newLevel), 700);
+    }
+    function _showLevelUp(lvl) {
+      const descs = { 2:'Timers are now active. Wrong answers cost 3 pts.', 3:'The countdown is tighter (15 s). Keep it up!', 4:'Hard mode unlocked — a new question set awaits!' };
+      document.getElementById('levelup-name').textContent = lvl.name;
+      document.getElementById('levelup-desc').textContent = descs[lvl.level] || '';
+      document.getElementById('levelup-modal').classList.add('show');
+    }
+    function renderXPHeader() {
+      const info = MRG.getLevelInfo();
+      const nextTxt = info.next ? `${info.xpToNext} XP to <strong>${info.next.name}</strong>` : '<strong>Max Level!</strong>';
+      document.getElementById('xp-header').innerHTML = `<span class="xp-level-badge">&#x1F3C5; ${info.current.name}</span><div class="xp-bar-wrap"><div class="xp-bar-fill" style="width:${info.pct.toFixed(1)}%"></div></div><span class="xp-label">${info.xp} XP &middot; ${nextTxt}</span>`;
     }
 
     // ── SVG helpers ───────────────────────────────────────────────────────────
     const _NS = 'http://www.w3.org/2000/svg';
     const _r2d = Math.PI / 180;
-
-    function pt(cx, cy, deg, dist) {
-      return [
-        +(cx + dist * Math.cos(deg * _r2d)).toFixed(2),
-        +(cy - dist * Math.sin(deg * _r2d)).toFixed(2)
-      ];
-    }
-
-    function arcD(cx, cy, a1, a2, r) {
-      const [x1, y1] = pt(cx, cy, a1, r);
-      const [x2, y2] = pt(cx, cy, a2, r);
-      const span = ((a2 - a1) % 360 + 360) % 360;
-      return `M ${x1} ${y1} A ${r} ${r} 0 ${span > 180 ? 1 : 0} 0 ${x2} ${y2}`;
-    }
-
-    function mk(tag, attrs, text) {
-      const e = document.createElementNS(_NS, tag);
-      for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
-      if (text != null) e.textContent = text;
-      return e;
-    }
-
-    function addLine(svg, x1, y1, x2, y2, color, sw) {
-      svg.appendChild(mk('line', {
-        x1, y1, x2, y2,
-        stroke: color || '#2c3e50', 'stroke-width': sw || 2, 'stroke-linecap': 'round'
-      }));
-    }
-
-    function addArc(svg, cx, cy, a1, a2, r, stroke, fill, sw) {
-      svg.appendChild(mk('path', {
-        d: arcD(cx, cy, a1, a2, r),
-        fill: fill || 'none', stroke: stroke || '#e74c3c', 'stroke-width': sw || 2
-      }));
-    }
-
+    function pt(cx, cy, deg, dist) { return [+(cx+dist*Math.cos(deg*_r2d)).toFixed(2), +(cy-dist*Math.sin(deg*_r2d)).toFixed(2)]; }
+    function arcD(cx, cy, a1, a2, r) { const [x1,y1]=pt(cx,cy,a1,r),[x2,y2]=pt(cx,cy,a2,r); const span=((a2-a1)%360+360)%360; return `M ${x1} ${y1} A ${r} ${r} 0 ${span>180?1:0} 0 ${x2} ${y2}`; }
+    function mk(tag, attrs, text) { const e=document.createElementNS(_NS,tag); for(const [k,v] of Object.entries(attrs)) e.setAttribute(k,v); if(text!=null) e.textContent=text; return e; }
+    function addLine(svg, x1, y1, x2, y2, color, sw) { svg.appendChild(mk('line',{x1,y1,x2,y2,stroke:color||'#2c3e50','stroke-width':sw||2,'stroke-linecap':'round'})); }
+    function addArc(svg, cx, cy, a1, a2, r, stroke, fill, sw) { svg.appendChild(mk('path',{d:arcD(cx,cy,a1,a2,r),fill:fill||'none',stroke:stroke||'#e74c3c','stroke-width':sw||2})); }
     function addFilledArc(svg, cx, cy, a1, a2, r, fill, stroke) {
-      const [x1, y1] = pt(cx, cy, a1, r);
-      const [x2, y2] = pt(cx, cy, a2, r);
-      const span = ((a2 - a1) % 360 + 360) % 360;
-      const d = `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${span > 180 ? 1 : 0} 0 ${x2} ${y2} Z`;
-      svg.appendChild(mk('path', { d, fill: fill || 'rgba(41,128,185,0.2)', stroke: stroke || 'none' }));
+      const [x1,y1]=pt(cx,cy,a1,r),[x2,y2]=pt(cx,cy,a2,r); const span=((a2-a1)%360+360)%360;
+      const d=`M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${span>180?1:0} 0 ${x2} ${y2} Z`;
+      svg.appendChild(mk('path',{d,fill:fill||'rgba(41,128,185,0.2)',stroke:stroke||'none'}));
     }
+    function angleLabel(svg, cx, cy, deg, dist, text, fill, size) { const [x,y]=pt(cx,cy,deg,dist); svg.appendChild(mk('text',{x,y,fill:fill||'#e74c3c','font-size':size||13,'font-family':'sans-serif','font-weight':'bold','text-anchor':'middle','dominant-baseline':'middle'},text)); }
+    function label(svg, x, y, text, fill, size, anchor) { svg.appendChild(mk('text',{x,y,fill:fill||'#555','font-size':size||12,'font-family':'sans-serif','font-weight':'normal','text-anchor':anchor||'middle'},text)); }
 
-    function angleLabel(svg, cx, cy, deg, dist, text, fill, size) {
-      const [x, y] = pt(cx, cy, deg, dist);
-      svg.appendChild(mk('text', {
-        x, y, fill: fill || '#e74c3c', 'font-size': size || 13,
-        'font-family': 'sans-serif', 'font-weight': 'bold',
-        'text-anchor': 'middle', 'dominant-baseline': 'middle'
-      }, text));
-    }
-
-    function label(svg, x, y, text, fill, size, anchor) {
-      svg.appendChild(mk('text', {
-        x, y, fill: fill || '#555', 'font-size': size || 12,
-        'font-family': 'sans-serif', 'font-weight': 'normal',
-        'text-anchor': anchor || 'middle'
-      }, text));
-    }
-
-    // ── Parallel-line diagram builder ────────────────────────────────────────
-    //
-    // Layout (all diagrams share the same geometry):
-    //   Two horizontal parallel lines at y=L1 and y=L2.
-    //   A transversal at angle TRANS_DEG crosses both.
-    //   The transversal hits line 1 at cx1 and line 2 at cx2.
-    //
-    // Angles at each intersection are measured from the EAST ray of the parallel
-    // line, sweeping CCW (standard maths convention).  The transversal adds
-    // four sectors at each crossing; their angles depend on TRANS_DEG.
-    //
-    // transAngle: angle of transversal measured from East (0°), CCW positive.
-    //   e.g. 55° means the transversal goes up-right at 55° above horizontal.
-    //
-    // At the upper intersection the four sectors (CCW from East) are:
-    //   sector A:  0°          → transAngle        (upper-right, between right parallel & transversal above)
-    //   sector B:  transAngle  → 180°              (upper-left)
-    //   sector C:  180°        → transAngle+180°   (lower-left, = vertically opp. to A)
-    //   sector D:  transAngle+180° → 360°          (lower-right, = vertically opp. to B)
-    //
-    // Corresponding angles: same letter at both intersections.
-    // Alternate angles: opposite-side sectors between the parallels.
-    // Co-interior: same-side sectors between the parallels.
-
-    const L1_Y = 55;   // y of upper parallel line
-    const L2_Y = 130;  // y of lower parallel line
-    const PAR_X1 = 10; // left extent of parallel lines
-    const PAR_X2 = 190;// right extent of parallel lines
-
-    // Compute x of transversal at a given y, given it passes through (cx_base, L1_Y) at transAngle
+    // Parallel-line diagram builder
+    const L1_Y=55, L2_Y=130, PAR_X1=10, PAR_X2=190;
     function transX(transAngle, cx_base, y) {
-      // x = cx_base + (y - L1_Y) * cos(transAngle) / sin(transAngle)  [rearranged from parametric]
-      // But careful: in SVG y increases downward, so going "down" from L1 means y increases.
-      // In math terms, a ray at transAngle from (cx_base, L1_Y) reaches y2 > y1 when going at
-      // angle (transAngle) — SVG y is flipped, so the ray going at transAngle in math space
-      // goes in SVG-y direction: dy_svg = -sin(transAngle) * t  (upward in SVG for positive angle)
-      //
-      // We want the intersection at L2_Y (below L1_Y in SVG, i.e. larger y value).
-      // L2_Y > L1_Y, so dy_svg > 0 → need -sin(transAngle)*t > 0 → t < 0
-      // Going backwards along the ray (t<0) reaches L2_Y if transAngle is acute (up-right).
-      // This is equivalent to using transAngle + 180° going forward.
-      //
-      // Simpler: The transversal is a straight line. Use slope:
-      //   slope_svg = -sin(transAngle) / cos(transAngle)  (SVG slope, y increases down)
-      //   x at L2_Y = cx_base + (L2_Y - L1_Y) / slope_svg
-      //             = cx_base + (L2_Y - L1_Y) * cos(transAngle) / (-sin(transAngle))
-      //
-      // Wait — the transversal goes from bottom-left to top-right (visually).  In SVG coords
-      // that means decreasing y (upward) as x increases.  For a transversal at math angle θ:
-      //   Math direction: (cos θ, sin θ)
-      //   SVG direction: (cos θ, -sin θ)   [y flipped]
-      //
-      // Starting at (cx_base, L1_Y), going in SVG direction (cos θ, -sin θ) * t:
-      //   y_svg = L1_Y - sin(θ) * t
-      //   To reach L2_Y:  L2_Y = L1_Y - sin(θ) * t  →  t = (L1_Y - L2_Y) / sin(θ)
-      //
-      // L2_Y > L1_Y (it's below), so (L1_Y - L2_Y) < 0 and sin(θ) > 0 for acute θ → t < 0
-      // x_svg = cx_base + cos(θ) * t
-      //       = cx_base + cos(θ) * (L1_Y - L2_Y) / sin(θ)
-      //       = cx_base - (L2_Y - L1_Y) * cot(θ)
-      const dy = y - L1_Y;
-      const cosT = Math.cos(transAngle * _r2d);
-      const sinT = Math.sin(transAngle * _r2d);
-      // t such that L1_Y - sinT*t = y  →  t = (L1_Y - y) / sinT
-      const t = (L1_Y - y) / sinT;
-      return +(cx_base + cosT * t).toFixed(2);
+      const sinT=Math.sin(transAngle*_r2d), cosT=Math.cos(transAngle*_r2d);
+      const t=(L1_Y-y)/sinT;
+      return +(cx_base+cosT*t).toFixed(2);
     }
-
-    // Draw two parallel lines + transversal, return intersection centres
     function drawParallels(svg, transAngle, cx1, extendBy) {
-      const ext = extendBy || 65;
-      // Transversal extents (go ext units beyond each parallel in both directions)
-      const cx2 = transX(transAngle, cx1, L2_Y);
-
-      // Compute transversal endpoints (extend past both parallels)
-      const sinT = Math.sin(transAngle * _r2d), cosT = Math.cos(transAngle * _r2d);
-      // Upward extension from cx1,L1_Y
-      const tUp = -ext;   // negative t goes upward along the ray
-      const tx1 = +(cx1 + cosT * tUp).toFixed(2), ty1 = +(L1_Y - sinT * tUp).toFixed(2);
-      // Downward extension from cx2,L2_Y
-      const tDown = ext;
-      const tx2 = +(cx2 + cosT * tDown).toFixed(2), ty2 = +(L2_Y - sinT * tDown).toFixed(2);
-
-      // Parallel lines
-      addLine(svg, PAR_X1, L1_Y, PAR_X2, L1_Y);
-      addLine(svg, PAR_X1, L2_Y, PAR_X2, L2_Y);
-
-      // Parallel markers (»)
-      svg.appendChild(mk('text', { x: PAR_X2 - 32, y: L1_Y - 4, 'font-size': 13, fill: '#2c3e50', 'font-family': 'sans-serif' }, '»'));
-      svg.appendChild(mk('text', { x: PAR_X2 - 32, y: L2_Y - 4, 'font-size': 13, fill: '#2c3e50', 'font-family': 'sans-serif' }, '»'));
-
-      // Transversal
-      addLine(svg, tx1, ty1, tx2, ty2, '#555', 2);
-
-      return { cx1, cy1: L1_Y, cx2, cy2: L2_Y };
+      const ext=extendBy||65, cx2=transX(transAngle,cx1,L2_Y);
+      const sinT=Math.sin(transAngle*_r2d), cosT=Math.cos(transAngle*_r2d);
+      const tUp=-ext; const tx1=+(cx1+cosT*tUp).toFixed(2), ty1=+(L1_Y-sinT*tUp).toFixed(2);
+      const tDown=ext; const tx2=+(cx2+cosT*tDown).toFixed(2), ty2=+(L2_Y-sinT*tDown).toFixed(2);
+      addLine(svg,PAR_X1,L1_Y,PAR_X2,L1_Y); addLine(svg,PAR_X1,L2_Y,PAR_X2,L2_Y);
+      svg.appendChild(mk('text',{x:PAR_X2-32,y:L1_Y-4,'font-size':13,fill:'#2c3e50','font-family':'sans-serif'},'»'));
+      svg.appendChild(mk('text',{x:PAR_X2-32,y:L2_Y-4,'font-size':13,fill:'#2c3e50','font-family':'sans-serif'},'»'));
+      addLine(svg,tx1,ty1,tx2,ty2,'#555',2);
+      return {cx1, cy1:L1_Y, cx2, cy2:L2_Y};
     }
-
-    // Draw angle arc at an intersection, for a given sector.
-    // sectorStart, sectorEnd: angles in degrees (CCW from East, standard math)
     function markAngle(svg, cx, cy, sectorStart, sectorEnd, r, fill, stroke) {
-      addFilledArc(svg, cx, cy, sectorStart, sectorEnd, r, fill, stroke);
-      addArc(svg, cx, cy, sectorStart, sectorEnd, r, stroke, 'none', 2);
+      addFilledArc(svg,cx,cy,sectorStart,sectorEnd,r,fill,stroke);
+      addArc(svg,cx,cy,sectorStart,sectorEnd,r,stroke,'none',2);
+    }
+    function sectorMid(a1, a2) { const span=((a2-a1)%360+360)%360; return a1+span/2; }
+    function sectors(T) { return { upperRight:[0,T], upperLeft:[T,180], lowerLeft:[180,T+180], lowerRight:[T+180,360] }; }
+
+    function buildQ(svgId, transAngle, cx1, givenLabel, unknownLabel, givenSectorKey, unknownSectorKey) {
+      const svg=document.getElementById(svgId);
+      const {cx1:icx1, cy1, cx2, cy2}=drawParallels(svg,transAngle,cx1,55);
+      const s=sectors(transAngle), R=17;
+      const gs=s[givenSectorKey], us=s[unknownSectorKey];
+      markAngle(svg,icx1,cy1,gs[0],gs[1],R,'rgba(230,126,34,0.2)','#e67e22');
+      markAngle(svg,cx2,cy2,us[0],us[1],R,'rgba(41,128,185,0.15)','#2980b9');
+      angleLabel(svg,icx1,cy1,sectorMid(...gs),R+11,givenLabel,'#e67e22',12);
+      angleLabel(svg,cx2,cy2,sectorMid(...us),R+11,unknownLabel,'#2980b9',14);
     }
 
-    // Sector mid-angle
-    function sectorMid(a1, a2) {
-      const span = ((a2 - a1) % 360 + 360) % 360;
-      return a1 + span / 2;
-    }
-
-    // ── Given transversal at angle transAngle, the four sectors at each intersection:
-    //    right  (upper-right) : 0° → transAngle              [= transAngle]
-    //    upper  (upper-left)  : transAngle → 180°            [= 180-transAngle]
-    //    left   (lower-left)  : 180° → transAngle+180°       [= transAngle]
-    //    lower  (lower-right) : transAngle+180° → 360°       [= 180-transAngle]
-    //
-    // Naming the sectors by position at upper intersection (same labels repeat at lower):
-    //   "upper-right"  : a1=0,          a2=transAngle
-    //   "upper-left"   : a1=transAngle, a2=180
-    //   "lower-left"   : a1=180,        a2=transAngle+180
-    //   "lower-right"  : a1=transAngle+180, a2=360
-    //
-    // Corresponding pairs (same position): upper-right@top = upper-right@bottom, etc.
-    // Alternate pairs (between parallels, opposite sides):
-    //   lower-right@top (below L1, right of transversal)  ↔  upper-left@bottom (above L2, left of transversal)
-    //   lower-left@top  (below L1, left of transversal)   ↔  upper-right@bottom (above L2, right of transversal)
-    // Co-interior (between parallels, same side):
-    //   lower-right@top  +  upper-right@bottom  = 180°
-    //   lower-left@top   +  upper-left@bottom   = 180°
-
-    function sectors(transAngle) {
-      const T = transAngle;
-      return {
-        upperRight: [0, T],
-        upperLeft:  [T, 180],
-        lowerLeft:  [180, T + 180],
-        lowerRight: [T + 180, 360]
-      };
-    }
-
-    // ── Build all worked example diagrams ────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function () {
+      initTimers();
+      renderXPHeader();
 
-      const TRANS = 55; // transversal angle for worked examples
-      const CX1 = 120;  // x of transversal at upper parallel
+      const TRANS=55, CX1=120;
 
-      // ── Example 1: Corresponding (upper-right at both intersections, 55°) ──
-      (function () {
-        const svg = document.getElementById('ex1-corr');
-        const { cx1, cy1, cx2, cy2 } = drawParallels(svg, TRANS, CX1);
-        const s = sectors(TRANS);
-        const R = 22, fillC = 'rgba(41,128,185,0.2)', strokeC = '#2980b9';
-        // Upper-right at top intersection
-        markAngle(svg, cx1, cy1, s.upperRight[0], s.upperRight[1], R, fillC, strokeC);
-        // Upper-right at bottom intersection (corresponding)
-        markAngle(svg, cx2, cy2, s.upperRight[0], s.upperRight[1], R, fillC, strokeC);
-        angleLabel(svg, cx1, cy1, sectorMid(...s.upperRight), R + 12, '55°', '#2980b9', 13);
-        angleLabel(svg, cx2, cy2, sectorMid(...s.upperRight), R + 12, '55°', '#2980b9', 13);
-        label(svg, 10, 205, 'Corresponding angles are equal (F-shape)', '#555', 12, 'start');
+      // Worked examples
+      (function() {
+        const svg=document.getElementById('ex1-corr');
+        const {cx1,cy1,cx2,cy2}=drawParallels(svg,TRANS,CX1);
+        const s=sectors(TRANS), R=22, fillC='rgba(41,128,185,0.2)', strokeC='#2980b9';
+        markAngle(svg,cx1,cy1,s.upperRight[0],s.upperRight[1],R,fillC,strokeC);
+        markAngle(svg,cx2,cy2,s.upperRight[0],s.upperRight[1],R,fillC,strokeC);
+        angleLabel(svg,cx1,cy1,sectorMid(...s.upperRight),R+12,'55°','#2980b9',13);
+        angleLabel(svg,cx2,cy2,sectorMid(...s.upperRight),R+12,'55°','#2980b9',13);
+        label(svg,10,205,'Corresponding angles are equal (F-shape)','#555',12,'start');
+      }());
+      (function() {
+        const svg=document.getElementById('ex2-alt');
+        const {cx1,cy1,cx2,cy2}=drawParallels(svg,TRANS,CX1);
+        const s=sectors(TRANS), R=22;
+        markAngle(svg,cx1,cy1,s.lowerRight[0],s.lowerRight[1],R,'rgba(231,76,60,0.2)','#e74c3c');
+        markAngle(svg,cx2,cy2,s.upperLeft[0],s.upperLeft[1],R,'rgba(231,76,60,0.2)','#e74c3c');
+        angleLabel(svg,cx1,cy1,sectorMid(...s.lowerRight),R+12,'55°','#e74c3c',13);
+        angleLabel(svg,cx2,cy2,sectorMid(...s.upperLeft),R+12,'55°','#e74c3c',13);
+        label(svg,10,205,'Alternate angles are equal (Z-shape)','#555',12,'start');
+      }());
+      (function() {
+        const svg=document.getElementById('ex3-coint');
+        const {cx1,cy1,cx2,cy2}=drawParallels(svg,TRANS,CX1);
+        const s=sectors(TRANS), R=22, suppAngle=180-TRANS;
+        markAngle(svg,cx1,cy1,s.lowerRight[0],s.lowerRight[1],R,'rgba(231,76,60,0.2)','#e74c3c');
+        markAngle(svg,cx2,cy2,s.upperRight[0],s.upperRight[1],R,'rgba(41,128,185,0.2)','#2980b9');
+        angleLabel(svg,cx1,cy1,sectorMid(...s.lowerRight),R+12,suppAngle+'°','#e74c3c',13);
+        angleLabel(svg,cx2,cy2,sectorMid(...s.upperRight),R+12,TRANS+'°','#2980b9',13);
+        label(svg,10,205,'Co-interior angles sum to 180°: '+suppAngle+'° + '+TRANS+'° = 180° ✓','#555',12,'start');
       }());
 
-      // ── Example 2: Alternate (lower-right@top ↔ upper-left@bottom) ──
-      (function () {
-        const svg = document.getElementById('ex2-alt');
-        const { cx1, cy1, cx2, cy2 } = drawParallels(svg, TRANS, CX1);
-        const s = sectors(TRANS);
-        const R = 22;
-        // Lower-right at top (below upper parallel, right of transversal)
-        markAngle(svg, cx1, cy1, s.lowerRight[0], s.lowerRight[1], R, 'rgba(231,76,60,0.2)', '#e74c3c');
-        // Upper-left at bottom (above lower parallel, left of transversal) — the alternate
-        markAngle(svg, cx2, cy2, s.upperLeft[0], s.upperLeft[1], R, 'rgba(231,76,60,0.2)', '#e74c3c');
-        angleLabel(svg, cx1, cy1, sectorMid(...s.lowerRight), R + 12, '55°', '#e74c3c', 13);
-        angleLabel(svg, cx2, cy2, sectorMid(...s.upperLeft),  R + 12, '55°', '#e74c3c', 13);
-        label(svg, 10, 205, 'Alternate angles are equal (Z-shape)', '#555', 12, 'start');
-      }());
-
-      // ── Example 3: Co-interior (lower-right@top + upper-right@bottom = 180°) ──
-      (function () {
-        const svg = document.getElementById('ex3-coint');
-        const { cx1, cy1, cx2, cy2 } = drawParallels(svg, TRANS, CX1);
-        const s = sectors(TRANS);
-        const R = 22;
-        // Lower-right at top
-        markAngle(svg, cx1, cy1, s.lowerRight[0], s.lowerRight[1], R, 'rgba(231,76,60,0.2)', '#e74c3c');
-        // Upper-right at bottom
-        markAngle(svg, cx2, cy2, s.upperRight[0], s.upperRight[1], R, 'rgba(41,128,185,0.2)', '#2980b9');
-        const suppAngle = 180 - TRANS; // co-interior angles: TRANS + (180-TRANS) = 180
-        angleLabel(svg, cx1, cy1, sectorMid(...s.lowerRight), R + 12, suppAngle + '°', '#e74c3c', 13);
-        angleLabel(svg, cx2, cy2, sectorMid(...s.upperRight), R + 12, TRANS + '°', '#2980b9', 13);
-        label(svg, 10, 205, 'Co-interior angles sum to 180°: ' + suppAngle + '° + ' + TRANS + '° = 180° ✓', '#555', 12, 'start');
-      }());
-
-      // ── Question diagrams ─────────────────────────────────────────────────
-      // Each question uses a specific angle and highlights two specific sectors.
-      // Parameters: (svgId, transAngle, cx1, givenAngle, givenSectorFn, unknownSectorFn, type)
-      //   type: 'corr' | 'alt' | 'coint'
-
-      function buildQ(svgId, transAngle, cx1, givenLabel, unknownLabel, givenSectorKey, unknownSectorKey) {
-        const svg = document.getElementById(svgId);
-        const { cx1: icx1, cy1, cx2, cy2 } = drawParallels(svg, transAngle, cx1, 55);
-        const s = sectors(transAngle);
-        const R = 17;
-
-        const gs = s[givenSectorKey];
-        const us = s[unknownSectorKey];
-
-        markAngle(svg, icx1, cy1, gs[0], gs[1], R, 'rgba(230,126,34,0.2)', '#e67e22');
-        markAngle(svg, cx2,  cy2, us[0], us[1], R, 'rgba(41,128,185,0.15)', '#2980b9');
-        angleLabel(svg, icx1, cy1, sectorMid(...gs), R + 11, givenLabel, '#e67e22', 12);
-        angleLabel(svg, cx2,  cy2, sectorMid(...us), R + 11, unknownLabel, '#2980b9', 14);
-      }
-
-      // Corresponding: same sector key at both intersections
-      // — given at top, unknown at bottom (same sector = same position = corresponding)
-      // Q1: 70° corresponding → upper-right at top, upper-right at bottom
+      // Question diagrams
       buildQ('q1-svg',  55, 115, '70°',  '?', 'upperRight', 'upperRight');
-      // Q2: 115° corresponding → upper-left at top, upper-left at bottom
       buildQ('q2-svg',  55, 115, '115°', '?', 'upperLeft',  'upperLeft');
-      // Q3: 62° corresponding → upper-right at top, upper-right at bottom
       buildQ('q3-svg',  55, 115, '62°',  '?', 'upperRight', 'upperRight');
-      // Q4: 98° corresponding → lower-right at top, lower-right at bottom
-      // (The obtuse angle 98° corresponds to lowerLeft = transAngle sector: need transAngle=98 for this)
-      // For Q4 we need a transversal where the "given" angle is lower-right (= 180 - transAngle).
-      // If lower-right = 98°, then 180 - transAngle = 98 → transAngle = 82°.
       buildQ('q4-svg',  82, 115, '98°',  '?', 'lowerRight', 'lowerRight');
-
-      // Alternate: lower-right@top ↔ upper-left@bottom, or lower-left@top ↔ upper-right@bottom
-      // Q5: 55° alternate → lower-left@top ↔ upper-right@bottom
       buildQ('q5-svg',  55, 115, '55°',  '?', 'lowerLeft',  'upperRight');
-      // Q6: 130° alternate → upper-left@top ↔ lower-right@bottom
-      // If upper-left = 130°, then 180-transAngle = 130 → transAngle = 50°
       buildQ('q6-svg',  50, 115, '130°', '?', 'upperLeft',  'lowerRight');
-      // Q7: 73° alternate → lower-left@top ↔ upper-right@bottom
-      // lower-left = transAngle = 73° (since lowerLeft spans transAngle degrees)
       buildQ('q7-svg',  73, 115, '73°',  '?', 'lowerLeft',  'upperRight');
-
-      // Co-interior: lower-right@top + upper-right@bottom = 180°  (right-side)
-      // Q8: 65° co-interior → lower-right@top, upper-right@bottom
-      // lower-right span = 180-transAngle. If 180-transAngle = 65 → transAngle = 115. But transAngle>90 is odd.
-      // Actually lowerRight = [T+180, 360], span = 360-(T+180) = 180-T. So 180-T = 65 → T = 115.
-      // Use T=115: transversal goes at 115° (up-left).
       buildQ('q8-svg',  115, 80, '65°',  '?', 'lowerRight', 'upperRight');
-      // Q9: 120° co-interior → upper-left@top (span=180-T), upper-right@bottom (span=T)
-      // Using left-side co-interior: lowerLeft@top + upperLeft@bottom = 180°
-      // lowerLeft = T. If T = 120 → transversal at 120°
       buildQ('q9-svg',  120, 80, '120°', '?', 'lowerLeft',  'upperLeft');
-      // Q10: 72° co-interior
-      // lowerRight span = 180-T = 72 → T = 108°
       buildQ('q10-svg', 108, 80, '72°',  '?', 'lowerRight', 'upperRight');
-
     });
   </script>
 

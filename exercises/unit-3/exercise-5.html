@@ -55,12 +55,20 @@
       flex-wrap: wrap;
       margin: 0.8rem 0;
     }
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #2c3e50;
+      margin: 1.2rem 0 0.4rem;
+    }
     .question-block {
+      position: relative;
       background: white;
       border: 1px solid #e0e0e0;
       border-radius: 8px;
       padding: 1rem 1.2rem;
       margin: 0.75rem 0;
+      overflow: hidden;
     }
     .q-inner { display: flex; gap: 1.2rem; align-items: flex-start; flex-wrap: wrap; }
     .q-inner svg { flex-shrink: 0; }
@@ -82,40 +90,11 @@
     .question-block input[type="number"]::-webkit-outer-spin-button,
     .question-block input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .question-block input[type="number"]:focus { outline: none; border-color: #2980b9; }
+    .question-block input[type="number"]:disabled,
+    .question-block input[type="radio"]:disabled { opacity: 0.6; cursor: default; }
     .feedback { font-size: 0.9rem; font-weight: 600; display: block; margin-top: 0.4rem; }
     .feedback.correct { color: #27ae60; }
     .feedback.incorrect { color: #e74c3c; }
-    .section-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #2c3e50;
-      margin: 1.2rem 0 0.4rem;
-    }
-    .check-btn {
-      display: inline-block;
-      margin-top: 1.2rem;
-      padding: 0.65rem 1.6rem;
-      background-color: #2980b9;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.15s ease;
-    }
-    .check-btn:hover { background-color: #1f6da0; }
-    .score-box {
-      margin-top: 1rem;
-      padding: 0.8rem 1.2rem;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      display: none;
-    }
-    .score-box.show { display: block; }
-    .score-box.great { background: #eafaf1; color: #1e8449; border: 1px solid #a9dfbf; }
-    .score-box.ok    { background: #fef9e7; color: #9a7d0a; border: 1px solid #f9e79f; }
-    .score-box.poor  { background: #fdedec; color: #c0392b; border: 1px solid #f5b7b1; }
     .section-divider { border: none; border-top: 2px dashed #ddd; margin: 1.5rem 0; }
     .net-label {
       font-size: 0.85rem;
@@ -124,6 +103,116 @@
       margin-top: 0.3rem;
       font-style: italic;
     }
+
+    /* ── Per-question timer bar ───────────────────────────────────────── */
+    .timer-bar-wrap {
+      margin: -1rem -1.2rem 0.75rem;
+      height: 4px;
+      background: #ecf0f1;
+      border-radius: 8px 8px 0 0;
+      overflow: hidden;
+    }
+    .timer-bar-fill { height: 100%; width: 100%; background: #27ae60; border-radius: 8px; }
+
+    /* ── Submit button ────────────────────────────────────────────────── */
+    .submit-q-btn {
+      display: inline-block;
+      margin-left: 0.5rem;
+      padding: 0.35rem 0.75rem;
+      background: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      vertical-align: middle;
+      transition: background 0.15s;
+    }
+    .submit-q-btn:hover    { background: #1e8449; }
+    .submit-q-btn:disabled { background: #95a5a6; cursor: default; }
+
+    /* ── Floating XP popup ────────────────────────────────────────────── */
+    .xp-popup {
+      position: absolute;
+      right: 1rem; top: 0.6rem;
+      font-size: 1rem; font-weight: 800;
+      pointer-events: none; z-index: 10;
+      animation: xpFloat 1.4s ease-out forwards;
+    }
+    .xp-popup-pos  { color: #27ae60; }
+    .xp-popup-neg  { color: #e74c3c; }
+    .xp-popup-zero { color: #95a5a6; }
+    @keyframes xpFloat {
+      0%   { opacity:1; transform:translateY(0); }
+      60%  { opacity:1; transform:translateY(-20px); }
+      100% { opacity:0; transform:translateY(-32px); }
+    }
+
+    /* ── XP header ────────────────────────────────────────────────────── */
+    #xp-header {
+      display: flex; align-items: center; gap: 0.75rem;
+      background: #1a252f; border-radius: 8px;
+      padding: 0.6rem 1rem; margin-bottom: 1.4rem; flex-wrap: wrap;
+    }
+    .xp-level-badge { color: #f1c40f; font-weight: 700; font-size: 0.95rem; white-space: nowrap; }
+    .xp-bar-wrap {
+      flex: 1; min-width: 100px;
+      background: #34495e; border-radius: 99px; height: 10px; overflow: hidden;
+    }
+    .xp-bar-fill { height:100%; background:#2ecc71; border-radius:99px; transition:width 0.5s ease; }
+    .xp-label { color: #bdc3c7; font-size: 0.85rem; white-space: nowrap; }
+    .xp-label strong { color: #ecf0f1; }
+
+    /* ── Results panel ────────────────────────────────────────────────── */
+    .results-panel {
+      background: linear-gradient(135deg, #eafaf1 0%, #d5f5e3 100%);
+      border: 2px solid #a9dfbf; border-radius: 12px;
+      padding: 1.5rem 2rem; margin-top: 1.5rem; text-align: center;
+    }
+    .results-stars  { font-size: 2.4rem; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+    .results-score  { font-size: 1.3rem; font-weight: 700; color: #1a7a3c; margin-bottom: 0.25rem; }
+    .results-xp     { font-size: 1rem; color: #1e8449; margin-bottom: 1rem; }
+    .results-no-xp  { font-size: 0.9rem; color: #7f8c8d; margin-bottom: 1rem; }
+    .results-btns   { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+    .results-btns button {
+      padding: 0.55rem 1.3rem; background: #2980b9; color: white;
+      border: none; border-radius: 6px; font-size: 0.95rem; cursor: pointer;
+    }
+    .results-btns button:hover { background: #1f6da0; }
+    .results-btns a {
+      padding: 0.55rem 1.3rem; background: #ecf0f1; color: #2c3e50;
+      border-radius: 6px; text-decoration: none; font-size: 0.95rem;
+    }
+    .results-btns a:hover { background: #d5d8dc; }
+
+    /* ── Level-up modal ───────────────────────────────────────────────── */
+    .levelup-modal {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+      display: none; align-items: center; justify-content: center;
+      z-index: 1000; animation: luFadeIn 0.3s ease;
+    }
+    .levelup-modal.show { display: flex; }
+    @keyframes luFadeIn { from { opacity:0; } to { opacity:1; } }
+    .levelup-box {
+      background: white; border-radius: 16px; padding: 2rem 2.5rem;
+      text-align: center; max-width: 340px; width: 90%;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+      animation: luPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes luPop {
+      from { transform: scale(0.7); opacity:0; }
+      to   { transform: scale(1);   opacity:1; }
+    }
+    .levelup-emoji { font-size: 3rem; margin-bottom: 0.5rem; }
+    .levelup-box h2 { color: #f39c12; font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .levelup-box p  { color: #555; font-size: 1rem; margin-bottom: 0.4rem; }
+    .levelup-desc   { font-size: 0.9rem !important; color: #888 !important; }
+    .levelup-box button {
+      margin-top: 1rem; padding: 0.6rem 1.8rem; background: #f39c12;
+      color: white; border: none; border-radius: 8px;
+      font-size: 1rem; font-weight: 700; cursor: pointer;
+    }
+    .levelup-box button:hover { background: #d68910; }
   </style>
 </head>
 <body>
@@ -144,6 +233,9 @@
   <main>
     <div class="exercise-area">
 
+      <!-- XP header -->
+      <div id="xp-header"></div>
+
       <h2>Worked Examples</h2>
 
       <!-- Part A: Nets -->
@@ -154,7 +246,6 @@
         <div class="net-fold-row">
           <div>
             <svg viewBox="0 0 220 230" width="200" height="210">
-              <!-- Cross-shaped cube net -->
               <rect x="85" y="10" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
               <rect x="10" y="60" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
               <rect x="60" y="60" width="50" height="50" fill="rgba(41,128,185,0.22)" stroke="#2980b9" stroke-width="2"/>
@@ -182,7 +273,7 @@
       <div class="worked-example">
         <h3>Example 2: Scale factors</h3>
         <p class="step">A <strong>scale factor</strong> tells you how much bigger (or smaller) a shape has become. Multiply every length by the scale factor to find the new dimensions.</p>
-        <p class="step"><span class="step-label">Step 1</span> Identify the scale factor: scale factor = new length ÷ original length.</p>
+        <p class="step"><span class="step-label">Step 1</span> Identify the scale factor: scale factor = new length &divide; original length.</p>
         <p class="step"><span class="step-label">Step 2</span> Multiply all lengths by the scale factor to get the enlarged shape.</p>
         <div style="margin: 0.8rem 0;">
           <svg viewBox="0 0 320 140" width="320" height="140">
@@ -199,7 +290,7 @@
           </svg>
         </div>
         <div class="rule-box">
-          <strong>Scale factor = new length ÷ original length</strong><br/>
+          <strong>Scale factor = new length &divide; original length</strong><br/>
           To enlarge: multiply all lengths by the scale factor.<br/>
           To reduce: scale factor is less than 1.
         </div>
@@ -208,200 +299,205 @@
       <hr class="section-divider" />
 
       <h2>Your Turn</h2>
-      <p style="font-size:0.9rem; color:#666; margin-bottom:0.6rem;">Answer each question. Click <em>Check Answers</em> when you are done.</p>
+      <p style="font-size:0.9rem; color:#666; margin-bottom:0.6rem;">Answer each question — it scores the moment you respond.</p>
 
-      <form id="exercise-form">
+      <div class="section-title">Part A: Questions 1 to 5 — What 3D shape does each net make?</div>
 
-        <div class="section-title">Part A: Questions 1 to 5: What 3D shape does each net make?</div>
-
-        <!-- Q1: Cube net -->
-        <div class="question-block">
-          <div class="q-inner">
-            <div>
-              <svg viewBox="0 0 220 230" width="190" height="200">
-                <rect x="85" y="10" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
-                <rect x="10" y="60" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
-                <rect x="60" y="60" width="50" height="50" fill="rgba(41,128,185,0.22)" stroke="#2980b9" stroke-width="2"/>
-                <rect x="110" y="60" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
-                <rect x="160" y="60" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
-                <rect x="60" y="110" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
-                <rect x="60" y="160" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
-                <text x="68" y="222" font-size="12" fill="#777" font-family="sans-serif" font-style="italic">Net A</text>
-              </svg>
+      <!-- Q1: Cube net -->
+      <div class="question-block" id="qb1">
+        <div id="tbw1" class="timer-bar-wrap"><div id="tb1" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <div>
+            <svg viewBox="0 0 220 230" width="190" height="200">
+              <rect x="85" y="10" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
+              <rect x="10" y="60" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
+              <rect x="60" y="60" width="50" height="50" fill="rgba(41,128,185,0.22)" stroke="#2980b9" stroke-width="2"/>
+              <rect x="110" y="60" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
+              <rect x="160" y="60" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
+              <rect x="60" y="110" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
+              <rect x="60" y="160" width="50" height="50" fill="rgba(41,128,185,0.15)" stroke="#2980b9" stroke-width="2"/>
+              <text x="68" y="222" font-size="12" fill="#777" font-family="sans-serif" font-style="italic">Net A</text>
+            </svg>
+          </div>
+          <div class="q-text">
+            <label>1. &nbsp; What 3D shape does Net A fold into?</label>
+            <div class="radio-group" id="rg1">
+              <label><input type="radio" name="q1" value="Cube" onclick="answerRadio(1)" /> Cube</label>
+              <label><input type="radio" name="q1" value="Triangular Prism" onclick="answerRadio(1)" /> Triangular Prism</label>
+              <label><input type="radio" name="q1" value="Square Pyramid" onclick="answerRadio(1)" /> Square Pyramid</label>
+              <label><input type="radio" name="q1" value="Cylinder" onclick="answerRadio(1)" /> Cylinder</label>
+              <label><input type="radio" name="q1" value="Cuboid" onclick="answerRadio(1)" /> Cuboid</label>
             </div>
-            <div class="q-text">
-              <label>1. &nbsp; What 3D shape does Net A fold into?</label>
-              <div class="radio-group" id="rg1">
-                <label><input type="radio" name="q1" value="Cube" /> Cube</label>
-                <label><input type="radio" name="q1" value="Triangular Prism" /> Triangular Prism</label>
-                <label><input type="radio" name="q1" value="Square Pyramid" /> Square Pyramid</label>
-                <label><input type="radio" name="q1" value="Cylinder" /> Cylinder</label>
-                <label><input type="radio" name="q1" value="Cuboid" /> Cuboid</label>
-              </div>
-              <span class="feedback" id="f1"></span>
-            </div>
+            <span class="feedback" id="f1"></span>
           </div>
         </div>
+      </div>
 
-        <!-- Q2: Triangular prism net -->
-        <div class="question-block">
-          <div class="q-inner">
-            <div>
-              <svg viewBox="0 0 220 200" width="190" height="175">
-                <!-- 3 rectangles in a row: 60×40 each -->
-                <rect x="20" y="70" width="60" height="40" fill="rgba(231,76,60,0.12)" stroke="#e74c3c" stroke-width="2"/>
-                <rect x="80" y="70" width="60" height="40" fill="rgba(231,76,60,0.18)" stroke="#e74c3c" stroke-width="2"/>
-                <rect x="140" y="70" width="60" height="40" fill="rgba(231,76,60,0.12)" stroke="#e74c3c" stroke-width="2"/>
-                <!-- Triangle on top of middle rect -->
-                <polygon points="80,70 140,70 110,25" fill="rgba(231,76,60,0.22)" stroke="#e74c3c" stroke-width="2"/>
-                <!-- Triangle on bottom of middle rect -->
-                <polygon points="80,110 140,110 110,155" fill="rgba(231,76,60,0.22)" stroke="#e74c3c" stroke-width="2"/>
-                <text x="78" y="185" font-size="12" fill="#777" font-family="sans-serif" font-style="italic">Net B</text>
-              </svg>
+      <!-- Q2: Triangular prism net -->
+      <div class="question-block" id="qb2">
+        <div id="tbw2" class="timer-bar-wrap"><div id="tb2" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <div>
+            <svg viewBox="0 0 220 200" width="190" height="175">
+              <rect x="20" y="70" width="60" height="40" fill="rgba(231,76,60,0.12)" stroke="#e74c3c" stroke-width="2"/>
+              <rect x="80" y="70" width="60" height="40" fill="rgba(231,76,60,0.18)" stroke="#e74c3c" stroke-width="2"/>
+              <rect x="140" y="70" width="60" height="40" fill="rgba(231,76,60,0.12)" stroke="#e74c3c" stroke-width="2"/>
+              <polygon points="80,70 140,70 110,25" fill="rgba(231,76,60,0.22)" stroke="#e74c3c" stroke-width="2"/>
+              <polygon points="80,110 140,110 110,155" fill="rgba(231,76,60,0.22)" stroke="#e74c3c" stroke-width="2"/>
+              <text x="78" y="185" font-size="12" fill="#777" font-family="sans-serif" font-style="italic">Net B</text>
+            </svg>
+          </div>
+          <div class="q-text">
+            <label>2. &nbsp; What 3D shape does Net B fold into?</label>
+            <div class="radio-group" id="rg2">
+              <label><input type="radio" name="q2" value="Cube" onclick="answerRadio(2)" /> Cube</label>
+              <label><input type="radio" name="q2" value="Triangular Prism" onclick="answerRadio(2)" /> Triangular Prism</label>
+              <label><input type="radio" name="q2" value="Square Pyramid" onclick="answerRadio(2)" /> Square Pyramid</label>
+              <label><input type="radio" name="q2" value="Cylinder" onclick="answerRadio(2)" /> Cylinder</label>
+              <label><input type="radio" name="q2" value="Cuboid" onclick="answerRadio(2)" /> Cuboid</label>
             </div>
-            <div class="q-text">
-              <label>2. &nbsp; What 3D shape does Net B fold into?</label>
-              <div class="radio-group" id="rg2">
-                <label><input type="radio" name="q2" value="Cube" /> Cube</label>
-                <label><input type="radio" name="q2" value="Triangular Prism" /> Triangular Prism</label>
-                <label><input type="radio" name="q2" value="Square Pyramid" /> Square Pyramid</label>
-                <label><input type="radio" name="q2" value="Cylinder" /> Cylinder</label>
-                <label><input type="radio" name="q2" value="Cuboid" /> Cuboid</label>
-              </div>
-              <span class="feedback" id="f2"></span>
-            </div>
+            <span class="feedback" id="f2"></span>
           </div>
         </div>
+      </div>
 
-        <!-- Q3: Square pyramid net -->
-        <div class="question-block">
-          <div class="q-inner">
-            <div>
-              <svg viewBox="0 0 220 220" width="190" height="190">
-                <!-- Centre square -->
-                <rect x="80" y="80" width="60" height="60" fill="rgba(39,174,96,0.18)" stroke="#27ae60" stroke-width="2"/>
-                <!-- Triangle top -->
-                <polygon points="80,80 140,80 110,30" fill="rgba(39,174,96,0.12)" stroke="#27ae60" stroke-width="2"/>
-                <!-- Triangle bottom -->
-                <polygon points="80,140 140,140 110,190" fill="rgba(39,174,96,0.12)" stroke="#27ae60" stroke-width="2"/>
-                <!-- Triangle left -->
-                <polygon points="80,80 80,140 30,110" fill="rgba(39,174,96,0.12)" stroke="#27ae60" stroke-width="2"/>
-                <!-- Triangle right -->
-                <polygon points="140,80 140,140 190,110" fill="rgba(39,174,96,0.12)" stroke="#27ae60" stroke-width="2"/>
-                <text x="78" y="212" font-size="12" fill="#777" font-family="sans-serif" font-style="italic">Net C</text>
-              </svg>
+      <!-- Q3: Square pyramid net -->
+      <div class="question-block" id="qb3">
+        <div id="tbw3" class="timer-bar-wrap"><div id="tb3" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <div>
+            <svg viewBox="0 0 220 220" width="190" height="190">
+              <rect x="80" y="80" width="60" height="60" fill="rgba(39,174,96,0.18)" stroke="#27ae60" stroke-width="2"/>
+              <polygon points="80,80 140,80 110,30" fill="rgba(39,174,96,0.12)" stroke="#27ae60" stroke-width="2"/>
+              <polygon points="80,140 140,140 110,190" fill="rgba(39,174,96,0.12)" stroke="#27ae60" stroke-width="2"/>
+              <polygon points="80,80 80,140 30,110" fill="rgba(39,174,96,0.12)" stroke="#27ae60" stroke-width="2"/>
+              <polygon points="140,80 140,140 190,110" fill="rgba(39,174,96,0.12)" stroke="#27ae60" stroke-width="2"/>
+              <text x="78" y="212" font-size="12" fill="#777" font-family="sans-serif" font-style="italic">Net C</text>
+            </svg>
+          </div>
+          <div class="q-text">
+            <label>3. &nbsp; What 3D shape does Net C fold into?</label>
+            <div class="radio-group" id="rg3">
+              <label><input type="radio" name="q3" value="Cube" onclick="answerRadio(3)" /> Cube</label>
+              <label><input type="radio" name="q3" value="Triangular Prism" onclick="answerRadio(3)" /> Triangular Prism</label>
+              <label><input type="radio" name="q3" value="Square Pyramid" onclick="answerRadio(3)" /> Square Pyramid</label>
+              <label><input type="radio" name="q3" value="Cylinder" onclick="answerRadio(3)" /> Cylinder</label>
+              <label><input type="radio" name="q3" value="Cuboid" onclick="answerRadio(3)" /> Cuboid</label>
             </div>
-            <div class="q-text">
-              <label>3. &nbsp; What 3D shape does Net C fold into?</label>
-              <div class="radio-group" id="rg3">
-                <label><input type="radio" name="q3" value="Cube" /> Cube</label>
-                <label><input type="radio" name="q3" value="Triangular Prism" /> Triangular Prism</label>
-                <label><input type="radio" name="q3" value="Square Pyramid" /> Square Pyramid</label>
-                <label><input type="radio" name="q3" value="Cylinder" /> Cylinder</label>
-                <label><input type="radio" name="q3" value="Cuboid" /> Cuboid</label>
-              </div>
-              <span class="feedback" id="f3"></span>
-            </div>
+            <span class="feedback" id="f3"></span>
           </div>
         </div>
+      </div>
 
-        <!-- Q4: Cylinder net -->
-        <div class="question-block">
-          <div class="q-inner">
-            <div>
-              <svg viewBox="0 0 200 210" width="180" height="188">
-                <!-- Rectangle in middle -->
-                <rect x="20" y="60" width="160" height="60" fill="rgba(142,68,173,0.15)" stroke="#8e44ad" stroke-width="2"/>
-                <!-- Circle on top -->
-                <ellipse cx="100" cy="60" rx="30" ry="25" fill="rgba(142,68,173,0.12)" stroke="#8e44ad" stroke-width="2"/>
-                <!-- Circle on bottom -->
-                <ellipse cx="100" cy="120" rx="30" ry="25" fill="rgba(142,68,173,0.12)" stroke="#8e44ad" stroke-width="2"/>
-                <text x="68" y="168" font-size="12" fill="#777" font-family="sans-serif" font-style="italic">Net D</text>
-              </svg>
+      <!-- Q4: Cylinder net -->
+      <div class="question-block" id="qb4">
+        <div id="tbw4" class="timer-bar-wrap"><div id="tb4" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <div>
+            <svg viewBox="0 0 200 210" width="180" height="188">
+              <rect x="20" y="60" width="160" height="60" fill="rgba(142,68,173,0.15)" stroke="#8e44ad" stroke-width="2"/>
+              <ellipse cx="100" cy="60" rx="30" ry="25" fill="rgba(142,68,173,0.12)" stroke="#8e44ad" stroke-width="2"/>
+              <ellipse cx="100" cy="120" rx="30" ry="25" fill="rgba(142,68,173,0.12)" stroke="#8e44ad" stroke-width="2"/>
+              <text x="68" y="168" font-size="12" fill="#777" font-family="sans-serif" font-style="italic">Net D</text>
+            </svg>
+          </div>
+          <div class="q-text">
+            <label>4. &nbsp; What 3D shape does Net D fold into?</label>
+            <div class="radio-group" id="rg4">
+              <label><input type="radio" name="q4" value="Cube" onclick="answerRadio(4)" /> Cube</label>
+              <label><input type="radio" name="q4" value="Triangular Prism" onclick="answerRadio(4)" /> Triangular Prism</label>
+              <label><input type="radio" name="q4" value="Square Pyramid" onclick="answerRadio(4)" /> Square Pyramid</label>
+              <label><input type="radio" name="q4" value="Cylinder" onclick="answerRadio(4)" /> Cylinder</label>
+              <label><input type="radio" name="q4" value="Cuboid" onclick="answerRadio(4)" /> Cuboid</label>
             </div>
-            <div class="q-text">
-              <label>4. &nbsp; What 3D shape does Net D fold into?</label>
-              <div class="radio-group" id="rg4">
-                <label><input type="radio" name="q4" value="Cube" /> Cube</label>
-                <label><input type="radio" name="q4" value="Triangular Prism" /> Triangular Prism</label>
-                <label><input type="radio" name="q4" value="Square Pyramid" /> Square Pyramid</label>
-                <label><input type="radio" name="q4" value="Cylinder" /> Cylinder</label>
-                <label><input type="radio" name="q4" value="Cuboid" /> Cuboid</label>
-              </div>
-              <span class="feedback" id="f4"></span>
-            </div>
+            <span class="feedback" id="f4"></span>
           </div>
         </div>
+      </div>
 
-        <!-- Q5: Cuboid net -->
-        <div class="question-block">
-          <div class="q-inner">
-            <div>
-              <svg viewBox="0 0 230 220" width="200" height="192">
-                <!-- Cross of 6 rectangles of two different sizes -->
-                <!-- Top: 70×40 -->
-                <rect x="70" y="10" width="70" height="40" fill="rgba(230,126,34,0.15)" stroke="#e67e22" stroke-width="2"/>
-                <!-- Row 2: left (50×40), middle (70×40), right (50×40) -->
-                <rect x="20" y="50" width="50" height="40" fill="rgba(230,126,34,0.12)" stroke="#e67e22" stroke-width="2"/>
-                <rect x="70" y="50" width="70" height="40" fill="rgba(230,126,34,0.2)" stroke="#e67e22" stroke-width="2"/>
-                <rect x="140" y="50" width="50" height="40" fill="rgba(230,126,34,0.12)" stroke="#e67e22" stroke-width="2"/>
-                <!-- Row 3: 70×40 -->
-                <rect x="70" y="90" width="70" height="40" fill="rgba(230,126,34,0.15)" stroke="#e67e22" stroke-width="2"/>
-                <!-- Bottom: 70×40 -->
-                <rect x="70" y="130" width="70" height="40" fill="rgba(230,126,34,0.12)" stroke="#e67e22" stroke-width="2"/>
-                <text x="78" y="190" font-size="12" fill="#777" font-family="sans-serif" font-style="italic">Net E</text>
-              </svg>
+      <!-- Q5: Cuboid net -->
+      <div class="question-block" id="qb5">
+        <div id="tbw5" class="timer-bar-wrap"><div id="tb5" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
+          <div>
+            <svg viewBox="0 0 230 220" width="200" height="192">
+              <rect x="70" y="10" width="70" height="40" fill="rgba(230,126,34,0.15)" stroke="#e67e22" stroke-width="2"/>
+              <rect x="20" y="50" width="50" height="40" fill="rgba(230,126,34,0.12)" stroke="#e67e22" stroke-width="2"/>
+              <rect x="70" y="50" width="70" height="40" fill="rgba(230,126,34,0.2)" stroke="#e67e22" stroke-width="2"/>
+              <rect x="140" y="50" width="50" height="40" fill="rgba(230,126,34,0.12)" stroke="#e67e22" stroke-width="2"/>
+              <rect x="70" y="90" width="70" height="40" fill="rgba(230,126,34,0.15)" stroke="#e67e22" stroke-width="2"/>
+              <rect x="70" y="130" width="70" height="40" fill="rgba(230,126,34,0.12)" stroke="#e67e22" stroke-width="2"/>
+              <text x="78" y="190" font-size="12" fill="#777" font-family="sans-serif" font-style="italic">Net E</text>
+            </svg>
+          </div>
+          <div class="q-text">
+            <label>5. &nbsp; What 3D shape does Net E fold into?</label>
+            <div class="radio-group" id="rg5">
+              <label><input type="radio" name="q5" value="Cube" onclick="answerRadio(5)" /> Cube</label>
+              <label><input type="radio" name="q5" value="Triangular Prism" onclick="answerRadio(5)" /> Triangular Prism</label>
+              <label><input type="radio" name="q5" value="Square Pyramid" onclick="answerRadio(5)" /> Square Pyramid</label>
+              <label><input type="radio" name="q5" value="Cylinder" onclick="answerRadio(5)" /> Cylinder</label>
+              <label><input type="radio" name="q5" value="Cuboid" onclick="answerRadio(5)" /> Cuboid</label>
             </div>
-            <div class="q-text">
-              <label>5. &nbsp; What 3D shape does Net E fold into?</label>
-              <div class="radio-group" id="rg5">
-                <label><input type="radio" name="q5" value="Cube" /> Cube</label>
-                <label><input type="radio" name="q5" value="Triangular Prism" /> Triangular Prism</label>
-                <label><input type="radio" name="q5" value="Square Pyramid" /> Square Pyramid</label>
-                <label><input type="radio" name="q5" value="Cylinder" /> Cylinder</label>
-                <label><input type="radio" name="q5" value="Cuboid" /> Cuboid</label>
-              </div>
-              <span class="feedback" id="f5"></span>
-            </div>
+            <span class="feedback" id="f5"></span>
           </div>
         </div>
+      </div>
 
-        <div class="section-title">Part B: Questions 6 to 10: Scale factors</div>
+      <div class="section-title">Part B: Questions 6 to 10 — Scale factors</div>
 
-        <div class="question-block">
-          <label>6. &nbsp; A rectangle is 5 cm long. It is enlarged with scale factor 3. What is the new length? (cm)</label>
-          <input type="number" step="0.1" min="0" id="q6" placeholder="?" />
-          <span class="feedback" id="f6"></span>
-        </div>
+      <div class="question-block" id="qb6">
+        <div id="tbw6" class="timer-bar-wrap"><div id="tb6" class="timer-bar-fill"></div></div>
+        <label>6. &nbsp; A rectangle is 5 cm long. It is enlarged with scale factor 3. What is the new length? (cm)</label>
+        <input type="number" step="0.1" min="0" id="q6" placeholder="?"
+          onfocus="qFocus(6)"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();answerFloat(6)}" />
+        <button class="submit-q-btn" id="sbtn6" onclick="answerFloat(6)">&#10003;</button>
+        <span class="feedback" id="f6"></span>
+      </div>
 
-        <div class="question-block">
-          <label>7. &nbsp; A shape has a side of 12 cm. It is reduced with scale factor 0.5. What is the new length? (cm)</label>
-          <input type="number" step="0.1" min="0" id="q7" placeholder="?" />
-          <span class="feedback" id="f7"></span>
-        </div>
+      <div class="question-block" id="qb7">
+        <div id="tbw7" class="timer-bar-wrap"><div id="tb7" class="timer-bar-fill"></div></div>
+        <label>7. &nbsp; A shape has a side of 12 cm. It is reduced with scale factor 0.5. What is the new length? (cm)</label>
+        <input type="number" step="0.1" min="0" id="q7" placeholder="?"
+          onfocus="qFocus(7)"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();answerFloat(7)}" />
+        <button class="submit-q-btn" id="sbtn7" onclick="answerFloat(7)">&#10003;</button>
+        <span class="feedback" id="f7"></span>
+      </div>
 
-        <div class="question-block">
-          <label>8. &nbsp; Original length = 4 cm, new length = 20 cm. What is the scale factor?</label>
-          <input type="number" step="0.1" min="0" id="q8" placeholder="?" />
-          <span class="feedback" id="f8"></span>
-        </div>
+      <div class="question-block" id="qb8">
+        <div id="tbw8" class="timer-bar-wrap"><div id="tb8" class="timer-bar-fill"></div></div>
+        <label>8. &nbsp; Original length = 4 cm, new length = 20 cm. What is the scale factor?</label>
+        <input type="number" step="0.1" min="0" id="q8" placeholder="?"
+          onfocus="qFocus(8)"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();answerFloat(8)}" />
+        <button class="submit-q-btn" id="sbtn8" onclick="answerFloat(8)">&#10003;</button>
+        <span class="feedback" id="f8"></span>
+      </div>
 
-        <div class="question-block">
-          <label>9. &nbsp; A square has side 8 cm. It is enlarged by scale factor 4. What is the perimeter of the new square? (cm)</label>
-          <input type="number" step="0.1" min="0" id="q9" placeholder="?" />
-          <span class="feedback" id="f9"></span>
-        </div>
+      <div class="question-block" id="qb9">
+        <div id="tbw9" class="timer-bar-wrap"><div id="tb9" class="timer-bar-fill"></div></div>
+        <label>9. &nbsp; A square has side 8 cm. It is enlarged by scale factor 4. What is the perimeter of the new square? (cm)</label>
+        <input type="number" step="0.1" min="0" id="q9" placeholder="?"
+          onfocus="qFocus(9)"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();answerFloat(9)}" />
+        <button class="submit-q-btn" id="sbtn9" onclick="answerFloat(9)">&#10003;</button>
+        <span class="feedback" id="f9"></span>
+      </div>
 
-        <div class="question-block">
-          <label>10. &nbsp; Original length = 30 cm, new length = 6 cm. What is the scale factor? (enter as a decimal)</label>
-          <input type="number" step="0.1" min="0" id="q10" placeholder="?" />
-          <span class="feedback" id="f10"></span>
-        </div>
+      <div class="question-block" id="qb10">
+        <div id="tbw10" class="timer-bar-wrap"><div id="tb10" class="timer-bar-fill"></div></div>
+        <label>10. &nbsp; Original length = 30 cm, new length = 6 cm. What is the scale factor? (enter as a decimal)</label>
+        <input type="number" step="0.1" min="0" id="q10" placeholder="?"
+          onfocus="qFocus(10)"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();answerFloat(10)}" />
+        <button class="submit-q-btn" id="sbtn10" onclick="answerFloat(10)">&#10003;</button>
+        <span class="feedback" id="f10"></span>
+      </div>
 
-        <button type="button" class="check-btn" onclick="checkAnswers()">Check Answers</button>
-      </form>
-
-      <div class="score-box" id="score-box"></div>
+      <!-- Results panel -->
+      <div id="results-panel" class="results-panel" style="display:none"></div>
 
     </div>
 
@@ -412,65 +508,162 @@
     Maths Revision &middot; Unit 3: Geometry
   </footer>
 
+  <!-- Level-up modal -->
+  <div id="levelup-modal" class="levelup-modal">
+    <div class="levelup-box">
+      <div class="levelup-emoji">&#127881;</div>
+      <h2>Level Up!</h2>
+      <p>You&rsquo;re now a <strong id="levelup-name"></strong>!</p>
+      <p id="levelup-desc" class="levelup-desc"></p>
+      <button onclick="document.getElementById('levelup-modal').classList.remove('show')">Continue &rarr;</button>
+    </div>
+  </div>
+
+  <script src="../../js/game.js"></script>
+  <script src="../../js/timer.js"></script>
   <script>
-    const radioAnswers = {
-      q1: 'Cube',
-      q2: 'Triangular Prism',
-      q3: 'Square Pyramid',
-      q4: 'Cylinder',
-      q5: 'Cuboid'
-    };
-    const floatAnswers = {
-      q6:  15,
-      q7:  6,
-      q8:  5,
-      q9:  128,
-      q10: 0.2
-    };
+    'use strict';
 
-    function checkAnswers() {
-      let correct = 0;
-      const total = 10;
+    const radioAnswers = { q1:'Cube', q2:'Triangular Prism', q3:'Square Pyramid', q4:'Cylinder', q5:'Cuboid' };
+    const floatAnswers = { q6:15, q7:6, q8:5, q9:128, q10:0.2 };
 
-      // Radio questions Q1-Q5
-      for (const [qKey, expected] of Object.entries(radioAnswers)) {
-        const num = qKey.slice(1);
-        const feedback = document.getElementById('f' + num);
-        const selected = document.querySelector('input[name="' + qKey + '"]:checked');
-        const isCorrect = selected && selected.value === expected;
+    const TOTAL_QUESTIONS = 10;
+    const MAX_SCORE       = TOTAL_QUESTIONS * 15;
 
-        feedback.textContent = isCorrect ? '\u2713 Correct!' : '\u2717 Answer: ' + expected;
-        feedback.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
-        if (isCorrect) correct++;
-      }
+    const timers   = {};
+    const answered = new Set();
+    let   runTotal = 0;
 
-      // Float questions Q6-Q10
-      for (const [qKey, expected] of Object.entries(floatAnswers)) {
-        const num = qKey.slice(1);
-        const el = document.getElementById(qKey);
-        const feedback = document.getElementById('f' + num);
-        const val = parseFloat(el.value);
-        const isCorrect = !isNaN(val) && Math.abs(val - expected) < 0.001;
-
-        el.style.borderColor = isCorrect ? '#27ae60' : '#e74c3c';
-        feedback.textContent = isCorrect ? '\u2713 Correct!' : '\u2717 Answer: ' + expected;
-        feedback.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
-        if (isCorrect) correct++;
-      }
-
-      const box = document.getElementById('score-box');
-      box.textContent = 'You got ' + correct + ' out of ' + total + '.';
-      if (correct === total) {
-        box.className = 'score-box show great';
-        box.textContent += ' Excellent work!';
-      } else if (correct >= 7) {
-        box.className = 'score-box show ok';
-        box.textContent += ' Good effort: review the ones you missed.';
-      } else {
-        box.className = 'score-box show poor';
-        box.textContent += ' Keep practising: re-read the worked examples and try again.';
+    function initTimers() {
+      const lvl = MRG.getCurrentLevel();
+      for (let n = 1; n <= TOTAL_QUESTIONS; n++) {
+        const barEl = document.getElementById('tb' + n);
+        timers[n] = new QuestionTimer(barEl, lvl.timerSecs);
+        const wrap = document.getElementById('tbw' + n);
+        if (wrap) wrap.style.display = lvl.timerVisible ? 'block' : 'none';
       }
     }
+
+    function qFocus(n) {
+      if (answered.has(n)) return;
+      if (!timers[n].hasStarted()) timers[n].start();
+    }
+
+    function answerRadio(n) {
+      if (answered.has(n)) return;
+      // Start and immediately stop timer (near-zero elapsed → 15 pts if correct)
+      if (!timers[n].hasStarted()) timers[n].start();
+      const elapsed = timers[n].stop();
+      answered.add(n);
+
+      const selected = document.querySelector('input[name="q' + n + '"]:checked');
+      const expected = radioAnswers['q' + n];
+      const correct  = selected && selected.value === expected;
+      const pts      = MRG.scoreQuestion(correct, elapsed);
+      runTotal      += pts;
+
+      const fb = document.getElementById('f' + n);
+      fb.textContent = correct ? '✓ Correct!' : '✗ ' + expected;
+      fb.className   = 'feedback ' + (correct ? 'correct' : 'incorrect');
+
+      // Disable all radios in the group
+      document.querySelectorAll('input[name="q' + n + '"]').forEach(r => r.disabled = true);
+
+      _showPopup(n, pts);
+      if (answered.size === TOTAL_QUESTIONS) setTimeout(_showResults, 500);
+    }
+
+    function answerFloat(n) {
+      if (answered.has(n)) return;
+      const el = document.getElementById('q' + n);
+      if (el.value === '') return;
+      const elapsed = timers[n].stop();
+      answered.add(n);
+
+      const val      = parseFloat(el.value);
+      const expected = floatAnswers['q' + n];
+      const correct  = !isNaN(val) && Math.abs(val - expected) < 0.001;
+      const pts      = MRG.scoreQuestion(correct, elapsed);
+      runTotal      += pts;
+
+      el.disabled = true;
+      const btn = document.getElementById('sbtn' + n);
+      if (btn) btn.disabled = true;
+      el.style.borderColor = correct ? '#27ae60' : '#e74c3c';
+
+      const fb = document.getElementById('f' + n);
+      fb.textContent = correct ? '✓ Correct!' : '✗ ' + expected;
+      fb.className   = 'feedback ' + (correct ? 'correct' : 'incorrect');
+
+      _showPopup(n, pts);
+      if (answered.size === TOTAL_QUESTIONS) setTimeout(_showResults, 500);
+    }
+
+    function _showPopup(n, pts) {
+      const qb  = document.getElementById('qb' + n);
+      const pop = document.createElement('div');
+      pop.className   = 'xp-popup ' + (pts > 0 ? 'xp-popup-pos' : pts < 0 ? 'xp-popup-neg' : 'xp-popup-zero');
+      pop.textContent = pts > 0 ? '+' + pts + ' pts' : pts + ' pts';
+      qb.appendChild(pop);
+      setTimeout(() => pop.remove(), 1500);
+    }
+
+    function _showResults() {
+      const total  = Math.max(0, runTotal);
+      const result = MRG.finishExercise('u3e5', total, MAX_SCORE);
+      const stars   = result.stars;
+      const starStr = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+      let xpHTML;
+      if (result.xpGained > 0) {
+        xpHTML = `<div class="results-xp">+${result.xpGained} XP earned &rarr; Total: ${result.newTotal} XP</div>`;
+      } else if (stars === 0) {
+        xpHTML = `<div class="results-no-xp">No XP yet &mdash; reach &#11088; (score &ge; 71&nbsp;pts) to earn XP.</div>`;
+      } else {
+        xpHTML = `<div class="results-no-xp">No new XP &mdash; you&rsquo;ve already matched your personal best.</div>`;
+      }
+      const panel = document.getElementById('results-panel');
+      panel.innerHTML = `
+        <div class="results-stars">${starStr}</div>
+        <div class="results-score">${total} / ${MAX_SCORE} pts</div>
+        ${xpHTML}
+        <div class="results-btns">
+          <button onclick="location.reload()">&#8629; Try Again</button>
+          <a href="../../units/unit-3.html">&larr; Back to Unit 3</a>
+        </div>`;
+      panel.style.display = 'block';
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      renderXPHeader();
+      if (result.leveledUp) setTimeout(() => _showLevelUp(result.newLevel), 700);
+    }
+
+    function _showLevelUp(lvl) {
+      const descs = {
+        2: 'Timers are now active. Wrong answers cost 3 pts.',
+        3: 'The countdown is tighter (15 s). Worked examples are now hidden by default.',
+        4: 'Hard mode unlocked — a new question set awaits!'
+      };
+      document.getElementById('levelup-name').textContent = lvl.name;
+      document.getElementById('levelup-desc').textContent = descs[lvl.level] || '';
+      document.getElementById('levelup-modal').classList.add('show');
+    }
+
+    function renderXPHeader() {
+      const info    = MRG.getLevelInfo();
+      const nextTxt = info.next
+        ? `${info.xpToNext} XP to <strong>${info.next.name}</strong>`
+        : '<strong>Max Level!</strong>';
+      document.getElementById('xp-header').innerHTML = `
+        <span class="xp-level-badge">&#x1F3C5; ${info.current.name}</span>
+        <div class="xp-bar-wrap">
+          <div class="xp-bar-fill" style="width:${info.pct.toFixed(1)}%"></div>
+        </div>
+        <span class="xp-label">${info.xp} XP &middot; ${nextTxt}</span>`;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      initTimers();
+      renderXPHeader();
+    });
   </script>
 
 </body>

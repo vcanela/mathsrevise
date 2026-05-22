@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Unit 1: Multiplying & Dividing Fractions</title>
+  <title>Unit 1: Multiplying &amp; Dividing Fractions</title>
   <link rel="stylesheet" href="../../css/style.css" />
   <script>
     MathJax = {
@@ -50,18 +50,33 @@
       font-size: 0.9rem;
       color: #7d6608;
     }
+    .section-title {
+      font-size: 1.1rem;
+      color: #2c3e50;
+      font-weight: 700;
+      margin: 1.5rem 0 0.5rem;
+      padding-left: 0.4rem;
+      border-left: 4px solid #2980b9;
+    }
+    .section-divider { border: none; border-top: 2px dashed #ddd; margin: 1.5rem 0; }
+
+    /* ── Question block ───────────────────────────────────────────────── */
     .question-block {
+      position: relative;
       background: white;
       border: 1px solid #e0e0e0;
       border-radius: 8px;
       padding: 1rem 1.2rem;
       margin: 0.75rem 0;
+      overflow: hidden;
+    }
+    .q-inner {
       display: flex;
       align-items: center;
       gap: 0.75rem;
       flex-wrap: wrap;
     }
-    .question-block .q-text {
+    .q-inner .q-text {
       font-size: 1.05rem;
       flex: 1;
       min-width: 220px;
@@ -85,50 +100,74 @@
       text-align: center;
     }
     .fraction-input input:focus { outline: none; border-color: #2980b9; }
+    .fraction-input input:disabled { opacity: 0.6; cursor: default; }
     .fraction-input .frac-line { width: 52px; border-top: 2px solid #555; }
     .feedback { font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
     .feedback.correct { color: #27ae60; }
     .feedback.incorrect { color: #e74c3c; }
-    .check-btn {
+
+    /* ── Timer bar ────────────────────────────────────────────────────── */
+    .timer-bar-wrap {
+      margin: -1rem -1.2rem 0.75rem;
+      height: 4px;
+      background: #ecf0f1;
+      border-radius: 8px 8px 0 0;
+      overflow: hidden;
+    }
+    .timer-bar-fill { height: 100%; width: 100%; background: #27ae60; border-radius: 8px; }
+
+    /* ── Submit button ────────────────────────────────────────────────── */
+    .submit-q-btn {
       display: inline-block;
-      margin-top: 1.2rem;
-      padding: 0.65rem 1.6rem;
-      background-color: #2980b9;
+      margin-left: 0.4rem;
+      padding: 0.35rem 0.75rem;
+      background: #27ae60;
       color: white;
       border: none;
       border-radius: 6px;
       font-size: 1rem;
       cursor: pointer;
-      transition: background-color 0.15s ease;
+      vertical-align: middle;
+      transition: background 0.15s;
     }
-    .check-btn:hover { background-color: #1f6da0; }
-    .score-box {
-      margin-top: 1rem;
-      padding: 0.8rem 1.2rem;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      display: none;
-    }
-    .score-box.show { display: block; }
-    .score-box.great { background: #eafaf1; color: #1e8449; border: 1px solid #a9dfbf; }
-    .score-box.ok    { background: #fef9e7; color: #9a7d0a; border: 1px solid #f9e79f; }
-    .score-box.poor  { background: #fdedec; color: #c0392b; border: 1px solid #f5b7b1; }
-    .section-divider { border: none; border-top: 2px dashed #ddd; margin: 1.5rem 0; }
-    .section-title {
-      font-size: 1.1rem;
-      color: #2c3e50;
-      font-weight: 700;
-      margin: 1.5rem 0 0.5rem;
-      padding-left: 0.4rem;
-      border-left: 4px solid #2980b9;
-    }
+    .submit-q-btn:hover    { background: #1e8449; }
+    .submit-q-btn:disabled { background: #95a5a6; cursor: default; }
+
+    /* ── XP popup / header / results / modal ─────────────────────────── */
+    .xp-popup { position:absolute; right:1rem; top:0.6rem; font-size:1rem; font-weight:800; pointer-events:none; z-index:10; animation:xpFloat 1.4s ease-out forwards; }
+    .xp-popup-pos { color:#27ae60; } .xp-popup-neg { color:#e74c3c; } .xp-popup-zero { color:#95a5a6; }
+    @keyframes xpFloat { 0% { opacity:1; transform:translateY(0); } 60% { opacity:1; transform:translateY(-20px); } 100% { opacity:0; transform:translateY(-32px); } }
+    #xp-header { display:flex; align-items:center; gap:0.75rem; background:#1a252f; border-radius:8px; padding:0.6rem 1rem; margin-bottom:1.4rem; flex-wrap:wrap; }
+    .xp-level-badge { color:#f1c40f; font-weight:700; font-size:0.95rem; white-space:nowrap; }
+    .xp-bar-wrap { flex:1; min-width:100px; background:#34495e; border-radius:99px; height:10px; overflow:hidden; }
+    .xp-bar-fill { height:100%; background:#2ecc71; border-radius:99px; transition:width 0.5s ease; }
+    .xp-label { color:#bdc3c7; font-size:0.85rem; white-space:nowrap; }
+    .xp-label strong { color:#ecf0f1; }
+    .results-panel { background:linear-gradient(135deg,#eafaf1 0%,#d5f5e3 100%); border:2px solid #a9dfbf; border-radius:12px; padding:1.5rem 2rem; margin-top:1.5rem; text-align:center; }
+    .results-stars { font-size:2.4rem; letter-spacing:0.08em; margin-bottom:0.4rem; }
+    .results-score { font-size:1.3rem; font-weight:700; color:#1a7a3c; margin-bottom:0.25rem; }
+    .results-xp { font-size:1rem; color:#1e8449; margin-bottom:1rem; }
+    .results-no-xp { font-size:0.9rem; color:#7f8c8d; margin-bottom:1rem; }
+    .results-btns { display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap; }
+    .results-btns button { padding:0.55rem 1.3rem; background:#2980b9; color:white; border:none; border-radius:6px; font-size:0.95rem; cursor:pointer; }
+    .results-btns button:hover { background:#1f6da0; }
+    .results-btns a { padding:0.55rem 1.3rem; background:#ecf0f1; color:#2c3e50; border-radius:6px; text-decoration:none; font-size:0.95rem; }
+    .results-btns a:hover { background:#d5d8dc; }
+    .levelup-modal { position:fixed; inset:0; background:rgba(0,0,0,0.55); display:none; align-items:center; justify-content:center; z-index:1000; }
+    .levelup-modal.show { display:flex; }
+    .levelup-box { background:white; border-radius:16px; padding:2rem 2.5rem; text-align:center; max-width:340px; width:90%; box-shadow:0 12px 40px rgba(0,0,0,0.25); }
+    .levelup-emoji { font-size:3rem; margin-bottom:0.5rem; }
+    .levelup-box h2 { color:#f39c12; font-size:1.8rem; margin-bottom:0.5rem; }
+    .levelup-box p { color:#555; font-size:1rem; margin-bottom:0.4rem; }
+    .levelup-desc { font-size:0.9rem !important; color:#888 !important; }
+    .levelup-box button { margin-top:1rem; padding:0.6rem 1.8rem; background:#f39c12; color:white; border:none; border-radius:8px; font-size:1rem; font-weight:700; cursor:pointer; }
+    .levelup-box button:hover { background:#d68910; }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>✖️ Multiplying &amp; Dividing Fractions</h1>
+    <h1>&#x2716;&#xFE0F; Multiplying &amp; Dividing Fractions</h1>
     <p>Unit 1: Number &amp; Arithmetic</p>
   </header>
 
@@ -143,12 +182,14 @@
   <main>
     <div class="exercise-area">
 
+      <div id="xp-header"></div>
+
       <h2>Worked Examples</h2>
 
       <p class="section-title">Part A: Multiplying Fractions</p>
 
       <div class="rule-box">
-        <div class="rule-title">📌 The Rule</div>
+        <div class="rule-title">&#128204; The Rule</div>
         Multiply the numerators together, then multiply the denominators together:
         \(\dfrac{a}{b} \times \dfrac{c}{d} = \dfrac{a \times c}{b \times d}\) then simplify if possible.
       </div>
@@ -158,19 +199,15 @@
         <p class="step"><span class="step-label">Step 1</span> Multiply numerators: \(2 \times 3 = \mathbf{6}\).</p>
         <p class="step"><span class="step-label">Step 2</span> Multiply denominators: \(3 \times 5 = \mathbf{15}\).</p>
         <p class="step"><span class="step-label">Step 3</span> Result: \(\dfrac{6}{15}\).</p>
-        <p class="step"><span class="step-label">Step 4</span> Simplify divide both by 3: \(\dfrac{6}{15} = \dfrac{2}{5}\).</p>
+        <p class="step"><span class="step-label">Step 4</span> Simplify &mdash; divide both by 3: \(\dfrac{6}{15} = \dfrac{2}{5}\).</p>
         <p class="step"><strong>Answer: \(\dfrac{2}{5}\)</strong></p>
-      </div>
-
-      <div class="hint-box">
-        💡 <strong>Tip cancel before you multiply!</strong> If any numerator shares a factor with any denominator, cancel first to keep numbers small. In the example above, the 3 in the numerator and the 3 in the denominator cancel: \(\dfrac{2}{\cancel{3}} \times \dfrac{\cancel{3}}{5} = \dfrac{2}{5}\). Same answer, easier arithmetic!
       </div>
 
       <p class="section-title">Part B: Dividing Fractions</p>
 
       <div class="rule-box">
-        <div class="rule-title">📌 The Rule "Keep, Change, Flip"</div>
-        <strong>Keep</strong> the first fraction. &nbsp;<strong>Change</strong> ÷ to ×. &nbsp;<strong>Flip</strong> the second fraction (its reciprocal).<br/><br/>
+        <div class="rule-title">&#128204; The Rule &ldquo;Keep, Change, Flip&rdquo;</div>
+        <strong>Keep</strong> the first fraction. &nbsp;<strong>Change</strong> &divide; to &times;. &nbsp;<strong>Flip</strong> the second fraction (its reciprocal).<br/><br/>
         \(\dfrac{a}{b} \div \dfrac{c}{d} = \dfrac{a}{b} \times \dfrac{d}{c}\) then multiply and simplify as normal.
       </div>
 
@@ -179,190 +216,318 @@
         <p class="step"><span class="step-label">Keep</span> Keep the first fraction: \(\dfrac{3}{4}\).</p>
         <p class="step"><span class="step-label">Change</span> Change \(\div\) to \(\times\).</p>
         <p class="step"><span class="step-label">Flip</span> Flip the second fraction: \(\dfrac{2}{3}\) becomes \(\dfrac{3}{2}\).</p>
-        <p class="step"><span class="step-label">Multiply</span> \(\dfrac{3}{4} \times \dfrac{3}{2} = \dfrac{3 \times 3}{4 \times 2} = \dfrac{9}{8}\).</p>
-        <p class="step"><span class="step-label">Simplify</span> 9 and 8 share no common factors already in simplest form.</p>
-        <p class="step"><strong>Answer: \(\dfrac{9}{8}\)</strong> &nbsp;(or \(1\tfrac{1}{8}\) as a mixed number)</p>
+        <p class="step"><span class="step-label">Multiply</span> \(\dfrac{3}{4} \times \dfrac{3}{2} = \dfrac{9}{8}\).</p>
+        <p class="step"><strong>Answer: \(\dfrac{9}{8}\)</strong></p>
       </div>
 
       <hr class="section-divider" />
 
       <h2>Your Turn</h2>
-      <p style="font-size:0.9rem; color:#666; margin-bottom:0.5rem;">Give your answer in its <strong>simplest form</strong>. If the answer is a whole number (e.g. 2), enter <strong>2</strong> on top and <strong>1</strong> on the bottom.</p>
+      <p style="font-size:0.9rem; color:#666; margin-bottom:0.5rem;">Give your answer in its <strong>simplest form</strong>. If the answer is a whole number, enter it on top and <strong>1</strong> on the bottom. Press &#10003; to submit each question.</p>
 
-      <form id="exercise-form">
+      <p class="section-title" style="margin-top:1rem;">Part A: Multiply</p>
 
-        <p class="section-title" style="margin-top:1rem;">Part A: Multiply</p>
-
-        <div class="question-block">
+      <!-- Q1 -->
+      <div class="question-block" id="qb1">
+        <div id="tbw1" class="timer-bar-wrap"><div id="tb1" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
           <div class="q-text"><span>1.</span> \(\dfrac{1}{2} \times \dfrac{2}{3} =\)</div>
           <div class="fraction-input">
-            <input type="text" id="q1n" placeholder="?" autocomplete="off" />
+            <input type="text" id="q1n" placeholder="?" autocomplete="off" onfocus="qFocus(1)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerFraction(1)}" />
             <div class="frac-line"></div>
-            <input type="text" id="q1d" placeholder="?" autocomplete="off" />
+            <input type="text" id="q1d" placeholder="?" autocomplete="off" onfocus="qFocus(1)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerFraction(1)}" />
           </div>
+          <button class="submit-q-btn" id="sbtn1" onclick="answerFraction(1)">&#10003;</button>
           <span class="feedback" id="f1"></span>
         </div>
+      </div>
 
-        <div class="question-block">
+      <!-- Q2 -->
+      <div class="question-block" id="qb2">
+        <div id="tbw2" class="timer-bar-wrap"><div id="tb2" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
           <div class="q-text"><span>2.</span> \(\dfrac{3}{4} \times \dfrac{2}{5} =\)</div>
           <div class="fraction-input">
-            <input type="text" id="q2n" placeholder="?" autocomplete="off" />
+            <input type="text" id="q2n" placeholder="?" autocomplete="off" onfocus="qFocus(2)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerFraction(2)}" />
             <div class="frac-line"></div>
-            <input type="text" id="q2d" placeholder="?" autocomplete="off" />
+            <input type="text" id="q2d" placeholder="?" autocomplete="off" onfocus="qFocus(2)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerFraction(2)}" />
           </div>
+          <button class="submit-q-btn" id="sbtn2" onclick="answerFraction(2)">&#10003;</button>
           <span class="feedback" id="f2"></span>
         </div>
+      </div>
 
-        <div class="question-block">
+      <!-- Q3 -->
+      <div class="question-block" id="qb3">
+        <div id="tbw3" class="timer-bar-wrap"><div id="tb3" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
           <div class="q-text"><span>3.</span> \(\dfrac{2}{3} \times \dfrac{3}{4} =\)</div>
           <div class="fraction-input">
-            <input type="text" id="q3n" placeholder="?" autocomplete="off" />
+            <input type="text" id="q3n" placeholder="?" autocomplete="off" onfocus="qFocus(3)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerFraction(3)}" />
             <div class="frac-line"></div>
-            <input type="text" id="q3d" placeholder="?" autocomplete="off" />
+            <input type="text" id="q3d" placeholder="?" autocomplete="off" onfocus="qFocus(3)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerFraction(3)}" />
           </div>
+          <button class="submit-q-btn" id="sbtn3" onclick="answerFraction(3)">&#10003;</button>
           <span class="feedback" id="f3"></span>
         </div>
+      </div>
 
-        <div class="question-block">
+      <!-- Q4 -->
+      <div class="question-block" id="qb4">
+        <div id="tbw4" class="timer-bar-wrap"><div id="tb4" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
           <div class="q-text"><span>4.</span> \(\dfrac{4}{5} \times \dfrac{1}{2} =\)</div>
           <div class="fraction-input">
-            <input type="text" id="q4n" placeholder="?" autocomplete="off" />
+            <input type="text" id="q4n" placeholder="?" autocomplete="off" onfocus="qFocus(4)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerFraction(4)}" />
             <div class="frac-line"></div>
-            <input type="text" id="q4d" placeholder="?" autocomplete="off" />
+            <input type="text" id="q4d" placeholder="?" autocomplete="off" onfocus="qFocus(4)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerFraction(4)}" />
           </div>
+          <button class="submit-q-btn" id="sbtn4" onclick="answerFraction(4)">&#10003;</button>
           <span class="feedback" id="f4"></span>
         </div>
+      </div>
 
-        <div class="question-block">
+      <!-- Q5 -->
+      <div class="question-block" id="qb5">
+        <div id="tbw5" class="timer-bar-wrap"><div id="tb5" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
           <div class="q-text"><span>5.</span> \(\dfrac{3}{8} \times \dfrac{4}{9} =\)</div>
           <div class="fraction-input">
-            <input type="text" id="q5n" placeholder="?" autocomplete="off" />
+            <input type="text" id="q5n" placeholder="?" autocomplete="off" onfocus="qFocus(5)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerFraction(5)}" />
             <div class="frac-line"></div>
-            <input type="text" id="q5d" placeholder="?" autocomplete="off" />
+            <input type="text" id="q5d" placeholder="?" autocomplete="off" onfocus="qFocus(5)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerFraction(5)}" />
           </div>
+          <button class="submit-q-btn" id="sbtn5" onclick="answerFraction(5)">&#10003;</button>
           <span class="feedback" id="f5"></span>
         </div>
+      </div>
 
-        <p class="section-title">Part B: Divide</p>
+      <p class="section-title">Part B: Divide</p>
 
-        <div class="question-block">
+      <!-- Q6 -->
+      <div class="question-block" id="qb6">
+        <div id="tbw6" class="timer-bar-wrap"><div id="tb6" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
           <div class="q-text"><span>6.</span> \(\dfrac{1}{2} \div \dfrac{1}{4} =\)</div>
           <div class="fraction-input">
-            <input type="text" id="q6n" placeholder="?" autocomplete="off" />
+            <input type="text" id="q6n" placeholder="?" autocomplete="off" onfocus="qFocus(6)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerFraction(6)}" />
             <div class="frac-line"></div>
-            <input type="text" id="q6d" placeholder="?" autocomplete="off" />
+            <input type="text" id="q6d" placeholder="?" autocomplete="off" onfocus="qFocus(6)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerFraction(6)}" />
           </div>
+          <button class="submit-q-btn" id="sbtn6" onclick="answerFraction(6)">&#10003;</button>
           <span class="feedback" id="f6"></span>
         </div>
+      </div>
 
-        <div class="question-block">
+      <!-- Q7 -->
+      <div class="question-block" id="qb7">
+        <div id="tbw7" class="timer-bar-wrap"><div id="tb7" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
           <div class="q-text"><span>7.</span> \(\dfrac{3}{5} \div \dfrac{3}{4} =\)</div>
           <div class="fraction-input">
-            <input type="text" id="q7n" placeholder="?" autocomplete="off" />
+            <input type="text" id="q7n" placeholder="?" autocomplete="off" onfocus="qFocus(7)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerFraction(7)}" />
             <div class="frac-line"></div>
-            <input type="text" id="q7d" placeholder="?" autocomplete="off" />
+            <input type="text" id="q7d" placeholder="?" autocomplete="off" onfocus="qFocus(7)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerFraction(7)}" />
           </div>
+          <button class="submit-q-btn" id="sbtn7" onclick="answerFraction(7)">&#10003;</button>
           <span class="feedback" id="f7"></span>
         </div>
+      </div>
 
-        <div class="question-block">
+      <!-- Q8 -->
+      <div class="question-block" id="qb8">
+        <div id="tbw8" class="timer-bar-wrap"><div id="tb8" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
           <div class="q-text"><span>8.</span> \(\dfrac{2}{3} \div \dfrac{4}{9} =\)</div>
           <div class="fraction-input">
-            <input type="text" id="q8n" placeholder="?" autocomplete="off" />
+            <input type="text" id="q8n" placeholder="?" autocomplete="off" onfocus="qFocus(8)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerFraction(8)}" />
             <div class="frac-line"></div>
-            <input type="text" id="q8d" placeholder="?" autocomplete="off" />
+            <input type="text" id="q8d" placeholder="?" autocomplete="off" onfocus="qFocus(8)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerFraction(8)}" />
           </div>
+          <button class="submit-q-btn" id="sbtn8" onclick="answerFraction(8)">&#10003;</button>
           <span class="feedback" id="f8"></span>
         </div>
+      </div>
 
-        <div class="question-block">
+      <!-- Q9 -->
+      <div class="question-block" id="qb9">
+        <div id="tbw9" class="timer-bar-wrap"><div id="tb9" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
           <div class="q-text"><span>9.</span> \(\dfrac{5}{6} \div \dfrac{5}{12} =\)</div>
           <div class="fraction-input">
-            <input type="text" id="q9n" placeholder="?" autocomplete="off" />
+            <input type="text" id="q9n" placeholder="?" autocomplete="off" onfocus="qFocus(9)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerFraction(9)}" />
             <div class="frac-line"></div>
-            <input type="text" id="q9d" placeholder="?" autocomplete="off" />
+            <input type="text" id="q9d" placeholder="?" autocomplete="off" onfocus="qFocus(9)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerFraction(9)}" />
           </div>
+          <button class="submit-q-btn" id="sbtn9" onclick="answerFraction(9)">&#10003;</button>
           <span class="feedback" id="f9"></span>
         </div>
+      </div>
 
-        <div class="question-block">
+      <!-- Q10 -->
+      <div class="question-block" id="qb10">
+        <div id="tbw10" class="timer-bar-wrap"><div id="tb10" class="timer-bar-fill"></div></div>
+        <div class="q-inner">
           <div class="q-text"><span>10.</span> \(\dfrac{3}{4} \div \dfrac{9}{16} =\)</div>
           <div class="fraction-input">
-            <input type="text" id="q10n" placeholder="?" autocomplete="off" />
+            <input type="text" id="q10n" placeholder="?" autocomplete="off" onfocus="qFocus(10)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerFraction(10)}" />
             <div class="frac-line"></div>
-            <input type="text" id="q10d" placeholder="?" autocomplete="off" />
+            <input type="text" id="q10d" placeholder="?" autocomplete="off" onfocus="qFocus(10)" onkeydown="if(event.key==='Enter'){event.preventDefault();answerFraction(10)}" />
           </div>
+          <button class="submit-q-btn" id="sbtn10" onclick="answerFraction(10)">&#10003;</button>
           <span class="feedback" id="f10"></span>
         </div>
+      </div>
 
-        <button type="button" class="check-btn" onclick="checkAnswers()">Check Answers</button>
-      </form>
-
-      <div class="score-box" id="score-box"></div>
+      <div id="results-panel" class="results-panel" style="display:none"></div>
 
     </div>
 
-    <a class="btn" href="../../units/unit-1.html">← Back to Unit 1</a>
+    <a class="btn" href="../../units/unit-1.html">&#8592; Back to Unit 1</a>
   </main>
 
   <footer>
     Maths Revision &middot; Unit 1: Number &amp; Arithmetic
   </footer>
 
+  <div id="levelup-modal" class="levelup-modal">
+    <div class="levelup-box">
+      <div class="levelup-emoji">&#127881;</div>
+      <h2>Level Up!</h2>
+      <p>You&rsquo;re now a <strong id="levelup-name"></strong>!</p>
+      <p id="levelup-desc" class="levelup-desc"></p>
+      <button onclick="document.getElementById('levelup-modal').classList.remove('show')">Continue &rarr;</button>
+    </div>
+  </div>
+
+  <script src="../../js/game.js"></script>
+  <script src="../../js/timer.js"></script>
   <script>
-    // [numerator, denominator] accepts any equivalent fraction
-    const answers = {
-      q1:  [1, 3],   // 1/2 × 2/3 = 2/6
-      q2:  [3, 10],  // 3/4 × 2/5 = 6/20
-      q3:  [1, 2],   // 2/3 × 3/4 = 6/12
-      q4:  [2, 5],   // 4/5 × 1/2 = 4/10
-      q5:  [1, 6],   // 3/8 × 4/9 = 12/72
-      q6:  [2, 1],   // 1/2 ÷ 1/4 = 1/2 × 4/1 = 2
-      q7:  [4, 5],   // 3/5 ÷ 3/4 = 3/5 × 4/3 = 12/15
-      q8:  [3, 2],   // 2/3 ÷ 4/9 = 2/3 × 9/4 = 18/12
-      q9:  [2, 1],   // 5/6 ÷ 5/12 = 5/6 × 12/5 = 60/30
-      q10: [4, 3],   // 3/4 ÷ 9/16 = 3/4 × 16/9 = 48/36
+    'use strict';
+
+    const ANSWERS = {
+      q1:  [1, 3],
+      q2:  [3, 10],
+      q3:  [1, 2],
+      q4:  [2, 5],
+      q5:  [1, 6],
+      q6:  [2, 1],
+      q7:  [4, 5],
+      q8:  [3, 2],
+      q9:  [2, 1],
+      q10: [4, 3]
     };
+
+    const TOTAL_QUESTIONS = 10;
+    const MAX_SCORE       = TOTAL_QUESTIONS * 15;
+
+    const timers   = {};
+    const answered = new Set();
+    let   runTotal = 0;
 
     function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
     function simplify(n, d) { const g = gcd(Math.abs(n), Math.abs(d)); return [n/g, d/g]; }
     function equivalent(n1, d1, n2, d2) { return n1 * d2 === n2 * d1; }
 
-    function checkAnswers() {
-      let correct = 0;
-      const total = Object.keys(answers).length;
-
-      for (const [id, [an, ad]] of Object.entries(answers)) {
-        const num = parseInt(document.getElementById(id + 'n').value.trim());
-        const den = parseInt(document.getElementById(id + 'd').value.trim());
-        const qNum = id.slice(1);
-        const feedback = document.getElementById('f' + qNum);
-        const inputN = document.getElementById(id + 'n');
-        const inputD = document.getElementById(id + 'd');
-        const [sn, sd] = simplify(an, ad);
-        const displayAnswer = sd === 1 ? `${sn}` : `${sn}/${sd}`;
-
-        if (!isNaN(num) && !isNaN(den) && den !== 0 && equivalent(num, den, an, ad)) {
-          feedback.textContent = '✓ Correct!';
-          feedback.className = 'feedback correct';
-          inputN.style.borderColor = '#27ae60';
-          inputD.style.borderColor = '#27ae60';
-          correct++;
-        } else {
-          feedback.textContent = `✗ Answer: ${displayAnswer}`;
-          feedback.className = 'feedback incorrect';
-          inputN.style.borderColor = '#e74c3c';
-          inputD.style.borderColor = '#e74c3c';
-        }
+    function initTimers() {
+      const lvl = MRG.getCurrentLevel();
+      for (let n = 1; n <= TOTAL_QUESTIONS; n++) {
+        timers[n] = new QuestionTimer(document.getElementById('tb' + n), lvl.timerSecs);
+        const wrap = document.getElementById('tbw' + n);
+        if (wrap) wrap.style.display = lvl.timerVisible ? 'block' : 'none';
       }
-
-      const box = document.getElementById('score-box');
-      box.textContent = `You got ${correct} out of ${total}.`;
-      box.className = 'score-box show ' + (correct === total ? 'great' : correct >= 7 ? 'ok' : 'poor');
-      if (correct === total) box.textContent += ' Excellent work! 🎉';
-      else if (correct >= 7) box.textContent += ' Good effort: review the ones you missed.';
-      else box.textContent += ' Keep practising: re-read the worked examples and try again.';
     }
+
+    function qFocus(n) {
+      if (answered.has(n)) return;
+      if (!timers[n].hasStarted()) timers[n].start();
+    }
+
+    function answerFraction(n) {
+      if (answered.has(n)) return;
+      const numEl = document.getElementById('q' + n + 'n');
+      const denEl = document.getElementById('q' + n + 'd');
+      if (numEl.value.trim() === '' || denEl.value.trim() === '') return;
+
+      const elapsed = timers[n].stop();
+      answered.add(n);
+
+      const num = parseInt(numEl.value.trim(), 10);
+      const den = parseInt(denEl.value.trim(), 10);
+      const [an, ad] = ANSWERS['q' + n];
+      const correct  = !isNaN(num) && !isNaN(den) && den !== 0 && equivalent(num, den, an, ad);
+      const pts      = MRG.scoreQuestion(correct, elapsed);
+      runTotal      += pts;
+
+      numEl.disabled = true;
+      denEl.disabled = true;
+      const btn = document.getElementById('sbtn' + n);
+      if (btn) btn.disabled = true;
+
+      const [sn, sd] = simplify(an, ad);
+      const dispAns  = sd === 1 ? `${sn}` : `${sn}/${sd}`;
+      const fb = document.getElementById('f' + n);
+      fb.textContent = correct ? '✓ Correct!' : '✗ ' + dispAns;
+      fb.className   = 'feedback ' + (correct ? 'correct' : 'incorrect');
+      numEl.style.borderColor = correct ? '#27ae60' : '#e74c3c';
+      denEl.style.borderColor = correct ? '#27ae60' : '#e74c3c';
+
+      _showPopup(n, pts);
+      if (answered.size === TOTAL_QUESTIONS) setTimeout(_showResults, 500);
+    }
+
+    function _showPopup(n, pts) {
+      const pop = document.createElement('div');
+      pop.className   = 'xp-popup ' + (pts > 0 ? 'xp-popup-pos' : pts < 0 ? 'xp-popup-neg' : 'xp-popup-zero');
+      pop.textContent = pts > 0 ? '+' + pts + ' pts' : pts + ' pts';
+      document.getElementById('qb' + n).appendChild(pop);
+      setTimeout(() => pop.remove(), 1500);
+    }
+
+    function _showResults() {
+      const total  = Math.max(0, runTotal);
+      const result = MRG.finishExercise('u1e4', total, MAX_SCORE);
+      const starStr = '⭐'.repeat(result.stars) + '☆'.repeat(3 - result.stars);
+      let xpHTML;
+      if (result.xpGained > 0) {
+        xpHTML = `<div class="results-xp">+${result.xpGained} XP earned &rarr; Total: ${result.newTotal} XP</div>`;
+      } else if (result.stars === 0) {
+        xpHTML = `<div class="results-no-xp">No XP yet &mdash; reach &#11088; (score &ge; 71&nbsp;pts) to earn XP.</div>`;
+      } else {
+        xpHTML = `<div class="results-no-xp">No new XP &mdash; you&rsquo;ve already matched your personal best.</div>`;
+      }
+      const panel = document.getElementById('results-panel');
+      panel.innerHTML = `
+        <div class="results-stars">${starStr}</div>
+        <div class="results-score">${total} / ${MAX_SCORE} pts</div>
+        ${xpHTML}
+        <div class="results-btns">
+          <button onclick="location.reload()">&#8629; Try Again</button>
+          <a href="../../units/unit-1.html">&larr; Back to Unit 1</a>
+        </div>`;
+      panel.style.display = 'block';
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      renderXPHeader();
+      if (result.leveledUp) setTimeout(() => _showLevelUp(result.newLevel), 700);
+    }
+
+    function _showLevelUp(lvl) {
+      const descs = { 2:'Timers are now active. Wrong answers cost 3 pts.', 3:'The countdown is tighter (15 s).', 4:'Hard mode unlocked!' };
+      document.getElementById('levelup-name').textContent = lvl.name;
+      document.getElementById('levelup-desc').textContent = descs[lvl.level] || '';
+      document.getElementById('levelup-modal').classList.add('show');
+    }
+
+    function renderXPHeader() {
+      const info    = MRG.getLevelInfo();
+      const nextTxt = info.next ? `${info.xpToNext} XP to <strong>${info.next.name}</strong>` : '<strong>Max Level!</strong>';
+      document.getElementById('xp-header').innerHTML = `
+        <span class="xp-level-badge">&#x1F3C5; ${info.current.name}</span>
+        <div class="xp-bar-wrap"><div class="xp-bar-fill" style="width:${info.pct.toFixed(1)}%"></div></div>
+        <span class="xp-label">${info.xp} XP &middot; ${nextTxt}</span>`;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => { initTimers(); renderXPHeader(); });
   </script>
 
 </body>
