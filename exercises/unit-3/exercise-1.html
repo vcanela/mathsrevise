@@ -860,6 +860,31 @@
         label(svg, 20, cy + 82, '90° + 90° + 125° + 55° = 360° ✓', '#555', 12, false, 'start');
       }());
 
+      // ── Expert Mode setup ────────────────────────────────────────────────────
+      const HARD_E_U3E1 = {
+        q1:  { label: '1. &nbsp; Which type of angle is 89°?',  type:'select', value:'Acute (0° to 90°)'   },
+        q2:  { label: '2. &nbsp; Which type of angle is 91°?',  type:'select', value:'Obtuse (90° to 180°)' },
+        q3:  { label: '3. &nbsp; Which type of angle is 179°?', type:'select', value:'Obtuse (90° to 180°)' },
+        q4:  { label: '4. &nbsp; Which type of angle is 181°?', type:'select', value:'Reflex (180° to 360°)' },
+        q5:  { label: '5. &nbsp; Two complementary angles. The larger is 4 times the smaller. Find the smaller angle. (°)', type:'number', value:18 },
+        q6:  { label: '6. &nbsp; Two complementary angles. Their difference is 24°. Find the smaller angle. (°)',             type:'number', value:33 },
+        q7:  { label: '7. &nbsp; Two supplementary angles. The larger is double the smaller plus 9°. Find the smaller. (°)',  type:'number', value:57 },
+        q8:  { label: '8. &nbsp; Two supplementary angles. Their difference is 38°. Find the smaller angle. (°)',             type:'number', value:71 },
+        q9:  { label: '9. &nbsp; A triangle has two equal angles. The third is 50°. Find each equal angle. (°)',              type:'number', value:65 },
+        q10: { label: '10. &nbsp; A quadrilateral has three angles: 80°, 95°, 105°. Find the fourth. (°)',                   type:'number', value:80 }
+      };
+      if (MRG.getCurrentLevel().level >= 4) {
+        const badge = document.createElement('div');
+        badge.style.cssText = 'background:#8e44ad;color:#fff;font-size:0.85rem;font-weight:700;padding:0.3rem 0.9rem;border-radius:6px;margin-bottom:0.5rem;display:inline-block;';
+        badge.textContent = '⚡ Expert Mode — harder questions';
+        document.getElementById('qb1').insertAdjacentElement('beforebegin', badge);
+        for (let n = 1; n <= TOTAL_QUESTIONS; n++) {
+          const q = HARD_E_U3E1['q' + n];
+          const lbl = document.querySelector('#qb' + n + ' .question-top label');
+          if (lbl) lbl.innerHTML = q.label;
+          ANSWERS['q' + n] = { type: q.type, value: q.value };
+        }
+      }
     });
   </script>
 

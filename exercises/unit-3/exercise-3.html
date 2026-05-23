@@ -517,6 +517,31 @@
       buildQ('q8-svg',  115, 80, '65°',  '?', 'lowerRight', 'upperRight');
       buildQ('q9-svg',  120, 80, '120°', '?', 'lowerLeft',  'upperLeft');
       buildQ('q10-svg', 108, 80, '72°',  '?', 'lowerRight', 'upperRight');
+      // ── Expert Mode (algebra with parallel-line angle rules, find x) ──────────
+      const HARD_E_U3E3 = {
+        q1:  { label: '1. &nbsp; Alternate angles are equal. One is 2x°, the other is 64°. Find x.', answer: 32 },
+        q2:  { label: '2. &nbsp; Co-interior angles sum to 180°. They are 3x° and 60°. Find x.', answer: 40 },
+        q3:  { label: '3. &nbsp; Corresponding angles are equal. One is (4x − 10)°, the other is 70°. Find x.', answer: 20 },
+        q4:  { label: '4. &nbsp; Co-interior angles: (2x + 5)° and (x + 25)°. Find x.', answer: 50 },
+        q5:  { label: '5. &nbsp; Alternate angles: (3x + 7)° and (5x − 19)°. They are equal. Find x.', answer: 13 },
+        q6:  { label: '6. &nbsp; Corresponding angles: (6x − 15)° and (3x + 21)°. Find x.', answer: 12 },
+        q7:  { label: '7. &nbsp; Co-interior angles: (4x + 8)° and (3x + 4)°. Find x.', answer: 24 },
+        q8:  { label: '8. &nbsp; Alternate angles: (2x + 15)° and (3x − 5)°. Find x.', answer: 20 },
+        q9:  { label: '9. &nbsp; Corresponding angles: (5x + 4)° and (3x + 24)°. Find x.', answer: 10 },
+        q10: { label: '10. &nbsp; Co-interior angles: (7x − 15)° and (3x + 5)°. Find x.', answer: 19 }
+      };
+      if (MRG.getCurrentLevel().level >= 4) {
+        const badge = document.createElement('div');
+        badge.style.cssText = 'background:#8e44ad;color:#fff;font-size:0.85rem;font-weight:700;padding:0.3rem 0.9rem;border-radius:6px;margin-bottom:0.5rem;display:inline-block;';
+        badge.textContent = '⚡ Expert Mode — harder questions';
+        document.getElementById('qb1').insertAdjacentElement('beforebegin', badge);
+        for (let n = 1; n <= TOTAL_QUESTIONS; n++) {
+          const q = HARD_E_U3E3['q' + n];
+          const lbl = document.querySelector('#qb' + n + ' label');
+          if (lbl) lbl.innerHTML = q.label;
+          ANSWERS['q' + n] = q.answer;
+        }
+      }
     });
   </script>
 

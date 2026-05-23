@@ -518,7 +518,37 @@
         <span class="xp-label">${info.xp} XP &middot; ${nextTxt}</span>`;
     }
 
-    document.addEventListener('DOMContentLoaded', () => { initTimers(); renderXPHeader(); });
+    // ── Expert Mode (double-bracket expand and collect) ───────────────────────
+    const HARD_E2 = {
+      q1:  { label: '1. &nbsp; \\(5(3b - 1) + 2(b + 4)\\)',    answer: [17,   3] },
+      q2:  { label: '2. &nbsp; \\(4(2c + 5) - 3(c - 2)\\)',    answer: [ 5,  26] },
+      q3:  { label: '3. &nbsp; \\(3(4k - 3) + 2(k + 7)\\)',    answer: [14,   5] },
+      q4:  { label: '4. &nbsp; \\(6(n + 4) - 2(n - 3)\\)',     answer: [ 4,  30] },
+      q5:  { label: '5. &nbsp; \\(4(3r - 5) - (r + 2)\\)',     answer: [11, -22] },
+      q6:  { label: '6. &nbsp; \\(7(d + 3) - 3(2d - 1)\\)',    answer: [ 1,  24] },
+      q7:  { label: '7. &nbsp; \\(3(4f - 5) + 2(f - 6)\\)',    answer: [14, -27] },
+      q8:  { label: '8. &nbsp; \\(5(2g + 3) - 4(g + 1)\\)',    answer: [ 6,  11] },
+      q9:  { label: '9. &nbsp; \\(8(h - 2) - 3(2h + 1)\\)',    answer: [ 2, -19] },
+      q10: { label: '10. &nbsp; \\(4(3j + 2) + 3(2j - 5)\\)',  answer: [18,  -7] }
+    };
+    function activateHardMode() {
+      const badge = document.createElement('div');
+      badge.style.cssText = 'background:#8e44ad;color:#fff;font-size:0.85rem;font-weight:700;padding:0.3rem 0.9rem;border-radius:6px;margin-bottom:0.5rem;display:inline-block;';
+      badge.textContent = '⚡ Expert Mode — harder questions';
+      document.getElementById('qb1').insertAdjacentElement('beforebegin', badge);
+      for (let n = 1; n <= TOTAL_QUESTIONS; n++) {
+        const q = HARD_E2['q' + n];
+        const lbl = document.querySelector('#qb' + n + ' .question-top label');
+        if (lbl) lbl.innerHTML = q.label;
+        ANSWERS['q' + n] = q.answer;
+      }
+      if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) MathJax.typesetPromise();
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      if (MRG.getCurrentLevel().level >= 4) activateHardMode();
+      initTimers();
+      renderXPHeader();
+    });
   </script>
 
 </body>

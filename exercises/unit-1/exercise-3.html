@@ -566,7 +566,37 @@
         <span class="xp-label">${info.xp} XP &middot; ${nextTxt}</span>`;
     }
 
-    document.addEventListener('DOMContentLoaded', () => { initTimers(); renderXPHeader(); });
+    // ── Expert Mode (harder unlike denominators, improper fraction results) ─────
+    const HARD_E3 = {
+      q1:  { latex: '\\dfrac{3}{4} + \\dfrac{5}{6} =',    answer: [19, 12] },
+      q2:  { latex: '\\dfrac{7}{8} - \\dfrac{2}{3} =',    answer: [ 5, 24] },
+      q3:  { latex: '\\dfrac{5}{6} + \\dfrac{7}{9} =',    answer: [29, 18] },
+      q4:  { latex: '\\dfrac{11}{12} - \\dfrac{3}{8} =',  answer: [13, 24] },
+      q5:  { latex: '\\dfrac{4}{5} + \\dfrac{7}{10} =',   answer: [ 3,  2] },
+      q6:  { latex: '\\dfrac{5}{6} - \\dfrac{3}{10} =',   answer: [ 8, 15] },
+      q7:  { latex: '\\dfrac{7}{8} + \\dfrac{5}{12} =',   answer: [31, 24] },
+      q8:  { latex: '\\dfrac{9}{10} - \\dfrac{2}{15} =',  answer: [23, 30] },
+      q9:  { latex: '\\dfrac{11}{15} + \\dfrac{7}{12} =', answer: [79, 60] },
+      q10: { latex: '\\dfrac{5}{9} - \\dfrac{7}{24} =',   answer: [19, 72] }
+    };
+    function activateHardMode() {
+      const badge = document.createElement('div');
+      badge.style.cssText = 'background:#8e44ad;color:#fff;font-size:0.85rem;font-weight:700;padding:0.3rem 0.9rem;border-radius:6px;margin-bottom:0.5rem;display:inline-block;';
+      badge.textContent = '⚡ Expert Mode — harder questions';
+      document.getElementById('qb1').insertAdjacentElement('beforebegin', badge);
+      for (let n = 1; n <= TOTAL_QUESTIONS; n++) {
+        const q = HARD_E3['q' + n];
+        const qtxt = document.querySelector('#qb' + n + ' .q-text');
+        if (qtxt) qtxt.innerHTML = '<span>' + n + '.</span> \\(' + q.latex + '\\)';
+        ANSWERS['q' + n] = q.answer;
+      }
+      if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) MathJax.typesetPromise();
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      if (MRG.getCurrentLevel().level >= 4) activateHardMode();
+      initTimers();
+      renderXPHeader();
+    });
   </script>
 
 </body>

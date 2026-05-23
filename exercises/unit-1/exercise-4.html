@@ -527,7 +527,37 @@
         <span class="xp-label">${info.xp} XP &middot; ${nextTxt}</span>`;
     }
 
-    document.addEventListener('DOMContentLoaded', () => { initTimers(); renderXPHeader(); });
+    // ── Expert Mode (harder multiply/divide fractions) ───────────────────────
+    const HARD_E4 = {
+      q1:  { latex: '\\dfrac{3}{4} \\times \\dfrac{8}{9} =',    answer: [ 2,  3] },
+      q2:  { latex: '\\dfrac{5}{6} \\div \\dfrac{10}{9} =',     answer: [ 3,  4] },
+      q3:  { latex: '\\dfrac{7}{8} \\times \\dfrac{4}{21} =',   answer: [ 1,  6] },
+      q4:  { latex: '\\dfrac{9}{10} \\div \\dfrac{3}{4} =',     answer: [ 6,  5] },
+      q5:  { latex: '\\dfrac{5}{12} \\times \\dfrac{8}{15} =',  answer: [ 2,  9] },
+      q6:  { latex: '\\dfrac{11}{15} \\div \\dfrac{11}{20} =',  answer: [ 4,  3] },
+      q7:  { latex: '\\dfrac{4}{7} \\times \\dfrac{14}{20} =',  answer: [ 2,  5] },
+      q8:  { latex: '\\dfrac{8}{15} \\div \\dfrac{4}{25} =',    answer: [10,  3] },
+      q9:  { latex: '\\dfrac{5}{8} \\times \\dfrac{12}{25} =',  answer: [ 3, 10] },
+      q10: { latex: '\\dfrac{9}{14} \\div \\dfrac{3}{7} =',     answer: [ 3,  2] }
+    };
+    function activateHardMode() {
+      const badge = document.createElement('div');
+      badge.style.cssText = 'background:#8e44ad;color:#fff;font-size:0.85rem;font-weight:700;padding:0.3rem 0.9rem;border-radius:6px;margin-bottom:0.5rem;display:inline-block;';
+      badge.textContent = '⚡ Expert Mode — harder questions';
+      document.getElementById('qb1').insertAdjacentElement('beforebegin', badge);
+      for (let n = 1; n <= TOTAL_QUESTIONS; n++) {
+        const q = HARD_E4['q' + n];
+        const qtxt = document.querySelector('#qb' + n + ' .q-text');
+        if (qtxt) qtxt.innerHTML = '<span>' + n + '.</span> \\(' + q.latex + '\\)';
+        ANSWERS['q' + n] = q.answer;
+      }
+      if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) MathJax.typesetPromise();
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      if (MRG.getCurrentLevel().level >= 4) activateHardMode();
+      initTimers();
+      renderXPHeader();
+    });
   </script>
 
 </body>

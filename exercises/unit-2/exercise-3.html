@@ -543,7 +543,38 @@
         <span class="xp-label">${info.xp} XP &middot; ${nextTxt}</span>`;
     }
 
-    document.addEventListener('DOMContentLoaded', () => { initTimers(); renderXPHeader(); });
+    // ── Expert Mode (larger HCFs, two-variable factorising) ──────────────────
+    const HARD_F3 = {
+      q1:  { label: '1. &nbsp; \\(24c + 36\\)',    orig: [24,  36], canon: [12, 2,  3] },
+      q2:  { label: '2. &nbsp; \\(15d - 20\\)',    orig: [15, -20], canon: [ 5, 3, -4] },
+      q3:  { label: '3. &nbsp; \\(18f + 27\\)',    orig: [18,  27], canon: [ 9, 2,  3] },
+      q4:  { label: '4. &nbsp; \\(16g - 40\\)',    orig: [16, -40], canon: [ 8, 2, -5] },
+      q5:  { label: '5. &nbsp; \\(35h + 28\\)',    orig: [35,  28], canon: [ 7, 5,  4] },
+      q6:  { label: '6. &nbsp; \\(24k - 16\\)',    orig: [24, -16], canon: [ 8, 3, -2] },
+      q7:  { label: '7. &nbsp; \\(45r + 30s\\)',   orig: [45,  30], canon: [15, 3,  2] },
+      q8:  { label: '8. &nbsp; \\(32v - 20w\\)',   orig: [32, -20], canon: [ 4, 8, -5] },
+      q9:  { label: '9. &nbsp; \\(42n + 28\\)',    orig: [42,  28], canon: [14, 3,  2] },
+      q10: { label: '10. &nbsp; \\(60p + 36q\\)',  orig: [60,  36], canon: [12, 5,  3] }
+    };
+    function activateHardMode() {
+      const badge = document.createElement('div');
+      badge.style.cssText = 'background:#8e44ad;color:#fff;font-size:0.85rem;font-weight:700;padding:0.3rem 0.9rem;border-radius:6px;margin-bottom:0.5rem;display:inline-block;';
+      badge.textContent = '⚡ Expert Mode — harder questions';
+      document.getElementById('qb1').insertAdjacentElement('beforebegin', badge);
+      for (let n = 1; n <= TOTAL_QUESTIONS; n++) {
+        const q = HARD_F3['q' + n];
+        const lbl = document.querySelector('#qb' + n + ' .question-top label');
+        if (lbl) lbl.innerHTML = q.label;
+        ORIGINALS['q' + n] = q.orig;
+        CANONICAL['q' + n] = q.canon;
+      }
+      if (typeof MathJax !== 'undefined' && MathJax.typesetPromise) MathJax.typesetPromise();
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      if (MRG.getCurrentLevel().level >= 4) activateHardMode();
+      initTimers();
+      renderXPHeader();
+    });
   </script>
 
 </body>

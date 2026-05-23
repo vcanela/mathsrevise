@@ -491,7 +491,36 @@
       const nextTxt = info.next ? `${info.xpToNext} XP to <strong>${info.next.name}</strong>` : '<strong>Max Level!</strong>';
       document.getElementById('xp-header').innerHTML = `<span class="xp-level-badge">&#x1F3C5; ${info.current.name}</span><div class="xp-bar-wrap"><div class="xp-bar-fill" style="width:${info.pct.toFixed(1)}%"></div></div><span class="xp-label">${info.xp} XP &middot; ${nextTxt}</span>`;
     }
+    const HARD_E_U3E4 = {
+      q1:  { label: '1. &nbsp; A line from the centre to the circumference is called a...?',                          radioAns: 'Radius'        },
+      q2:  { label: '2. &nbsp; The total distance around the outside of a circle is called the...?',                  radioAns: 'Circumference' },
+      q3:  { label: '3. &nbsp; A straight line through the centre from edge to edge is called a...?',                 radioAns: 'Diameter'      },
+      q4:  { label: '4. &nbsp; A pie-slice region bounded by two radii and an arc is called a...?',                   radioAns: 'Sector'        },
+      q5:  { label: '5. &nbsp; A straight line joining two points on a circle, not through the centre, is called a...?', radioAns: 'Chord'      },
+      q6:  { label: '6. &nbsp; A line that just touches a circle at exactly one point is called a...?',               radioAns: 'Tangent'       },
+      q7:  { label: '7. &nbsp; A portion of the circumference of a circle is called an...?',                          radioAns: 'Arc'           },
+      q8:  { label: '8. &nbsp; The fixed point equidistant from all points on the circle is called the...?',          radioAns: 'Centre'        },
+      q9:  { label: '9. &nbsp; Circle A has radius 6 cm. Circle B\'s diameter equals 5 times the radius of A. Find the diameter of B. (cm)', numAns: 30 },
+      q10: { label: '10. &nbsp; A circle\'s diameter is 8 cm more than its radius. Find the diameter. (cm)',          numAns: 16 }
+    };
+    function activateHardMode() {
+      const badge = document.createElement('div');
+      badge.style.cssText = 'background:#8e44ad;color:#fff;font-size:0.85rem;font-weight:700;padding:0.3rem 0.9rem;border-radius:6px;margin-bottom:0.5rem;display:inline-block;';
+      badge.textContent = '⚡ Expert Mode — harder questions';
+      document.getElementById('qb1').insertAdjacentElement('beforebegin', badge);
+      for (let n = 1; n <= 8; n++) {
+        const q = HARD_E_U3E4['q' + n];
+        document.querySelector('#qb' + n + ' label').innerHTML = q.label;
+        RADIO_ANSWERS['q' + n] = q.radioAns;
+      }
+      for (let n = 9; n <= 10; n++) {
+        const q = HARD_E_U3E4['q' + n];
+        document.querySelector('#qb' + n + ' label').innerHTML = q.label;
+        NUM_ANSWERS['q' + n] = q.numAns;
+      }
+    }
     document.addEventListener('DOMContentLoaded', function () {
+      if (MRG.getCurrentLevel().level >= 4) activateHardMode();
       initTimers();
       renderXPHeader();
     });

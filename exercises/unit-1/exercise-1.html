@@ -492,7 +492,32 @@
         <span class="xp-label">${info.xp} XP &middot; ${nextTxt}</span>`;
     }
 
+    // ── Expert Mode (3-number sums, 3 d.p., round-number subtraction) ──────────
+    const HARD_E = {
+      q1:  { label: '1. &nbsp; 4.72 + 8.69 + 1.35 =',    answer: 14.76  },
+      q2:  { label: '2. &nbsp; 20 &minus; 3.47 =',        answer: 16.53  },
+      q3:  { label: '3. &nbsp; 7.825 + 3.496 =',          answer: 11.321 },
+      q4:  { label: '4. &nbsp; 15.6 &minus; 8.73 =',      answer: 6.87   },
+      q5:  { label: '5. &nbsp; 2.08 + 3.94 + 5.17 =',     answer: 11.19  },
+      q6:  { label: '6. &nbsp; 100 &minus; 34.67 =',       answer: 65.33  },
+      q7:  { label: '7. &nbsp; 9.003 &minus; 4.567 =',     answer: 4.436  },
+      q8:  { label: '8. &nbsp; 6.4 + 0.87 + 2.19 =',      answer: 9.46   },
+      q9:  { label: '9. &nbsp; 50 &minus; 27.85 =',        answer: 22.15  },
+      q10: { label: '10. &nbsp; 3.142 + 2.718 =',          answer: 5.86   }
+    };
+    function activateHardMode() {
+      const badge = document.createElement('div');
+      badge.style.cssText = 'background:#8e44ad;color:#fff;font-size:0.85rem;font-weight:700;padding:0.3rem 0.9rem;border-radius:6px;margin-bottom:0.5rem;display:inline-block;';
+      badge.textContent = '⚡ Expert Mode — harder questions';
+      document.getElementById('qb1').insertAdjacentElement('beforebegin', badge);
+      for (let n = 1; n <= TOTAL_QUESTIONS; n++) {
+        const q = HARD_E['q' + n];
+        document.querySelector('#qb' + n + ' label').innerHTML = q.label;
+        ANSWERS['q' + n] = q.answer;
+      }
+    }
     document.addEventListener('DOMContentLoaded', function () {
+      if (MRG.getCurrentLevel().level >= 4) activateHardMode();
       initTimers();
       renderXPHeader();
     });

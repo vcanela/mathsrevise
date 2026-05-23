@@ -660,7 +660,36 @@
         <span class="xp-label">${info.xp} XP &middot; ${nextTxt}</span>`;
     }
 
+    const HARD_E_U3E5 = {
+      q1:  { label: '1. &nbsp; A 3D shape has 6 identical square faces. Name the shape.',                                         radioAns: 'Cube'             },
+      q2:  { label: '2. &nbsp; A 3D shape has 2 triangular faces and 3 rectangular faces. Name it.',                              radioAns: 'Triangular Prism' },
+      q3:  { label: '3. &nbsp; A 3D shape has 5 faces: 1 square base and 4 identical triangles. Name it.',                       radioAns: 'Square Pyramid'   },
+      q4:  { label: '4. &nbsp; A 3D shape has 3 faces: 2 circles and 1 curved rectangle (when unrolled). Name it.',              radioAns: 'Cylinder'         },
+      q5:  { label: '5. &nbsp; A 3D shape has 6 rectangular faces, not all the same size. Name it.',                             radioAns: 'Cuboid'           },
+      q6:  { label: '6. &nbsp; A triangle has a base of 8 cm. It is enlarged with scale factor 2.5. New base? (cm)',             floatAns: 20   },
+      q7:  { label: '7. &nbsp; Similar shapes have perimeter 24 cm. Scale factor is 1.5. New perimeter? (cm)',                   floatAns: 36   },
+      q8:  { label: '8. &nbsp; A new length is 45 cm. The scale factor was 3. Find the original length. (cm)',                   floatAns: 15   },
+      q9:  { label: '9. &nbsp; A rectangle is 4 cm &times; 6 cm, enlarged by scale factor 2. Area of new rectangle? (cm&sup2;)', floatAns: 96   },
+      q10: { label: '10. &nbsp; Two similar shapes have perimeters 20 cm and 35 cm. Find the scale factor. (decimal)',           floatAns: 1.75 }
+    };
+    function activateHardMode() {
+      const badge = document.createElement('div');
+      badge.style.cssText = 'background:#8e44ad;color:#fff;font-size:0.85rem;font-weight:700;padding:0.3rem 0.9rem;border-radius:6px;margin-bottom:0.5rem;display:inline-block;';
+      badge.textContent = '⚡ Expert Mode — harder questions';
+      document.getElementById('qb1').insertAdjacentElement('beforebegin', badge);
+      for (let n = 1; n <= 5; n++) {
+        const q = HARD_E_U3E5['q' + n];
+        document.querySelector('#qb' + n + ' label').innerHTML = q.label;
+        radioAnswers['q' + n] = q.radioAns;
+      }
+      for (let n = 6; n <= 10; n++) {
+        const q = HARD_E_U3E5['q' + n];
+        document.querySelector('#qb' + n + ' label').innerHTML = q.label;
+        floatAnswers['q' + n] = q.floatAns;
+      }
+    }
     document.addEventListener('DOMContentLoaded', function () {
+      if (MRG.getCurrentLevel().level >= 4) activateHardMode();
       initTimers();
       renderXPHeader();
     });
