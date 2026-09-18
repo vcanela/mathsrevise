@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Maths Revise · Page self-test</title>
+  <style>
+    body { font-family: 'IBM Plex Sans', system-ui, sans-serif; margin: 2rem; color: #1b2430; }
+    h1 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+    p  { font-size: 0.9rem; color: #5b6775; }
+    table { border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; }
+    td, th { border: 1px solid #dfe4ea; padding: 0.3rem 0.6rem; text-align: left; }
+    .ok   { color: #1d7a4c; }
+    .bad  { color: #b8342b; font-weight: 600; }
+    #frame { width: 900px; height: 500px; border: 1px solid #ddd; margin-top: 1rem; }
+    #summary { margin-top: 1rem; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <h1>Page self-test</h1>
+  <p>
+    Loads every page of the site in turn and checks that it renders without console errors,
+    that each exercise produces its question cards, and that every question has an answer control
+    and any diagram it asked for. Open this from the dev server, not from the file system.
+  </p>
+  <div id="summary">Running…</div>
+  <table id="out"><tr><th>Page</th><th>Cards</th><th>Diagrams</th><th>Result</th></tr></table>
+  <iframe id="frame" title="page under test"></iframe>
+
+  <script src="../js/game.js"></script>
+  <script src="../js/manifest.js"></script>
+  <script>
+    'use strict';
+
+    // ?runs=N repeats every exercise with N different question sets, so the
+    // diagram checks below see many generated shapes rather than just one.
+    const RUNS = Number(new URLSearchParams(location.search).get('runs')) || 1;
+    const sets = Array.from({ length: RUNS }, (_, i) => i + 1);
+
+    const pages = [
+      { url: '../index.html', kind: 'home' },
+      ...Manifest.UNITS.map(u => ({ url: `../units/unit-${u.n}.html`, kind: 'unit' })),
+      ...Manifest.UNITS.flatMap(u => u.exercises.flatMap(ex => sets.map(s => ({
+        url: `../exercises/unit-${u.n}/exercise-${ex.n}.html?set=${s}`, kind: 'exercise', id: ex.id
+      }))))
+    ];
+
+    const frame = document.getElementById('frame');
+    const out   = document.getElementById('out');
+    let failures = 0;
+
+    function row(url, cards, dia, problems) {
+      const tr = document.createElement('tr');
+      const cell = (text, cls) => {
+        const td = document.createElement('td');
+        td.textContent = text;
+        if (cls) td.className = cls;
+        tr.appendChild(td);
+      };
+      cell(url.replace('../', ''));
+      cell(String(cards));
+      cell(String(dia));
+      cell(problems.length ? problems.join('; ') : 'ok', problems.length ? 'bad' : 'ok');
+      out.appendChild(tr);
+      if (problems.length) failures++;
+    }
+
+    function load(url) {
+      return new Promise(resolve => {
+        const errors = [];
+        frame.onload = () => {
+          const w = frame.contentWindow;
+          w.addEventListener('error', e => errors.push(String(e.message)));
+          const origErr = w.console.error;
+          w.console.error = (...a) => { errors.push(a.join(' ')); origErr.apply(w.console, a); };
+          // Give the page a moment to render and typeset.
+          setTimeout(() => resolve({ doc: frame.contentDocument, errors }), 450);
+        };
+        frame.src = url;
+      });
+    }
+
+    (async () => {
+      for (const p of pages) {
+        const { doc, errors } = await load(p.url);
+        const problems = [...errors];
+        const cards = doc.querySelectorAll('.qcard').length;
+        const dia   = doc.querySelectorAll('.qdiagram').length;
+
+        if (!doc.querySelector('header')) problems.push('no header rendered');
+
+        if (p.kind === 'exercise') {
+          if (cards === 0) problems.push('no questions rendered');
+          doc.querySelectorAll('.qcard').forEach((c, i) => {
+            if (!c.querySelector('.ans-box, .choice, .spot-line, .match-item, .order-chip')) {
+              problems.push(`Q${i + 1} has no answer control`);
+            }
+            if (!c.querySelector('.qtext').textContent.trim()) problems.push(`Q${i + 1} has an empty prompt`);
+          });
+          // Every diagram must actually contain drawn shapes.
+          doc.querySelectorAll('.qdiagram').forEach((svg, i) => {
+            if (svg.childElementCount === 0) problems.push(`diagram ${i + 1} is empty`);
+            if (/NaN/.test(svg.innerHTML)) problems.push(`diagram ${i + 1} contains NaN`);
+          });
+
+          // The central claim of this resource is that the pictures are
+          // honest. Measure every polygon that carries degree labels and
+          // check each label against the angle actually drawn at that corner.
+          const Geo = frame.contentWindow.Geo;
+          doc.querySelectorAll('.qdiagram').forEach((svg, i) => {
+            const poly = svg.querySelector('polygon');
+            if (!poly || !Geo) return;
+            const pts = poly.getAttribute('points').trim().split(/\s+/)
+              .map(p => p.split(',').map(Number));
+            if (pts.length < 3 || pts.some(p => p.length !== 2 || p.some(isNaN))) return;
+            const drawn = Geo.interiorAngles(pts);
+            for (const t of svg.querySelectorAll('text')) {
+              const mm = /^(\d+(?:\.\d+)?)\s*°$/.exec(t.textContent.trim());
+              if (!mm) continue;
+              const claimed = Number(mm[1]);
+              const at = [Number(t.getAttribute('x')), Number(t.getAttribute('y'))];
+              // The label sits just outside its own corner, so the nearest
+              // vertex is the one it belongs to.
+              let best = 0, bestD = Infinity;
+              pts.forEach((p, k) => {
+                const dd = Math.hypot(p[0] - at[0], p[1] - at[1]);
+                if (dd < bestD) { bestD = dd; best = k; }
+              });
+              if (Math.abs(drawn[best] - claimed) > 1.5) {
+                problems.push(
+                  `diagram ${i + 1} is labelled ${claimed}° but is drawn as ` +
+                  `${drawn[best].toFixed(1)}°`);
+              }
+            }
+          });
+        } else if (doc.querySelectorAll('.card').length === 0) {
+          problems.push('no cards rendered');
+        }
+
+        row(p.url, cards, dia, problems);
+      }
+      const s = document.getElementById('summary');
+      s.textContent = failures
+        ? `${failures} of ${pages.length} pages have problems.`
+        : `All ${pages.length} pages rendered cleanly.`;
+      s.className = failures ? 'bad' : 'ok';
+      document.title = failures ? `FAIL (${failures})` : 'PASS';
+    })();
+  </script>
+</body>
+</html>
