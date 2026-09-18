@@ -326,7 +326,11 @@ const Geo = (() => {
 
         if (o.label !== undefined && o.label !== null) {
           const bis = a1 + span / 2;
-          const dist = r + (o.gap === undefined ? 13 : o.gap) + (String(o.label).length > 3 ? 4 : 0);
+          // A long label such as "3x - 34" needs to sit further along the
+          // bisector, towards the middle of the shape, or it runs into the
+          // sides meeting at this corner.
+          const extra = Math.max(0, String(o.label).length - 3) * 2.2;
+          const dist = r + (o.gap === undefined ? 13 : o.gap) + extra;
           api.text(add(V, fromDir(bis, dist)), o.label, {
             fill: colour, size: o.size || 13, bold: true
           });

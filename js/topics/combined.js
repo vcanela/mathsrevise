@@ -200,12 +200,12 @@
         const A = e.parts.map(p => p.angle);
         out.push({
           prompt: 'Write the equation for the angles of this triangle.',
-          diagram: { w: 240, h: 180 },
+          diagram: { w: 270, h: 200 },
           draw: (d, G) => {
-            const p = G.fit(G.triangleFromAngles(A[0], A[1], A[2]), 240, 180, 44);
+            const p = G.fit(G.triangleFromAngles(A[0], A[1], A[2]), 270, 200, 52);
             d.polygon(p);
             e.parts.forEach((part, k) => d.angleArc(p, k, {
-              label: part.tex, size: 11.5,
+              label: part.tex, size: 11, gap: 16,
               colour: ['var(--dia-accent)', 'var(--dia-known)', 'var(--dia-unknown)'][k]
             }));
           },
@@ -357,11 +357,11 @@
         const A = e.parts.map(p => p.angle);
         out.push({
           prompt: 'Find ' + m('x') + '.',
-          diagram: { w: 240, h: 180 },
+          diagram: { w: 270, h: 200 },
           draw: (d, G) => {
-            const p = G.fit(G.triangleFromAngles(A[0], A[1], A[2]), 240, 180, 44);
+            const p = G.fit(G.triangleFromAngles(A[0], A[1], A[2]), 270, 200, 52);
             d.polygon(p);
-            e.parts.forEach((part, k) => d.angleArc(p, k, { label: part.tex, size: 11.5 }));
+            e.parts.forEach((part, k) => d.angleArc(p, k, { label: part.tex, size: 11, gap: 16 }));
           },
           input: { kind: 'number', prefix: m('x') + ' =', answer: e.x, width: 76 },
           explain: `<span class="work">${equationTex(e)} gives \\(x = ${e.x}\\). Checking: ${A.map(deg).join(' + ')} = 180°. ✓</span>`
@@ -376,12 +376,12 @@
         out.push({
           prompt: `Find ${m('x')}, then find the angle marked ${m(e.parts[which].tex)}.`,
           note: 'Two answers: the value of ' + m('x') + ', then the angle itself in degrees.',
-          diagram: { w: 240, h: 180 },
+          diagram: { w: 270, h: 200 },
           draw: (d, G) => {
-            const p = G.fit(G.triangleFromAngles(A[0], A[1], A[2]), 240, 180, 44);
+            const p = G.fit(G.triangleFromAngles(A[0], A[1], A[2]), 270, 200, 52);
             d.polygon(p);
             e.parts.forEach((part, k) => d.angleArc(p, k, {
-              label: part.tex, size: 11.5,
+              label: part.tex, size: 11, gap: 16,
               colour: k === which ? 'var(--dia-unknown)' : 'var(--dia-accent)',
               ticks: k === which ? 2 : 1
             }));
