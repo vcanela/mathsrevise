@@ -14,90 +14,137 @@ const Dia = (() => {
    * Negative counts are drawn hollow, which is how the "take away from both
    * sides" move is shown.
    */
-  function drawPan(d, cx, topY, xs, units, opt) {
-    opt = opt || {};
-    const bw = 22, bh = 22, gap = 4;
-    const items = [];
-    for (let i = 0; i < Math.abs(xs); i++)   items.push({ kind: 'x', neg: xs < 0 });
-    for (let i = 0; i < Math.abs(units); i++) items.push({ kind: 'u', neg: units < 0 });
+  /**
+   * How a pan's contents will be laid out, without drawing anything yet.
+   * Shrinks the counters until the stack fits both the width of the pan and
+   * the height available above the beam.
+   */
+  function panLayout(xs, units, maxW, maxH) {
+    const count = Math.abs(xs) + Math.abs(units);
+    const step = size => size + Math.max(3, size * 0.18);
+    if (!count) return { size: 22, step: step(22), perRow: 6, rows: 0, height: 0 };
+    for (let size = 22; size >= 5; size -= 0.5) {
+      const st = step(size);
+      const perRow = Math.max(1, Math.min(7, Math.floor(maxW / st)));
+      const rows = Math.ceil(count / perRow);
+      if (rows * st <= maxH) return { size, step: st, perRow, rows, height: rows * st };
+    }
+    // Nothing fits comfortably: use the smallest counters and pack the row.
+    const size = 5, st = step(size);
+    const perRow = Math.max(1, Math.ceil(count / Math.max(1, Math.floor(maxH / st))));
+    return { size, step: st, perRow, rows: Math.ceil(count / perRow), height: maxH };
+  }
 
-    const perRow = Math.min(5, Math.max(3, Math.ceil(Math.sqrt(items.length))));
-    const rows = Math.ceil(items.length / perRow) || 1;
+  /**
+   * A pan of an equation balance: `xs` boxes marked x and `units` small discs,
+   * stacked upwards from `baseY`. Negative counts are drawn hollow, which is
+   * how the "take away from both sides" move is shown.
+   */
+  function drawPan(d, cx, baseY, xs, units, lay) {
+    const items = [];
+    for (let i = 0; i < Math.abs(xs); i++)    items.push({ kind: 'x', neg: xs < 0 });
+    for (let i = 0; i < Math.abs(units); i++) items.push({ kind: 'u', neg: units < 0 });
+    const { size, step, perRow, rows } = lay;
 
     items.forEach((it, i) => {
       const r = Math.floor(i / perRow), c = i % perRow;
       const inRow = Math.min(perRow, items.length - r * perRow);
-      const x = cx - (inRow * (bw + gap) - gap) / 2 + c * (bw + gap);
-      const y = topY - (rows - r) * (bh + gap) + gap;
+      const x = cx - (inRow * step - (step - size)) / 2 + c * step;
+      const y = baseY - (rows - r) * step;
       if (it.kind === 'x') {
         d.add('rect', {
-          x, y, width: bw, height: bh, rx: 3,
+          x, y, width: size, height: size, rx: Math.max(2, size * 0.14),
           fill: it.neg ? 'none' : XCOL, stroke: it.neg ? NEGCOL : XCOL,
           'stroke-width': 1.6, 'stroke-dasharray': it.neg ? '3 2' : null
         });
-        d.text([x + bw / 2, y + bh / 2], 'x', { fill: it.neg ? NEGCOL : 'var(--surface)', size: 12 });
+        if (size >= 13) {
+          d.text([x + size / 2, y + size / 2], 'x',
+                 { fill: it.neg ? NEGCOL : 'var(--surface)', size: Math.min(12, size * 0.6) });
+        }
       } else {
         d.add('circle', {
-          cx: x + bw / 2, cy: y + bh / 2, r: 8.5,
+          cx: x + size / 2, cy: y + size / 2, r: size * 0.39,
           fill: it.neg ? 'none' : UCOL, stroke: it.neg ? NEGCOL : UCOL,
           'stroke-width': 1.6, 'stroke-dasharray': it.neg ? '3 2' : null
         });
       }
     });
-    return rows * (bh + gap);
   }
 
   /**
    * A whole balance: left side ax + b, right side cx + d.
-   * `opt.strike` greys out the tiles being removed from both sides.
+   * The pans are sized to whatever the canvas can hold, so an equation with a
+   * large constant such as 2n + 7 = 23 still fits instead of stacking its
+   * counters off the top of the picture.
    */
   function balance(d, eq, opt) {
     opt = opt || {};
     const w = d.w, h = d.h;
-    const beamY = h - 48;
+    const standH = 40;                       // beam, pivot and base
+    const beamY = h - standH;
     const lx = w * 0.27, rx = w * 0.73;
+    const panW = w * 0.44;
+    const panH = beamY - 9;
 
-    drawPan(d, lx, beamY - 8, eq.lx || 0, eq.lc || 0);
-    drawPan(d, rx, beamY - 8, eq.rx || 0, eq.rc || 0);
+    // Both pans share a layout, so the counters are the same size on each side.
+    const left  = panLayout(eq.lx || 0, eq.lc || 0, panW, panH);
+    const right = panLayout(eq.rx || 0, eq.rc || 0, panW, panH);
+    const smaller = left.size <= right.size ? left : right;
+    const both = { size: smaller.size, step: smaller.step, perRow: smaller.perRow };
+    const rowsOf = (a, b) => Math.ceil((Math.abs(a) + Math.abs(b)) / both.perRow) || 0;
 
-    // Beam, pivot and pans.
-    d.line([lx - 42, beamY], [rx + 42, beamY], { stroke: INK, width: 2.5 });
+    drawPan(d, lx, beamY - 7, eq.lx || 0, eq.lc || 0, { ...both, rows: rowsOf(eq.lx, eq.lc) });
+    drawPan(d, rx, beamY - 7, eq.rx || 0, eq.rc || 0, { ...both, rows: rowsOf(eq.rx, eq.rc) });
+
+    // Beam, pivot and base.
+    d.line([lx - panW / 2, beamY], [rx + panW / 2, beamY], { stroke: INK, width: 2.5 });
     d.line([lx, beamY], [lx, beamY + 6], { stroke: MUTED, width: 1.5 });
     d.line([rx, beamY], [rx, beamY + 6], { stroke: MUTED, width: 1.5 });
     d.add('path', {
-      d: `M ${w / 2 - 14} ${h - 14} L ${w / 2} ${beamY + 2} L ${w / 2 + 14} ${h - 14} Z`,
+      d: `M ${w / 2 - 13} ${h - 9} L ${w / 2} ${beamY + 2} L ${w / 2 + 13} ${h - 9} Z`,
       fill: 'none', stroke: MUTED, 'stroke-width': 2, 'stroke-linejoin': 'round'
     });
-    d.line([w / 2 - 22, h - 12], [w / 2 + 22, h - 12], { stroke: MUTED, width: 2.5 });
+    d.line([w / 2 - 20, h - 7], [w / 2 + 20, h - 7], { stroke: MUTED, width: 2.5 });
 
-    if (opt.caption) d.text([w / 2, 14], opt.caption, { fill: MUTED, size: 12, bold: false });
     return d;
   }
 
-  /** Coloured tiles for collecting like terms: one tile per unit of each term. */
+  /**
+   * Coloured tiles for collecting like terms: one tile per unit of each term.
+   * The tiles shrink to whatever fits the canvas width, so a long expression
+   * does not run off the right-hand edge.
+   */
   function tiles(d, groups, opt) {
     opt = opt || {};
     const palette = [XCOL, 'var(--dia-unknown)', UCOL, MUTED];
-    const tw = 26, th = 26, gap = 5, groupGap = 16;
-    let x = 10;
-    const y = opt.y === undefined ? d.h / 2 - th / 2 : opt.y;
+    const n = groups.reduce((s, g) => s + Math.abs(g.count), 0) || 1;
+    const gaps = Math.max(0, groups.length - 1);
+    const pad = 8;
+    // Solve for the tile size that exactly fills the available width, capped so
+    // a short expression does not end up with enormous tiles.
+    const avail = d.w - 2 * pad;
+    const size = Math.min(28, Math.max(10, (avail - gaps * 16) / (n + (n - 1) * 0.19)));
+    const gap = size * 0.19, groupGap = 16;
+    const used = n * size + (n - 1) * gap + gaps * groupGap;
+
+    let x = (d.w - used) / 2;
+    const y = opt.y === undefined ? d.h / 2 - size / 2 : opt.y;
 
     groups.forEach((g, gi) => {
       const colour = palette[gi % palette.length];
       for (let i = 0; i < Math.abs(g.count); i++) {
         const neg = g.count < 0;
         d.add('rect', {
-          x, y, width: tw, height: th, rx: 4,
+          x, y, width: size, height: size, rx: size * 0.15,
           fill: neg ? 'none' : colour, stroke: colour,
           'stroke-width': 1.7, 'stroke-dasharray': neg ? '3 2' : null
         });
-        d.text([x + tw / 2, y + th / 2], g.label,
-               { fill: neg ? colour : 'var(--surface)', size: 12.5 });
-        x += tw + gap;
+        d.text([x + size / 2, y + size / 2], g.label,
+               { fill: neg ? colour : 'var(--surface)', size: Math.min(13, size * 0.5) });
+        x += size + gap;
       }
-      if (gi < groups.length - 1) x += groupGap;
+      if (gi < groups.length - 1) x += groupGap - gap;
     });
-    if (opt.caption) d.text([d.w / 2, y + th + 20], opt.caption, { fill: MUTED, size: 11.5, bold: false });
     return x;
   }
 
@@ -143,7 +190,6 @@ const Dia = (() => {
       x += pw;
     });
     d.text([padL - 14, padT + h / 2], outside, { fill: UCOL, size: 13 });
-    if (opt.caption) d.text([d.w / 2, d.h - 6], opt.caption, { fill: MUTED, size: 11.5, bold: false });
     return d;
   }
 
@@ -161,8 +207,16 @@ const Dia = (() => {
    *   });
    */
   function angleFan(d, spec) {
-    const c = spec.center || [d.w / 2, d.h * (spec.lowCentre === false ? 0.5 : 0.62)];
-    const R = spec.radius || Math.min(d.w, d.h) * (spec.lowCentre === false ? 0.42 : 0.62);
+    // With a baseline everything is drawn above the line, so the vertex sits
+    // near the bottom of the canvas and the radius fills what is left. Without
+    // one the rays go all round, so the vertex is centred.
+    const onLine = spec.baseline && spec.lowCentre !== false;
+    const c = spec.center ||
+      (onLine ? [d.w / 2, d.h - 22]
+              : [d.w / 2, d.h * (spec.lowCentre === false ? 0.5 : 0.6)]);
+    const R = spec.radius || (onLine
+      ? Math.min(d.w / 2 - 10, d.h - 40)
+      : Math.min(d.w, d.h) * (spec.lowCentre === false ? 0.42 : 0.6));
     const screen = a => -a;                        // maths degrees → screen degrees
 
     // A baseline through the point, drawn full width, for "on a straight line".
@@ -189,7 +243,6 @@ const Dia = (() => {
       });
     });
 
-    if (spec.caption) d.text([d.w / 2, d.h - 8], spec.caption, { fill: MUTED, size: 11.5, bold: false });
     return d;
   }
 
@@ -247,7 +300,6 @@ const Dia = (() => {
       });
     });
 
-    if (opt.caption) d.text([w / 2, h - 6], opt.caption, { fill: MUTED, size: 11.5, bold: false });
     return { P1, P2, dirs };
   }
 
@@ -289,7 +341,6 @@ const Dia = (() => {
       d.line([t[0] - R * 0.95, t[1]], [t[0] + R * 0.95, t[1]], { stroke: HL, width: 3 });
       d.dot(t, { r: 3, fill: HL });
     }
-    if (opt.caption) d.text([d.w / 2, d.h - 8], opt.caption, { fill: MUTED, size: 11.5, bold: false });
     return d;
   }
 
@@ -332,7 +383,6 @@ const Dia = (() => {
         fill: 'var(--dia-fill)', stroke: INK, 'stroke-width': 1.8, 'stroke-linejoin': 'round'
       });
     }
-    if (opt.caption) d.text([d.w / 2, d.h - 4], opt.caption, { fill: MUTED, size: 11.5, bold: false });
     return d;
   }
 

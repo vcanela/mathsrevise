@@ -105,6 +105,11 @@ const Geo = (() => {
     for (let i = 1; i < n; i++) dirs.push(dirs[i - 1] + (180 - angles[i]));
     const vec = dirs.map(d => [Math.cos(d * RAD), Math.sin(d * RAD)]);
 
+    // Many side-length choices close the shape; some are long and thin, which
+    // fits the viewBox badly and crowds the angle labels together. Score every
+    // candidate and keep the roundest, rather than taking the first that works.
+    let best = null, bestScore = Infinity;
+
     for (let attempt = 0; attempt < (tries || 250); attempt++) {
       const s = [];
       for (let i = 0; i < n - 2; i++) s.push(rng ? 0.6 + rng.next() * 0.8 : 1);
@@ -118,24 +123,28 @@ const Geo = (() => {
       if (s1 <= 0.12 || s2 <= 0.12) continue;             // would fold back on itself
       s.push(s1, s2);
 
-      // Keep the shape reasonably chunky: a very long thin polygon fits the
-      // viewBox badly and crowds its own angle labels together.
       const longest = Math.max(...s), shortest = Math.min(...s);
-      if (shortest / longest < 0.42) continue;
+      if (shortest / longest < 0.3) continue;          // a sliver of a side
 
       const pts = [[0, 0]];
       for (let i = 0; i < n - 1; i++) pts.push(add(pts[i], scale(vec[i], s[i])));
       const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
       const bw = Math.max(...xs) - Math.min(...xs), bh = Math.max(...ys) - Math.min(...ys);
-      if (Math.max(bw, bh) / Math.max(Math.min(bw, bh), 1e-9) > 1.55) continue;
+      const aspect = Math.max(bw, bh) / Math.max(Math.min(bw, bh), 1e-9);
+      if (aspect > 2) continue;
 
       // Built in maths orientation; flip to screen coordinates.
       const screen = pts.map(p => [p[0], -p[1]]);
       // Trust nothing: confirm the finished shape really has these angles.
       const got = interiorAngles(screen);
-      if (got.every((g, i) => Math.abs(g - angles[i]) < 0.5)) return screen;
+      if (!got.every((g, i) => Math.abs(g - angles[i]) < 0.5)) continue;
+
+      // Lower is better: square-ish outline, sides not wildly unequal.
+      const score = (aspect - 1) * 2 + (longest / shortest - 1);
+      if (score < bestScore) { bestScore = score; best = screen; }
+      if (bestScore < 0.35) break;                     // good enough, stop looking
     }
-    return null;
+    return best;
   }
 
   /** Quadrilateral / polygon from vertices you supply, in order. */

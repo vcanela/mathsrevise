@@ -368,7 +368,12 @@ const Exercise = (() => {
       const dh = (q.diagram && q.diagram.h) || 180;
       const svg = document.createElementNS(Geo.NS, 'svg');
       svg.setAttribute('class', 'qdiagram');
-      const dia = h('div', { class: 'qdia-wrap' }, svg);
+      // Captions live in HTML rather than inside the SVG, so a long one wraps
+      // instead of running off the edge of the drawing.
+      const dia = h('figure', { class: 'qdia-wrap', style: `width:min(100%, ${dw}px)` }, svg,
+        q.diagram && q.diagram.caption
+          ? h('figcaption', { class: 'dia-caption', html: q.diagram.caption })
+          : null);
       body = h('div', { class: 'qbody with-diagram' });
       card.appendChild(body);
       body.appendChild(dia);
@@ -420,8 +425,8 @@ const Exercise = (() => {
 
       fb.className = 'qfeedback ' + (res.ok ? 'good' : 'bad');
       fb.innerHTML = res.ok
-        ? '<strong>Correct.</strong>' + (q.explain ? ' ' + q.explain : '')
-        : '<strong>Not quite.</strong> ' + res.correctHTML + (q.explain ? '<br>' + q.explain : '');
+        ? '<strong>Correct</strong>' + (q.explain ? q.explain : '')
+        : '<strong>Not quite</strong>' + res.correctHTML + (q.explain ? '<br>' + q.explain : '');
 
       floatPoints(card, pts);
       MJ.typeset([fb]);
@@ -496,8 +501,12 @@ const Exercise = (() => {
       if (ex.draw) {
         const svg = document.createElementNS(Geo.NS, 'svg');
         svg.setAttribute('class', 'qdiagram');
-        inner.appendChild(h('div', { class: 'qdia-wrap' }, svg));
-        try { ex.draw(Geo.canvas(svg, (ex.diagram && ex.diagram.w) || 250, (ex.diagram && ex.diagram.h) || 190), Geo); }
+        const exW = (ex.diagram && ex.diagram.w) || 250;
+        inner.appendChild(h('figure', { class: 'qdia-wrap', style: `width:min(100%, ${exW}px)` }, svg,
+          ex.diagram && ex.diagram.caption
+            ? h('figcaption', { class: 'dia-caption', html: ex.diagram.caption })
+            : null));
+        try { ex.draw(Geo.canvas(svg, exW, (ex.diagram && ex.diagram.h) || 190), Geo); }
         catch (err) { console.error('example diagram failed', err); }
       }
       const steps = h('div', { class: 'example-steps' });

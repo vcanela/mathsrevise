@@ -53,6 +53,7 @@ js/
 tools/
   check-topics.js       generates ~200k questions and checks them (node)
   selftest.html         loads every page in a browser and checks it renders
+  check-diagrams.html   measures every diagram against its own viewBox
   build-pages.js        regenerates the HTML shells from the manifest (node)
 ```
 
@@ -106,7 +107,7 @@ Use `rng` for every random choice, never `Math.random`, or `?set=N` stops being 
 
 ## Testing
 
-Both checks should pass before committing.
+All three checks should pass before committing.
 
 ```bash
 node tools/check-topics.js 400
@@ -126,6 +127,28 @@ http://localhost:8765/tools/selftest.html?runs=6
 Loads every page in an iframe and checks it renders without console errors, that each question
 has an answer control and a prompt, and — the important one — that every angle label on a
 polygon is within 1.5° of the angle actually drawn at that corner.
+
+```bash
+# also with the dev server running:
+http://localhost:8765/tools/check-diagrams.html?runs=4
+```
+
+Measures the real ink bounds of every drawing against its viewBox and reports anything that
+spills over the edge, which is what makes a diagram look cut off. Worth running after changing
+anything in `diagrams.js` or a diagram size.
+
+## The look
+
+The design is meant to read as "worked in pen, on good paper": a warm ground with a faint
+squared grid, IBM Plex Serif for anything mathematical, IBM Plex Sans for interface chrome,
+IBM Plex Mono in the answer boxes. MathJax sets formulas in a serif face, so the prose around
+them is serif too and the two sit together rather than clashing.
+
+Answers are fill-in-the-blank boxes ruled in ochre underneath, multiple choice is lettered
+a) b) c) d) as in a printed exercise, and marking uses pen colours: a green or red rule down
+the margin of the card, a small-caps verdict, and the working set in italic like a note in
+the margin. Colours are all custom properties, and the diagrams read the same tokens, so
+dark mode needs nothing extra from a diagram author.
 
 ## Progress and scoring
 

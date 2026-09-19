@@ -26,12 +26,9 @@
     examples: [
       {
         title: 'Example 1: naming by size',
-        diagram: { w: 240, h: 150 },
+        diagram: { w: 240, h: 150, caption: 'Less than 90°, so this one is acute' },
         draw(d) {
-          Dia.angleFan(d, {
-            rays: [0, 40], marks: [{ from: 0, to: 1, label: '40°' }],
-            caption: 'Less than 90°, so this is acute'
-          });
+          Dia.angleFan(d, { rays: [0, 40], marks: [{ from: 0, to: 1, label: '40°' }] });
         },
         steps: [
           'Under 90° is <strong>acute</strong>; exactly 90° is a <strong>right angle</strong>.',
@@ -503,11 +500,10 @@
     examples: [
       {
         title: 'Example 1: corresponding angles are equal',
-        diagram: { w: 260, h: 175 },
+        diagram: { w: 260, h: 175, caption: 'The same corner at each crossing: the F shape' },
         draw(d) {
           Dia.transversal(d, 62, {
-            mark: [{ at: '1BR', label: '62°' }, { at: '2BR', label: '62°', colour: 'var(--dia-known)' }],
-            caption: 'Same corner at each crossing: the F shape'
+            mark: [{ at: '1BR', label: '62°' }, { at: '2BR', label: '62°', colour: 'var(--dia-known)' }]
           });
         },
         steps: [
@@ -518,11 +514,10 @@
       },
       {
         title: 'Example 2: co-interior angles add to 180°',
-        diagram: { w: 260, h: 175 },
+        diagram: { w: 260, h: 175, caption: 'Between the lines, on the same side: the C shape' },
         draw(d) {
           Dia.transversal(d, 70, {
-            mark: [{ at: '1BR', label: '70°' }, { at: '2TL', label: '110°', colour: 'var(--dia-known)' }],
-            caption: 'Between the lines, same side: the C shape'
+            mark: [{ at: '1BR', label: '70°' }, { at: '2TL', label: '110°', colour: 'var(--dia-known)' }]
           });
         },
         steps: [
@@ -684,15 +679,13 @@
     examples: [
       {
         title: 'Example 1: why the rule is 180(n − 2)',
-        diagram: { w: 230, h: 175 },
+        diagram: { w: 230, h: 165, caption: '5 sides &rarr; 3 triangles &rarr; \\(3 \\times 180 = 540°\\)' },
         draw(d, G) {
-          const p = G.fit(G.regularPolygon(5), 230, 175, 26);
+          const p = G.fit(G.regularPolygon(5), 230, 165, 22);
           d.polygon(p);
           // Diagonals from the first vertex split it into three triangles.
           d.line(p[0], p[2], { stroke: 'var(--dia-accent)', width: 1.6, dash: '4 3' });
           d.line(p[0], p[3], { stroke: 'var(--dia-accent)', width: 1.6, dash: '4 3' });
-          d.text([d.w / 2, d.h - 8], '5 sides → 3 triangles → 3 × 180 = 540°',
-                 { fill: 'var(--dia-muted)', size: 11.5, bold: false });
         },
         steps: [
           'Pick one corner and join it to every other corner.',
@@ -769,15 +762,15 @@
         const hide = rng.int(0, n - 1);
         out.push({
           prompt: `Find the missing angle in this ${Fmt.polyName(n)}.`,
-          diagram: { w: 235, h: 185 },
+          diagram: { w: 250, h: 200 },
           draw: (d, G) => {
-            const p = G.fit(pts, 235, 185, 36);
+            const p = G.fit(pts, 250, 200, 44);
             d.polygon(p);
             // Labels are read back off the finished shape, never assumed.
             const measured = G.interiorAngles(p);
             measured.forEach((a, k) => {
-              if (k === hide) d.angleArc(p, k, { label: 'x', unknown: true, r: 17, size: 12 });
-              else d.angleArc(p, k, { label: deg(r0(a)), r: 17, size: 11.5, colour: 'var(--dia-known)' });
+              if (k === hide) d.angleArc(p, k, { label: 'x', unknown: true, size: 12, gap: 11 });
+              else d.angleArc(p, k, { label: deg(r0(a)), size: 11.5, gap: 11, colour: 'var(--dia-known)' });
             });
           },
           input: { kind: 'number', prefix: m('x') + ' =', suffix: '°', answer: angles[hide], width: 78 },
@@ -897,8 +890,8 @@
     examples: [
       {
         title: 'Example 1: radius and diameter',
-        diagram: { w: 190, h: 165 },
-        draw(d) { Dia.circlePart(d, 'diameter', { caption: 'A diameter passes through the centre' }); },
+        diagram: { w: 190, h: 165, caption: 'A diameter passes through the centre' },
+        draw(d) { Dia.circlePart(d, 'diameter'); },
         steps: [
           'The <strong>radius</strong> goes from the centre to the edge.',
           'The <strong>diameter</strong> goes right across, through the centre.',
@@ -907,8 +900,8 @@
       },
       {
         title: 'Example 2: sector and segment',
-        diagram: { w: 190, h: 165 },
-        draw(d) { Dia.circlePart(d, 'sector', { caption: 'A sector is bounded by two radii and an arc' }); },
+        diagram: { w: 190, h: 165, caption: 'A sector is bounded by two radii and an arc' },
+        draw(d) { Dia.circlePart(d, 'sector'); },
         steps: [
           'A <strong>sector</strong> is cut by two radii, like a slice of pizza.',
           'A <strong>segment</strong> is cut off by a single straight chord.',
@@ -1035,8 +1028,8 @@
     examples: [
       {
         title: 'Example 1: the net of a cube',
-        diagram: { w: 210, h: 165 },
-        draw(d) { Dia.net(d, 'cube', { caption: 'Six squares fold into a cube' }); },
+        diagram: { w: 210, h: 165, caption: 'Six squares, folding into a cube' },
+        draw(d) { Dia.net(d, 'cube'); },
         steps: [
           'Count the squares: six of them, one for each face.',
           'Folding the four in a row makes the sides; the other two become top and bottom.',

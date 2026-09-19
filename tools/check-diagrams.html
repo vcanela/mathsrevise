@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Maths Revise · Diagram fit check</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 2rem; color: #1b2430; }
+    table { border-collapse: collapse; margin-top: 1rem; font-size: 0.82rem; }
+    td, th { border: 1px solid #dfe4ea; padding: 0.25rem 0.55rem; text-align: left; }
+    .bad { color: #b8342b; font-weight: 600; }
+    .ok  { color: #1d7a4c; }
+    #frame { width: 960px; height: 400px; border: 1px solid #ddd; margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>Diagram fit check</h1>
+  <p>
+    Measures the real ink bounds of every SVG against its viewBox and reports anything
+    that spills outside, which is what makes a diagram look cut off.
+  </p>
+  <div id="summary">Running…</div>
+  <table id="out">
+    <tr><th>Page</th><th>Where</th><th>viewBox</th><th>Ink bounds</th><th>Overflow L/R/T/B</th></tr>
+  </table>
+  <iframe id="frame" title="page under test"></iframe>
+
+  <script src="../js/game.js"></script>
+  <script src="../js/manifest.js"></script>
+  <script>
+    'use strict';
+    const SETS = Number(new URLSearchParams(location.search).get('runs')) || 1;
+    const pages = Manifest.UNITS.flatMap(u => u.exercises.flatMap(ex =>
+      Array.from({ length: SETS }, (_, i) => ({
+        url: `../exercises/unit-${u.n}/exercise-${ex.n}.html?set=${i + 1}`, id: ex.id
+      }))));
+
+    const frame = document.getElementById('frame');
+    const out = document.getElementById('out');
+    let bad = 0, total = 0;
+
+    const round = v => Math.round(v * 10) / 10;
+
+    // CACHEBUST: the page HTML itself is cacheable, so force a fresh copy.
+    const bust = u => u + (u.includes('?') ? '&' : '?') + '_=' + Date.now();
+
+    function load(url) {
+      return new Promise(resolve => {
+        frame.onload = () => setTimeout(() => resolve(frame.contentDocument), 500);
+        frame.src = bust(url);
+      });
+    }
+
+    (async () => {
+      for (const p of pages) {
+        const doc = await load(p.url);
+        // Make every collapsed worked-example section visible, or its SVGs
+        // measure as zero.
+        doc.querySelectorAll('.examples-body').forEach(b => { b.style.display = ''; });
+        await new Promise(r => setTimeout(r, 200));
+
+        doc.querySelectorAll('svg').forEach(svg => {
+          const vb = (svg.getAttribute('viewBox') || '').split(/\s+/).map(Number);
+          if (vb.length !== 4) return;
+          let bb;
+          try { bb = svg.getBBox(); } catch (_) { return; }
+          if (!bb || (bb.width === 0 && bb.height === 0)) return;
+          total++;
+          const over = {
+            l: Math.max(0, vb[0] - bb.x),
+            t: Math.max(0, vb[1] - bb.y),
+            r: Math.max(0, (bb.x + bb.width) - (vb[0] + vb[2])),
+            b: Math.max(0, (bb.y + bb.height) - (vb[1] + vb[3]))
+          };
+          const worst = Math.max(over.l, over.r, over.t, over.b);
+          if (worst < 0.5) return;
+          bad++;
+          const card = svg.closest('.example') || svg.closest('.qcard');
+          const where = card
+            ? (card.classList.contains('example')
+                ? 'example: ' + (card.querySelector('h3') || {}).textContent
+                : 'Q' + card.id.replace('q', ''))
+            : '?';
+          const tr = document.createElement('tr');
+          [p.url.replace('../exercises/', ''), where,
+           `${vb[2]}×${vb[3]}`,
+           `x ${round(bb.x)}..${round(bb.x + bb.width)}, y ${round(bb.y)}..${round(bb.y + bb.height)}`,
+           `${round(over.l)} / ${round(over.r)} / ${round(over.t)} / ${round(over.b)}`
+          ].forEach(t => { const td = document.createElement('td'); td.textContent = t; tr.appendChild(td); });
+          tr.className = 'bad';
+          out.appendChild(tr);
+        });
+      }
+      const s = document.getElementById('summary');
+      s.textContent = bad
+        ? `${bad} of ${total} diagrams spill outside their viewBox.`
+        : `All ${total} diagrams fit inside their viewBox.`;
+      s.className = bad ? 'bad' : 'ok';
+      document.title = bad ? `FAIL (${bad})` : 'PASS';
+    })();
+  </script>
+</body>
+</html>

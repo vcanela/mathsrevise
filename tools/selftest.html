@@ -64,6 +64,9 @@
       if (problems.length) failures++;
     }
 
+    // The page HTML itself is cacheable, so force a fresh copy each time.
+    const bust = u => u + (u.includes('?') ? '&' : '?') + '_=' + Date.now();
+
     function load(url) {
       return new Promise(resolve => {
         const errors = [];
@@ -75,7 +78,7 @@
           // Give the page a moment to render and typeset.
           setTimeout(() => resolve({ doc: frame.contentDocument, errors }), 450);
         };
-        frame.src = url;
+        frame.src = bust(url);
       });
     }
 

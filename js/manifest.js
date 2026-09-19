@@ -51,7 +51,7 @@ const Manifest = (() => {
       ]
     },
     {
-      n: 5, short: 'Unit 5', name: 'Unit 5: Maths in Words', icon: '“”',
+      n: 5, short: 'Unit 5', name: 'Unit 5: Maths in Words', icon: '→',
       blurb: 'Turning English into algebra and algebra back into English.',
       exercises: [
         { n: 1, id: 'u5e1', title: 'Words to Expressions', tag: 'Writing the algebra' },

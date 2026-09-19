@@ -21,11 +21,11 @@
     examples: [
       {
         title: 'Example 1: \\(3a + 2b + 2a + b\\)',
-        diagram: { w: 260, h: 120 },
+        diagram: { w: 260, h: 96, caption: 'Five \\(a\\)-tiles and three \\(b\\)-tiles' },
         draw(d) {
           Dia.tiles(d, [
             { label: 'a', count: 5 }, { label: 'b', count: 3 }
-          ], { y: 34, caption: 'Five a-tiles and three b-tiles' });
+          ], { y: 30 });
         },
         steps: [
           'Find the like terms: the \\(a\\) terms are \\(3a\\) and \\(2a\\); the \\(b\\) terms are \\(2b\\) and \\(b\\).',
@@ -227,12 +227,12 @@
     examples: [
       {
         title: 'Example 1: \\(4(x + 3)\\)',
-        diagram: { w: 250, h: 130 },
+        diagram: { w: 250, h: 120, caption: 'The whole rectangle: \\(4x + 12\\)' },
         draw(d) {
           Dia.areaModel(d, '4', [
             { label: 'x', product: '4x', width: 2 },
             { label: '3', product: '12', width: 1.4 }
-          ], { caption: 'Area of the whole rectangle = 4x + 12' });
+          ]);
         },
         steps: [
           'The rectangle is 4 tall, and \\(x + 3\\) wide.',
@@ -564,8 +564,8 @@
     examples: [
       {
         title: 'Example 1: \\(2x + 3 = 11\\)',
-        diagram: { w: 260, h: 150 },
-        draw(d) { Dia.balance(d, { lx: 2, lc: 3, rx: 0, rc: 11 }, { caption: '2x + 3 = 11' }); },
+        diagram: { w: 260, h: 150, caption: 'Both pans weigh the same: \\(2x + 3 = 11\\)' },
+        draw(d) { Dia.balance(d, { lx: 2, lc: 3, rx: 0, rc: 11 }); },
         steps: [
           'The scales balance, so both sides weigh the same.',
           'Take 3 away from <em>both</em> sides: \\(2x = 8\\). The scales still balance.',
@@ -746,8 +746,8 @@
     examples: [
       {
         title: 'Example 1: \\(5x + 2 = 3x + 10\\)',
-        diagram: { w: 280, h: 150 },
-        draw(d) { Dia.balance(d, { lx: 5, lc: 2, rx: 3, rc: 10 }, { caption: '5x + 2 = 3x + 10' }); },
+        diagram: { w: 280, h: 160, caption: '\\(x\\) boxes on both pans: \\(5x + 2 = 3x + 10\\)' },
+        draw(d) { Dia.balance(d, { lx: 5, lc: 2, rx: 3, rc: 10 }); },
         steps: [
           'Both pans hold \\(x\\) boxes. Take 3 boxes off <em>each</em> side: \\(2x + 2 = 10\\).',
           'Now it is an ordinary one-sided equation. Take 2 off both sides: \\(2x = 8\\).',

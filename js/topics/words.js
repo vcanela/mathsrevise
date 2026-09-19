@@ -90,12 +90,12 @@
       },
       {
         title: 'Example 2: "3 times the sum of n and 4"',
-        diagram: { w: 240, h: 125 },
+        diagram: { w: 240, h: 118, caption: '\\(3(n + 4) = 3n + 12\\)' },
         draw(d) {
           Dia.areaModel(d, '3', [
             { label: 'n', product: '3n', width: 2 },
             { label: '4', product: '12', width: 1.4 }
-          ], { caption: '3(n + 4) = 3n + 12' });
+          ]);
         },
         steps: [
           'The sum of \\(n\\) and 4 is \\(n + 4\\).',
@@ -400,8 +400,8 @@
     examples: [
       {
         title: 'Example: “I think of a number, double it and add 7. The answer is 23.”',
-        diagram: { w: 250, h: 140 },
-        draw(d) { Dia.balance(d, { lx: 2, lc: 7, rx: 0, rc: 23 }, { caption: '2n + 7 = 23' }); },
+        diagram: { w: 250, h: 150, caption: '\\(2n + 7 = 23\\)' },
+        draw(d) { Dia.balance(d, { lx: 2, lc: 7, rx: 0, rc: 23 }); },
         steps: [
           'Let \\(n\\) be the number I thought of. Write that down first.',
           '"Double it and add 7" is \\(2n + 7\\). "The answer is 23" gives the equals sign.',
