@@ -357,6 +357,14 @@ const Exercise = (() => {
     const head = h('div', { class: 'qhead' },
       h('span', { class: 'qnum', text: n }),
       h('div', { class: 'qtext', html: q.prompt }),
+      // In a mixed session, say which exercise the question came from and link
+      // to it, so a student who keeps missing one kind can go and drill it.
+      q.source
+        ? h('a', {
+            class: 'qsource', href: state.base + q.source.href,
+            title: 'Practise this on its own: ' + q.source.title
+          }, q.source.label)
+        : null,
       q.tag ? h('span', { class: 'qtag', text: q.tag }) : null);
     card.appendChild(head);
 
@@ -469,6 +477,23 @@ const Exercise = (() => {
       h('option', { value: 'free', text: 'Free practice (new every time)', selected: set === null }),
       [1, 2, 3, 4, 5, 6].map(n => h('option', { value: n, text: 'Set ' + n, selected: set === n })));
 
+    // A practice session has no set picker: its questions are chosen for the
+    // student, and today's set is already fixed by the date.
+    if (cfg.practice) {
+      return h('div', { class: 'toolbar' },
+        h('button', {
+          type: 'button', class: 'tool-btn',
+          onclick() {
+            // Today's set is otherwise fixed by the date, so shuffling has to
+            // ask for a different one explicitly.
+            const u = new URL(location.href);
+            u.searchParams.set('r', String(Math.floor(Math.random() * 1e6)));
+            location.href = u.pathname + u.search;
+          }
+        }, '↻ Shuffle this set'),
+        h('span', { class: 'tool-note', text: 'Chosen from the topics you have seen least recently.' }));
+    }
+
     return h('div', { class: 'toolbar' },
       h('button', { type: 'button', class: 'tool-btn primary', onclick: () => location.reload() },
         '↻ New questions'),
@@ -552,23 +577,31 @@ const Exercise = (() => {
 
   // ── Main ──────────────────────────────────────────────────────────────────
   function run(cfg) {
-    const unit  = Manifest.unit(cfg.unit);
+    // A practice session is not inside a unit, and its page sits at the site
+    // root rather than two levels down.
+    const practice = !!cfg.practice;
+    const base  = cfg.base === undefined ? '../../' : cfg.base;
+    const unit  = practice ? null : Manifest.unit(cfg.unit);
     const level = MRG.getCurrentLevel();
     const rng   = Seed.rng(cfg.id);
     const difficulty = level.level >= 4 ? 'expert' : level.level >= 3 ? 'hard' : 'core';
 
     let questions;
     try {
-      questions = cfg.generate(rng, difficulty);
+      questions = cfg.questions || cfg.generate(rng, difficulty);
     } catch (err) {
       console.error('question generation failed', err);
       document.body.appendChild(h('p', { class: 'fatal', text: 'Could not build the questions: ' + err.message }));
       return;
     }
+    if (!questions || !questions.length) {
+      document.body.appendChild(h('p', { class: 'fatal', text: 'No questions could be built.' }));
+      return;
+    }
     const total = questions.length;
     const maxScore = total * 15;
 
-    const state = { level, done: new Set(), score: 0, onAnswered: () => {} };
+    const state = { level, done: new Set(), score: 0, base, onAnswered: () => {} };
 
     // ── Page chrome ──
     document.title = cfg.title + ' · Maths Revision';
@@ -576,15 +609,21 @@ const Exercise = (() => {
     root.innerHTML = '';
 
     root.appendChild(h('header', { class: 'page-head' },
+      practice ? h('span', { class: 'eyebrow', text: cfg.eyebrow || 'Daily practice' }) : null,
       h('h1', { text: cfg.title }),
-      h('p', { text: cfg.blurb || unit.name })));
+      h('p', { text: cfg.blurb || (unit ? unit.name : '') })));
 
-    root.appendChild(h('nav', { class: 'crumbs' },
-      h('a', { href: '../../index.html', text: 'Home' }),
-      h('span', { text: '/' }),
-      h('a', { href: `../../units/unit-${cfg.unit}.html`, text: unit.short }),
-      h('span', { text: '/' }),
-      h('span', { class: 'here', text: cfg.title })));
+    root.appendChild(practice
+      ? h('nav', { class: 'crumbs' },
+          h('a', { href: base + 'index.html', text: 'Home' }),
+          h('span', { text: '/' }),
+          h('span', { class: 'here', text: cfg.title }))
+      : h('nav', { class: 'crumbs' },
+          h('a', { href: base + 'index.html', text: 'Home' }),
+          h('span', { text: '/' }),
+          h('a', { href: `${base}units/unit-${cfg.unit}.html`, text: unit.short }),
+          h('span', { text: '/' }),
+          h('span', { class: 'here', text: cfg.title })));
 
     const main = h('main');
     root.appendChild(main);
@@ -594,9 +633,18 @@ const Exercise = (() => {
     if (ex) main.appendChild(ex);
 
     main.appendChild(h('div', { class: 'section-head' },
-      h('h2', { text: 'Your turn' }),
+      h('h2', { text: practice ? 'Mixed questions' : 'Your turn' }),
       h('span', { class: 'qcount', text: total + ' questions' })));
     main.appendChild(toolbar(cfg));
+    if (practice && cfg.topics && cfg.topics.length) {
+      main.appendChild(h('p', { class: 'practice-drawn' },
+        'Drawn from ',
+        cfg.topics.map((t, i) => [
+          i ? ', ' : '',
+          h('a', { href: base + `exercises/unit-${t.unit}/exercise-${t.n}.html`, title: Practice.reason(t) },
+            `${t.unit}.${t.n} ${t.title}`)
+        ]).flat()));
+    }
 
     if (difficulty === 'expert') {
       main.appendChild(h('div', { class: 'mode-flag', text: 'Expert mode: these questions are the hard set.' }));
@@ -616,10 +664,13 @@ const Exercise = (() => {
     const results = h('section', { class: 'results', style: 'display:none' });
     main.appendChild(results);
 
-    main.appendChild(h('a', { class: 'back-link', href: `../../units/unit-${cfg.unit}.html` },
-      '← Back to ' + unit.short));
+    main.appendChild(practice
+      ? h('a', { class: 'back-link', href: base + 'index.html' }, '← Back to all units')
+      : h('a', { class: 'back-link', href: `${base}units/unit-${cfg.unit}.html` },
+          '← Back to ' + unit.short));
 
-    root.appendChild(h('footer', { class: 'page-foot', text: 'Maths Revision · ' + unit.name }));
+    root.appendChild(h('footer', { class: 'page-foot',
+      text: 'Maths Revision · ' + (unit ? unit.name : 'Daily practice') }));
 
     const modal = levelUpModal();
     root.appendChild(modal.node);
@@ -640,30 +691,58 @@ const Exercise = (() => {
 
     function finish() {
       const score  = Math.max(0, state.score);
-      const result = MRG.finishExercise(cfg.id, score, maxScore);
-      const stars  = '★'.repeat(result.stars) + '☆'.repeat(3 - result.stars);
-      let xpLine;
-      if (result.xpGained > 0) {
-        xpLine = h('p', { class: 'results-xp', html: `+${result.xpGained} XP &rarr; ${result.newTotal} XP total` });
-      } else if (result.stars === 0) {
-        xpLine = h('p', { class: 'results-note', html: `No XP yet. Reach one star (${Math.ceil(maxScore * 0.47)} pts) to earn some.` });
-      } else {
-        xpLine = h('p', { class: 'results-note', text: 'No new XP: you have already matched your best here.' });
-      }
+      const result = practice
+        ? MRG.finishPractice(score, maxScore, cfg.topicIds)
+        : MRG.finishExercise(cfg.id, score, maxScore);
+
       const wrong = questions.map((_, i) => i + 1).filter(n => cards[n - 1].card.classList.contains('was-wrong'));
 
       results.innerHTML = '';
-      results.appendChild(h('div', { class: 'results-stars', text: stars }));
-      results.appendChild(h('p', { class: 'results-score', text: `${score} / ${maxScore} points` }));
-      results.appendChild(xpLine);
+
+      if (practice) {
+        results.appendChild(h('div', { class: 'results-tick', text: '✓' }));
+        results.appendChild(h('p', { class: 'results-score',
+          text: `${total - wrong.length} of ${total} right` }));
+      } else {
+        const stars = '★'.repeat(result.stars) + '☆'.repeat(3 - result.stars);
+        results.appendChild(h('div', { class: 'results-stars', text: stars }));
+        results.appendChild(h('p', { class: 'results-score', text: `${score} / ${maxScore} points` }));
+      }
+
+      if (result.xpGained > 0) {
+        results.appendChild(h('p', { class: 'results-xp',
+          html: `+${result.xpGained} XP &rarr; ${result.newTotal} XP total` }));
+      } else if (!practice && result.stars === 0) {
+        results.appendChild(h('p', { class: 'results-note',
+          html: `No XP yet. Reach one star (${Math.ceil(maxScore * 0.47)} pts) to earn some.` }));
+      } else if (!practice) {
+        results.appendChild(h('p', { class: 'results-note',
+          text: 'No new XP: you have already matched your best here.' }));
+      }
+
+      // The week's progress, which is the thing we actually want them to come
+      // back for. Never framed as something lost.
+      const wk = result.week;
+      if (wk) {
+        results.appendChild(h('p', { class: 'results-week' },
+          result.firstToday ? 'Today is done. ' : 'Already counted for today. ',
+          wk.met
+            ? h('strong', { text: `That is ${wk.done} days this week — target met.` })
+            : h('strong', { text: `${wk.done} of ${wk.target} days this week.` })));
+      }
+
       if (wrong.length) {
         results.appendChild(h('p', { class: 'results-note' },
           'Worth another look: ',
           wrong.map((n, i) => [i ? ', ' : '', h('a', { href: '#q' + n, text: 'Q' + n })]).flat()));
       }
+
       results.appendChild(h('div', { class: 'results-btns' },
-        h('button', { type: 'button', class: 'tool-btn primary', onclick: () => location.reload() }, 'Try a new set'),
-        h('a', { class: 'tool-btn', href: `../../units/unit-${cfg.unit}.html` }, 'Back to ' + unit.short)));
+        h('button', { type: 'button', class: 'tool-btn primary', onclick: () => location.reload() },
+          practice ? 'Another set' : 'Try a new set'),
+        practice
+          ? h('a', { class: 'tool-btn', href: base + 'index.html' }, 'Home')
+          : h('a', { class: 'tool-btn', href: `${base}units/unit-${cfg.unit}.html` }, 'Back to ' + unit.short)));
       results.style.display = '';
       results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 

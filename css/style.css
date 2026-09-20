@@ -221,6 +221,130 @@ main {
 }
 .xp-text strong { color: var(--ink); font-weight: 600; }
 
+/* ── Daily practice panel ─────────────────────────────────────────────────── */
+.habit {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 1.6rem;
+  box-shadow: var(--shadow);
+}
+.habit-done { border-left-color: var(--good); }
+
+.habit-main {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; flex-wrap: wrap;
+}
+.habit-text h2 {
+  font-family: var(--font-serif);
+  font-size: 1.15rem; font-weight: 600;
+}
+.habit-sub {
+  font-family: var(--font-sans);
+  font-size: 0.86rem; color: var(--ink-soft);
+  margin-top: 0.2rem; max-width: 34rem;
+}
+.habit-go { flex: none; white-space: nowrap; }
+
+.habit-week {
+  display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;
+  margin-top: 0.95rem; padding-top: 0.85rem;
+  border-top: 1px solid var(--rule-soft);
+}
+.week-dots { display: flex; gap: 0.3rem; }
+.week-dot {
+  width: 1.55rem; height: 1.55rem;
+  display: grid; place-items: center;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-s);
+  background: var(--surface-2);
+  font-family: var(--font-sans);
+  font-size: 0.68rem; font-weight: 600;
+  color: var(--ink-faint);
+}
+.week-dot.done {
+  background: var(--accent); border-color: var(--accent);
+  color: var(--surface);
+}
+.week-dot.today { box-shadow: 0 0 0 2px var(--accent-soft); border-color: var(--accent); }
+.week-dot.future { opacity: 0.45; }
+.habit-weekline {
+  font-family: var(--font-sans);
+  font-size: 0.85rem; color: var(--ink-soft);
+}
+
+.habit-cal { margin-top: 0.9rem; }
+.habit-cal summary {
+  font-family: var(--font-sans);
+  font-size: 0.8rem; color: var(--ink-faint);
+  cursor: pointer; list-style: none;
+}
+.habit-cal summary::-webkit-details-marker { display: none; }
+.habit-cal summary::before {
+  content: '';
+  display: inline-block; vertical-align: middle;
+  margin-right: 0.4rem;
+  width: 0; height: 0;
+  border-left: 5px solid var(--accent);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  transition: transform .18s ease;
+}
+.habit-cal[open] summary::before { transform: rotate(90deg); }
+.habit-cal summary:hover { color: var(--ink-soft); }
+
+.cal {
+  display: flex; gap: 3px; margin-top: 0.7rem;
+  overflow-x: auto; padding-bottom: 0.2rem;
+}
+.cal-col { display: flex; flex-direction: column; gap: 3px; }
+.cal-label {
+  width: 0.9rem; height: 11px;
+  font-family: var(--font-sans); font-size: 0.55rem; line-height: 11px;
+  color: var(--ink-faint); text-align: right; padding-right: 2px;
+}
+.cal-cell {
+  width: 11px; height: 11px;
+  border-radius: 2px;
+  background: var(--surface-2);
+  border: 1px solid var(--rule-soft);
+}
+.cal-cell.done { background: var(--accent); border-color: var(--accent); }
+.cal-cell.today { box-shadow: 0 0 0 1.5px var(--accent-soft); }
+.cal-cell.future { opacity: 0.35; }
+
+/* Where a mixed question came from */
+.qsource {
+  font-family: var(--font-mono);
+  font-size: 0.72rem; font-weight: 500;
+  color: var(--brand-ink);
+  background: var(--brand-soft);
+  border-radius: var(--radius-s);
+  padding: 0.1rem 0.4rem;
+  text-decoration: none; white-space: nowrap;
+}
+.qsource:hover { background: var(--brand); color: var(--surface); }
+
+.practice-drawn {
+  font-family: var(--font-sans);
+  font-size: 0.82rem; color: var(--ink-faint);
+  margin: -0.4rem 0 1rem;
+}
+.practice-drawn a { color: var(--ink-soft); text-decoration: none; }
+.practice-drawn a:hover { color: var(--brand); text-decoration: underline; }
+
+.results-tick {
+  font-family: var(--font-serif);
+  font-size: 2.1rem; line-height: 1; color: var(--good);
+}
+.results-week {
+  font-family: var(--font-sans);
+  font-size: 0.88rem; color: var(--ink-soft); margin-top: 0.5rem;
+}
+.results-week strong { color: var(--accent-ink); }
+
 /* ── Worked examples: set like a textbook ─────────────────────────────────── */
 .examples { margin-bottom: 2rem; }
 .examples-toggle {

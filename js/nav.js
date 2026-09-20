@@ -69,6 +69,7 @@ const Nav = (() => {
     const main = h('main');
     root.appendChild(main);
     main.appendChild(xpStrip());
+    main.appendChild(Habit.panel(''));
 
     main.appendChild(h('p', { class: 'intro' },
       'Every exercise builds new questions each time you open it, so you can practise the same topic ' +

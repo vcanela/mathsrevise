@@ -22,6 +22,7 @@ vm.runInThisContext(fs.readFileSync(path.join(ROOT, 'js/manifest.js'), 'utf8'));
 const TOPIC_FILE = { 1: 'number', 2: 'algebra', 3: 'geometry', 4: 'combined', 5: 'words' };
 
 const CORE = ['rng', 'format', 'algebra', 'geometry', 'diagrams', 'game', 'manifest', 'timer', 'engine'];
+const ALL_TOPICS = ['number', 'algebra', 'geometry', 'combined', 'words'].map(t => 'topics/' + t);
 
 /**
  * A short hash of every script and stylesheet, stamped onto the asset links.
@@ -86,8 +87,17 @@ function write(rel, content) {
 write('index.html', shell({
   title: 'Maths Revision',
   up: '',
-  scripts: ['game', 'manifest', 'engine', 'nav'],
+  scripts: ['game', 'manifest', 'engine', 'habit', 'nav'],
   boot: 'Nav.renderHome();'
+}));
+
+// ── Daily practice ───────────────────────────────────────────────────────────
+// Needs every topic loaded, since a session draws from across the whole site.
+write('practice.html', shell({
+  title: "Today's practice · Maths Revision",
+  up: '',
+  scripts: [...CORE, ...ALL_TOPICS, 'practice'],
+  boot: 'Practice.start();'
 }));
 
 // ── Unit pages ───────────────────────────────────────────────────────────────

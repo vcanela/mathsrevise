@@ -6,6 +6,9 @@ places where algebra and geometry meet. No frameworks, no build step, no server.
 
 **5 units · 21 exercises · 10 questions each, generated fresh every time.**
 
+There is also a **daily practice** session: about ten questions mixed across the units,
+chosen from whatever the student has seen least recently.
+
 ---
 
 ## Two things worth knowing before you change anything
@@ -29,6 +32,7 @@ never position vertices by hand and label them with numbers chosen separately.
 
 ```
 index.html              home page (rendered from the manifest)
+practice.html           the daily mixed practice session
 units/unit-N.html       one per unit
 exercises/unit-N/…      one per exercise; each is a ~20 line shell
 css/style.css           the whole stylesheet, light and dark
@@ -36,7 +40,9 @@ js/
   manifest.js           the list of units and exercises — the single source of truth
   engine.js             renders an exercise page: cards, inputs, scoring, results
   nav.js                renders the home and unit pages
-  game.js               XP, levels, stars, saved in localStorage
+  practice.js           picks what is due and builds the mixed session
+  habit.js              the daily panel: weekly target and practice calendar
+  game.js               XP, levels, stars and practice days, in localStorage
   timer.js              the per-question countdown bar
   rng.js                seeded random numbers (this is what ?set=N controls)
   algebra.js            parses and compares typed algebraic expressions
@@ -150,12 +156,41 @@ the margin of the card, a small-caps verdict, and the working set in italic like
 the margin. Colours are all custom properties, and the diagrams read the same tokens, so
 dark mode needs nothing extra from a diagram author.
 
+## Daily practice and keeping it up
+
+`practice.html` builds a short mixed session, and this is the part meant to bring students
+back. Two deliberate choices sit behind it.
+
+**The questions are chosen, not random.** `Practice.priorities()` ranks every topic by how
+overdue it is: never attempted comes first, then longest since last seen, then fewest stars.
+That is spaced repetition. Mixing topics in one session also forces the student to work out
+*which* method applies rather than being told by the page heading, which is where most marks
+actually go missing. Each question is tagged with the exercise it came from and links there,
+so a student who keeps missing one kind can go and drill it.
+
+Today's session is seeded from the date, so it is one specific thing all day. `?r=…` asks for
+a different one (the shuffle button) and `?set=N` seeds it identically for everyone, which is
+how a class can be given the same practice.
+
+**Regularity is a weekly target, not a streak.** The goal is four days a week, resetting every
+Monday, shown as seven dots plus a calendar of recent weeks. A streak is a number you can
+lose, and the students most likely to lose one — away for a weekend, off ill, on holiday over
+a term break — are exactly the ones worth keeping. A weekly target costs a missed day and
+nothing more, and the calendar gives the satisfying part of a streak with no failure state.
+If you disagree and want a streak, `MRG.habitSummary()` already returns the longest run.
+
 ## Progress and scoring
 
-XP, stars and best scores live in `localStorage` on the student's own device. Nothing is sent
-anywhere and there is no account. Levels unlock a timer (level 2), a tighter countdown
-(level 3) and the harder question sets (level 4). "Reset progress on this device" is on the
-home page.
+XP, stars, best scores and practice days live in `localStorage` on the student's own device.
+Nothing is sent anywhere and there is no account. Levels unlock a timer (level 2), a tighter
+countdown (level 3) and the harder question sets (level 4). "Reset progress on this device"
+is on the home page.
+
+Star XP is awarded once per star tier per exercise, as before. On top of that there is a small
+**effort XP** award for finishing any set, so the bar still moves for a student who has already
+three-starred everything: without it, XP froze permanently and any daily goal measured in XP
+became impossible. Effort XP is capped per day, so it cannot be ground into unlocking Expert
+mode and its harder questions.
 
 ## Deployment
 

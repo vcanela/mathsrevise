@@ -29,10 +29,13 @@
   <script>
     'use strict';
     const SETS = Number(new URLSearchParams(location.search).get('runs')) || 1;
-    const pages = Manifest.UNITS.flatMap(u => u.exercises.flatMap(ex =>
-      Array.from({ length: SETS }, (_, i) => ({
-        url: `../exercises/unit-${u.n}/exercise-${ex.n}.html?set=${i + 1}`, id: ex.id
-      }))));
+    const pages = [
+      ...Array.from({ length: SETS }, (_, i) => ({ url: `../practice.html?r=${i + 1}`, id: 'practice' })),
+      ...Manifest.UNITS.flatMap(u => u.exercises.flatMap(ex =>
+        Array.from({ length: SETS }, (_, i) => ({
+          url: `../exercises/unit-${u.n}/exercise-${ex.n}.html?set=${i + 1}`, id: ex.id
+        }))))
+    ];
 
     const frame = document.getElementById('frame');
     const out = document.getElementById('out');

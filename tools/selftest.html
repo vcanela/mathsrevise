@@ -38,6 +38,7 @@
 
     const pages = [
       { url: '../index.html', kind: 'home' },
+      { url: '../practice.html', kind: 'exercise', id: 'practice' },
       ...Manifest.UNITS.map(u => ({ url: `../units/unit-${u.n}.html`, kind: 'unit' })),
       ...Manifest.UNITS.flatMap(u => u.exercises.flatMap(ex => sets.map(s => ({
         url: `../exercises/unit-${u.n}/exercise-${ex.n}.html?set=${s}`, kind: 'exercise', id: ex.id

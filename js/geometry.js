@@ -239,6 +239,20 @@ const Geo = (() => {
     svgEl.setAttribute('role', 'img');
     svgEl.innerHTML = '';
 
+    // Boxes of the angle labels already placed. Long algebraic labels such as
+    // "3x - 19" are wide enough that two adjacent corners of a triangle will
+    // collide, so each new label is nudged along its own bisector until it
+    // has room.
+    const placed = [];
+    const labelBox = (cx, cy, text, size) => {
+      const wEst = String(text).length * size * 0.56 + 4;
+      const hEst = size * 1.25;
+      return { x: cx - wEst / 2, y: cy - hEst / 2, w: wEst, h: hEst };
+    };
+    const clashes = b => placed.some(p =>
+      b.x < p.x + p.w && b.x + b.w > p.x && b.y < p.y + p.h && b.y + b.h > p.y);
+    const inside = b => b.x >= 0 && b.y >= 0 && b.x + b.w <= w && b.y + b.h <= h;
+
     const api = {
       node: svgEl, w, h,
 
@@ -339,10 +353,29 @@ const Geo = (() => {
           // bisector, towards the middle of the shape, or it runs into the
           // sides meeting at this corner.
           const extra = Math.max(0, String(o.label).length - 3) * 2.2;
-          const dist = r + (o.gap === undefined ? 13 : o.gap) + extra;
-          api.text(add(V, fromDir(bis, dist)), o.label, {
-            fill: colour, size: o.size || 13, bold: true
-          });
+          const base = r + (o.gap === undefined ? 13 : o.gap) + extra;
+          const size = o.size || 13;
+
+          // Walk outwards along the bisector until the label has room. If
+          // nothing inside works, put it on the far side of the vertex, which
+          // is outside the shape and usually empty.
+          let pos = null, box = null;
+          for (const [dir, steps] of [[1, [0, 5, 10, 16, 22]], [-1, [10, 16, 22, 28]]]) {
+            for (const step of steps) {
+              const d = base + step;
+              const p = add(V, fromDir(dir > 0 ? bis : bis + 180, d));
+              const b = labelBox(p[0], p[1], o.label, size);
+              if (!inside(b)) continue;
+              if (!clashes(b)) { pos = p; box = b; break; }
+            }
+            if (pos) break;
+          }
+          if (!pos) {
+            pos = add(V, fromDir(bis, base));
+            box = labelBox(pos[0], pos[1], o.label, size);
+          }
+          placed.push(box);
+          api.text(pos, o.label, { fill: colour, size, bold: true });
         }
         return api;
       },
