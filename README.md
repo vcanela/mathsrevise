@@ -6,8 +6,8 @@ places where algebra and geometry meet. No frameworks, no build step, no server.
 
 **5 units · 21 exercises · 10 questions each, generated fresh every time.**
 
-There is also a **daily practice** session: about ten questions mixed across the units,
-chosen from whatever the student has seen least recently.
+There is also a **daily practice** session: five questions, about two minutes, mixed across
+the units and chosen from whatever the student has seen least recently.
 
 ---
 
@@ -159,7 +159,12 @@ dark mode needs nothing extra from a diagram author.
 ## Daily practice and keeping it up
 
 `practice.html` builds a short mixed session, and this is the part meant to bring students
-back. Two deliberate choices sit behind it.
+back. Three deliberate choices sit behind it.
+
+**It is short on purpose.** Five questions, about two minutes. The daily bar has to be low
+enough that doing it is easier than skipping it; a five minute task gets put off on a busy
+evening and the habit dies. Anyone with more time presses "Five more", or opens any of the 21
+exercises, which are as long as they ever were.
 
 **The questions are chosen, not random.** `Practice.priorities()` ranks every topic by how
 overdue it is: never attempted comes first, then longest since last seen, then fewest stars.
@@ -178,6 +183,10 @@ lose, and the students most likely to lose one — away for a weekend, off ill, 
 a term break — are exactly the ones worth keeping. A weekly target costs a missed day and
 nothing more, and the calendar gives the satisfying part of a streak with no failure state.
 If you disagree and want a streak, `MRG.habitSummary()` already returns the longest run.
+
+Finishing the daily mix leads with "That is today's practice done" rather than the score, and
+says outright that coming back tomorrow counts for more than doing extra now. That is not just
+encouragement: effort XP is capped per day, so it is literally true.
 
 ## Progress and scoring
 

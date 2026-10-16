@@ -17,7 +17,11 @@
 
 const Practice = (() => {
 
-  const SESSION_QUESTIONS = 10;
+  // Short on purpose. The daily bar has to be low enough that it is easier to
+  // do than to skip; a five minute task gets put off on a busy evening and the
+  // habit dies. Five questions from five different topics is about two
+  // minutes, and the student who wants more can simply go again.
+  const SESSION_QUESTIONS = 5;
   const TOPICS_PER_SESSION = 5;
 
   /** Whole days between an ISO day key and today. */
@@ -177,8 +181,8 @@ const Practice = (() => {
       id: 'practice',
       eyebrow: set !== null ? 'Shared practice set ' + set : 'Daily practice',
       title: done ? 'More practice' : "Today's practice",
-      blurb: 'A mix of questions from across the units, chosen from what you have ' +
-             'seen least recently. Each one says which exercise it came from.',
+      blurb: 'Five questions from across the units, chosen from what you have seen ' +
+             'least recently. Each one says which exercise it came from.',
       questions: s.questions,
       topicIds: s.topicIds,
       topics: s.topics

@@ -43,6 +43,17 @@ const Exercise = (() => {
 
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
+  /**
+   * Load a different practice set. A plain reload would not do: today's
+   * session is seeded from the date, so it would hand back the same five
+   * questions. Asking for a new `r` is what makes it different.
+   */
+  function freshSet() {
+    const u = new URL(location.href);
+    u.searchParams.set('r', String(Math.floor(Math.random() * 1e6)));
+    location.href = u.pathname + u.search;
+  }
+
   // ── Input renderers ───────────────────────────────────────────────────────
   // Each returns { node, filled(), check() → {ok, correctHTML}, lock(), focus() }
   const Inputs = {};
@@ -481,16 +492,8 @@ const Exercise = (() => {
     // student, and today's set is already fixed by the date.
     if (cfg.practice) {
       return h('div', { class: 'toolbar' },
-        h('button', {
-          type: 'button', class: 'tool-btn',
-          onclick() {
-            // Today's set is otherwise fixed by the date, so shuffling has to
-            // ask for a different one explicitly.
-            const u = new URL(location.href);
-            u.searchParams.set('r', String(Math.floor(Math.random() * 1e6)));
-            location.href = u.pathname + u.search;
-          }
-        }, '↻ Shuffle this set'),
+        h('button', { type: 'button', class: 'tool-btn', onclick: freshSet },
+          '↻ Shuffle this set'),
         h('span', { class: 'tool-note', text: 'Chosen from the topics you have seen least recently.' }));
     }
 
@@ -702,7 +705,12 @@ const Exercise = (() => {
       if (practice) {
         results.appendChild(h('div', { class: 'results-tick', text: '✓' }));
         results.appendChild(h('p', { class: 'results-score',
-          text: `${total - wrong.length} of ${total} right` }));
+          text: result.firstToday ? "That is today's practice done"
+                                  : `${total - wrong.length} of ${total} right` }));
+        if (result.firstToday) {
+          results.appendChild(h('p', { class: 'results-note',
+            text: `${total - wrong.length} of ${total} right.` }));
+        }
       } else {
         const stars = '★'.repeat(result.stars) + '☆'.repeat(3 - result.stars);
         results.appendChild(h('div', { class: 'results-stars', text: stars }));
@@ -725,10 +733,17 @@ const Exercise = (() => {
       const wk = result.week;
       if (wk) {
         results.appendChild(h('p', { class: 'results-week' },
-          result.firstToday ? 'Today is done. ' : 'Already counted for today. ',
+          result.firstToday ? '' : 'Already counted for today. ',
           wk.met
-            ? h('strong', { text: `That is ${wk.done} days this week — target met.` })
+            ? h('strong', { text: `${wk.done} days this week — target met.` })
             : h('strong', { text: `${wk.done} of ${wk.target} days this week.` })));
+      }
+
+      // Say plainly that turning up again tomorrow beats doing more now. The
+      // per-day XP cap already works this way; without saying so, nobody knows.
+      if (practice && result.firstToday) {
+        results.appendChild(h('p', { class: 'results-note',
+          text: 'Coming back tomorrow counts for more than doing extra now.' }));
       }
 
       if (wrong.length) {
@@ -737,11 +752,16 @@ const Exercise = (() => {
           wrong.map((n, i) => [i ? ', ' : '', h('a', { href: '#q' + n, text: 'Q' + n })]).flat()));
       }
 
+      // After the daily mix the main action is to stop. Going again is still
+      // there, but quietly, as the secondary button.
       results.appendChild(h('div', { class: 'results-btns' },
-        h('button', { type: 'button', class: 'tool-btn primary', onclick: () => location.reload() },
-          practice ? 'Another set' : 'Try a new set'),
         practice
-          ? h('a', { class: 'tool-btn', href: base + 'index.html' }, 'Home')
+          ? h('a', { class: 'tool-btn primary', href: base + 'index.html' }, 'Done for today')
+          : h('button', { type: 'button', class: 'tool-btn primary', onclick: () => location.reload() },
+              'Try a new set'),
+        practice
+          ? h('button', { type: 'button', class: 'tool-btn', onclick: freshSet },
+              'Five more')
           : h('a', { class: 'tool-btn', href: `${base}units/unit-${cfg.unit}.html` }, 'Back to ' + unit.short)));
       results.style.display = '';
       results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });

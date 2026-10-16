@@ -76,8 +76,8 @@ const Habit = (() => {
       h('div', { class: 'habit-text' },
         h('h2', { text: done ? 'Practice done for today' : "Today's practice" }),
         h('p', { class: 'habit-sub', text: done
-          ? 'Come back tomorrow, or go again now if you want more.'
-          : 'About ten questions, mixed across the topics you have seen least recently. Five minutes.' })),
+          ? 'Tomorrow is what counts. Go again now if you want more, but the day is already in.'
+          : 'Five questions, about two minutes, mixed across the topics you have seen least recently.' })),
       h('a', { class: 'tool-btn primary habit-go', href: base + 'practice.html' },
         done ? 'Practise again' : 'Start')));
 
