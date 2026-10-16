@@ -73,6 +73,32 @@ tools/
 | 4 Algebra Meets Geometry | 3 | angles and lengths as expressions: build the equation, then solve it |
 | 5 Maths in Words | 3 | English to algebra, algebra to English, word problems |
 
+## Getting unstuck
+
+Every question has a quiet **Stuck?** button that opens help in two steps: first the rule with
+no numbers in it, for a student who knows the topic but cannot find the first move; then the
+full worked solution for that exact question.
+
+Both routes end at **Try one like it**, which is the part that actually teaches. Understanding
+an explanation is recognition, not recall — watching someone else solve it strengthens nothing.
+The step that consolidates is the one they do unaided immediately afterwards, and without this
+the next question is a different topic and the moment is lost.
+
+The same button appears on any question answered **wrong**, which is the same moment
+pedagogically and used to be a dead end.
+
+A follow-up is a genuine twin: same topic, same index in that topic's set, fresh numbers.
+Question 4 of Collecting Like Terms is always "two letters, coefficients only", so
+regenerating at the same index gives the same kind of question rather than merely the same
+topic. `tools/check-topics.js` enforces that indexes stay stable, because the feature silently
+breaks if a generator ever starts varying what it emits at a position.
+
+Scoring follows from the aim. A question taken with help scores **zero, never negative**, so
+asking is safe. The follow-up scores **normally**, so the marks are won back by doing one
+yourself. Getting a follow-up wrong costs nothing either — charging for a second chance would
+make it something to avoid. Follow-ups chain two deep, labelled 3a and 3b, and indent under
+the question they came from so the record of where help was needed stays visible.
+
 ## Question types
 
 The engine renders seven kinds of answer control. A generator picks whichever suits the question.

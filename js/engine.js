@@ -357,16 +357,42 @@ const Exercise = (() => {
     };
   };
 
+  /**
+   * Another question of the same kind: same topic, same position in that
+   * topic's set, fresh numbers. The position is what carries the meaning —
+   * question 4 of Collecting Like Terms is always "two letters, coefficients
+   * only" — so regenerating at the same index gives a genuine twin rather
+   * than just something from the same topic.
+   */
+  function similarTo(q, difficulty) {
+    const topic = q.origin && window.Topics && window.Topics[q.origin.topicId];
+    if (!topic) return null;
+    try {
+      const fresh = topic.generate(new RNG((Math.random() * 2 ** 32) >>> 0), difficulty);
+      const twin = fresh[q.origin.index];
+      if (!twin) return null;
+      // Carry the provenance across so the new card behaves like its parent.
+      return { ...twin, origin: q.origin, source: q.source };
+    } catch (err) {
+      console.error('could not build a similar question', err);
+      return null;
+    }
+  }
+
   // ── One question card ─────────────────────────────────────────────────────
-  function buildCard(state, q, n) {
-    const card = h('article', { class: 'qcard', id: 'q' + n });
+  // `n` is the label shown in the margin: "3" for an original question, "3a"
+  // for the follow-up a student asked for after getting 3 wrong.
+  function buildCard(state, q, n, depth) {
+    depth = depth || 0;
+    const card = h('article', { class: 'qcard' + (depth ? ' qcard-follow' : ''), id: 'q' + n });
 
     const bar  = h('div', { class: 'tbar-fill' });
     const wrap = h('div', { class: 'tbar', style: state.level.timerVisible ? '' : 'display:none' }, bar);
     card.appendChild(wrap);
 
     const head = h('div', { class: 'qhead' },
-      h('span', { class: 'qnum', text: n }),
+      h('span', { class: 'qnum' + (depth ? ' qnum-follow' : ''), text: n }),
+      depth ? h('span', { class: 'follow-flag', text: 'One like it' }) : null,
       h('div', { class: 'qtext', html: q.prompt }),
       // In a mixed session, say which exercise the question came from and link
       // to it, so a student who keeps missing one kind can go and drill it.
@@ -413,7 +439,87 @@ const Exercise = (() => {
 
     const fb = h('p', { class: 'qfeedback' });
     answerArea.appendChild(fb);
+
+    // ── Help, in two steps, then one to try unaided ───────────────────────
+    // Understanding an explanation is recognition, not recall: watching
+    // someone else solve it strengthens nothing. The step that matters is the
+    // one they do themselves straight afterwards, so every route through here
+    // ends at "Try one like it".
+    const helpRow = h('div', { class: 'qhelp' });
+    const helpBody = h('div', { class: 'qhelp-body', style: 'display:none' });
+    let helpLevel = 0;                       // 0 none, 1 nudge, 2 full working
+
+    const stuckBtn = h('button', {
+      type: 'button', class: 'help-btn',
+      onclick() { takeHelp(); }
+    }, 'Stuck?');
+
+    const twinBtn = h('button', {
+      type: 'button', class: 'help-btn twin-btn', style: 'display:none',
+      onclick() { spawnTwin(); }
+    }, 'Try one like it');
+
+    helpRow.appendChild(stuckBtn);
+    helpRow.appendChild(twinBtn);
+    answerArea.appendChild(helpBody);
+    answerArea.appendChild(helpRow);
     body.appendChild(answerArea);
+
+    function takeHelp() {
+      if (state.done.has(n) && helpLevel >= 2) return;
+      helpLevel++;
+      helpBody.style.display = '';
+
+      if (helpLevel === 1) {
+        // The rule, with no numbers in it. Enough for a student who knows the
+        // topic but cannot find the first move. In a mixed session this comes
+        // from the question's own topic, not the page.
+        const topic = q.origin && window.Topics && window.Topics[q.origin.topicId];
+        const nudge = (topic && topic.hint) || state.hint ||
+                      'Look back at the worked examples at the top of the page.';
+        helpBody.innerHTML = '<p class="help-step"><strong>Where to start</strong>' + nudge + '</p>';
+        stuckBtn.textContent = 'Show me how';
+      } else {
+        helpBody.innerHTML +=
+          '<p class="help-step"><strong>How it is done</strong>' +
+          (q.explain || 'Work through it a line at a time.') + '</p>';
+        stuckBtn.style.display = 'none';
+        // Taking the full working settles this question: it scores nothing,
+        // but nothing is lost either. The marks are available on the twin.
+        if (!state.done.has(n)) {
+          timer.stop();
+          state.done.add(n);
+          input.lock();
+          submit.disabled = true;
+          card.classList.add('answered', 'was-helped');
+          fb.className = 'qfeedback';
+          fb.innerHTML = '<strong>Answered with help</strong>' +
+            'No marks for this one, and none lost. Try the next one to earn them.';
+          state.onAnswered();
+        }
+        offerTwin();
+      }
+      MJ.typeset([helpBody, fb]);
+    }
+
+    function offerTwin() {
+      if (depth >= state.maxDepth) {
+        twinBtn.style.display = 'none';
+        return;
+      }
+      twinBtn.style.display = '';
+    }
+
+    function spawnTwin() {
+      const twin = similarTo(q, state.difficulty);
+      if (!twin) {
+        twinBtn.disabled = true;
+        twinBtn.textContent = 'No similar question available';
+        return;
+      }
+      twinBtn.style.display = 'none';
+      state.addFollowUp(card, twin, n, depth + 1);
+    }
 
     const timer = new QuestionTimer(bar, state.level.timerSecs);
 
@@ -439,7 +545,10 @@ const Exercise = (() => {
       submit.disabled = true;
       card.classList.add('answered', res.ok ? 'was-right' : 'was-wrong');
 
-      const pts = MRG.scoreQuestion(res.ok, elapsed);
+      // A follow-up is a second chance, so getting it wrong costs nothing.
+      // Charging for it would make "try one like it" something to avoid.
+      let pts = MRG.scoreQuestion(res.ok, elapsed);
+      if (depth > 0) pts = Math.max(0, pts);
       state.score += pts;
 
       fb.className = 'qfeedback ' + (res.ok ? 'good' : 'bad');
@@ -447,12 +556,17 @@ const Exercise = (() => {
         ? '<strong>Correct</strong>' + (q.explain ? q.explain : '')
         : '<strong>Not quite</strong>' + res.correctHTML + (q.explain ? '<br>' + q.explain : '');
 
+      stuckBtn.style.display = 'none';
+      // Getting it wrong is the same moment as asking for help, and until now
+      // it was a dead end: read the working, move on to an unrelated topic.
+      if (!res.ok) offerTwin();
+
       floatPoints(card, pts);
       MJ.typeset([fb]);
       state.onAnswered();
     }
 
-    return { card, focus: input.focus };
+    return { card, focus: input.focus, label: n };
   }
 
   function floatPoints(card, pts) {
@@ -601,10 +715,24 @@ const Exercise = (() => {
       document.body.appendChild(h('p', { class: 'fatal', text: 'No questions could be built.' }));
       return;
     }
-    const total = questions.length;
-    const maxScore = total * 15;
+    // Follow-up questions add cards as the student asks for them, so the
+    // number on the page grows. The score ceiling stays pegged to the original
+    // set: a follow-up is a chance to win back marks already forfeited, not a
+    // way to push the total higher.
+    // Each question remembers where it came from, which is what makes "one
+    // like it" possible: same topic, same index, fresh numbers.
+    questions.forEach((q, i) => {
+      if (!q.origin) q.origin = { topicId: cfg.id, index: i };
+    });
 
-    const state = { level, done: new Set(), score: 0, base, onAnswered: () => {} };
+    const originalTotal = questions.length;
+    const maxScore = originalTotal * 15;
+
+    const state = {
+      level, done: new Set(), score: 0, base, difficulty,
+      hint: cfg.hint, maxDepth: 2,
+      onAnswered: () => {}, addFollowUp: () => {}
+    };
 
     // ── Page chrome ──
     document.title = cfg.title + ' · Maths Revision';
@@ -637,7 +765,7 @@ const Exercise = (() => {
 
     main.appendChild(h('div', { class: 'section-head' },
       h('h2', { text: practice ? 'Mixed questions' : 'Your turn' }),
-      h('span', { class: 'qcount', text: total + ' questions' })));
+      h('span', { class: 'qcount', text: originalTotal + ' questions' })));
     main.appendChild(toolbar(cfg));
     if (practice && cfg.topics && cfg.topics.length) {
       main.appendChild(h('p', { class: 'practice-drawn' },
@@ -661,8 +789,26 @@ const Exercise = (() => {
     const list = h('div', { class: 'qlist' });
     main.appendChild(list);
 
-    const cards = questions.map((q, i) => buildCard(state, q, i + 1));
+    const cards = questions.map((q, i) => buildCard(state, q, i + 1, 0));
     cards.forEach(c => list.appendChild(c.card));
+
+    // A student asking for "one like it" inserts a new card directly beneath
+    // the one they were stuck on, labelled 3a, 3b and so on, so the record of
+    // where they needed help stays visible.
+    state.addFollowUp = (afterCard, twinQ, parentLabel, depth) => {
+      const root = String(parentLabel).replace(/[a-z]+$/, '');
+      const label = root + 'abcdef'[Math.min(depth, 6) - 1];
+      const built = buildCard(state, twinQ, label, depth);
+      afterCard.insertAdjacentElement('afterend', built.card);
+      cards.splice(cards.indexOf(cards.find(c => c.card === afterCard)) + 1, 0, built);
+      // The session is no longer over, if it had been.
+      state.finished = false;
+      results.style.display = 'none';
+      MJ.typeset([built.card]);
+      built.card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      setTimeout(() => built.focus(), 320);
+      paintProgress();
+    };
 
     const results = h('section', { class: 'results', style: 'display:none' });
     main.appendChild(results);
@@ -681,24 +827,35 @@ const Exercise = (() => {
     // ── Progress and finishing ──
     function paintProgress() {
       const n = state.done.size;
-      progress.querySelector('.progress-fill').style.width = (n / total * 100) + '%';
+      progress.querySelector('.progress-fill').style.width = (n / cards.length * 100) + '%';
       progress.querySelector('.progress-text').textContent =
-        `${n} of ${total} answered · ${Math.max(0, state.score)} pts`;
+        `${n} of ${cards.length} answered · ${Math.max(0, state.score)} pts`;
     }
     paintProgress();
 
     state.onAnswered = () => {
       paintProgress();
-      if (state.done.size === total) setTimeout(finish, 450);
+      if (state.done.size === cards.length) setTimeout(finish, 450);
     };
 
     function finish() {
-      const score  = Math.max(0, state.score);
-      const result = practice
-        ? MRG.finishPractice(score, maxScore, cfg.topicIds)
-        : MRG.finishExercise(cfg.id, score, maxScore);
+      const score = Math.max(0, state.score);
 
-      const wrong = questions.map((_, i) => i + 1).filter(n => cards[n - 1].card.classList.contains('was-wrong'));
+      // Answering a follow-up can complete the session a second time. Only an
+      // improvement is banked, so the panel can be re-rendered as often as
+      // needed without awarding the same work twice.
+      if (!state.finished || score > state.bankedScore) {
+        state.lastResult = practice
+          ? MRG.finishPractice(score, maxScore, cfg.topicIds)
+          : MRG.finishExercise(cfg.id, score, maxScore);
+        state.bankedScore = score;
+        state.finished = true;
+      }
+      const result = state.lastResult;
+
+      const wrong  = cards.filter(c => c.card.classList.contains('was-wrong')).map(c => c.label);
+      const helped = cards.filter(c => c.card.classList.contains('was-helped')).map(c => c.label);
+      const right  = cards.filter(c => c.card.classList.contains('was-right')).length;
 
       results.innerHTML = '';
 
@@ -706,10 +863,10 @@ const Exercise = (() => {
         results.appendChild(h('div', { class: 'results-tick', text: '✓' }));
         results.appendChild(h('p', { class: 'results-score',
           text: result.firstToday ? "That is today's practice done"
-                                  : `${total - wrong.length} of ${total} right` }));
+                                  : `${right} of ${cards.length} right` }));
         if (result.firstToday) {
           results.appendChild(h('p', { class: 'results-note',
-            text: `${total - wrong.length} of ${total} right.` }));
+            text: `${right} of ${cards.length} right.` }));
         }
       } else {
         const stars = '★'.repeat(result.stars) + '☆'.repeat(3 - result.stars);
@@ -750,6 +907,12 @@ const Exercise = (() => {
         results.appendChild(h('p', { class: 'results-note' },
           'Worth another look: ',
           wrong.map((n, i) => [i ? ', ' : '', h('a', { href: '#q' + n, text: 'Q' + n })]).flat()));
+      }
+      if (helped.length) {
+        results.appendChild(h('p', { class: 'results-note' },
+          'Taken with help: ',
+          helped.map((n, i) => [i ? ', ' : '', h('a', { href: '#q' + n, text: 'Q' + n })]).flat(),
+          '. Worth coming back to these.'));
       }
 
       // After the daily mix the main action is to stop. Going again is still

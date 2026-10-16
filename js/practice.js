@@ -122,6 +122,8 @@ const Practice = (() => {
       for (const i of idx) {
         out.push({
           ...all[i],
+          // Where this came from, so the engine can build another like it.
+          origin: { topicId: t.id, index: i },
           source: {
             id: t.id,
             label: `${t.unit}.${t.n}`,

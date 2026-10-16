@@ -775,6 +775,86 @@ main {
 .order-chip.used { opacity: 0.3; }
 .order-chip:disabled { cursor: default; }
 
+/* ── Help, and the question you try afterwards ────────────────────────────── */
+.qhelp { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.7rem; }
+.help-btn {
+  font-family: var(--font-sans);
+  font-size: 0.8rem; font-weight: 500;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-s);
+  background: transparent;
+  color: var(--ink-faint);
+  cursor: pointer;
+  transition: color .15s ease, border-color .15s ease, background .15s ease;
+}
+.help-btn:hover:not(:disabled) {
+  color: var(--brand-ink); border-color: var(--brand); background: var(--brand-soft);
+}
+.help-btn:disabled { cursor: default; opacity: 0.6; }
+/* The one that matters: doing another unaided. */
+.twin-btn {
+  color: var(--accent-ink);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  background: var(--accent-soft);
+  font-weight: 600;
+}
+.twin-btn:hover:not(:disabled) {
+  color: var(--surface); background: var(--accent); border-color: var(--accent);
+}
+
+.qhelp-body { margin-top: 0.6rem; }
+.help-step {
+  font-size: 0.9rem; line-height: 1.55;
+  color: var(--ink-soft);
+  background: var(--surface-2);
+  border-left: 2px solid var(--brand);
+  border-radius: 0 var(--radius-s) var(--radius-s) 0;
+  padding: 0.6rem 0.85rem;
+  margin-bottom: 0.4rem;
+}
+.help-step strong {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.13em; text-transform: uppercase;
+  color: var(--brand-ink);
+  margin-bottom: 0.2rem;
+}
+
+/* A question answered by reading the working: neither right nor wrong. */
+.qcard.was-helped::before {
+  content: '';
+  position: absolute; left: -1px; top: -1px; bottom: -1px;
+  width: 3px; background: var(--brand);
+  border-radius: var(--radius) 0 0 var(--radius);
+}
+.qcard.was-helped .qfeedback { color: var(--ink-soft); }
+.qcard.was-helped .qfeedback strong { color: var(--brand-ink); }
+
+/* The follow-up card, set slightly in from its parent. */
+.qcard-follow {
+  margin-left: 1.5rem;
+  border-left: 2px solid var(--accent-soft);
+}
+.qnum-follow {
+  background: var(--surface-2);
+  border-color: var(--rule);
+  color: var(--ink-soft);
+}
+.follow-flag {
+  font-family: var(--font-sans);
+  font-size: 0.65rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--accent-ink);
+  align-self: flex-start;
+  margin-top: 0.2rem;
+}
+
+@media (max-width: 600px) {
+  .qcard-follow { margin-left: 0.6rem; }
+}
+
 /* ── Feedback: a note in the margin, in pen ───────────────────────────────── */
 .qfeedback {
   font-size: 0.92rem; line-height: 1.55;

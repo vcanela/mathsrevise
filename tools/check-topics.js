@@ -200,6 +200,27 @@ for (const id of ids) {
     }
   }
   if (counts.size > 1) fail(id, 'question count varies between runs: ' + [...counts].join(', '));
+
+  // "Try one like it" regenerates the same topic at the same index, so the
+  // index has to mean the same kind of question every time. If a generator
+  // ever starts varying what it emits at a position, a student asking for a
+  // similar question would silently get an unrelated one.
+  for (const diff of ['core', 'expert']) {
+    const kinds = [];
+    for (let run = 0; run < Math.min(RUNS, 120); run++) {
+      let qs;
+      try { qs = topic.generate(new RNG(run * 7919 + 13), diff); } catch (_) { continue; }
+      (qs || []).forEach((q, i) => {
+        (kinds[i] = kinds[i] || new Set()).add(q.input && q.input.kind);
+      });
+    }
+    kinds.forEach((set, i) => {
+      if (set.size > 1) {
+        fail(`${id}/${diff}/Q${i + 1}`,
+             'question type varies by run, so "one like it" would not match: ' + [...set].join(' | '));
+      }
+    });
+  }
 }
 
 // ── Report ───────────────────────────────────────────────────────────────────
