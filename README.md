@@ -57,6 +57,13 @@ generated with fresh numbers, like the maths. **Conceptual** ones cannot be, so 
 An exercise can be listed in the manifest with `soon: true` before it is written. It then shows on
 its unit page as a dashed placeholder, gets no page, and is left out of the daily mix.
 
+**Learn it.** Each science topic opens with a collapsible reading section of short idea cards
+(a heading, a sentence or two, and usually a diagram), declared as `learn: [{ id, title, text, draw }]`
+in the topic. Every question slot names the card that answers it (`learn: 'id'` on the slot, or on
+an item), and "Stuck?" links straight to that card; in the daily mix the link opens the topic page
+at that card. `node tools/check-topics.js` fails if any question has no card or names a missing one,
+and lists any card no question links to.
+
 **Reviewing content.** Authored science items can't be verified by a script: a wrong fact would
 pass every test. `tools/review-science.html` lists every item with all its options, the marked
 answer and the explanation, each with an ID such as `7.1·Q4·3` for reporting problems.

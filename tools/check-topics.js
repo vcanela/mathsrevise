@@ -52,6 +52,7 @@ for (const f of topicFiles) {
 
 // ── Checks ───────────────────────────────────────────────────────────────────
 const problems = [];
+const unlinked = [];          // cards no question links to: allowed, but listed
 let checked = 0;
 
 function fail(where, msg, extra) {
@@ -215,6 +216,16 @@ for (const id of ids) {
   const topic = Topics[id];
   (topic.examples || []).forEach((ex, i) => checkExample(`${id} example ${i + 1}`, ex));
 
+  // Learn it cards: ids unique, diagrams draw, and when a topic has cards,
+  // every question names one of them, so "Stuck?" can always link to it.
+  const cardIds = (topic.learn || []).map(c => c.id);
+  if (new Set(cardIds).size !== cardIds.length) fail(id, 'duplicate Learn it card ids');
+  (topic.learn || []).forEach(c => {
+    if (!c.title || !c.text) fail(`${id} learn ${c.id}`, 'card needs a title and text');
+    checkExample(`${id} learn ${c.id}`, c);
+  });
+  const usedCards = new Set();
+
   let counts = new Set();
   for (const diff of ['core', 'hard', 'expert']) {
     for (let run = 0; run < RUNS; run++) {
@@ -225,9 +236,15 @@ for (const id of ids) {
       if (!Array.isArray(qs) || !qs.length) { fail(`${id}/${diff}/seed${run}`, 'generate returned nothing'); continue; }
       counts.add(qs.length);
       qs.forEach((q, i) => checkQuestion(`${id}/${diff}/seed${run}/Q${i + 1}`, q));
+      if (cardIds.length) qs.forEach((q, i) => {
+        if (!q.learn) fail(`${id}/Q${i + 1}`, 'no Learn it card linked');
+        else if (!cardIds.includes(q.learn)) fail(`${id}/Q${i + 1}`, 'links to missing card ' + q.learn);
+        else usedCards.add(q.learn);
+      });
     }
   }
   if (counts.size > 1) fail(id, 'question count varies between runs: ' + [...counts].join(', '));
+  for (const c of cardIds) if (!usedCards.has(c)) unlinked.push(`${id}:${c}`);
 
   // "Try one like it" regenerates the same topic at the same index, so the
   // index has to mean the same kind of question every time. If a generator
@@ -262,6 +279,7 @@ for (const p of problems) {
   tally.set(key, rec);
 }
 console.log(`Checked ${checked} generated questions across ${ids.length} topics (${RUNS} seeds each, 3 difficulties).`);
+if (unlinked.length) console.log('Learn it cards no question links to (fine if intended): ' + unlinked.join(', '));
 if (!tally.size) {
   console.log('No problems found.');
   process.exit(0);

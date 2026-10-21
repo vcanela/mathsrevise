@@ -423,6 +423,78 @@ main {
 .examples-toggle.open::before { transform: rotate(90deg); }
 .examples-toggle:hover { color: var(--ink); }
 
+/* ── Learn it: idea cards, a heading, a line or two and a picture ─────────── */
+.learn-count {
+  font-weight: 500; letter-spacing: 0.04em; text-transform: none;
+  color: var(--ink-faint); font-size: 0.78rem; margin-left: 0.2rem;
+}
+.learn-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-auto-flow: row dense;     /* later cards fill the gap beside a wide one */
+  align-items: start;            /* a short card stays short */
+  gap: 0.9rem;
+}
+.learn-card {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--brand);
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem 1rem;
+  box-shadow: var(--shadow);
+  display: flex; flex-direction: column;
+  scroll-margin: 5rem;
+}
+.learn-card.wide { grid-column: 1 / -1; }
+.learn-fig { margin: 0 auto 0.7rem; width: 100%; }
+.learn-fig .qdiagram { width: 100%; height: auto; display: block; }
+.learn-card h3 {
+  font-family: var(--font-serif);
+  font-size: 1rem; font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 0.35rem;
+}
+.learn-text { font-size: 0.9rem; line-height: 1.5; color: var(--ink-soft); }
+.learn-text p + p { margin-top: 0.4rem; }
+.learn-text strong { color: var(--ink); }
+.learn-text ul { margin: 0.3rem 0 0 1.1rem; }
+.learn-text li { margin-bottom: 0.15rem; }
+.learn-text .data-table { margin: 0.45rem 0 0.1rem; font-size: 0.84rem; width: 100%; }
+.learn-text .data-table td, .learn-text .data-table th {
+  font-family: var(--font-sans); text-align: left; padding: 0.25rem 0.5rem;
+}
+.learn-steps { list-style: none; counter-reset: ls; margin: 0.4rem 0 0.4rem !important; }
+.learn-steps li {
+  counter-increment: ls; position: relative;
+  padding: 0.2rem 0 0.2rem 1.7rem; margin: 0 !important;
+}
+.learn-steps li::before {
+  content: counter(ls);
+  position: absolute; left: 0; top: 0.22rem;
+  width: 1.2rem; height: 1.2rem; border-radius: 50%;
+  background: var(--brand-soft); color: var(--brand-ink);
+  font-size: 0.72rem; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+}
+.learn-steps li + li::after {
+  content: ''; position: absolute; left: 0.58rem; top: -0.12rem; height: 0.32rem;
+  border-left: 1.5px solid var(--brand-soft);
+}
+@keyframes learn-flash {
+  0%, 30% { box-shadow: 0 0 0 3px var(--accent); }
+  100%    { box-shadow: var(--shadow); }
+}
+.learn-card.flash { animation: learn-flash 1.8s ease-out; }
+.help-learn { margin-top: 0.3rem; }
+.learn-link {
+  color: var(--brand-ink); font-weight: 600; text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.learn-link:hover { color: var(--accent-ink); }
+@media (max-width: 560px) {
+  .learn-grid { grid-template-columns: 1fr; }
+}
+
 .example {
   background: var(--surface);
   border: 1px solid var(--rule);

@@ -15,6 +15,8 @@
     .rv-toc { font-family: var(--font-sans); font-size: 0.85rem; margin: 1rem 0 2rem; }
     .rv-toc a { margin-right: 1rem; }
     .rv-topic { margin-top: 2.5rem; }
+    .rv-learn { margin-left: 0.6rem; color: var(--brand-ink); font-weight: 500; }
+    .rv-topic .learn-grid { margin: 0.6rem 0 1.2rem; }
     .rv-topic > h2 { font-size: 1.4rem; border-bottom: 2px solid var(--rule); padding-bottom: 0.3rem; }
     .rv-hint { font-family: var(--font-sans); font-size: 0.85rem; color: var(--ink-soft); margin: 0.5rem 0 1rem; }
     .rv-slot { margin: 1.4rem 0 0.4rem; font-family: var(--font-sans); font-size: 0.78rem; font-weight: 600;
@@ -144,9 +146,10 @@
       return box;
     }
 
-    function itemCard(id, q, generatedNote) {
+    function itemCard(id, q, generatedNote, learnNote) {
       const card = h('div', { class: 'rv-item' },
-        h('div', { class: 'rv-id' }, id, generatedNote ? h('span', { class: 'rv-gen', text: generatedNote }) : null));
+        h('div', { class: 'rv-id' }, id, generatedNote ? h('span', { class: 'rv-gen', text: generatedNote }) : null,
+          learnNote ? h('span', { class: 'rv-learn', text: learnNote }) : null));
       const main = h('div', {},
         h('div', { class: 'rv-prompt', html: q.prompt }),
         q.note ? h('div', { class: 'rv-note', html: q.note }) : null);
@@ -175,6 +178,28 @@
         h('h2', { text: `${ex.label} ${ex.title}` }),
         h('p', { class: 'rv-hint', html: '<strong>Stuck? nudge:</strong> ' + t.hint }));
 
+      // Learn it cards: the reading every question should be answerable from.
+      if (t.learn && t.learn.length) {
+        sec.appendChild(h('div', { class: 'rv-slot', text: 'Learn it' }));
+        const grid = h('div', { class: 'learn-grid' });
+        for (const c of t.learn) {
+          const card = h('article', { class: 'learn-card' + (c.wide ? ' wide' : '') },
+            h('span', { class: 'rv-id', text: `${ex.label}·L·${c.id}` }));
+          if (c.draw) {
+            const svg = document.createElementNS(Geo.NS, 'svg');
+            svg.setAttribute('class', 'qdiagram');
+            const w = (c.diagram && c.diagram.w) || 240;
+            card.appendChild(h('figure', { class: 'learn-fig', style: `max-width:${w}px` }, svg,
+              c.diagram && c.diagram.caption ? h('figcaption', { class: 'dia-caption', html: c.diagram.caption }) : null));
+            try { c.draw(Geo.canvas(svg, w, (c.diagram && c.diagram.h) || 150), Geo); } catch (_) {}
+          }
+          card.appendChild(h('h3', { html: c.title }));
+          card.appendChild(h('div', { class: 'learn-text', html: c.text }));
+          grid.appendChild(card);
+        }
+        sec.appendChild(grid);
+      }
+
       // Worked examples are authored content too.
       (t.examples || []).forEach((e, i) => {
         const box = h('div', { class: 'rv-example' },
@@ -199,7 +224,10 @@
           const samples = item.generated ? 3 : 1;
           for (let k = 0; k < samples; k++) {
             const q = item(new RNG(1000 + 37 * ii + 101 * k + si), 'core');
-            sec.appendChild(itemCard(id, q, item.generated ? `generated, sample ${k + 1}` : null));
+            const cid = q.learn || slot.learn;
+            const card = cid && t.learn && t.learn.find(c => c.id === cid);
+            sec.appendChild(itemCard(id, q, item.generated ? `generated, sample ${k + 1}` : null,
+                                     card ? 'Learn it: ' + card.title : null));
           }
         });
       });

@@ -40,6 +40,9 @@ const Sci = (() => {
       const item = rng.pick(slot.items);
       const q = item(rng, diff);
       q.slot = slot.name || 'Slot ' + (i + 1);
+      // Which "Learn it" card answers this question. An item can name its
+      // own card; otherwise it takes the slot's.
+      if (!q.learn && slot.learn) q.learn = slot.learn;
       return q;
     });
     const Topics = window.Topics || (window.Topics = {});
@@ -61,7 +64,7 @@ const Sci = (() => {
     return {
       prompt: o.prompt, note: o.note, tag: o.tag, draw: o.draw, diagram: o.diagram,
       input: { kind: 'choice', options, correct: options.findIndex(x => x.right), wide: o.wide !== false },
-      explain: o.explain
+      explain: o.explain, learn: o.learn
     };
   }
 
@@ -75,7 +78,7 @@ const Sci = (() => {
         options: [{ html: 'True', right: !!o.answer }, { html: 'False', right: !o.answer }],
         correct: o.answer ? 0 : 1
       },
-      explain: o.explain
+      explain: o.explain, learn: o.learn
     };
   }
 
@@ -95,7 +98,7 @@ const Sci = (() => {
       input: { kind: 'sort', bins: o.bins, items: chosen.map(it => ({ html: it.text, bin: it.bin })),
                // The whole bank, which the review page lists. The engine ignores it.
                bank: o.items.map(it => ({ html: it.text, bin: it.bin })) },
-      explain: o.explain
+      explain: o.explain, learn: o.learn
     };
   }
 
@@ -108,7 +111,7 @@ const Sci = (() => {
     return {
       prompt: o.prompt, note: o.note, tag: o.tag, draw: o.draw, diagram: o.diagram,
       input: { kind: 'label', markers: o.markers, options },
-      explain: o.explain
+      explain: o.explain, learn: o.learn
     };
   }
 
@@ -118,7 +121,7 @@ const Sci = (() => {
       prompt: o.prompt, note: o.note, tag: o.tag,
       input: { kind: 'spot', lines: o.lines, wrong: o.wrong,
                cue: o.cue || 'Click the first line that is wrong.' },
-      explain: o.explain
+      explain: o.explain, learn: o.learn
     };
   }
 
@@ -394,7 +397,7 @@ const SciDia = (() => {
     return { X, Y, xMax, yMax };
   }
 
-  return { particles, stateCycle, CHANGES, graph, arrow, niceStep };
+  return { particles, stateCycle, CHANGES, graph, arrow, niceStep, arrowHeadAt: (d, from, to) => arrowHead(d, from, to) };
 })();
 
 
@@ -690,10 +693,12 @@ const SciDia = (() => {
     SciDia.arrow(d, start, hit, { colour: 'var(--dia-accent)', width: 2 });
     const real = Math.asin(Math.sin(i * RAD) / 1.33) / RAD;
     const away = Math.min(80, i + (i - real) * 1.6);
-    const angles = { towards: real, straight: i, away };
+    // With no `order`, only the true path is drawn, as an arrow.
+    const angles = order ? { towards: real, straight: i, away } : { towards: real };
     const L2 = d.h - hit[1] - 20;
     for (const [kind, a] of Object.entries(angles)) {
       const end = [hit[0] + L2 * Math.sin(a * RAD), hit[1] + L2 * Math.cos(a * RAD)];
+      if (!order) { SciDia.arrow(d, hit, end, { colour: 'var(--dia-accent)', width: 2 }); continue; }
       d.line(hit, end, { stroke: INK, width: 1.4 });
       const lab = Geo.add(end, Geo.scale(Geo.norm(Geo.sub(end, hit)), 10));
       d.text(lab, order[kind], { size: 12, fill: 'var(--accent-ink)' });
@@ -800,6 +805,416 @@ const SciDia = (() => {
 
   Object.assign(SciDia, {
     moon, PHASES, eclipse, web, cell, PLANT_PARTS, ANIMAL_PARTS,
-    earthLayers, LAYERS, mirror, refraction, forceDiagram, seesaw, chromatogram, box
+    earthLayers, LAYERS, mirror, refraction, forceDiagram, seesaw, chromatogram, box, leader
   });
+})();
+
+
+// ── Learn it diagrams ──────────────────────────────────────────────────────
+// Small pictures for the idea cards. Apparatus is drawn schematically, but
+// where a picture makes a physical claim (a liquid's surface stays level in
+// a tilted beaker, sediment collects in the lowest corner) it is computed.
+
+(() => {
+  const INK = 'var(--dia-ink)', MUTED = 'var(--dia-muted)';
+  const RAD = Math.PI / 180;
+  const SAND = 'var(--mantle)', MUD = 'var(--crust)', IRON = 'var(--moon-dark)';
+  const pts = list => list.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+
+  /** A short label in the muted diagram style. */
+  function note(d, p, text, anchor) {
+    d.text(p, text, { size: 10.5, fill: MUTED, bold: false, anchor: anchor || 'middle' });
+  }
+  /** A label joined to what it names by a thin line. */
+  function tag(d, at, to, text, anchor) {
+    const back = anchor === 'end' ? 3 : anchor === 'start' ? -3 : 0;
+    d.line([at[0] + back, at[1]], to, { stroke: MUTED, width: 0.9 });
+    d.dot(to, { r: 1.8, fill: MUTED });
+    d.text(at, text, { size: 10.5, fill: 'var(--accent-ink)', bold: false, anchor: anchor || 'start' });
+  }
+  /** Keep the part of a polygon at or below the line y = level (Sutherland–Hodgman, one edge). */
+  function below(poly, level) {
+    const out = [];
+    for (let i = 0; i < poly.length; i++) {
+      const a = poly[i], b = poly[(i + 1) % poly.length];
+      const ain = a[1] >= level, bin = b[1] >= level;
+      if (ain) out.push(a);
+      if (ain !== bin) {
+        const t = (level - a[1]) / (b[1] - a[1]);
+        out.push([a[0] + t * (b[0] - a[0]), level]);
+      }
+    }
+    return out;
+  }
+  const rot = (p, c, deg) => {
+    const a = deg * RAD, x = p[0] - c[0], y = p[1] - c[1];
+    return [c[0] + x * Math.cos(a) - y * Math.sin(a), c[1] + x * Math.sin(a) + y * Math.cos(a)];
+  };
+  /** An open-topped beaker, as a path, from its four corners (rim left, base left, base right, rim right). */
+  function beaker(d, c) {
+    d.add('path', { d: 'M ' + c.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' L '),
+                    fill: 'none', stroke: INK, 'stroke-width': 1.6, 'stroke-linejoin': 'round' });
+  }
+
+  // ── Pure substance and mixture, as particles ──────────────────────────────
+  function pureVsMixture(d) {
+    const r = 6, gap = 2 * r + 4;
+    const kinds = [
+      { fill: 'var(--brand)', edge: 'var(--brand-ink)' },
+      { fill: 'var(--accent)', edge: 'var(--accent-ink)' }
+    ];
+    // Which particles in the mixture are the second substance. Fixed, so the
+    // picture is the same every visit.
+    const second = new Set([1, 3, 6, 8, 12, 14, 15, 17]);
+    const panel = (x0, mixed, label) => {
+      const bw = (d.w - 36) / 2, bh = d.h - 42;
+      d.add('rect', { x: x0, y: 8, width: bw, height: bh, rx: 4, fill: 'var(--dia-fill)', stroke: INK, 'stroke-width': 1.5 });
+      const cols = 5, rows = 4;
+      const left = x0 + (bw - (cols - 1) * gap) / 2, top = 8 + (bh - (rows - 1) * gap) / 2;
+      let k = 0;
+      for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++, k++) {
+        const jx = ((k * 37) % 7 - 3) * 0.6, jy = ((k * 53) % 7 - 3) * 0.6;
+        const kind = kinds[mixed && second.has(k) ? 1 : 0];
+        d.add('circle', { cx: (left + i * gap + jx).toFixed(1), cy: (top + j * gap + jy).toFixed(1), r,
+                          fill: kind.fill, stroke: kind.edge, 'stroke-width': 1, 'fill-opacity': 0.85 });
+      }
+      note(d, [x0 + bw / 2, d.h - 16], label);
+    };
+    panel(12, false, 'Pure substance');
+    panel(d.w / 2 + 6, true, 'Mixture');
+  }
+
+  // ── Sieving ───────────────────────────────────────────────────────────────
+  function sieve(d) {
+    const P0 = [60, 34], C = [130, 104], P2 = [200, 34];
+    const at = t => [(1 - t) ** 2 * P0[0] + 2 * (1 - t) * t * C[0] + t * t * P2[0],
+                     (1 - t) ** 2 * P0[1] + 2 * (1 - t) * t * C[1] + t * t * P2[1]];
+    d.add('path', { d: `M ${P0[0]} ${P0[1]} Q ${C[0]} ${C[1]} ${P2[0]} ${P2[1]}`, fill: 'none',
+                    stroke: INK, 'stroke-width': 2, 'stroke-dasharray': '7 3' });
+    d.line([P0[0] - 14, P0[1]], P0, { stroke: INK, width: 2 });
+    d.line(P2, [P2[0] + 14, P2[1]], { stroke: INK, width: 2 });
+    // Gravel resting on the mesh: each stone sits one radius above it.
+    for (const [t, lift, r] of [[0.32, 8, 7], [0.45, 9, 8], [0.58, 8.5, 7.5], [0.7, 7, 6.5], [0.42, 23, 7], [0.56, 23, 7.5]]) {
+      const p = at(t);
+      d.add('circle', { cx: p[0].toFixed(1), cy: (p[1] - lift).toFixed(1), r, fill: MUD, stroke: INK, 'stroke-width': 1 });
+    }
+    // Sand grains falling through, and collecting in the tray.
+    for (const [x, y] of [[118, 80], [132, 86], [126, 95], [140, 99], [121, 106], [134, 110], [128, 116]]) d.dot([x, y], { r: 1.8, fill: SAND });
+    d.add('path', { d: 'M 84 120 L 84 136 L 176 136 L 176 120', fill: 'none', stroke: INK, 'stroke-width': 1.6 });
+    for (let k = 0; k < 26; k++) d.dot([94 + ((k * 29) % 72), 132 - ((k * 7) % 3) * 1.8], { r: 1.8, fill: SAND });
+    note(d, [130, 12], 'gravel stays in the sieve');
+    note(d, [112, 100], 'sand falls through', 'end');
+  }
+
+  // ── Filtration ────────────────────────────────────────────────────────────
+  function filtration(d) {
+    const cx = 120;
+    // Filter paper cone, the liquid sitting in it, and the residue at the tip.
+    d.add('polygon', { points: pts([[cx - 44, 22], [cx + 44, 22], [cx, 70]]), fill: 'var(--paper-strip)', stroke: 'var(--accent)', 'stroke-width': 1.2 });
+    d.add('polygon', { points: pts([[cx - 32, 35], [cx + 32, 35], [cx, 70]]), fill: 'var(--water)', stroke: 'none' });
+    for (const [x, y] of [[0, 65], [-3, 61], [3, 61], [-6, 57], [0, 57], [6, 57], [-3, 53], [3, 53], [-9, 53], [9, 53]]) d.dot([cx + x, y], { r: 1.9, fill: MUD });
+    d.add('path', { d: `M ${cx - 50} 18 L ${cx - 5} 72 L ${cx - 5} 100 M ${cx + 5} 100 L ${cx + 5} 72 L ${cx + 50} 18`,
+                    fill: 'none', stroke: INK, 'stroke-width': 1.8, 'stroke-linejoin': 'round' });
+    d.dot([cx, 110], { r: 2.2, fill: 'var(--earth)' });
+    beaker(d, [[cx - 36, 96], [cx - 36, 148], [cx + 36, 148], [cx + 36, 96]]);
+    d.add('rect', { x: cx - 35, y: 126, width: 70, height: 21, fill: 'var(--water)', stroke: 'none' });
+    tag(d, [cx + 54, 34], [cx + 28, 34], 'filter paper');
+    tag(d, [cx - 54, 56], [cx - 10, 56], 'residue', 'end');
+    tag(d, [cx + 54, 136], [cx + 30, 136], 'filtrate');
+  }
+
+  // ── Settling and decanting ────────────────────────────────────────────────
+  function decant(d) {
+    // 1. Settled: mud at the bottom, clearer water above.
+    const A = [[24, 46], [24, 122], [84, 122], [84, 46]];
+    d.add('rect', { x: 25, y: 64, width: 58, height: 57, fill: 'var(--water)', stroke: 'none' });
+    d.add('rect', { x: 25, y: 108, width: 58, height: 13, fill: MUD, 'fill-opacity': 0.85, stroke: 'none' });
+    beaker(d, A);
+    note(d, [54, 140], '1  Let it settle');
+
+    // 2. Tilted to pour. The water's surface stays level, found by clipping
+    // the tilted beaker at the height of its lip; the settled mud stays as a
+    // layer on the base, which is what lets the water be poured off.
+    const pivot = [150, 112], tilt = 26;
+    const B = [[124, 50], [124, 112], [176, 112], [176, 50]].map(p => rot(p, pivot, tilt));
+    const lip = B[3];
+    const water = below(B, lip[1] + 1);
+    const mud = [[125, 99], [125, 111], [175, 111], [175, 99]].map(p => rot(p, pivot, tilt));
+    d.add('polygon', { points: pts(water), fill: 'var(--water)', stroke: 'none' });
+    d.add('polygon', { points: pts(mud), fill: MUD, 'fill-opacity': 0.85, stroke: 'none' });
+    beaker(d, B);
+    // The stream from the lip into the second beaker.
+    const C = [[204, 92], [204, 122], [244, 122], [244, 92]];
+    d.add('path', { d: `M ${lip[0].toFixed(1)} ${lip[1].toFixed(1)} Q ${lip[0] + 14} ${lip[1] - 2} ${lip[0] + 16} 116`,
+                    fill: 'none', stroke: 'var(--earth)', 'stroke-width': 3, 'stroke-linecap': 'round', 'stroke-opacity': 0.8 });
+    d.add('rect', { x: 205, y: 110, width: 38, height: 11, fill: 'var(--water)', stroke: 'none' });
+    beaker(d, C);
+    note(d, [186, 140], '2  Pour off the water');
+  }
+
+  // ── Evaporation ───────────────────────────────────────────────────────────
+  function evaporation(d) {
+    const cx = 110;
+    // Steam rising.
+    for (const dx of [-14, 0, 14]) {
+      const x = cx + dx;
+      d.add('path', { d: `M ${x} 62 q 5 -6 0 -12 q -5 -6 0 -12 q 5 -6 0 -12`, fill: 'none', stroke: MUTED, 'stroke-width': 1.2 });
+    }
+    note(d, [cx - 26, 30], 'water evaporates', 'end');
+    // Dish with crystals left in it.
+    d.add('path', { d: `M ${cx - 38} 68 Q ${cx} 98 ${cx + 38} 68 Z`, fill: 'var(--surface-2)', stroke: INK, 'stroke-width': 1.6 });
+    for (const [x, y, a] of [[-10, 76, 10], [0, 79, -15], [10, 76, 25], [-4, 73, 40], [5, 73, 0]]) {
+      d.add('rect', { x: cx + x - 2.5, y: y - 2.5, width: 5, height: 5, fill: 'var(--paper-strip)', stroke: INK, 'stroke-width': 0.8,
+                      transform: `rotate(${a} ${cx + x} ${y})` });
+    }
+    tag(d, [cx + 52, 74], [cx + 14, 76], 'salt crystals');
+    // Gauze, tripod and a gentle flame.
+    d.line([cx - 48, 90], [cx + 48, 90], { stroke: MUTED, width: 2 });
+    d.line([cx - 40, 90], [cx - 50, 146], { stroke: INK, width: 1.6 });
+    d.line([cx + 40, 90], [cx + 50, 146], { stroke: INK, width: 1.6 });
+    d.add('path', { d: `M ${cx} 100 Q ${cx - 10} 114 ${cx} 122 Q ${cx + 10} 114 ${cx} 100 Z`, fill: 'var(--sun)', stroke: 'var(--accent)', 'stroke-width': 1.2 });
+    d.add('rect', { x: cx - 6, y: 122, width: 12, height: 24, fill: 'var(--surface-2)', stroke: INK, 'stroke-width': 1.3 });
+  }
+
+  // ── Separating with a magnet ──────────────────────────────────────────────
+  function magnet(d) {
+    const cx = 120;
+    d.add('path', { d: `M ${cx - 20} 70 L ${cx - 20} 36 A 20 20 0 0 1 ${cx + 20} 36 L ${cx + 20} 70`,
+                    fill: 'none', stroke: 'var(--dia-accent)', 'stroke-width': 12 });
+    d.line([cx - 20, 62], [cx - 20, 72], { stroke: INK, width: 12 });
+    d.line([cx + 20, 62], [cx + 20, 72], { stroke: INK, width: 12 });
+    // Iron filings clinging to the poles.
+    const filing = (x, y, a) => d.line([x - 3 * Math.cos(a), y - 3 * Math.sin(a)], [x + 3 * Math.cos(a), y + 3 * Math.sin(a)], { stroke: IRON, width: 1.6 });
+    for (let k = 0; k < 9; k++) {
+      filing(cx - 20 + ((k * 5) % 13) - 6, 81 + (k % 3) * 4, k * 0.7);
+      filing(cx + 20 + ((k * 7) % 13) - 6, 81 + (k % 3) * 4, k * 1.1);
+    }
+    tag(d, [cx - 40, 86], [cx - 26, 86], 'iron sticks', 'end');
+    // The heap left behind: sand only.
+    // Grains placed on a low-discrepancy pattern under a parabolic outline.
+    d.add('path', { d: `M ${cx - 50} 140 Q ${cx} 100 ${cx + 50} 140 Z`, fill: SAND, 'fill-opacity': 0.25, stroke: 'none' });
+    for (let k = 0; k < 90; k++) {
+      const u = (k * 0.618034) % 1, v = (k * 0.754878) % 1;
+      const x = cx - 46 + u * 92, top = 140 - 19 * (1 - ((x - cx) / 50) ** 2);
+      d.dot([x, top + 2 + v * (136 - top)], { r: 1.7, fill: SAND });
+    }
+    d.line([cx - 60, 141], [cx + 60, 141], { stroke: INK, width: 1.4 });
+    tag(d, [cx + 62, 126], [cx + 30, 132], 'sand stays');
+  }
+
+  // ── Thermal energy ────────────────────────────────────────────────────────
+  function flame(d, c, s) {
+    s = s || 1;
+    d.add('path', { d: `M ${c[0]} ${c[1] - 16 * s} Q ${c[0] - 9 * s} ${c[1] - 3 * s} ${c[0]} ${c[1] + 4 * s} Q ${c[0] + 9 * s} ${c[1] - 3 * s} ${c[0]} ${c[1] - 16 * s} Z`,
+                    fill: 'var(--sun)', stroke: 'var(--accent)', 'stroke-width': 1.2 });
+  }
+  /** One way thermal energy moves: 'conduction', 'convection' or 'radiation'. */
+  function heatTransfer(d, kind) {
+    const P = 'var(--brand)', PE = 'var(--brand-ink)';
+    if (kind === 'conduction') {
+      // A metal bar as a row of touching particles. Those over the flame
+      // vibrate hardest; each passes energy to the next, but none move along.
+      const r = 9, y = 60, n = 10, x0 = 30;
+      for (let i = 0; i < n; i++) {
+        const x = x0 + i * 2 * r;
+        // A zigzag above each particle, taller where it vibrates more.
+        const amp = Math.max(0, 5 - i * 0.55);
+        if (amp > 0.8) {
+          d.add('path', { d: `M ${x - 6} ${y - r - 5} l 3 ${-amp} l 3 ${amp} l 3 ${-amp} l 3 ${amp}`,
+                          fill: 'none', stroke: MUTED, 'stroke-width': 1.1, 'stroke-linejoin': 'round' });
+        }
+        d.add('circle', { cx: x, cy: y, r, fill: P, stroke: PE, 'stroke-width': 1, 'fill-opacity': 0.85 });
+      }
+      flame(d, [x0 + r, 90], 1.2);
+      SciDia.arrow(d, [70, 30], [200, 30], { colour: 'var(--dia-accent)', width: 2 });
+      note(d, [135, 18], 'energy passes along');
+      note(d, [140, 92], 'the particles stay in place');
+      return;
+    }
+    if (kind === 'convection') {
+      // A pan of water heated from below, with the current drawn as two loops.
+      const L = 50, R = 190, top = 34, bot = 110;
+      d.add('rect', { x: L + 1, y: top + 6, width: R - L - 2, height: bot - top - 7, fill: 'var(--water)', stroke: 'none' });
+      d.add('path', { d: `M ${L} ${top} L ${L} ${bot} L ${R} ${bot} L ${R} ${top}`, fill: 'none', stroke: INK, 'stroke-width': 1.8 });
+      const cx = (L + R) / 2;
+      for (const side of [-1, 1]) {
+        const xi = cx + side * 10, xo = cx + side * 52;
+        d.add('path', { d: `M ${xi} ${bot - 12} L ${xi} ${top + 20} Q ${xi} ${top + 12} ${xi + side * 10} ${top + 12} L ${xo - side * 10} ${top + 12} Q ${xo} ${top + 12} ${xo} ${top + 22} L ${xo} ${bot - 22} Q ${xo} ${bot - 12} ${xo - side * 10} ${bot - 12} L ${xi + side * 6} ${bot - 12}`,
+                        fill: 'none', stroke: 'var(--dia-accent)', 'stroke-width': 1.8 });
+        SciDia.arrow(d, [xi, top + 40], [xi, top + 26], { colour: 'var(--dia-accent)', width: 1.8 });
+        SciDia.arrow(d, [xo, top + 44], [xo, top + 60], { colour: 'var(--dia-accent)', width: 1.8 });
+      }
+      flame(d, [cx, 128], 1);
+      note(d, [cx, 18], 'warm water rises; cooler water sinks');
+      return;
+    }
+    // Radiation: from a fire across a gap, with no material needed.
+    flame(d, [44, 92], 2.2);
+    d.add('rect', { x: 26, y: 96, width: 36, height: 8, rx: 2, fill: MUD, stroke: INK, 'stroke-width': 1 });
+    for (const dy of [-20, 0, 20]) {
+      const y = 70 + dy;
+      let path = `M 76 ${y}`;
+      for (let x = 76; x < 176; x += 10) path += ` q 2.5 -5 5 0 q 2.5 5 5 0`;
+      d.add('path', { d: path, fill: 'none', stroke: 'var(--dia-accent)', 'stroke-width': 1.5 });
+      SciDia.arrow(d, [176, y], [190, y], { colour: 'var(--dia-accent)', width: 1.5 });
+    }
+    d.add('rect', { x: 198, y: 44, width: 18, height: 52, rx: 8, fill: 'var(--moon-lit)', stroke: INK, 'stroke-width': 1.3 });
+    note(d, [130, 118], 'no material needed');
+  }
+
+  /** Particles at two temperatures: the same particles, moving at different speeds. */
+  function particleSpeed(d) {
+    const box = (x0, len, label) => {
+      const bw = (d.w - 36) / 2, bh = d.h - 40;
+      d.add('rect', { x: x0, y: 8, width: bw, height: bh, rx: 4, fill: 'var(--dia-fill)', stroke: INK, 'stroke-width': 1.5 });
+      const spots = [[0.2, 0.25, 30], [0.55, 0.2, 160], [0.82, 0.35, 250], [0.3, 0.62, 100], [0.68, 0.7, 330], [0.15, 0.85, 200], [0.5, 0.48, 60], [0.85, 0.85, 120]];
+      for (const [u, v, a] of spots) {
+        const c = [x0 + 10 + u * (bw - 20), 16 + v * (bh - 20)];
+        const tip = Geo.add(c, Geo.fromDir(a, 6 + len));
+        SciDia.arrow(d, Geo.add(c, Geo.fromDir(a, 6)), tip, { colour: MUTED, width: 1.1, head: 4 });
+        d.add('circle', { cx: c[0].toFixed(1), cy: c[1].toFixed(1), r: 5, fill: 'var(--brand)', stroke: 'var(--brand-ink)', 'stroke-width': 1, 'fill-opacity': 0.85 });
+      }
+      note(d, [x0 + bw / 2, d.h - 16], label);
+    };
+    box(12, 5, 'Cooler');
+    box(d.w / 2 + 6, 15, 'Hotter');
+  }
+
+  // ── The Moon's orbit, from above ──────────────────────────────────────────
+  /** Sunlight from the left; the half of the Moon facing the Sun is always lit. */
+  function moonOrbit(d) {
+    const E = [d.w / 2 + 20, d.h / 2], R = Math.min(d.h / 2 - 22, 62);
+    for (const y of [E[1] - 50, E[1], E[1] + 50]) SciDia.arrow(d, [10, y], [44, y], { colour: 'var(--accent)', width: 1.6 });
+    note(d, [30, E[1] - 64], 'sunlight');
+    d.add('circle', { cx: E[0], cy: E[1], r: R, fill: 'none', stroke: MUTED, 'stroke-width': 1, 'stroke-dasharray': '4 3' });
+    d.add('circle', { cx: E[0], cy: E[1], r: 13, fill: 'var(--earth)', stroke: INK, 'stroke-width': 1.1 });
+    note(d, [E[0], E[1] + 24], 'Earth');
+    const mr = 8;
+    for (const [ang, lab] of [[180, 'new'], [270, ''], [0, 'full'], [90, '']]) {
+      const c = [E[0] + R * Math.cos(ang * RAD), E[1] + R * Math.sin(ang * RAD)];
+      d.add('circle', { cx: c[0].toFixed(1), cy: c[1].toFixed(1), r: mr, fill: 'var(--moon-dark)', stroke: INK, 'stroke-width': 1 });
+      d.add('path', { d: `M ${c[0].toFixed(1)} ${(c[1] - mr).toFixed(1)} A ${mr} ${mr} 0 0 0 ${c[0].toFixed(1)} ${(c[1] + mr).toFixed(1)} Z`,
+                      fill: 'var(--moon-lit)', stroke: 'none' });
+      if (lab) note(d, [c[0] + (ang === 0 ? 0 : 0), c[1] + (ang === 0 || ang === 180 ? -16 : 0)], lab);
+    }
+  }
+
+  // ── Solutions ─────────────────────────────────────────────────────────────
+  /** A beaker of liquid: 'solution', 'suspension' or 'saturated'. */
+  function solution(d, kind) {
+    const L = d.w / 2 - 44, R = d.w / 2 + 44, top = 20, bot = d.h - 30, lvl = 38;
+    d.add('rect', { x: L + 1, y: lvl, width: R - L - 2, height: bot - lvl - 1, fill: 'var(--water)', stroke: 'none' });
+    const S = 'var(--dia-accent)';
+    if (kind === 'suspension') {
+      // Clumps of undissolved solid, more of them lower down, some settled.
+      for (let k = 0; k < 9; k++) {
+        const x = L + 12 + ((k * 0.618) % 1) * (R - L - 24), y = lvl + 10 + ((k * 0.38 + k / 9) % 1) * (bot - lvl - 30);
+        d.add('circle', { cx: x.toFixed(1), cy: y.toFixed(1), r: 3.6, fill: MUD, stroke: INK, 'stroke-width': 0.6 });
+      }
+      for (let k = 0; k < 12; k++) d.add('circle', { cx: (L + 8 + k * 6.5).toFixed(1), cy: bot - 4 - (k % 2) * 3, r: 3.2, fill: MUD, stroke: INK, 'stroke-width': 0.6 });
+    } else {
+      // Dissolved: single particles spread evenly through the liquid.
+      for (let k = 0; k < 26; k++) {
+        const x = L + 8 + ((0.5 + k * 0.7548776662) % 1) * (R - L - 16), y = lvl + 6 + ((0.5 + k * 0.5698402910) % 1) * (bot - lvl - 14);
+        d.dot([x, y], { r: 1.8, fill: S });
+      }
+      if (kind === 'saturated') {
+        for (const [x, y, a] of [[-14, 0, 10], [-6, -2, 35], [2, 0, -10], [10, -1, 20], [-2, -6, 0], [6, -6, 45]]) {
+          const cx = d.w / 2 + x, cy = bot - 5 + y;
+          d.add('rect', { x: cx - 3.5, y: cy - 3.5, width: 7, height: 7, fill: 'var(--paper-strip)', stroke: INK, 'stroke-width': 0.8, transform: `rotate(${a} ${cx} ${cy})` });
+        }
+      }
+    }
+    beaker(d, [[L, top], [L, bot], [R, bot], [R, top]]);
+    note(d, [d.w / 2, d.h - 12], { solution: 'dissolved: spread evenly', suspension: 'not dissolved: settles', saturated: 'no more can dissolve' }[kind]);
+  }
+
+  /** The same volume of solvent with less and more solute. */
+  function concentration(d) {
+    const one = (cx, n, label) => {
+      const L = cx - 38, R = cx + 38, top = 16, bot = d.h - 30, lvl = 32;
+      d.add('rect', { x: L + 1, y: lvl, width: R - L - 2, height: bot - lvl - 1, fill: 'var(--brand)', 'fill-opacity': 0.05 + n * 0.012, stroke: 'none' });
+      for (let k = 0; k < n; k++) {
+        const x = L + 8 + ((0.5 + k * 0.7548776662) % 1) * (R - L - 16), y = lvl + 6 + ((0.5 + k * 0.5698402910) % 1) * (bot - lvl - 14);
+        d.dot([x, y], { r: 2, fill: 'var(--dia-accent)' });
+      }
+      beaker(d, [[L, top], [L, bot], [R, bot], [R, top]]);
+      note(d, [cx, d.h - 12], label);
+    };
+    one(d.w * 0.27, 6, 'dilute');
+    one(d.w * 0.73, 24, 'concentrated');
+  }
+
+  // ── How we see ────────────────────────────────────────────────────────────
+  function seeing(d) {
+    // Lamp, top left.
+    const lamp = [40, 34];
+    d.add('circle', { cx: lamp[0], cy: lamp[1], r: 11, fill: 'var(--sun)', stroke: 'var(--accent)', 'stroke-width': 1.2 });
+    for (let a = 0; a < 360; a += 45) d.line(Geo.add(lamp, Geo.fromDir(a, 14)), Geo.add(lamp, Geo.fromDir(a, 18)), { stroke: 'var(--accent)', width: 1.2 });
+    note(d, [lamp[0], lamp[1] + 30], 'source');
+    // Book, bottom middle.
+    const book = [d.w / 2, d.h - 34];
+    d.add('rect', { x: book[0] - 26, y: book[1] - 8, width: 52, height: 14, rx: 2, fill: 'var(--brand)', 'fill-opacity': 0.75, stroke: INK, 'stroke-width': 1.1 });
+    note(d, [book[0], book[1] + 20], 'object');
+    // Eye, right.
+    const eye = [d.w - 34, 40];
+    d.add('path', { d: `M ${eye[0] - 16} ${eye[1]} Q ${eye[0]} ${eye[1] - 12} ${eye[0] + 16} ${eye[1]} Q ${eye[0]} ${eye[1] + 12} ${eye[0] - 16} ${eye[1]} Z`, fill: 'var(--surface)', stroke: INK, 'stroke-width': 1.2 });
+    d.add('circle', { cx: eye[0] - 3, cy: eye[1], r: 4.5, fill: INK });
+    note(d, [eye[0], eye[1] + 24], 'eye');
+    SciDia.arrow(d, Geo.add(lamp, [14, 12]), [book[0] - 10, book[1] - 12], { colour: 'var(--dia-accent)', width: 1.8 });
+    SciDia.arrow(d, [book[0] + 10, book[1] - 12], [eye[0] - 20, eye[1] + 6], { colour: 'var(--dia-accent)', width: 1.8 });
+  }
+
+  // ── Cycles and nests ──────────────────────────────────────────────────────
+  /**
+   * Stages round a loop, with an arrow from each to the next. `labels` go
+   * clockwise from the top; optional `edges` label the arrows.
+   */
+  function cycle(d, labels, o) {
+    o = o || {};
+    const size = o.size || 11;
+    const widest = Math.max(...labels.map(t => String(t).length * size * 0.58 + 14));
+    const c = [d.w / 2, d.h / 2], rx = d.w / 2 - (o.padX || widest / 2 + 4), ry = d.h / 2 - (o.padY || 20);
+    const n = labels.length;
+    const boxes = labels.map((t, i) => {
+      const a = -90 + i * 360 / n;
+      const p = [c[0] + rx * Math.cos(a * RAD), c[1] + ry * Math.sin(a * RAD)];
+      return SciDia.box(d, p, t, { size, h: 22, fill: o.fill && o.fill[i] });
+    });
+    boxes.forEach((b, i) => {
+      const nb = boxes[(i + 1) % n];
+      const from = boxEdgeOf(b, nb.c), to = boxEdgeOf(nb, b.c);
+      // Bow each arrow outwards a little, so the loop reads as a loop.
+      const mid = Geo.scale(Geo.add(from, to), 0.5);
+      const out = Geo.norm(Geo.sub(mid, c));
+      const ctrl = Geo.add(mid, Geo.scale(out, 14));
+      d.add('path', { d: `M ${from[0].toFixed(1)} ${from[1].toFixed(1)} Q ${ctrl[0].toFixed(1)} ${ctrl[1].toFixed(1)} ${to[0].toFixed(1)} ${to[1].toFixed(1)}`,
+                      fill: 'none', stroke: INK, 'stroke-width': 1.4 });
+      SciDia.arrowHeadAt(d, ctrl, to);
+      if (o.edges && o.edges[i]) {
+        const lp = Geo.add(ctrl, Geo.scale(out, 4));
+        d.text(lp, o.edges[i], { size: 9.5, fill: 'var(--accent-ink)', bold: false,
+                                 anchor: Math.abs(out[0]) < 0.3 ? 'middle' : out[0] > 0 ? 'start' : 'end' });
+      }
+    });
+  }
+  function boxEdgeOf(b, p) {
+    const u = Geo.norm(Geo.sub(p, b.c));
+    const tx = Math.abs(u[0]) > 1e-6 ? (b.w / 2 + 3) / Math.abs(u[0]) : Infinity;
+    const ty = Math.abs(u[1]) > 1e-6 ? (b.h / 2 + 3) / Math.abs(u[1]) : Infinity;
+    return Geo.add(b.c, Geo.scale(u, Math.min(tx, ty)));
+  }
+
+  /** Nested regions, outermost first, each labelled in its top-left corner. */
+  function nested(d, labels) {
+    labels.forEach((t, i) => {
+      const inset = 6 + i * 26;
+      d.add('rect', { x: inset, y: inset, width: d.w - 2 * inset, height: d.h - 2 * inset, rx: 8,
+                      fill: 'var(--brand)', 'fill-opacity': 0.06 + i * 0.05, stroke: 'var(--brand-ink)', 'stroke-width': 1.2 });
+      d.text([inset + 8, inset + 13], t, { size: 11, fill: 'var(--brand-ink)', anchor: 'start' });
+    });
+  }
+
+  Object.assign(SciDia, { note, tag, below, rot, beaker, pureVsMixture, sieve, filtration, decant, evaporation, magnet,
+                         flame, heatTransfer, particleSpeed, moonOrbit, solution, concentration, seeing, cycle, nested });
 })();

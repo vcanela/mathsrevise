@@ -55,6 +55,71 @@
           'Adding thermal energy makes particles move faster; removing it slows them down. ' +
           'The particles themselves never change size or type, and the mass stays the same.',
 
+    learn: [
+      {
+        id: 'states', title: 'Solid, liquid and gas', wide: true,
+        diagram: { w: 360, h: 128 },
+        draw(d) {
+          const rng = new RNG(11);
+          const gap = 16, margin = 4, bw = (d.w - 2 * margin - 2 * gap) / 3;
+          ['solid', 'liquid', 'gas'].forEach((s, i) => {
+            const box = { x: margin + i * (bw + gap), y: 4, w: bw, h: 100 };
+            SciDia.particles(d, s, rng, { box, r: 6, cols: 5, rows: 3, count: s === 'liquid' ? 15 : 7, minGap: 26 });
+            d.text([box.x + bw / 2, 118], s[0].toUpperCase() + s.slice(1), { size: 12 });
+          });
+        },
+        text: '<p>Everything is made of <strong>particles</strong>, far too small to see.</p>' +
+              '<ul><li><strong>Solid:</strong> close together in a fixed arrangement, vibrating in place. Keeps its shape.</li>' +
+              '<li><strong>Liquid:</strong> close together, but sliding past each other. Flows and takes the shape of its container.</li>' +
+              '<li><strong>Gas:</strong> far apart, moving fast in all directions, with weak attractions. Fills its container. The gaps between the particles are empty.</li></ul>'
+      },
+      {
+        id: 'same', title: 'The particles never change',
+        text: '<p>In every state, the particles are the <strong>same size</strong> and the <strong>same type</strong>.</p>' +
+              '<p>Only their <strong>arrangement</strong>, <strong>spacing</strong> and <strong>movement</strong> change. Even in a solid they are moving: vibrating on the spot.</p>'
+      },
+      {
+        id: 'changes', title: 'Six changes of state',
+        diagram: { w: 300, h: 210 },
+        draw(d) { SciDia.stateCycle(d, CH); },
+        text: '<p>Solid ↔ liquid: <strong>melting</strong>, <strong>freezing</strong>. Liquid ↔ gas: <strong>evaporation</strong>, <strong>condensation</strong>. ' +
+              'Solid ↔ gas, skipping the liquid: <strong>sublimation</strong>, <strong>deposition</strong>.</p>'
+      },
+      {
+        id: 'energy', title: 'Adding or removing thermal energy',
+        text: '<p><strong>Add</strong> thermal energy and the particles move faster, until they overcome some of the attractions: melting, evaporation, sublimation.</p>' +
+              '<p><strong>Remove</strong> it and they slow down, and the attractions pull them together: freezing, condensation, deposition.</p>'
+      },
+      {
+        id: 'everyday', title: 'Changes of state around you',
+        text: Sci.table(['What you see', 'Change'], [
+          ['A puddle dries up', 'evaporation'], ['A mirror fogs in the shower', 'condensation'],
+          ['An ice block turns to a puddle', 'melting'], ['Candle wax drips and goes hard', 'freezing'],
+          ['Frost on a windscreen', 'deposition'], ['Dry ice turns straight to gas', 'sublimation']])
+      },
+      {
+        id: 'mass', title: 'Mass stays the same',
+        text: '<p>100 g of ice melts into <strong>100 g</strong> of water. Nothing is added or taken away; the same particles are just rearranged.</p>' +
+              '<p>Evaporated water still exists, spread through the air as water vapour.</p>'
+      },
+      {
+        id: 'expand', title: 'Expanding when heated',
+        text: '<p>Heated particles move more and push a little further apart, so the material gets slightly bigger. The particles themselves do not grow.</p>' +
+              '<p>That is why long bridges have small gaps called expansion joints.</p>'
+      },
+      {
+        id: 'water', title: 'Water is unusual',
+        text: '<p>Most substances are denser as a solid. Water is the exception: freezing locks its particles into an arrangement with gaps, which takes up <strong>more</strong> space.</p>' +
+              '<p>So ice floats, and a full glass bottle can crack in the freezer.</p>'
+      },
+      {
+        id: 'fair', title: 'A fair test',
+        text: '<ul><li><strong>Independent variable:</strong> the one thing you change on purpose.</li>' +
+              '<li><strong>Dependent variable:</strong> what you measure.</li>' +
+              '<li><strong>Controlled variables:</strong> everything else, kept the same.</li></ul>'
+      }
+    ],
+
     examples: [
       {
         title: 'Example 1: the same particles, three arrangements',
@@ -94,7 +159,7 @@
     slots: [
       // 1 · Read the state off a particle diagram.
       {
-        name: 'Which state is shown?',
+        name: 'Which state is shown?', learn: 'states',
         items: ['solid', 'liquid', 'gas'].map(state => rng => {
           const pr = new RNG(rng.int(1, 1e9));
           // Always offered in the natural order: solid, liquid, gas.
@@ -115,7 +180,7 @@
 
       // 2 · Match each state to its particle picture or property.
       {
-        name: 'Match the state to its description',
+        name: 'Match the state to its description', learn: 'states',
         items: [STATE_TEXT, STATE_PROPS].map(table => rng => {
           const left = ['Solid', 'Liquid', 'Gas'];
           const order = rng.shuffle([0, 1, 2]);
@@ -139,7 +204,7 @@
 
       // 3 · Label the six changes of state.
       {
-        name: 'Label the changes of state',
+        name: 'Label the changes of state', learn: 'changes',
         items: [rng => {
           const perm = rng.shuffle([0, 1, 2, 3, 4, 5]);
           const labels = CH.map((_, c) => String(perm.indexOf(c) + 1));
@@ -157,7 +222,7 @@
 
       // 4 · Name the change in an everyday situation.
       {
-        name: 'Name the everyday change',
+        name: 'Name the everyday change', learn: 'everyday',
         items: EVERYDAY.map(ev => rng => C(rng, {
           prompt: ev.text + ' Which change of state is this?',
           right: ev.change,
@@ -176,7 +241,7 @@
 
       // 5 · Is thermal energy added or removed?
       {
-        name: 'Thermal energy added or removed?',
+        name: 'Thermal energy added or removed?', learn: 'energy',
         items: [rng => Sci.sort(rng, {
           prompt: 'For each change, is thermal energy added or removed?',
           bins: ['Added', 'Removed'],
@@ -191,7 +256,7 @@
 
       // 6 · Spot the misconception.
       {
-        name: 'Spot the misconception',
+        name: 'Spot the misconception', learn: 'same',
         items: [
           rng => Sci.spot(rng, {
             prompt: 'A student explains why a metal rod gets longer when heated.',
@@ -206,7 +271,7 @@
           }),
           rng => {
             const g = rng.pick([150, 200, 250, 300, 350]);
-            return Sci.spot(rng, {
+            return Sci.spot(rng, { learn: 'mass',
               prompt: `A student predicts what happens when ${g} g of ice melts in a sealed container.`,
               lines: [
                 `${g} g of ice is sealed in a container and left to melt.`,
@@ -218,7 +283,7 @@
               explain: `Mass is conserved during a change of state. The same particles are there, just arranged differently, so the water has a mass of ${g} g.`
             });
           },
-          rng => Sci.spot(rng, {
+          rng => Sci.spot(rng, { learn: 'states',
             prompt: 'A student describes the particles in a solid.',
             lines: [
               'In a solid, the particles are held close together.',
@@ -229,7 +294,7 @@
             wrong: 2,
             explain: 'The particles in a solid are always moving: they vibrate on the spot. The attractive forces stop them leaving their places, not from moving.'
           }),
-          rng => Sci.spot(rng, {
+          rng => Sci.spot(rng, { learn: 'mass',
             prompt: 'A student explains how a puddle dries up.',
             lines: [
               'A puddle dries up on a warm, sunny day.',
@@ -240,7 +305,7 @@
             wrong: 3,
             explain: 'The particles still exist: they are spread out in the air as water vapour, a gas. Nothing is destroyed in a change of state.'
           }),
-          rng => Sci.spot(rng, {
+          rng => Sci.spot(rng, { learn: 'states',
             prompt: 'A student describes the particles in a gas.',
             lines: [
               'In a gas, the particles are far apart.',
@@ -256,23 +321,23 @@
 
       // 7 · True or false.
       {
-        name: 'True or false',
+        name: 'True or false', learn: 'states',
         items: [
-          rng => TF(rng, { statement: 'Ice floats on water because solid water is less dense than liquid water.', answer: true,
+          rng => TF(rng, { learn: 'water', statement: 'Ice floats on water because solid water is less dense than liquid water.', answer: true,
             explain: 'When water freezes, its particles form a fixed arrangement with gaps, which takes up more space, so ice is less dense.' }),
-          rng => TF(rng, { statement: 'Most materials are denser as a solid than as a liquid.', answer: true,
+          rng => TF(rng, { learn: 'water', statement: 'Most materials are denser as a solid than as a liquid.', answer: true,
             explain: 'For most substances, such as wax and iron, the particles pack more closely as a solid. Water is the unusual exception.' }),
-          rng => TF(rng, { statement: 'When water freezes, its particles get bigger.', answer: false,
+          rng => TF(rng, { learn: 'same', statement: 'When water freezes, its particles get bigger.', answer: false,
             explain: 'The particles stay the same size. They lock into an arrangement with gaps between them, which is why ice takes up more space.' }),
           rng => TF(rng, { statement: 'The particles in a liquid are far apart, like the particles in a gas.', answer: false,
             explain: 'Liquid particles are close together, held by attractive forces. Only in a gas are they far apart.' }),
           rng => TF(rng, { statement: 'The particles in a gas have only weak attractions between them.', answer: true,
             explain: 'The attractions are weak and the particles are far apart, which is why a gas spreads out to fill its container.' }),
-          rng => TF(rng, { statement: 'Heating a substance makes its particles move faster.', answer: true,
+          rng => TF(rng, { learn: 'energy', statement: 'Heating a substance makes its particles move faster.', answer: true,
             explain: 'Adding thermal energy speeds the particles up, until they can overcome the attractive forces holding them together.' }),
-          rng => TF(rng, { statement: 'During a change of state, the particles turn into a different type of particle.', answer: false,
+          rng => TF(rng, { learn: 'same', statement: 'During a change of state, the particles turn into a different type of particle.', answer: false,
             explain: 'A change of state alters how the particles are arranged and how far apart they are, but not their size, shape or type.' }),
-          rng => TF(rng, { statement: 'Water vapour can turn straight into ice without becoming a liquid first.', answer: true,
+          rng => TF(rng, { learn: 'changes', statement: 'Water vapour can turn straight into ice without becoming a liquid first.', answer: true,
             explain: 'That is deposition, gas straight to solid, which is how frost forms.' }),
           rng => TF(rng, { statement: 'Everything around us is made of particles too small to see, even with an ordinary microscope.', answer: true,
             explain: 'All matter is made of sub-microscopic particles.' })
@@ -281,7 +346,7 @@
 
       // 8 · Mass is conserved.
       {
-        name: 'Mass during a change of state',
+        name: 'Mass during a change of state', learn: 'mass',
         items: [
           Sci.gen((rng, diff) => {
             const g = rng.int(6, 48) * 5;
@@ -313,7 +378,7 @@
 
       // 9 · Explain the everyday problem.
       {
-        name: 'Explain the everyday problem',
+        name: 'Explain the everyday problem', learn: 'water',
         items: [
           rng => C(rng, {
             prompt: 'A glass bottle filled to the top with water cracks in the freezer. Which is the best explanation?',
@@ -325,7 +390,7 @@
             ],
             explain: 'Unlike most substances, water takes up more space as a solid, so a full bottle has nowhere for the extra volume to go.'
           }),
-          rng => C(rng, {
+          rng => C(rng, { learn: 'everyday',
             prompt: 'On a cold morning, the inside of a car’s windows is covered in tiny drops of water. Which is the best explanation?',
             right: 'Water vapour in the air inside the car loses thermal energy on the cold glass and condenses into liquid.',
             wrong: [
@@ -335,7 +400,7 @@
             ],
             explain: 'This is condensation. The water was already in the air as a gas; the cold glass takes thermal energy from it.'
           }),
-          rng => C(rng, {
+          rng => C(rng, { learn: 'energy',
             prompt: 'Why can a wet road become icy on a clear, cold night?',
             right: 'The water on the road loses thermal energy to the cold air until its particles settle into a fixed arrangement: it freezes.',
             wrong: [
@@ -345,7 +410,7 @@
             ],
             explain: 'Freezing happens when thermal energy is removed, not added.'
           }),
-          rng => C(rng, {
+          rng => C(rng, { learn: 'expand',
             prompt: 'Long bridges have small gaps in them called expansion joints. What are they for?',
             right: 'In hot weather the bridge’s materials expand, and the gaps give them room to get longer without cracking.',
             wrong: [
@@ -360,7 +425,7 @@
 
       // 10 · Plan a fair test.
       {
-        name: 'Variables in an investigation',
+        name: 'Variables in an investigation', learn: 'fair',
         items: (() => {
           const scenarios = [
             {
@@ -442,6 +507,56 @@
     hint: 'Speed is the distance travelled in each second (or each hour). Divide the distance by the time: ' +
           'speed = distance ÷ time. On a distance–time graph, a steeper line means faster, and a flat line means not moving.',
 
+    learn: [
+      {
+        id: 'formula', title: 'Calculating speed',
+        text: '<p>Speed is the distance travelled in each unit of time:</p>' +
+              '<p style="text-align:center">' + m('\\text{speed} = \\text{distance} \\div \\text{time}') + '</p>' +
+              '<p>300 m in 60 s: ' + m('300 \\div 60 = 5') + ' m/s. Divide, never multiply, and always distance on top.</p>'
+      },
+      {
+        id: 'units', title: 'Units of speed',
+        text: '<p>The unit is a distance unit <strong>per</strong> time unit.</p>' +
+              Sci.table(['Distance in', 'Time in', 'Speed in'], [['metres', 'seconds', 'm/s'], ['kilometres', 'hours', 'km/h']]) +
+              '<p>5 m/s means <strong>5 metres every second</strong>.</p>'
+      },
+      {
+        id: 'compare', title: 'Who is faster?',
+        text: '<p>Over the <strong>same distance</strong>, the shorter time is the faster speed.</p>' +
+              '<p>In the <strong>same time</strong>, the longer distance is the faster speed.</p>'
+      },
+      {
+        id: 'graph', title: 'Distance–time graphs',
+        diagram: { w: 280, h: 200 },
+        draw(d) {
+          SciDia.graph(d, {
+            xMax: 10, yMax: 40, xStep: 2, yStep: 10, xLabel: 'Time (s)', yLabel: 'Distance (m)',
+            series: [{ points: [[0, 0], [10, 40]], label: 'A' }, { points: [[0, 0], [4, 8], [6, 8], [10, 16]], label: 'B' }]
+          });
+        },
+        text: '<ul><li><strong>Steeper</strong> line: faster. A is faster than B.</li>' +
+              '<li><strong>Flat</strong> line: stopped. B stops from 4 s to 6 s.</li>' +
+              '<li>Straight sloping line: <strong>steady</strong> speed.</li></ul>' +
+              '<p>Read any point to find a speed: A goes 40 m in 10 s, so 4 m/s.</p>'
+      },
+      {
+        id: 'constant', title: 'Constant or changing speed',
+        text: '<p><strong>Constant:</strong> the same distance every second, such as a car on cruise control or a conveyor belt.</p>' +
+              '<p><strong>Changing:</strong> starting, stopping, falling, or being thrown upwards.</p>'
+      },
+      {
+        id: 'kinetic', title: 'Kinetic energy',
+        text: '<p><strong>Kinetic energy</strong> is the energy of motion. A rolling skateboard has it; a parked car does not.</p>'
+      },
+      {
+        id: 'reliable', title: 'Accurate and reliable timing',
+        text: '<ul><li>Measure <strong>distance</strong> and <strong>time</strong>.</li>' +
+              '<li>Use a <strong>stopwatch</strong> for short times, since it shows parts of a second.</li>' +
+              '<li><strong>Repeat</strong> and <strong>average</strong>: add the times and divide by how many. Then use the average time.</li>' +
+              '<li>If you know a result was measured wrongly, repeat it and leave it out.</li></ul>'
+      }
+    ],
+
     examples: [
       {
         title: 'Example 1: calculating a speed',
@@ -476,7 +591,7 @@
     slots: [
       // 1 · Calculate a speed in m/s.
       {
-        name: 'Calculate speed in m/s',
+        name: 'Calculate speed in m/s', learn: 'formula',
         items: [Sci.gen((rng, diff) => {
           const mv = rng.pick(MOVERS);
           const v = stepped(rng, mv.lo, mv.hi, diff === 'core' ? Math.max(mv.step, 0.5) : mv.step);
@@ -492,7 +607,7 @@
 
       // 2 · Calculate a speed in km/h.
       {
-        name: 'Calculate speed in km/h',
+        name: 'Calculate speed in km/h', learn: 'units',
         items: [Sci.gen((rng, diff) => {
           const veh = rng.pick(VEHICLES);
           const v = rng.int(veh.lo / 5, veh.hi / 5) * 5;
@@ -509,7 +624,7 @@
 
       // 3 · What speed means.
       {
-        name: 'What speed means',
+        name: 'What speed means', learn: 'units',
         items: [
           rng => C(rng, {
             prompt: 'Which of these is a unit of speed?',
@@ -525,14 +640,14 @@
               explain: `Speed is distance per unit of time: ${v} m/s is ${v} metres in each second.`
             });
           },
-          rng => C(rng, {
+          rng => C(rng, { learn: 'formula',
             prompt: 'Which calculation gives a speed?',
             right: m('\\text{distance} \\div \\text{time}'),
             wrong: [m('\\text{distance} \\times \\text{time}'), m('\\text{time} \\div \\text{distance}'), m('\\text{distance} + \\text{time}')],
             wide: false,
             explain: 'Speed is calculated by dividing the distance travelled by the time taken.'
           }),
-          rng => C(rng, {
+          rng => C(rng, { learn: 'kinetic',
             prompt: 'Which of these has kinetic energy?',
             right: rng.pick(['A skateboard rolling down a path', 'A kicked rugby ball in flight', 'A bus driving along the road']),
             wrong: ['A book resting on a shelf', 'A parked car', 'A rock sitting on the beach'],
@@ -554,7 +669,8 @@
                           { html: 'They have the same speed', right: false }],
                 correct: aFaster ? 0 : 1
               },
-              explain: `Over the same distance, the shorter time means the faster speed: ${winner} took less time.`
+              explain: `Over the same distance, the shorter time means the faster speed: ${winner} took less time.`,
+              learn: 'compare'
             };
           }
         ]
@@ -562,7 +678,7 @@
 
       // 4 · Read a speed off a distance–time graph.
       {
-        name: 'Speed from a graph',
+        name: 'Speed from a graph', learn: 'graph',
         items: [Sci.gen((rng, diff) => {
           const v = diff === 'core' ? rng.int(1, 5) : rng.pick([0.5, 1.5, 2, 2.5, 3, 3.5, 4, 4.5]);
           const T = 10;
@@ -583,7 +699,7 @@
 
       // 5 · Compare two motions on one graph.
       {
-        name: 'Faster or slower on a graph',
+        name: 'Faster or slower on a graph', learn: 'graph',
         items: [Sci.gen(rng => {
           let va = rng.int(1, 5), vb = rng.int(1, 5);
           while (vb === va) vb = rng.int(1, 5);
@@ -611,7 +727,7 @@
 
       // 6 · What a section of a graph shows.
       {
-        name: 'Reading a journey graph',
+        name: 'Reading a journey graph', learn: 'graph',
         items: [Sci.gen(rng => {
           const v1 = rng.int(2, 4), t1 = rng.pick([4, 6]);
           const rest = rng.pick([2, 4]);
@@ -647,7 +763,7 @@
 
       // 7 · Repeat trials and average.
       {
-        name: 'Averaging repeat trials',
+        name: 'Averaging repeat trials', learn: 'reliable',
         items: [Sci.gen(rng => {
           // Choose a speed and a mean time that give a clean distance, then
           // spread three trials around the mean so they average to it exactly.
@@ -679,7 +795,7 @@
 
       // 8 · Spot the mistake in a calculation.
       {
-        name: 'Spot the mistake',
+        name: 'Spot the mistake', learn: 'formula',
         items: [
           Sci.gen(rng => {
             const t = rng.int(2, 8), v = rng.int(2, 6), dist = v * t;
@@ -711,7 +827,7 @@
           }),
           Sci.gen(rng => {
             const h = rng.int(2, 4), v = rng.int(8, 20) * 5, dist = v * h;
-            return Sci.spot(rng, {
+            return Sci.spot(rng, { learn: 'units',
               prompt: `A car travels ${dist} km in ${h} hours. A student works out its average speed.`,
               lines: [
                 m('\\text{speed} = \\text{distance} \\div \\text{time}'),
@@ -728,7 +844,7 @@
 
       // 9 · Constant or changing speed.
       {
-        name: 'Constant or changing speed?',
+        name: 'Constant or changing speed?', learn: 'constant',
         items: [rng => Sci.sort(rng, {
           prompt: 'Is each one moving at a constant speed, or is its speed changing?',
           bins: ['Constant', 'Changing'],
@@ -751,7 +867,7 @@
 
       // 10 · Accuracy and reliability.
       {
-        name: 'Accurate and reliable measurements',
+        name: 'Accurate and reliable measurements', learn: 'reliable',
         items: [
           rng => C(rng, {
             prompt: 'Why do scientists repeat a timing several times and take the average?',
@@ -823,6 +939,75 @@
           '(particle to particle through a material), convection (a warm liquid or gas moves) and radiation (no material needed). ' +
           'A good insulator has a low thermal conductivity, so it passes thermal energy on slowly.',
 
+    learn: [
+      {
+        id: 'temp', title: 'Temperature',
+        diagram: { w: 260, h: 130 },
+        draw(d) { SciDia.particleSpeed(d); },
+        text: '<p><strong>Temperature</strong> measures the <strong>average kinetic energy</strong> of the particles: how fast they move, on average. Hotter particles move faster; they do not get bigger.</p>'
+      },
+      {
+        id: 'thermal', title: 'Thermal energy is not temperature',
+        text: '<p><strong>Thermal energy</strong> is the energy of the motion and interactions of <strong>all</strong> the particles, so it also depends on how much substance there is.</p>' +
+              '<p>A warm bath has more thermal energy than a cup of boiling water: it is cooler, but has far more particles.</p>'
+      },
+      {
+        id: 'conduction', title: 'Conduction',
+        diagram: { w: 240, h: 110 },
+        draw(d) { SciDia.heatTransfer(d, 'conduction'); },
+        text: '<p>Thermal energy passes <strong>through a material</strong>, particle to particle. The material itself does not move. A spoon in hot soup warms up this way.</p>'
+      },
+      {
+        id: 'convection', title: 'Convection',
+        diagram: { w: 240, h: 140 },
+        draw(d) { SciDia.heatTransfer(d, 'convection'); },
+        text: '<p>A warm <strong>liquid or gas moves</strong>, carrying thermal energy with it. Warm air from a heater rises and spreads round the room.</p>'
+      },
+      {
+        id: 'radiation', title: 'Radiation',
+        diagram: { w: 240, h: 130 },
+        draw(d) { SciDia.heatTransfer(d, 'radiation'); },
+        text: '<p>Needs <strong>no material</strong>, so it can cross empty space. This is how the Sun warms the Earth, and how you feel a campfire from across it.</p>'
+      },
+      {
+        id: 'direction', title: 'Hot to cold',
+        text: '<p>Thermal energy always moves from the <strong>warmer</strong> thing to the <strong>colder</strong> thing, until they reach the same temperature.</p>' +
+              '<p>"Cold" never moves anywhere: a cold drink warms up because energy flows <em>in</em>.</p>'
+      },
+      {
+        id: 'conductors', title: 'Conductors and insulators',
+        text: Sci.table(['Good conductors', 'Insulators'], [['Copper', 'Wool'], ['Aluminium', 'Polystyrene foam'], ['Steel, iron', 'Wood, plastic, cork'], ['', 'Trapped air, feathers']]) +
+              '<p>Insulators have a <strong>low thermal conductivity</strong>: energy passes through them slowly. Many work by trapping air. They make no heat of their own.</p>'
+      },
+      {
+        id: 'choosing', title: 'The right material for the job',
+        text: '<ul><li>Pan base: a <strong>metal</strong>, to pass energy to the food fast.</li>' +
+              '<li>Pan handle: <strong>wood</strong> or plastic, to stay cool.</li>' +
+              '<li>Chilly bin: <strong>foam</strong>, to keep energy out.</li>' +
+              '<li>Tramping: <strong>layers</strong> of merino, trapping air.</li>' +
+              '<li>Hāngī: a layer of <strong>earth</strong> keeps energy in the pit.</li></ul>'
+      },
+      {
+        id: 'graph', title: 'Comparing insulators',
+        diagram: { w: 280, h: 200 },
+        draw(d) {
+          const curve = k => Array.from({ length: 11 }, (_, i) => [i * 2, +(20 + 60 * Math.exp(-k * i * 2)).toFixed(1)]);
+          SciDia.graph(d, {
+            xMax: 20, yMax: 80, xStep: 4, yStep: 20, xLabel: 'Time (min)', yLabel: 'Temperature (°C)',
+            series: [{ points: curve(0.03), label: 'A' }, { points: curve(0.095), label: 'B' }]
+          });
+        },
+        text: '<p>The best insulator cools <strong>slowest</strong>, so its line stays <strong>highest</strong>: A here.</p>' +
+              '<p>How much it cooled = starting temperature − later temperature.</p>'
+      },
+      {
+        id: 'fair', title: 'A fair test of insulators',
+        text: '<ul><li><strong>Change:</strong> the wrapping material.</li>' +
+              '<li><strong>Measure:</strong> the temperature after a set time.</li>' +
+              '<li><strong>Keep the same:</strong> starting temperature, volume of water, thickness of wrapping.</li></ul>'
+      }
+    ],
+
     examples: [
       {
         title: 'Example 1: conduction through a metal spoon',
@@ -856,18 +1041,18 @@
     slots: [
       // 1 · Which kind of transfer?
       {
-        name: 'Conduction, convection or radiation?',
+        name: 'Conduction, convection or radiation?', learn: 'conduction',
         items: TRANSFERS.map(t => rng => C(rng, {
           prompt: t.text + ' How is thermal energy being transferred?',
           right: t.way, wrong: ['conduction', 'convection', 'radiation'].filter(w => w !== t.way),
           keepOrder: false, wide: false,
-          explain: WAY_EXPLAIN[t.way]
+          explain: WAY_EXPLAIN[t.way], learn: t.way
         }))
       },
 
       // 2 · Good or poor thermal conductor.
       {
-        name: 'Conductor or insulator?',
+        name: 'Conductor or insulator?', learn: 'conductors',
         items: [rng => Sci.sort(rng, {
           prompt: 'Is each material a good conductor of thermal energy, or an insulator?',
           bins: ['Good conductor', 'Insulator'],
@@ -883,11 +1068,11 @@
 
       // 3 · Temperature and thermal energy are different.
       {
-        name: 'Temperature and thermal energy',
+        name: 'Temperature and thermal energy', learn: 'thermal',
         items: [
           rng => TF(rng, { statement: 'A bath of warm water has more thermal energy than a cup of boiling water.', answer: true,
             explain: 'The boiling water is hotter, so its particles move faster on average. But the bath has vastly more particles, so in total it has more thermal energy.' }),
-          rng => TF(rng, { statement: 'Temperature is a measure of the average kinetic energy of the particles in a substance.', answer: true,
+          rng => TF(rng, { learn: 'temp', statement: 'Temperature is a measure of the average kinetic energy of the particles in a substance.', answer: true,
             explain: 'That is exactly what temperature measures: how fast the particles are moving, on average.' }),
           rng => TF(rng, { statement: 'Temperature and thermal energy are two words for the same thing.', answer: false,
             explain: 'Temperature is the average kinetic energy of the particles. Thermal energy is the energy of all their motion and interactions together, so it also depends on how much substance there is.' }),
@@ -900,7 +1085,7 @@
 
       // 4 · Read the best insulator off cooling curves.
       {
-        name: 'Best insulator from a graph',
+        name: 'Best insulator from a graph', learn: 'graph',
         items: [Sci.gen(rng => {
           const three = rng.sample(INSULATION, 3);
           const letters = ['A', 'B', 'C'];
@@ -930,7 +1115,7 @@
 
       // 5 · Temperature drop from a table.
       {
-        name: 'Reading a cooling table',
+        name: 'Reading a cooling table', learn: 'graph',
         items: [Sci.gen(rng => {
           const start = rng.int(70, 90);
           const drops = [rng.int(8, 14), rng.int(5, 9), rng.int(3, 6), rng.int(2, 4)];
@@ -949,7 +1134,7 @@
 
       // 6 · Spot the misconception.
       {
-        name: 'Spot the misconception',
+        name: 'Spot the misconception', learn: 'conduction',
         items: [
           rng => Sci.spot(rng, {
             prompt: 'A student explains why the handle of a metal pan gets hot.',
@@ -962,7 +1147,7 @@
             wrong: 2,
             explain: 'In conduction the particles stay in place. Each one passes energy to its neighbours, so the energy travels along the handle, but the metal itself does not move.'
           }),
-          rng => Sci.spot(rng, {
+          rng => Sci.spot(rng, { learn: 'conductors',
             prompt: 'A student explains why a wool jumper keeps you warm.',
             lines: [
               'Your body is warmer than the cold air around you.',
@@ -973,7 +1158,7 @@
             wrong: 2,
             explain: 'Wool makes no heat of its own. It is a good insulator (it traps air), so it slows down the thermal energy leaving your body.'
           }),
-          rng => Sci.spot(rng, {
+          rng => Sci.spot(rng, { learn: 'direction',
             prompt: 'A student explains why a cold drink warms up on a hot day.',
             lines: [
               'The drink is colder than the air around it.',
@@ -989,7 +1174,7 @@
 
       // 7 · Choose a material for the job.
       {
-        name: 'Choosing a material',
+        name: 'Choosing a material', learn: 'choosing',
         items: [
           rng => C(rng, {
             prompt: 'Which material is best for lining a chilly bin to keep food cold?',
@@ -1023,7 +1208,7 @@
 
       // 8 · Particles and temperature.
       {
-        name: 'Particles and temperature',
+        name: 'Particles and temperature', learn: 'temp',
         items: [
           rng => C(rng, {
             prompt: 'When a pot of water is heated, what happens to its particles?',
@@ -1037,7 +1222,7 @@
             wrong: ['They are bigger.', 'There are more of them in the same volume.', 'They have stopped moving.'],
             explain: 'A higher temperature means a higher average kinetic energy: the particles move faster on average.'
           }),
-          rng => C(rng, {
+          rng => C(rng, { learn: 'thermal',
             prompt: 'What does thermal energy describe?',
             right: 'The energy of the motion and interactions of all the particles in a substance',
             wrong: ['How hot the surface of an object feels', 'The speed of the fastest particle', 'The size of the particles'],
@@ -1048,7 +1233,7 @@
 
       // 9 · Fair test.
       {
-        name: 'Planning a fair test',
+        name: 'Planning a fair test', learn: 'fair',
         items: (() => {
           const sc = {
             setup: 'To find the best material for a lunchbox cover, {n} wraps identical cans of hot water in different materials and measures the temperature after 20 minutes.',
@@ -1083,17 +1268,17 @@
 
       // 10 · True or false.
       {
-        name: 'True or false',
+        name: 'True or false', learn: 'conduction',
         items: [
           rng => TF(rng, { statement: 'In conduction, the material itself moves to carry the thermal energy.', answer: false,
             explain: 'Conduction passes energy between particles that stay in place. It is in convection that the liquid or gas moves.' }),
-          rng => TF(rng, { statement: 'Insulating materials have a low thermal conductivity.', answer: true,
+          rng => TF(rng, { learn: 'conductors', statement: 'Insulating materials have a low thermal conductivity.', answer: true,
             explain: 'A low thermal conductivity means thermal energy passes through slowly, which is what makes a good insulator.' }),
-          rng => TF(rng, { statement: 'Thermal energy from the Sun reaches Earth by radiation.', answer: true,
+          rng => TF(rng, { learn: 'radiation', statement: 'Thermal energy from the Sun reaches Earth by radiation.', answer: true,
             explain: 'There is almost nothing between the Sun and Earth, so it cannot be conduction or convection.' }),
-          rng => TF(rng, { statement: 'Metals are generally good conductors of thermal energy.', answer: true,
+          rng => TF(rng, { learn: 'conductors', statement: 'Metals are generally good conductors of thermal energy.', answer: true,
             explain: 'That is why pots and pans are made of metal, and their handles often are not.' }),
-          rng => TF(rng, { statement: 'Trapped air is a poor conductor of thermal energy.', answer: true,
+          rng => TF(rng, { learn: 'conductors', statement: 'Trapped air is a poor conductor of thermal energy.', answer: true,
             explain: 'Air has a very low thermal conductivity, which is why so many insulators work by trapping it.' })
         ]
       }
@@ -1126,6 +1311,60 @@
     blurb: 'Why the Moon seems to change shape, how long its cycle takes, and what causes an eclipse.',
     hint: 'Half of the Moon is always lit by the Sun. As the Moon orbits Earth, we see different amounts of that lit half: ' +
           'that is the cycle of phases, about 29.5 days long. An eclipse happens when the Sun, Earth and Moon line up.',
+
+    learn: [
+      {
+        id: 'moon', title: 'The Moon',
+        text: '<p>The Moon is Earth’s <strong>natural satellite</strong>: a roughly spherical body that orbits the Earth.</p>' +
+              '<p>It makes no light of its own. We see it because it <strong>reflects sunlight</strong>.</p>'
+      },
+      {
+        id: 'why', title: 'Why the shape seems to change',
+        diagram: { w: 260, h: 170, caption: 'Seen from far above. Not to scale.' },
+        draw(d) { SciDia.moonOrbit(d); },
+        text: '<p>The Sun always lights <strong>half</strong> of the Moon. As the Moon orbits, we see different amounts of that lit half.</p>' +
+              '<p><strong>New Moon:</strong> between Earth and Sun; the lit half faces away. <strong>Full Moon:</strong> on the far side of Earth; the lit half faces us. It is not Earth’s shadow.</p>'
+      },
+      {
+        id: 'phases', title: 'The phases, from New Zealand', wide: true,
+        diagram: { w: 424, h: 96 },
+        draw(d) {
+          SciDia.PHASES.forEach((p, i) => {
+            const x = 26 + i * 52.5;
+            SciDia.moon(d, [x, 32], 20, p.angle);
+            p.name.split(' ').forEach((w, k) => d.text([x, 66 + k * 12], w, { size: 9.5, fill: 'var(--dia-muted)', bold: false }));
+          });
+        },
+        text: '<p>After new Moon the lit part grows (<strong>waxing</strong>): crescent, first quarter, gibbous, full. Then it shrinks (<strong>waning</strong>) back to new.</p>' +
+              '<p>In New Zealand a waxing Moon is lit on the <strong>left</strong>; a waning Moon on the right.</p>'
+      },
+      {
+        id: 'cycle', title: 'How long it takes',
+        text: '<p>One full cycle of phases takes about <strong>29.5 days</strong>, from one full Moon to the next.</p>' +
+              '<p>The four main phases are about a week apart: ' + m('29.5 \\div 4 \\approx 7.4') + ' days.</p>'
+      },
+      {
+        id: 'rise', title: 'Moonrise',
+        text: '<p>Because the Moon moves along its orbit, it rises at a different time each day: on average about <strong>50 minutes later</strong> each day.</p>'
+      },
+      {
+        id: 'lunar', title: 'Lunar eclipse',
+        diagram: { w: 300, h: 110 },
+        draw(d) { SciDia.eclipse(d, 'lunar'); },
+        text: '<p><strong>Earth in the middle.</strong> The Moon passes into Earth’s shadow, so sunlight cannot reach it.</p>'
+      },
+      {
+        id: 'solar', title: 'Solar eclipse',
+        diagram: { w: 300, h: 110 },
+        draw(d) { SciDia.eclipse(d, 'solar'); },
+        text: '<p><strong>Moon in the middle.</strong> It passes between Earth and the Sun and blocks the Sun from view for some places. It happens in the daytime.</p>'
+      },
+      {
+        id: 'mara', title: 'Maramataka',
+        text: '<p>The <strong>Māori lunar calendar</strong>, built from the Moon’s phases and key stars. It guides daily and seasonal activities such as fishing, planting and harvesting.</p>' +
+              '<p>It differs between regions and iwi. In many, the rising of Matariki, or Puanga, marks the new year.</p>'
+      }
+    ],
 
     examples: [
       {
@@ -1161,7 +1400,7 @@
     slots: [
       // 1 · Name the phase from its picture.
       {
-        name: 'Name the phase',
+        name: 'Name the phase', learn: 'phases',
         items: SciDia.PHASES.filter(p => p.name !== 'new Moon').map(p => rng => C(rng, {
           prompt: 'This is how the Moon looks one night in New Zealand. Which phase is it?',
           diagram: { w: 120, h: 110 },
@@ -1183,7 +1422,7 @@
 
       // 2 · Put the phases in order.
       {
-        name: 'Order of the phases',
+        name: 'Order of the phases', learn: 'phases',
         items: [
           rng => {
             const seq = ['waxing crescent', 'first quarter', 'waxing gibbous', 'full Moon'];
@@ -1210,7 +1449,7 @@
 
       // 3 · Why the Moon appears to change shape.
       {
-        name: 'Why the phases happen',
+        name: 'Why the phases happen', learn: 'why',
         items: [
           rng => C(rng, {
             prompt: 'Why does the Moon appear to change shape during the month?',
@@ -1224,7 +1463,7 @@
             wrong: ['Between the Earth and the Sun', 'Right next to the Sun in the sky', 'Inside the Earth’s shadow every time'],
             explain: 'At full Moon the Sun lights the side of the Moon that faces us. (A lunar eclipse only happens when the line-up is exact, which is not every month.)'
           }),
-          rng => C(rng, {
+          rng => C(rng, { learn: 'moon',
             prompt: 'What is the Moon?',
             right: 'A roughly spherical natural satellite that orbits the Earth',
             wrong: ['A star that orbits the Sun', 'A planet that orbits the Earth', 'A flat disc that reflects sunlight'],
@@ -1235,7 +1474,7 @@
 
       // 4 · Using the length of the cycle.
       {
-        name: 'Using the lunar cycle',
+        name: 'Using the lunar cycle', learn: 'cycle',
         items: [
           Sci.gen(rng => {
             const day = rng.int(1, 6);
@@ -1261,7 +1500,7 @@
 
       // 5 · Solar or lunar eclipse?
       {
-        name: 'Solar or lunar eclipse?',
+        name: 'Solar or lunar eclipse?', learn: 'lunar',
         items: ['lunar', 'solar'].map(type => rng => ({
           prompt: 'The diagram shows the Sun, Earth and Moon lined up. What kind of eclipse is this?',
           diagram: { w: 300, h: 110, caption: 'Not to scale.' },
@@ -1272,6 +1511,7 @@
                       { html: 'Not an eclipse', right: false }],
             correct: type === 'solar' ? 0 : 1
           },
+          learn: type,
           explain: type === 'lunar'
             ? 'The Earth is in the middle, and the Moon is in the Earth’s shadow: a lunar eclipse.'
             : 'The Moon is in the middle, blocking the Sun from part of the Earth: a solar eclipse.'
@@ -1280,7 +1520,7 @@
 
       // 6 · Moonrise data.
       {
-        name: 'Moonrise data',
+        name: 'Moonrise data', learn: 'rise',
         items: [Sci.gen(rng => {
           const avg = rng.int(46, 54);
           const gaps = rng.shuffle([avg - 2, avg + 1, avg + 1]);
@@ -1301,7 +1541,7 @@
 
       // 7 · Maramataka.
       {
-        name: 'Maramataka',
+        name: 'Maramataka', learn: 'mara',
         items: [
           rng => C(rng, {
             prompt: 'What is the Maramataka?',
@@ -1324,17 +1564,17 @@
 
       // 8 · True or false.
       {
-        name: 'True or false',
+        name: 'True or false', learn: 'why',
         items: [
-          rng => TF(rng, { statement: 'The Moon makes its own light, like the Sun.', answer: false,
+          rng => TF(rng, { learn: 'moon', statement: 'The Moon makes its own light, like the Sun.', answer: false,
             explain: 'The Moon gives out no light of its own. We see it because it reflects sunlight.' }),
-          rng => TF(rng, { statement: 'A lunar eclipse happens when the Moon passes directly into the Earth’s shadow.', answer: true,
+          rng => TF(rng, { learn: 'lunar', statement: 'A lunar eclipse happens when the Moon passes directly into the Earth’s shadow.', answer: true,
             explain: 'With the Earth exactly between the Sun and the Moon, the Earth’s shadow falls on the Moon.' }),
-          rng => TF(rng, { statement: 'A solar eclipse happens when the Moon passes directly between the Earth and the Sun.', answer: true,
+          rng => TF(rng, { learn: 'solar', statement: 'A solar eclipse happens when the Moon passes directly between the Earth and the Sun.', answer: true,
             explain: 'The Moon blocks the Sun from view for people in its shadow.' }),
-          rng => TF(rng, { statement: 'The Moon rises at the same time every night.', answer: false,
+          rng => TF(rng, { learn: 'rise', statement: 'The Moon rises at the same time every night.', answer: false,
             explain: 'Because the Moon moves along its orbit, it rises at a different time each day: generally later.' }),
-          rng => TF(rng, { statement: 'A full cycle of the Moon’s phases takes about 29.5 days.', answer: true,
+          rng => TF(rng, { learn: 'cycle', statement: 'A full cycle of the Moon’s phases takes about 29.5 days.', answer: true,
             explain: 'That is the length of the lunar cycle, from one new Moon to the next.' }),
           rng => TF(rng, { statement: 'Half of the Moon is lit by the Sun at all times.', answer: true,
             explain: 'The Sun always lights the half facing it. The phases are about how much of that half we can see.' })
@@ -1343,7 +1583,7 @@
 
       // 9 · Spot the misconception.
       {
-        name: 'Spot the misconception',
+        name: 'Spot the misconception', learn: 'why',
         items: [
           rng => Sci.spot(rng, {
             prompt: 'A student explains the phases of the Moon.',
@@ -1356,7 +1596,7 @@
             wrong: 2,
             explain: 'The Earth’s shadow only falls on the Moon during a lunar eclipse. The phases come from seeing different amounts of the Moon’s sunlit half.'
           }),
-          rng => Sci.spot(rng, {
+          rng => Sci.spot(rng, { learn: 'solar',
             prompt: 'A student explains a solar eclipse.',
             lines: [
               'In a solar eclipse, the Sun, Moon and Earth line up.',
@@ -1372,7 +1612,7 @@
 
       // 10 · Match each phase to what is happening.
       {
-        name: 'Match the phases',
+        name: 'Match the phases', learn: 'why',
         items: [rng => {
           const names = Object.keys(PHASE_DESC);
           const order = rng.shuffle([0, 1, 2, 3]);
@@ -1428,6 +1668,50 @@
           '(a process inside its body). Adaptations help with getting resources, avoiding hazards, or reproducing. ' +
           'They raise the chance of surviving, but do not guarantee it.',
 
+    learn: [
+      {
+        id: 'what', title: 'What an adaptation is for',
+        text: '<p>An <strong>adaptation</strong> helps an organism survive and reproduce where it lives. It helps with one of three things:</p>' +
+              Sci.table(['Helps with', 'Example'], [['Getting resources', 'A tūī’s brush-tipped tongue collects nectar'],
+                ['Avoiding danger', 'A kina’s spines put off predators'], ['Reproducing', 'A bird sings in spring to attract a mate']])
+      },
+      {
+        id: 'kinds', title: 'Three kinds of adaptation', wide: true,
+        text: Sci.table(['Kind', 'Meaning', 'Example'], [
+                ['<strong>Structural</strong>', 'A body feature', 'A kiwi’s nostrils at the tip of its beak'],
+                ['<strong>Behavioural</strong>', 'Something it does', 'Penguins huddling in a storm'],
+                ['<strong>Physiological</strong>', 'A process inside the body', 'A stone wētā surviving being frozen']])
+      },
+      {
+        id: 'beaks', title: 'Beaks suit food', wide: true,
+        text: Sci.table(['Bird', 'Beak', 'Food'], [
+                ['Kiwi', 'Long, nostrils at the tip', 'Worms underground'], ['Kererū', 'Very wide gape', 'Large fruit, whole'],
+                ['Kākā', 'Strong and hooked', 'Grubs under bark'], ['Kārearea', 'Sharp and hooked', 'Meat'],
+                ['Tūī', 'Curved, brush-tipped tongue', 'Nectar']])
+      },
+      {
+        id: 'variation', title: 'Individuals vary',
+        text: '<p>Organisms of the same species are not identical. Some variations suit the environment better.</p>' +
+              '<p>On dark rocks, darker-shelled snails are harder for birds to spot, so more of them survive.</p>'
+      },
+      {
+        id: 'chance', title: 'A better chance, not a guarantee',
+        text: '<p>An adaptation <strong>increases the chance</strong> of surviving and reproducing. It does not guarantee it.</p>' +
+              '<p>How well it works <strong>depends on the environment</strong>: a green gecko is hidden among leaves but stands out on a bare branch, and thick fur that helps in the cold can cause overheating in the heat.</p>'
+      },
+      {
+        id: 'environments', title: 'Suited to the place',
+        text: '<ul><li>Windy coasts: small, tough leaves tear less and lose less water.</li>' +
+              '<li>Wading birds: long legs reach food in deeper water.</li>' +
+              '<li>Freezing storms: huddling penguins each lose less thermal energy.</li></ul>'
+      },
+      {
+        id: 'lamarck', title: 'Lamarck’s idea',
+        text: '<p>Jean-Baptiste Lamarck proposed that traits gained during a lifetime are passed to offspring: a giraffe stretching its neck would have longer-necked young.</p>' +
+              '<p>This idea has been <strong>contested</strong>. Stretching does not change what is passed on.</p>'
+      }
+    ],
+
     examples: [
       {
         title: 'Example 1: three kinds of adaptation',
@@ -1450,7 +1734,7 @@
     slots: [
       // 1 · Structural, behavioural or physiological.
       {
-        name: 'What kind of adaptation?',
+        name: 'What kind of adaptation?', learn: 'kinds',
         items: [rng => Sci.sort(rng, {
           prompt: 'Is each adaptation structural, behavioural or physiological?',
           bins: TYPES,
@@ -1462,7 +1746,7 @@
 
       // 2 · What is the adaptation for?
       {
-        name: 'What is it for?',
+        name: 'What is it for?', learn: 'what',
         items: [rng => Sci.sort(rng, {
           prompt: 'What does each adaptation mainly help with?',
           bins: ['Getting resources', 'Avoiding danger', 'Reproducing'],
@@ -1480,7 +1764,7 @@
 
       // 3 · Match the beak to the food.
       {
-        name: 'Beaks and food',
+        name: 'Beaks and food', learn: 'beaks',
         items: [rng => {
           const rows = [
             ['Kiwi', 'Long beak with nostrils at the tip, for finding worms underground'],
@@ -1502,7 +1786,7 @@
 
       // 4 · Variation within a species.
       {
-        name: 'Variation',
+        name: 'Variation', learn: 'variation',
         items: [
           rng => C(rng, {
             prompt: 'Why might two tūī of the same species not be equally good at surviving?',
@@ -1521,7 +1805,7 @@
 
       // 5 · An adaptation is not a guarantee.
       {
-        name: 'Adaptations and survival',
+        name: 'Adaptations and survival', learn: 'chance',
         items: [
           rng => TF(rng, { statement: 'Having a good adaptation guarantees that an animal will survive.', answer: false,
             explain: 'An adaptation increases the likelihood of surviving and reproducing. It does not guarantee it.' }),
@@ -1529,14 +1813,14 @@
             explain: 'That is what makes it an adaptation: it helps the organism survive and reproduce in its environment.' }),
           rng => TF(rng, { statement: 'Camouflage that works well in one habitat may work less well in another.', answer: true,
             explain: 'Environmental conditions affect how effective an adaptation is.' }),
-          rng => TF(rng, { statement: 'Organisms of the same species can differ in their adaptations.', answer: true,
+          rng => TF(rng, { learn: 'variation', statement: 'Organisms of the same species can differ in their adaptations.', answer: true,
             explain: 'Individuals show variation in their traits, including their adaptations.' })
         ]
       },
 
       // 6 · The environment changes how well it works.
       {
-        name: 'When the environment changes',
+        name: 'When the environment changes', learn: 'chance',
         items: [
           rng => C(rng, {
             prompt: 'A pale-coloured moth is well camouflaged on pale lichen-covered trees. The lichen dies and the bark underneath is dark. What is most likely?',
@@ -1555,7 +1839,7 @@
 
       // 7 · Lamarck.
       {
-        name: 'Lamarck’s idea',
+        name: 'Lamarck’s idea', learn: 'lamarck',
         items: [
           rng => C(rng, {
             prompt: 'A student says: "A giraffe’s neck gets longer during its life from stretching up to reach leaves, and it passes this longer neck on to its young." Whose idea is this?',
@@ -1574,9 +1858,9 @@
 
       // 8 · Explain how an adaptation helps.
       {
-        name: 'How does it help?',
+        name: 'How does it help?', learn: 'what',
         items: [
-          rng => C(rng, {
+          rng => C(rng, { learn: 'environments',
             prompt: 'How does huddling help penguins survive a freezing storm?',
             right: 'Each penguin loses less thermal energy, because much of its body is sheltered by others.',
             wrong: ['Huddling makes the penguins produce food.', 'The penguins in the middle get colder so the outside ones get warmer.', 'It makes them harder for predators to find.'],
@@ -1599,7 +1883,7 @@
 
       // 9 · Adaptations from different environments.
       {
-        name: 'Comparing environments',
+        name: 'Comparing environments', learn: 'environments',
         items: [
           rng => C(rng, {
             prompt: 'Plants growing on exposed, windy coasts often have small, tough leaves. Which is the best explanation?',
@@ -1618,7 +1902,7 @@
 
       // 10 · Name the kind of adaptation (one at a time).
       {
-        name: 'Which kind is this?',
+        name: 'Which kind is this?', learn: 'kinds',
         items: ADAPT.map(a => rng => ({
           prompt: a.text + '. What kind of adaptation is this?',
           input: {
@@ -1659,6 +1943,57 @@
     hint: 'Every living thing is made of cells. Plant and animal cells both have a nucleus, cytoplasm and a cell membrane; ' +
           'plant cells also have a cell wall, chloroplasts and a large vacuole. Cells build up into tissues, organs, systems and organisms.',
 
+    learn: [
+      {
+        id: 'cell', title: 'Cells',
+        text: '<p>Every living thing is made of <strong>cells</strong>, the basic unit of life. Most are far too small to see without a microscope.</p>' +
+              '<p>The structures inside a cell that do its jobs are called <strong>organelles</strong>.</p>'
+      },
+      {
+        id: 'plant', title: 'A plant cell', wide: true,
+        diagram: { w: 424, h: 200 },
+        draw(d) { SciDia.cell(d, 'plant', Object.fromEntries(SciDia.PLANT_PARTS.map(p => [p, p]))); },
+        text: '<p>A tough <strong>cell wall</strong> outside the membrane, green <strong>chloroplasts</strong>, and a large <strong>vacuole</strong> filling the middle.</p>'
+      },
+      {
+        id: 'animal', title: 'An animal cell', wide: true,
+        diagram: { w: 424, h: 200 },
+        draw(d) { SciDia.cell(d, 'animal', Object.fromEntries(SciDia.ANIMAL_PARTS.map(p => [p, p]))); },
+        text: '<p>Just a <strong>membrane</strong> on the outside, so no fixed shape. No cell wall, no chloroplasts, no large vacuole.</p>'
+      },
+      {
+        id: 'compare', title: 'Plant and animal cells compared',
+        text: Sci.table(['Part', 'Plant', 'Animal'], [['Nucleus', '✓', '✓'], ['Cytoplasm', '✓', '✓'], ['Cell membrane', '✓', '✓'],
+                ['Cell wall', '✓', ''], ['Chloroplasts', '✓', ''], ['Large vacuole', '✓', '']]) +
+              '<p>Plant cells that get no light, such as in an onion bulb, have no chloroplasts.</p>'
+      },
+      {
+        id: 'jobs', title: 'What each part does',
+        text: Sci.table(['Part', 'Job'], Object.entries(FUNCTION).map(([k, v]) => [k[0].toUpperCase() + k.slice(1), v]))
+      },
+      {
+        id: 'levels', title: 'From cells to organisms',
+        text: '<ol class="learn-steps"><li><strong>Cells</strong> of the same kind group into</li><li><strong>tissues</strong>, which make up</li>' +
+              '<li><strong>organs</strong>, which work together in</li><li><strong>organ systems</strong>, which make up the</li><li><strong>organism</strong>.</li></ol>'
+      },
+      {
+        id: 'special', title: 'Specialised cells', wide: true,
+        text: '<p>Cells in one organism differ, each shaped for its job.</p>' +
+              Sci.table(['Cell', 'Feature', 'Job'], [['Sperm', 'Long tail', 'Swims to an egg'], ['Nerve', 'Long and thin', 'Carries signals'],
+                ['Root hair', 'Long extension', 'Absorbs water'], ['Potato', 'Full of starch', 'Stores food']])
+      },
+      {
+        id: 'micro', title: 'One cell or many',
+        text: '<p><strong>Microorganisms</strong> are a single cell: bacteria, yeast, some algae.</p>' +
+              '<p>Most organisms you can see are made of many cells: a mushroom, kelp, a wētā, you.</p>'
+      },
+      {
+        id: 'history', title: 'Discovering cells',
+        text: '<p>Cells were only found once the <strong>microscope</strong> was invented.</p>' +
+              '<p><strong>Robert Hooke</strong> saw tiny compartments in cork and named them cells. <strong>Antonie van Leeuwenhoek</strong> built powerful microscopes and was among the first to see microorganisms.</p>'
+      }
+    ],
+
     examples: [
       {
         title: 'Example 1: a plant cell',
@@ -1685,7 +2020,7 @@
     slots: [
       // 1 · Label a plant cell.
       {
-        name: 'Label a plant cell',
+        name: 'Label a plant cell', learn: 'plant',
         items: [rng => {
           const order = rng.shuffle(SciDia.PLANT_PARTS);
           const labels = Object.fromEntries(order.map((p, i) => [p, String(i + 1)]));
@@ -1701,7 +2036,7 @@
 
       // 2 · Label an animal cell.
       {
-        name: 'Label an animal cell',
+        name: 'Label an animal cell', learn: 'animal',
         items: [rng => {
           const order = rng.shuffle(SciDia.ANIMAL_PARTS);
           const labels = Object.fromEntries(order.map((p, i) => [p, String(i + 1)]));
@@ -1717,7 +2052,7 @@
 
       // 3 · Plant cells only, or both?
       {
-        name: 'Plant cells only, or both?',
+        name: 'Plant cells only, or both?', learn: 'compare',
         items: [rng => Sci.sort(rng, {
           prompt: 'Is each part found only in plant cells, or in both plant and animal cells?',
           bins: ['Plant cells only', 'Both'],
@@ -1732,7 +2067,7 @@
 
       // 4 · What does each part do?
       {
-        name: 'What each part does',
+        name: 'What each part does', learn: 'jobs',
         items: [rng => {
           const four = rng.sample(Object.keys(FUNCTION), 4);
           const order = rng.shuffle([0, 1, 2, 3]);
@@ -1747,7 +2082,7 @@
 
       // 5 · From cells to organisms.
       {
-        name: 'From cells to organisms',
+        name: 'From cells to organisms', learn: 'levels',
         items: [rng => {
           const seq = ['Cell', 'Tissue', 'Organ', 'Organ system', 'Organism'];
           const order = rng.shuffle([0, 1, 2, 3, 4]);
@@ -1761,7 +2096,7 @@
 
       // 6 · Specialised cells.
       {
-        name: 'Specialised cells',
+        name: 'Specialised cells', learn: 'special',
         items: [
           rng => C(rng, {
             prompt: 'A sperm cell has a long tail. What is it specialised for?',
@@ -1788,7 +2123,7 @@
 
       // 7 · History of cells.
       {
-        name: 'Discovering cells',
+        name: 'Discovering cells', learn: 'history',
         items: [
           rng => C(rng, {
             prompt: 'Who first observed and named cells, looking at thin slices of cork through a microscope?',
@@ -1812,7 +2147,7 @@
 
       // 8 · Single-celled or multicellular?
       {
-        name: 'Single-celled or many cells?',
+        name: 'Single-celled or many cells?', learn: 'micro',
         items: [rng => Sci.sort(rng, {
           prompt: 'Is each organism single-celled or made of many cells?',
           bins: ['Single-celled', 'Many cells'],
@@ -1828,7 +2163,7 @@
 
       // 9 · Patterns in cell structures.
       {
-        name: 'Patterns in cells',
+        name: 'Patterns in cells', learn: 'compare',
         items: [
           rng => C(rng, {
             prompt: 'Cells from a leaf contain chloroplasts, but cells from an onion bulb do not. Which is the best explanation?',
@@ -1846,15 +2181,15 @@
 
       // 10 · True or false.
       {
-        name: 'True or false',
+        name: 'True or false', learn: 'cell',
         items: [
           rng => TF(rng, { statement: 'Cells are the basic unit that all living things are made of.', answer: true,
             explain: 'Cells are the fundamental unit of organisms.' }),
-          rng => TF(rng, { statement: 'Animal cells have a cell wall.', answer: false,
+          rng => TF(rng, { learn: 'compare', statement: 'Animal cells have a cell wall.', answer: false,
             explain: 'Only plant cells (and fungi and bacteria) have a cell wall. Animal cells have just a membrane.' }),
-          rng => TF(rng, { statement: 'All the cells in a multicellular organism are exactly the same.', answer: false,
+          rng => TF(rng, { learn: 'special', statement: 'All the cells in a multicellular organism are exactly the same.', answer: false,
             explain: 'Cells are specialised for different functions, so they differ in shape and contents.' }),
-          rng => TF(rng, { statement: 'Bacteria are single-celled organisms.', answer: true,
+          rng => TF(rng, { learn: 'micro', statement: 'Bacteria are single-celled organisms.', answer: true,
             explain: 'Bacteria are microorganisms: each one is a single cell.' }),
           rng => TF(rng, { statement: 'The structures inside a cell that carry out functions are called organelles.', answer: true,
             explain: 'The nucleus, chloroplasts and vacuole are examples of organelles.' })
@@ -1918,6 +2253,49 @@
     hint: 'A population is one kind of organism in one place; a community is all the populations living there together; ' +
           'an ecosystem is the community plus its non-living surroundings. In a food web, each arrow points from the food to the eater.',
 
+    learn: [
+      {
+        id: 'levels', title: 'Population, community, ecosystem',
+        diagram: { w: 260, h: 150 },
+        draw(d) { SciDia.nested(d, ['Ecosystem', 'Community', 'Population']); },
+        text: '<ul><li><strong>Population:</strong> one kind of organism in one place, such as all the kererū in a patch of bush.</li>' +
+              '<li><strong>Community:</strong> all the populations living there together.</li>' +
+              '<li><strong>Ecosystem:</strong> the community plus its non-living surroundings.</li></ul>'
+      },
+      {
+        id: 'biotic', title: 'Biotic and abiotic',
+        text: Sci.table(['Biotic (living)', 'Abiotic (non-living)'], [['Plants, such as tree ferns', 'Sunlight'], ['Animals, such as wētā', 'Water, rainfall'],
+                ['Fungi', 'Temperature, wind'], ['Bacteria', 'Rocks, soil, air']])
+      },
+      {
+        id: 'web', title: 'Reading a food web', wide: true,
+        ...webDiagram(WEBS.forest),
+        text: '<p>Each arrow points from the <strong>food</strong> to the organism that <strong>eats</strong> it: the way energy moves.</p>' +
+              '<p>What does it eat? Follow the arrows <strong>into</strong> it. What eats it? Follow the arrows <strong>out of</strong> it. Ship rats eat tawa fruit and tree wētā, and are eaten by stoats and ruru.</p>'
+      },
+      {
+        id: 'producers', title: 'Producers and consumers',
+        text: '<p><strong>Producers</strong> make their own food using sunlight. No arrows point into them, and every food web starts with them.</p>' +
+              '<p><strong>Consumers</strong> eat other organisms: every one that has an arrow pointing in.</p>'
+      },
+      {
+        id: 'abundance', title: 'Fewer at the top',
+        text: '<p>Only part of the energy passes on at each step up a food web, so each level supports fewer organisms. There are far more producers than top predators.</p>'
+      },
+      {
+        id: 'removed', title: 'If one disappears',
+        text: '<p>Remove a predator, and the animals it ate usually <strong>increase</strong>, since fewer are being eaten.</p>' +
+              '<p>Real ecosystems are tangled, so think about every arrow in and out.</p>'
+      },
+      {
+        id: 'depend', title: 'Depending on each other',
+        text: '<p>Organisms are <strong>interdependent</strong>:</p>' +
+              '<ul><li>Tūī and korimako carry pollen for native flowers, and feed on their nectar.</li>' +
+              '<li>Kererū swallow tawa fruit and spread its seeds.</li>' +
+              '<li>Tree wētā shelter in holes in tree trunks.</li></ul>'
+      }
+    ],
+
     examples: [
       {
         title: 'Example 1: population, community, ecosystem',
@@ -1942,7 +2320,7 @@
     slots: [
       // 1 · Match the terms.
       {
-        name: 'Population, community, ecosystem',
+        name: 'Population, community, ecosystem', learn: 'levels',
         items: [rng => {
           const rows = [
             ['Population', 'A group of the same type of organism living in the same place at the same time'],
@@ -1961,7 +2339,7 @@
 
       // 2 · Which is it?
       {
-        name: 'Which term fits?',
+        name: 'Which term fits?', learn: 'levels',
         items: [
           ['All the tuatara living on Takapourewa (Stephens Island)', 0],
           ['All the kina on one reef', 0],
@@ -1980,7 +2358,7 @@
 
       // 3 · Biotic or abiotic.
       {
-        name: 'Biotic or abiotic?',
+        name: 'Biotic or abiotic?', learn: 'biotic',
         items: [rng => Sci.sort(rng, {
           prompt: 'Is each part of a forest ecosystem biotic (living) or abiotic (non-living)?',
           bins: ['Biotic', 'Abiotic'],
@@ -1997,7 +2375,7 @@
 
       // 4 · What does it eat?
       {
-        name: 'What does it eat?',
+        name: 'What does it eat?', learn: 'web',
         items: Object.values(WEBS).map(w => rng => {
           const eaters = Object.keys(w.nodes).filter(id => eats(w, id).length > 0);
           const id = rng.pick(eaters);
@@ -2014,7 +2392,7 @@
 
       // 5 · What eats it?
       {
-        name: 'What eats it?',
+        name: 'What eats it?', learn: 'web',
         items: Object.values(WEBS).map(w => rng => {
           const prey = Object.keys(w.nodes).filter(id => eatenBy(w, id).length > 0);
           const id = rng.pick(prey);
@@ -2031,7 +2409,7 @@
 
       // 6 · Count the producers.
       {
-        name: 'Counting producers and consumers',
+        name: 'Counting producers and consumers', learn: 'producers',
         items: Object.values(WEBS).map(w => rng => {
           const askProducers = rng.chance();
           const producers = Object.values(w.nodes).filter(n => n.role === 'producer').length;
@@ -2049,7 +2427,7 @@
 
       // 7 · What happens if one is removed?
       {
-        name: 'If one were removed',
+        name: 'If one were removed', learn: 'removed',
         items: Object.values(WEBS).map(w => rng => {
           // Remove a predator and ask about an animal it eats: freed from one of
           // its predators, that population would most likely grow. Producers
@@ -2075,7 +2453,7 @@
 
       // 8 · Patterns in abundance.
       {
-        name: 'Patterns in food webs',
+        name: 'Patterns in food webs', learn: 'abundance',
         items: [
           rng => C(rng, {
             prompt: 'In most ecosystems there are far more producers than top predators. Which is the best explanation?',
@@ -2083,7 +2461,7 @@
             wrong: ['Predators are too large to fit in an ecosystem.', 'Producers reproduce only once in their lives.', 'Top predators do not need food.'],
             explain: 'Energy is lost at each step, so the higher up a food web, the fewer organisms it can support.'
           }),
-          rng => C(rng, {
+          rng => C(rng, { learn: 'producers',
             prompt: 'Why does every food web start with producers?',
             right: 'Producers make their own food using sunlight, and every other organism depends on that food.',
             wrong: ['Producers are the biggest organisms.', 'Producers eat everything else.', 'It is just a convention for drawing food webs.'],
@@ -2094,7 +2472,7 @@
 
       // 9 · Interdependence.
       {
-        name: 'Depending on each other',
+        name: 'Depending on each other', learn: 'depend',
         items: [
           rng => C(rng, {
             prompt: 'Many native plants rely on birds such as tūī and bellbirds (korimako) to carry their pollen. What would most likely happen to these plants if the birds disappeared?',
@@ -2118,13 +2496,13 @@
 
       // 10 · True or false.
       {
-        name: 'True or false',
+        name: 'True or false', learn: 'levels',
         items: [
           rng => TF(rng, { statement: 'A community is made up of many different populations.', answer: true,
             explain: 'A community is all the populations living in the same place and interacting.' }),
-          rng => TF(rng, { statement: 'Sunlight and water are biotic parts of an ecosystem.', answer: false,
+          rng => TF(rng, { learn: 'biotic', statement: 'Sunlight and water are biotic parts of an ecosystem.', answer: false,
             explain: 'Biotic means living. Sunlight and water are abiotic: non-living.' }),
-          rng => TF(rng, { statement: 'In a food web, the arrows point from the food to the organism that eats it.', answer: true,
+          rng => TF(rng, { learn: 'web', statement: 'In a food web, the arrows point from the food to the organism that eats it.', answer: true,
             explain: 'The arrows show the direction energy moves: from food to eater.' }),
           rng => TF(rng, { statement: 'A population can contain several different species.', answer: false,
             explain: 'A population is one type of organism. Several species living together form a community.' })

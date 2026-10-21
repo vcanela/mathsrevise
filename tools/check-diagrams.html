@@ -55,9 +55,9 @@
     (async () => {
       for (const p of pages) {
         const doc = await load(p.url);
-        // Make every collapsed worked-example section visible, or its SVGs
-        // measure as zero.
-        doc.querySelectorAll('.examples-body').forEach(b => { b.style.display = ''; });
+        // Make every collapsed section (worked examples, Learn it) visible,
+        // or its SVGs measure as zero.
+        doc.querySelectorAll('.examples-body, .learn-body').forEach(b => { b.style.display = ''; });
         await new Promise(r => setTimeout(r, 200));
 
         doc.querySelectorAll('svg').forEach(svg => {
@@ -76,11 +76,13 @@
           const worst = Math.max(over.l, over.r, over.t, over.b);
           if (worst < 0.5) return;
           bad++;
-          const card = svg.closest('.example') || svg.closest('.qcard');
+          const card = svg.closest('.example') || svg.closest('.learn-card') || svg.closest('.qcard');
           const where = card
             ? (card.classList.contains('example')
                 ? 'example: ' + (card.querySelector('h3') || {}).textContent
-                : 'Q' + card.id.replace('q', ''))
+                : card.classList.contains('learn-card')
+                  ? 'learn: ' + card.id.replace('learn-', '')
+                  : 'Q' + card.id.replace('q', ''))
             : '?';
           const tr = document.createElement('tr');
           [p.url.replace('../exercises/', ''), where,

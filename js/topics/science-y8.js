@@ -43,12 +43,12 @@
   // separation method was.
 
   const METHODS = [
-    { mix: 'Sand mixed with water', method: 'Filtration', why: 'The sand is insoluble, so filter paper lets the water through and traps the sand grains.' },
-    { mix: 'Salt dissolved in water, when you want to keep the salt', method: 'Evaporation', why: 'The salt is dissolved, so it passes through a filter. Evaporating the water leaves the salt behind.' },
-    { mix: 'Gravel mixed with fine sand', method: 'Sieving', why: 'The gravel pieces are bigger than the holes in a sieve; the sand falls through.' },
-    { mix: 'Muddy water, left to stand so the mud sinks', method: 'Settling and decanting', why: 'The denser mud settles to the bottom, and the clearer water can be poured off the top.' },
-    { mix: 'Dried peas mixed with rice', method: 'Sieving', why: 'The peas are much bigger than the grains of rice, so a sieve with the right holes separates them.' },
-    { mix: 'Iron filings mixed with sand', method: 'Using a magnet', why: 'Iron is magnetic and sand is not, so a magnet pulls the iron out.' }
+    { mix: 'Sand mixed with water', method: 'Filtration', learn: 'filter', why: 'The sand is insoluble, so filter paper lets the water through and traps the sand grains.' },
+    { mix: 'Salt dissolved in water, when you want to keep the salt', method: 'Evaporation', learn: 'evaporate', why: 'The salt is dissolved, so it passes through a filter. Evaporating the water leaves the salt behind.' },
+    { mix: 'Gravel mixed with fine sand', method: 'Sieving', learn: 'sieve', why: 'The gravel pieces are bigger than the holes in a sieve; the sand falls through.' },
+    { mix: 'Muddy water, left to stand so the mud sinks', method: 'Settling and decanting', learn: 'decant', why: 'The denser mud settles to the bottom, and the clearer water can be poured off the top.' },
+    { mix: 'Dried peas mixed with rice', method: 'Sieving', learn: 'sieve', why: 'The peas are much bigger than the grains of rice, so a sieve with the right holes separates them.' },
+    { mix: 'Iron filings mixed with sand', method: 'Using a magnet', learn: 'magnet', why: 'Iron is magnetic and sand is not, so a magnet pulls the iron out.' }
   ];
   const ALL_METHODS = ['Filtration', 'Evaporation', 'Sieving', 'Settling and decanting', 'Using a magnet'];
 
@@ -59,6 +59,74 @@
     hint: 'In a mixture, the substances are not chemically joined, so each keeps its own properties. Separate them using a ' +
           'difference between them: particle size (sieving, filtration), density (settling and decanting), whether it dissolves ' +
           '(evaporation leaves the dissolved solid behind) or whether it is magnetic.',
+
+    learn: [
+      {
+        id: 'mixture', title: 'Mixtures',
+        diagram: { w: 240, h: 140 },
+        draw(d) { SciDia.pureVsMixture(d); },
+        text: '<p>A <strong>mixture</strong> is two or more substances physically combined. They are <strong>not chemically joined</strong>, so each keeps its own properties: iron mixed with sand is still magnetic.</p>' +
+              '<p>A <strong>pure substance</strong> is just one substance, such as distilled water or copper.</p>'
+      },
+      {
+        id: 'states', title: 'Any states can mix',
+        text: '<p>The substances in a mixture can be in the same state or different states.</p>' +
+              Sci.table(['Mixture', 'States'], [['Air', 'gas + gas'], ['Fizzy drink', 'gas in a liquid'], ['Muddy water', 'solid in a liquid'], ['Sand and salt', 'solid + solid']])
+      },
+      {
+        id: 'choose', title: 'Choosing a method',
+        text: '<p>Every separation uses a <strong>difference</strong> between the substances.</p>' +
+              Sci.table(['Difference', 'Method'], [['Particle size', 'Sieving, filtration'], ['Density', 'Settling and decanting'], ['Dissolves or not', 'Dissolve, filter, then evaporate'], ['Magnetic or not', 'A magnet']])
+      },
+      {
+        id: 'sieve', title: 'Sieving',
+        diagram: { w: 240, h: 145 },
+        draw(d) { SciDia.sieve(d); },
+        text: '<p>Separates solids with <strong>different particle sizes</strong>. Big pieces stay in the sieve; small ones fall through. Gravel from sand; peas from rice.</p>'
+      },
+      {
+        id: 'filter', title: 'Filtration',
+        diagram: { w: 240, h: 155 },
+        draw(d) { SciDia.filtration(d); },
+        text: '<p>Separates an <strong>insoluble solid</strong> from a liquid. The liquid passes through filter paper (the <strong>filtrate</strong>); the solid is trapped (the <strong>residue</strong>).</p>' +
+              '<p>A <strong>dissolved</strong> substance passes straight through.</p>'
+      },
+      {
+        id: 'decant', title: 'Settling and decanting',
+        diagram: { w: 260, h: 150 },
+        draw(d) { SciDia.decant(d); },
+        text: '<p>A <strong>denser</strong> solid sinks to the bottom. Then the liquid is poured carefully off the top. Mud from muddy water.</p>'
+      },
+      {
+        id: 'evaporate', title: 'Evaporation',
+        diagram: { w: 240, h: 150 },
+        draw(d) { SciDia.evaporation(d); },
+        text: '<p>Gets a <strong>dissolved solid</strong> back from a solution. Warm it gently in an <strong>evaporating dish</strong>: the water evaporates and the solid is left as crystals.</p>'
+      },
+      {
+        id: 'magnet', title: 'Using a magnet',
+        diagram: { w: 240, h: 150 },
+        draw(d) { SciDia.magnet(d); },
+        text: '<p>Pulls a <strong>magnetic</strong> substance, such as iron, out of a mixture. Sand, salt and sulfur are not magnetic, so they stay behind.</p>'
+      },
+      {
+        id: 'plan', title: 'Planning a separation',
+        text: '<p>Use one difference at a time. Salt from <strong>rock salt</strong> (salt mixed with sand):</p>' +
+              '<ol class="learn-steps"><li>Crush it</li><li>Stir into warm water: the salt dissolves</li><li>Filter: the sand stays behind</li><li>Evaporate: the salt is left</li></ol>' +
+              '<p>With iron in the mix too, take it out with a magnet first.</p>'
+      },
+      {
+        id: 'chroma', title: 'Chromatography',
+        diagram: { w: 240, h: 180 },
+        draw(d) { SciDia.chromatogram(d, [{ label: 'A', rf: 0.3 }, { label: 'B', rf: 0.75 }, { label: 'C', rf: 0.5 }], [{ label: 'X', contains: [0, 1] }]); },
+        text: '<p>Separates the <strong>dyes</strong> in an ink. The solvent soaks up the paper and carries each dye a different distance. A spot level with a known dye is that dye, so ink X contains A and B.</p>'
+      },
+      {
+        id: 'effective', title: 'How well did it work?',
+        text: '<p>Weigh the substance before mixing and after separating.</p>' +
+              '<p><strong>Lost = start − recovered.</strong> Some is always lost: solution soaks into the filter paper and sand, and crystals can spit out of the dish.</p>'
+      }
+    ],
 
     examples: [
       {
@@ -90,7 +158,7 @@
     slots: [
       // 1 · Mixture or pure substance?
       {
-        name: 'Mixture or pure substance?',
+        name: 'Mixture or pure substance?', learn: 'mixture',
         items: [rng => Sci.sort(rng, {
           prompt: 'Is each one a mixture or a pure substance?',
           bins: ['Mixture', 'Pure substance'],
@@ -107,17 +175,17 @@
 
       // 2 · Best separation method.
       {
-        name: 'Choosing a separation method',
+        name: 'Choosing a separation method', learn: 'choose',
         items: METHODS.map(x => rng => C(rng, {
           prompt: `<em>${x.mix}.</em> Which method separates this best?`,
           right: x.method, wrong: rng.sample(ALL_METHODS.filter(a => a !== x.method), 3), wide: false,
-          explain: x.why
+          explain: x.why, learn: x.learn
         }))
       },
 
       // 3 · Order the steps.
       {
-        name: 'Planning a separation',
+        name: 'Planning a separation', learn: 'plan',
         items: [
           rng => order(rng, 'Put the steps for getting clean salt from rock salt (salt mixed with sand) in order.',
             ['Crush the rock salt', 'Stir it into warm water so the salt dissolves', 'Filter to remove the sand', 'Evaporate the water to leave the salt'],
@@ -130,7 +198,7 @@
 
       // 4 · What property does each method use?
       {
-        name: 'How each method works',
+        name: 'How each method works', learn: 'choose',
         items: [rng => match(rng, 'Match each separation method to the difference it uses.', [
           ['Sieving', 'Different particle sizes: bigger pieces stay in the sieve'],
           ['Filtration', 'An insoluble solid is trapped, while the liquid passes through'],
@@ -141,7 +209,7 @@
 
       // 5 · Read a chromatogram.
       {
-        name: 'Reading a chromatogram',
+        name: 'Reading a chromatogram', learn: 'chroma',
         items: [Sci.gen(rng => {
           // Four reference dyes at well-separated heights, and an ink made of
           // two (or three) of them.
@@ -171,7 +239,7 @@
 
       // 6 · States in a mixture.
       {
-        name: 'States in a mixture',
+        name: 'States in a mixture', learn: 'states',
         items: [
           rng => C(rng, {
             prompt: 'Which mixture is made of substances in <strong>different</strong> states?',
@@ -188,7 +256,7 @@
 
       // 7 · Spot the misconception.
       {
-        name: 'Spot the misconception',
+        name: 'Spot the misconception', learn: 'mixture',
         items: [
           rng => Sci.spot(rng, {
             prompt: 'A student describes a mixture of iron filings and sulfur powder.',
@@ -210,29 +278,30 @@
               'The mud particles are too big to pass through, so they stay behind.'
             ],
             wrong: 2,
-            explain: 'A dissolved substance is spread through the water as particles far too small to be caught, so it passes straight through. Evaporation is needed to get it back.'
+            explain: 'A dissolved substance is spread through the water as particles far too small to be caught, so it passes straight through. Evaporation is needed to get it back.',
+            learn: 'filter'
           })
         ]
       },
 
       // 8 · True or false.
       {
-        name: 'True or false',
+        name: 'True or false', learn: 'mixture',
         items: [
           rng => TF(rng, { statement: 'The substances in a mixture are chemically joined together.', answer: false,
             explain: 'A mixture is a physical combination. The substances are not chemically joined, which is why they can be separated.' }),
           rng => TF(rng, { statement: 'Each substance in a mixture keeps its own properties.', answer: true,
             explain: 'Because they are not chemically joined, iron in a mixture is still magnetic, salt is still salty, and so on.' }),
           rng => TF(rng, { statement: 'Filtration can separate dissolved salt from water.', answer: false,
-            explain: 'Dissolved salt passes through filter paper. Evaporation is needed instead.' }),
+            explain: 'Dissolved salt passes through filter paper. Evaporation is needed instead.', learn: 'filter' }),
           rng => TF(rng, { statement: 'Mixtures can be separated using differences such as particle size or density.', answer: true,
-            explain: 'Sieving and filtration use particle size; settling and decanting use density.' })
+            explain: 'Sieving and filtration use particle size; settling and decanting use density.', learn: 'choose' })
         ]
       },
 
       // 9 · How effective was the method?
       {
-        name: 'How well did it work?',
+        name: 'How well did it work?', learn: 'effective',
         items: [Sci.gen(rng => {
           const start = rng.int(15, 40);
           const got = start - rng.int(2, 6);
@@ -248,12 +317,12 @@
 
       // 10 · Choosing equipment.
       {
-        name: 'Choosing equipment',
+        name: 'Choosing equipment', learn: 'filter',
         items: [
           rng => C(rng, {
             prompt: 'Which equipment would you use to evaporate the water from a salt solution?',
             right: 'An evaporating dish over a gentle heat', wrong: ['A sieve', 'Filter paper in a funnel', 'A magnet'],
-            explain: 'The solution is warmed in a shallow evaporating dish until the water has evaporated, leaving the salt.'
+            explain: 'The solution is warmed in a shallow evaporating dish until the water has evaporated, leaving the salt.', learn: 'evaporate'
           }),
           rng => C(rng, {
             prompt: 'Which equipment separates sand from water?',
@@ -263,7 +332,7 @@
           rng => C(rng, {
             prompt: 'Which equipment separates the coloured dyes in a felt-tip pen ink?',
             right: 'Chromatography paper standing in a solvent', wrong: ['A sieve', 'A magnet', 'Filter paper in a funnel'],
-            explain: 'Chromatography separates the dyes as the solvent carries them different distances up the paper.'
+            explain: 'Chromatography separates the dyes as the solvent carries them different distances up the paper.', learn: 'chroma'
           })
         ]
       }
@@ -293,6 +362,55 @@
           'of solvent. A saturated solution holds as much solute as it can at that temperature; any more stays as a solid. ' +
           'In a suspension the solid does not dissolve at all.',
 
+    learn: [
+      {
+        id: 'words', title: 'Solute, solvent, solution',
+        diagram: { w: 160, h: 140 },
+        draw(d) { SciDia.solution(d, 'solution'); },
+        text: '<p>Salt dissolves in water. The salt is the <strong>solute</strong>; the water is the <strong>solvent</strong>; salt water is the <strong>solution</strong>.</p>' +
+              '<p>A solution is a mixture. The solute has not disappeared: its particles are spread evenly through the solvent.</p>'
+      },
+      {
+        id: 'suspension', title: 'Suspensions',
+        diagram: { w: 160, h: 140 },
+        draw(d) { SciDia.solution(d, 'suspension'); },
+        text: '<p>An <strong>insoluble</strong> solid, such as flour or sand, only spreads through the liquid. It does not dissolve, and it <strong>settles</strong> if left to stand. "Shake well before use" means a suspension.</p>'
+      },
+      {
+        id: 'conc', title: 'Concentration',
+        diagram: { w: 240, h: 140 },
+        draw(d) { SciDia.concentration(d); },
+        text: '<p><strong>Concentration</strong> is how much solute there is in a certain volume of solvent. A more concentrated coloured solution looks <strong>darker</strong>.</p>'
+      },
+      {
+        id: 'compare', title: 'Comparing concentrations',
+        text: '<p>Compare the <strong>same volume</strong>, such as per 100 mL.</p>' +
+              '<p>A: 10 g in 100 mL. B: 30 g in 200 mL, which is 15 g in every 100 mL. So B is more concentrated.</p>'
+      },
+      {
+        id: 'change', title: 'Changing a concentration',
+        text: Sci.table(['Do this', 'Concentration'], [['Dissolve more solute', 'goes up'], ['Evaporate some solvent', 'goes up'],
+                ['Add water (double the volume)', 'goes down (halves)'], ['Pour some away', 'stays the same']])
+      },
+      {
+        id: 'saturated', title: 'Saturated solutions',
+        diagram: { w: 160, h: 140 },
+        draw(d) { SciDia.solution(d, 'saturated'); },
+        text: '<p>A <strong>saturated</strong> solution holds as much solute as it can at that temperature. Any extra stays as a solid.</p>' +
+              '<p>If 20 g dissolves in 100 mL, then 40 g dissolves in 200 mL. How much dissolves depends on temperature.</p>'
+      },
+      {
+        id: 'dissolve', title: 'Dissolving is not melting',
+        text: '<p><strong>Melting</strong> is one substance turning from solid to liquid when heated. <strong>Dissolving</strong> is a solute’s particles spreading through a solvent.</p>' +
+              '<p>Nothing is lost: 200 g of water plus 20 g of salt makes 220 g of solution.</p>'
+      },
+      {
+        id: 'chroma', title: 'How chromatography works',
+        text: '<p>Each dye travels a different distance up the paper, depending on <strong>how soluble</strong> it is in the solvent and <strong>how strongly</strong> it is attracted to the paper.</p>' +
+              '<p>The start line is drawn in <strong>pencil</strong>, which does not dissolve and run.</p>'
+      }
+    ],
+
     examples: [
       {
         title: 'Example 1: solute, solvent, solution',
@@ -316,7 +434,7 @@
     slots: [
       // 1 · Solute, solvent, solution.
       {
-        name: 'Solute, solvent, solution',
+        name: 'Solute, solvent, solution', learn: 'words',
         items: PAIRS.map(p => rng => match(rng, `${p.solute} is dissolved in ${p.solvent.toLowerCase()}. Match each word to what it is here.`, [
           ['Solute', p.solute],
           ['Solvent', p.solvent],
@@ -326,7 +444,7 @@
 
       // 2 · Solution or suspension?
       {
-        name: 'Solution or suspension?',
+        name: 'Solution or suspension?', learn: 'suspension',
         items: [rng => Sci.sort(rng, {
           prompt: 'Does each one make a solution or a suspension?',
           bins: ['Solution', 'Suspension'],
@@ -343,7 +461,7 @@
 
       // 3 · Which is more concentrated?
       {
-        name: 'Comparing concentrations',
+        name: 'Comparing concentrations', learn: 'compare',
         items: [Sci.gen(rng => {
           const vA = rng.pick([100, 200, 250, 500]), vB = rng.pick([100, 200, 250, 500]);
           let cA = rng.int(2, 12) * 2, cB = rng.int(2, 12) * 2;          // grams per 100 mL
@@ -366,7 +484,7 @@
 
       // 4 · Saturated solutions.
       {
-        name: 'Saturated solutions',
+        name: 'Saturated solutions', learn: 'saturated',
         items: [
           Sci.gen(rng => {
             const max = rng.int(6, 20) * 2, extra = rng.int(3, 15);
@@ -392,7 +510,7 @@
 
       // 5 · Making a solution stronger or weaker.
       {
-        name: 'Changing a concentration',
+        name: 'Changing a concentration', learn: 'change',
         items: [
           rng => C(rng, {
             prompt: 'How could you make a salt solution <strong>more</strong> concentrated?',
@@ -415,22 +533,22 @@
 
       // 6 · True or false.
       {
-        name: 'True or false',
+        name: 'True or false', learn: 'words',
         items: [
-          rng => TF(rng, { statement: 'In a suspension, the solid particles settle to the bottom if it is left to stand.', answer: true,
+          rng => TF(rng, { learn: 'suspension', statement: 'In a suspension, the solid particles settle to the bottom if it is left to stand.', answer: true,
             explain: 'The particles are insoluble and only dispersed through the liquid, so they gradually settle.' }),
-          rng => TF(rng, { statement: 'A saturated solution can still dissolve more of the same solute at the same temperature.', answer: false,
+          rng => TF(rng, { learn: 'saturated', statement: 'A saturated solution can still dissolve more of the same solute at the same temperature.', answer: false,
             explain: 'Saturated means it already holds the maximum amount at that temperature. Any extra stays as a solid.' }),
           rng => TF(rng, { statement: 'A solution is a kind of mixture.', answer: true,
             explain: 'The solute and solvent are mixed, not chemically joined, so a solution is a mixture.' }),
-          rng => TF(rng, { statement: 'When sugar dissolves in water, the sugar no longer exists.', answer: false,
+          rng => TF(rng, { learn: 'dissolve', statement: 'When sugar dissolves in water, the sugar no longer exists.', answer: false,
             explain: 'Its particles are spread through the water. You can taste it, and you can get it back by evaporating the water.' })
         ]
       },
 
       // 7 · Spot the misconception.
       {
-        name: 'Spot the misconception',
+        name: 'Spot the misconception', learn: 'dissolve',
         items: [
           rng => Sci.spot(rng, {
             prompt: 'A student describes dissolving sugar in a cup of tea.',
@@ -459,7 +577,7 @@
 
       // 8 · Colour and concentration.
       {
-        name: 'Colour and concentration',
+        name: 'Colour and concentration', learn: 'conc',
         items: [Sci.gen(rng => {
           const vols = [100, 200, 250];
           const cs = rng.sample([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 3).map(c => c * 2);   // grams per 100 mL, all different
@@ -484,7 +602,7 @@
 
       // 9 · Chromatography.
       {
-        name: 'How chromatography works',
+        name: 'How chromatography works', learn: 'chroma',
         items: [
           rng => C(rng, {
             prompt: 'Why do the dyes in an ink travel different distances up chromatography paper?',
@@ -503,7 +621,7 @@
 
       // 10 · Solutions in everyday life.
       {
-        name: 'Everyday solutions',
+        name: 'Everyday solutions', learn: 'saturated',
         items: [
           rng => C(rng, {
             prompt: 'Why does a glass of very sweet, cold iced tea often have sugar left at the bottom?',
@@ -511,7 +629,7 @@
             wrong: ['The sugar melted and sank.', 'Cold water cannot dissolve any sugar.', 'The sugar turned back into a solid after dissolving.'],
             explain: 'How much solute dissolves depends on temperature. Once the solution is saturated, the rest stays solid.'
           }),
-          rng => C(rng, {
+          rng => C(rng, { learn: 'suspension',
             prompt: 'A bottle of medicine says "shake well before use". What does this suggest?',
             right: 'It is a suspension, and the solid settles out when it stands.',
             wrong: ['It is a saturated solution.', 'Shaking makes the medicine stronger.', 'The medicine evaporates if not shaken.'],
@@ -537,6 +655,50 @@
     hint: 'Everything we see either gives out light or reflects it. To see something, light must travel from a source to the ' +
           'object and then into our eyes. At a mirror, light leaves at the same angle to the normal as it arrived. ' +
           'Light changes direction (refracts) when it passes from one material into another.',
+
+    learn: [
+      {
+        id: 'sources', title: 'Sources and reflectors',
+        text: '<p>Everything we see either <strong>gives out</strong> light or <strong>reflects</strong> it.</p>' +
+              Sci.table(['Light sources', 'Only reflect light'], [['The Sun, stars', 'The Moon, planets'], ['Flames, light bulbs', 'Mirrors, books'],
+                ['Lightning, glow-worms', 'Faces, road signs']])
+      },
+      {
+        id: 'seeing', title: 'How we see',
+        diagram: { w: 240, h: 140 },
+        draw(d) { SciDia.seeing(d); },
+        text: '<p>Light travels from a <strong>source</strong> to an <strong>object</strong>, reflects, and travels into the <strong>eye</strong>. Light from a source itself can go straight to the eye.</p>' +
+              '<p>With no light at all, nothing reaches the eye, so you see nothing however long you wait.</p>'
+      },
+      {
+        id: 'ideas', title: 'Two ideas about sight',
+        text: '<p><strong>Plato</strong>’s understanding was that the eyes send out rays towards what we see.</p>' +
+              '<p><strong>Ibn al-Haytham</strong>, about a thousand years ago, contested this: light travels from objects into the eye.</p>'
+      },
+      {
+        id: 'reflection', title: 'Reflection in a mirror',
+        diagram: { w: 280, h: 190 },
+        draw(d) { SciDia.mirror(d, 35, { reflected: true }); },
+        text: '<p>Angles are measured from the <strong>normal</strong>, a line at right angles to the mirror. Light leaves at the <strong>same angle</strong> as it arrived.</p>' +
+              '<p>To see yourself: source → your face → mirror → your eyes.</p>'
+      },
+      {
+        id: 'refraction', title: 'Refraction',
+        diagram: { w: 260, h: 200 },
+        draw(d) { SciDia.refraction(d, 50, null); },
+        text: '<p>Light <strong>changes direction</strong> when it passes from one material into another. Going from air into water, it bends <strong>towards the normal</strong>.</p>'
+      },
+      {
+        id: 'everyday', title: 'Refraction around us',
+        text: '<ul><li>A pencil in water looks bent at the surface.</li><li>A swimming pool looks shallower than it is.</li></ul>' +
+              '<p>Both happen because light from under the water changes direction as it leaves the water.</p>'
+      },
+      {
+        id: 'rays', title: 'Drawing and testing',
+        text: '<p>Rays are drawn as <strong>straight lines</strong> with an <strong>arrow</strong> showing which way the light travels.</p>' +
+              '<p>To investigate a mirror, change the angle the ray hits it (independent variable) and measure the reflected angle.</p>'
+      }
+    ],
 
     examples: [
       {
@@ -564,7 +726,7 @@
     slots: [
       // 1 · Source or reflector?
       {
-        name: 'Light source or reflector?',
+        name: 'Light source or reflector?', learn: 'sources',
         items: [rng => Sci.sort(rng, {
           prompt: 'Does each one give out its own light, or only reflect light?',
           bins: ['Light source', 'Reflects light'],
@@ -581,7 +743,7 @@
 
       // 2 · How do we see?
       {
-        name: 'How we see things',
+        name: 'How we see things', learn: 'seeing',
         items: [
           rng => C(rng, {
             prompt: 'Which shows the path of light that lets you see a tree on a sunny day?',
@@ -598,7 +760,7 @@
 
       // 3 · Order the path of light for a reflection.
       {
-        name: 'The path of a reflection',
+        name: 'The path of a reflection', learn: 'reflection',
         items: [
           rng => order(rng, 'You see your own face in a mirror in a lit room. Put the path of the light in order.',
             ['The light bulb', 'Your face', 'The mirror', 'Your eyes'],
@@ -611,7 +773,7 @@
 
       // 4 · Angle of reflection.
       {
-        name: 'Angle of reflection',
+        name: 'Angle of reflection', learn: 'reflection',
         items: [Sci.gen(rng => {
           const i = rng.int(4, 13) * 5;
           return {
@@ -626,7 +788,7 @@
 
       // 5 · Which way does it refract?
       {
-        name: 'Light entering water',
+        name: 'Light entering water', learn: 'refraction',
         items: [Sci.gen(rng => {
           const i = rng.int(9, 12) * 5;          // 45° to 60°, so the three paths are clearly apart
           const letters = rng.shuffle(['A', 'B', 'C']);
@@ -647,7 +809,7 @@
 
       // 6 · Plato and Ibn al-Haytham.
       {
-        name: 'Ideas about light',
+        name: 'Ideas about light', learn: 'ideas',
         items: [
           rng => C(rng, {
             prompt: 'What did Ibn al-Haytham argue about how we see?',
@@ -661,7 +823,7 @@
 
       // 7 · Spot the misconception.
       {
-        name: 'Spot the misconception',
+        name: 'Spot the misconception', learn: 'seeing',
         items: [
           rng => Sci.spot(rng, {
             prompt: 'A student describes going into a cave with no light at all.',
@@ -674,7 +836,7 @@
             wrong: 2,
             explain: 'With no light at all, nothing reflects light into your eyes, so you see nothing however long you wait. Eyes adjust to dim light, not to no light.'
           }),
-          rng => Sci.spot(rng, {
+          rng => Sci.spot(rng, { learn: 'sources',
             prompt: 'A student explains why we can see the Moon.',
             lines: [
               'The Moon is a natural satellite of Earth.',
@@ -690,7 +852,7 @@
 
       // 8 · Refraction in everyday life.
       {
-        name: 'Refraction around us',
+        name: 'Refraction around us', learn: 'everyday',
         items: [
           rng => C(rng, {
             prompt: 'A straight pencil standing in a glass of water looks bent at the water’s surface. Why?',
@@ -709,7 +871,7 @@
 
       // 9 · Investigating reflection.
       {
-        name: 'Investigating light',
+        name: 'Investigating light', learn: 'rays',
         items: [
           rng => C(rng, {
             prompt: `${Sci.name(rng)} shines a ray of light at a mirror at different angles and measures the angle of the reflected ray each time. What is the independent variable?`,
@@ -726,15 +888,15 @@
 
       // 10 · True or false.
       {
-        name: 'True or false',
+        name: 'True or false', learn: 'seeing',
         items: [
           rng => TF(rng, { statement: 'Everything we see is either a light source or reflects light.', answer: true,
             explain: 'If an object neither gives out nor reflects light, no light can travel from it to our eyes.' }),
-          rng => TF(rng, { statement: 'Light changes direction when it passes from air into water.', answer: true,
+          rng => TF(rng, { learn: 'refraction', statement: 'Light changes direction when it passes from air into water.', answer: true,
             explain: 'That change of direction at a boundary between materials is refraction.' }),
           rng => TF(rng, { statement: 'We see a book because light travels from our eyes to the book.', answer: false,
             explain: 'Light travels from a source to the book and then into our eyes.' }),
-          rng => TF(rng, { statement: 'When we see something in a mirror, the light has travelled from a source to the object, then to the mirror, then to our eyes.', answer: true,
+          rng => TF(rng, { learn: 'reflection', statement: 'When we see something in a mirror, the light has travelled from a source to the object, then to the mirror, then to our eyes.', answer: true,
             explain: 'That is the path of light for a reflection.' })
         ]
       }
@@ -760,6 +922,52 @@
     hint: 'Add up the forces in each direction. If they cancel, the net force is zero and the motion does not change. ' +
           'If they do not cancel, the object speeds up, slows down or changes direction. On a seesaw, the turning effect ' +
           'depends on both the weight and how far it is from the pivot.',
+
+    learn: [
+      {
+        id: 'net', title: 'Net force',
+        diagram: { w: 260, h: 130, caption: 'Arrow lengths are in proportion to the forces.' },
+        draw(d) { SciDia.forceDiagram(d, { left: 30, right: 50 }); },
+        text: '<p>Forces in opposite directions: subtract. ' + m('50 - 30 = 20') + ' N, towards the bigger force (right).</p>'
+      },
+      {
+        id: 'balanced', title: 'Balanced forces',
+        diagram: { w: 260, h: 130 },
+        draw(d) { SciDia.forceDiagram(d, { left: 40, right: 40 }); },
+        text: '<p>Equal and opposite forces cancel: the <strong>net force is zero</strong>, and the motion <strong>does not change</strong>. Something still stays still; something moving keeps the same speed in a straight line.</p>'
+      },
+      {
+        id: 'unbalanced', title: 'Unbalanced forces change motion',
+        text: '<p>An unbalanced force makes an object <strong>speed up</strong>, <strong>slow down</strong> or <strong>change direction</strong>, or more than one of these.</p>' +
+              '<p>A car going round a corner at a steady speed is changing direction, so the forces on it are unbalanced.</p>'
+      },
+      {
+        id: 'mass', title: 'More mass, more force',
+        text: '<p>An object with more mass needs a <strong>larger unbalanced force</strong> for the same change in motion. Push an empty and a full trolley equally hard: the empty one speeds up more.</p>'
+      },
+      {
+        id: 'seesaw', title: 'Seesaws and turning',
+        diagram: { w: 300, h: 140 },
+        draw(d) { SciDia.seesaw(d, { n: 3, d: 2 }, { n: 2, d: 3 }); },
+        text: '<p>A seesaw is a <strong>lever</strong> with a <strong>pivot</strong>. The turning effect depends on the <strong>force</strong> and how <strong>far from the pivot</strong> it acts. Twice as far out, twice the turning effect.</p>'
+      },
+      {
+        id: 'balance', title: 'Balancing a seesaw',
+        text: '<p>It balances when weight × distance is the same on both sides.</p>' +
+              '<p>30 kg at 2 m balances 20 kg at ' + m('30 \\times 2 \\div 20 = 3') + ' m. The lighter person sits further out.</p>'
+      },
+      {
+        id: 'myths', title: 'Two common mistakes',
+        text: '<ul><li>A car at a steady speed does <strong>not</strong> need a bigger forward force. Bigger would make it speed up; at steady speed the forces are balanced.</li>' +
+              '<li>Moving things do not “run out of force”. A rolling ball stops because friction is an unbalanced force against it.</li></ul>'
+      },
+      {
+        id: 'fair', title: 'Testing a seesaw fairly',
+        text: '<ul><li><strong>Change:</strong> the mass on one side.</li><li><strong>Measure:</strong> the distance needed to balance it.</li>' +
+              '<li><strong>Keep the same:</strong> the ruler, the pivot position, the other mass.</li></ul>' +
+              '<p>Record results in a <strong>table</strong>, so patterns are easy to see.</p>'
+      }
+    ],
 
     examples: [
       {
@@ -788,7 +996,7 @@
     slots: [
       // 1 · Net force.
       {
-        name: 'Net force',
+        name: 'Net force', learn: 'net',
         items: [Sci.gen(rng => {
           let a = rng.int(1, 9) * 10, b = rng.int(1, 9) * 10;
           while (a === b) b = rng.int(1, 9) * 10;
@@ -805,7 +1013,7 @@
 
       // 2 · What happens to a still object?
       {
-        name: 'Will it move?',
+        name: 'Will it move?', learn: 'balanced',
         items: [Sci.gen(rng => {
           const balanced = rng.chance(0.35);
           const a = rng.int(2, 8) * 10;
@@ -826,7 +1034,7 @@
 
       // 3 · Balanced or unbalanced?
       {
-        name: 'Balanced or unbalanced?',
+        name: 'Balanced or unbalanced?', learn: 'unbalanced',
         items: [rng => Sci.sort(rng, {
           prompt: 'Are the forces on each one balanced or unbalanced?',
           bins: ['Balanced', 'Unbalanced'],
@@ -847,7 +1055,7 @@
 
       // 4 · Which way will the seesaw tip?
       {
-        name: 'Which way will it tip?',
+        name: 'Which way will it tip?', learn: 'seesaw',
         items: [Sci.gen(rng => {
           let L, R;
           const balanced = rng.chance(0.25);
@@ -873,7 +1081,7 @@
 
       // 5 · Where must the child sit?
       {
-        name: 'Balancing a seesaw',
+        name: 'Balancing a seesaw', learn: 'balance',
         items: [Sci.gen(rng => {
           let big, small, d1, d2;
           do {
@@ -895,7 +1103,7 @@
 
       // 6 · Mass and force.
       {
-        name: 'Mass and force',
+        name: 'Mass and force', learn: 'mass',
         items: [
           rng => C(rng, {
             prompt: 'An empty supermarket trolley and a fully loaded one are pushed with the same force. Which speeds up more?',
@@ -909,7 +1117,7 @@
 
       // 7 · Spot the misconception.
       {
-        name: 'Spot the misconception',
+        name: 'Spot the misconception', learn: 'myths',
         items: [
           rng => Sci.spot(rng, {
             prompt: 'A student explains a car moving along a straight road at a steady 50 km/h.',
@@ -938,7 +1146,7 @@
 
       // 8 · Unbalanced forces in everyday life.
       {
-        name: 'Forces around us',
+        name: 'Forces around us', learn: 'unbalanced',
         items: [
           rng => C(rng, {
             prompt: 'A netball player catches a pass. What does the force from the player\u2019s hands do to the ball?',
@@ -955,7 +1163,7 @@
 
       // 9 · A fair test with a seesaw.
       {
-        name: 'Planning a seesaw test',
+        name: 'Planning a seesaw test', learn: 'fair',
         items: [
           rng => C(rng, {
             prompt: `${Sci.name(rng)} tests how far from the pivot a 50 g mass must be placed to balance different masses on the other side. What is the independent variable?`,
@@ -972,15 +1180,15 @@
 
       // 10 · True or false.
       {
-        name: 'True or false',
+        name: 'True or false', learn: 'balanced',
         items: [
           rng => TF(rng, { statement: 'When the forces on an object are balanced, the net force is zero.', answer: true,
             explain: 'Balanced forces cancel each other, so there is no net force.' }),
           rng => TF(rng, { statement: 'When the forces on a moving object are balanced, it must slow down.', answer: false,
             explain: 'Balanced forces mean the motion does not change: it carries on at the same speed in the same direction.' }),
-          rng => TF(rng, { statement: 'A seesaw is a type of lever.', answer: true,
+          rng => TF(rng, { learn: 'seesaw', statement: 'A seesaw is a type of lever.', answer: true,
             explain: 'A seesaw is a lever with forces acting on both sides of a pivot.' }),
-          rng => TF(rng, { statement: 'A small push far from the pivot can balance a larger push close to it.', answer: true,
+          rng => TF(rng, { learn: 'seesaw', statement: 'A small push far from the pivot can balance a larger push close to it.', answer: true,
             explain: 'The turning effect depends on both the size of the force and its distance from the pivot.' })
         ]
       }
@@ -1010,6 +1218,55 @@
           'sedimentary rock from layers of sediment pressed together; metamorphic rock from rock changed by heat and pressure. ' +
           'We use Earth materials because of their properties.',
 
+    learn: [
+      {
+        id: 'layers', title: 'The Earth’s layers',
+        diagram: { w: 300, h: 190, caption: 'The crust is far thinner than shown.' },
+        draw(d) { SciDia.earthLayers(d, Object.fromEntries(SciDia.LAYERS.map(l => [l, l]))); },
+        text: '<p>From the outside in: <strong>crust</strong>, <strong>mantle</strong>, <strong>outer core</strong>, <strong>inner core</strong>. The crust is the thinnest layer; the mantle is the thickest.</p>' +
+              '<p>The <strong>geosphere</strong> is the solid Earth: its rocks, minerals, soil and landforms.</p>'
+      },
+      {
+        id: 'minerals', title: 'Minerals and rocks',
+        text: '<p>A <strong>mineral</strong> is a natural material whose particles form a repeating pattern, giving it a regular crystal shape.</p>' +
+              '<p>A <strong>rock</strong> is made of one or more minerals. The types and arrangement of its minerals give a rock its colour, texture and hardness.</p>'
+      },
+      {
+        id: 'types', title: 'Three types of rock', wide: true,
+        text: Sci.table(['Type', 'Forms when', 'Examples'], [
+                ['<strong>Igneous</strong>', 'melted rock cools and hardens', 'granite, basalt, pumice, obsidian'],
+                ['<strong>Sedimentary</strong>', 'layers of sediment are pressed and cemented', 'sandstone, limestone, mudstone, conglomerate'],
+                ['<strong>Metamorphic</strong>', 'rock is changed by heat and pressure', 'marble, slate, schist, gneiss']])
+      },
+      {
+        id: 'cycle', title: 'The rock cycle',
+        diagram: { w: 300, h: 190, caption: 'One route round. Any type can become any other.' },
+        draw(d) { SciDia.cycle(d, ['Igneous', 'Sedimentary', 'Metamorphic'], { edges: ['worn down, pressed', 'heat and pressure', 'melted, cooled'] }); },
+        text: '<p>Over very long times, rocks keep changing from one type to another.</p>'
+      },
+      {
+        id: 'identify', title: 'Clues to a rock’s type',
+        text: '<ul><li>Layers or fossils: <strong>sedimentary</strong>.</li>' +
+              '<li>Interlocking crystals from cooled melted rock: <strong>igneous</strong>. Slow cooling underground gives bigger crystals.</li>' +
+              '<li>Full of holes and light enough to float: <strong>pumice</strong>, igneous, from frothy lava.</li></ul>'
+      },
+      {
+        id: 'fossils', title: 'How a fossil forms',
+        text: '<ol class="learn-steps"><li>An organism dies</li><li>It is buried in sediment</li><li>Over a long time, minerals replace its material</li><li>The rock wears away and the fossil is exposed</li></ol>' +
+              '<p>A fossil has the shape of the organism, but it is now stone.</p>'
+      },
+      {
+        id: 'soil', title: 'What soil is made of',
+        text: '<p>Rock particles, <strong>air</strong> and <strong>water</strong>, decaying organisms, and <strong>living</strong> things: fungi, bacteria, earthworms, plant roots.</p>'
+      },
+      {
+        id: 'uses', title: 'Using Earth materials',
+        text: Sci.table(['Material', 'Why it is useful'], [
+                ['Pounamu', 'very tough; takes an edge and polish'], ['Hāngī stones', 'volcanic rock that holds heat without cracking'],
+                ['Limestone', 'spread on farmland; landscaping'], ['Aluminium', 'strong and not very dense'], ['Iron', 'strong; buildings and bridges']])
+      }
+    ],
+
     examples: [
       {
         title: 'Example 1: the Earth’s layers',
@@ -1035,7 +1292,7 @@
     slots: [
       // 1 · Label the layers.
       {
-        name: 'The Earth’s layers',
+        name: 'The Earth’s layers', learn: 'layers',
         items: [rng => {
           const ord = rng.shuffle(SciDia.LAYERS);
           const labels = Object.fromEntries(ord.map((l, i) => [l, String(i + 1)]));
@@ -1051,7 +1308,7 @@
 
       // 2 · Sort rocks by type.
       {
-        name: 'Igneous, sedimentary or metamorphic?',
+        name: 'Igneous, sedimentary or metamorphic?', learn: 'types',
         items: [rng => Sci.sort(rng, {
           prompt: 'Is each rock igneous, sedimentary or metamorphic?',
           bins: ROCK_TYPES,
@@ -1063,7 +1320,7 @@
 
       // 3 · How each type forms.
       {
-        name: 'How rocks form',
+        name: 'How rocks form', learn: 'cycle',
         items: [rng => match(rng, 'Match each type of rock to how it forms.', [
           ['Igneous', 'Melted rock cools and hardens'],
           ['Sedimentary', 'Layers of sediment are pressed and cemented together'],
@@ -1073,7 +1330,7 @@
 
       // 4 · How a fossil forms.
       {
-        name: 'How a fossil forms',
+        name: 'How a fossil forms', learn: 'fossils',
         items: [
           rng => order(rng, 'Put the stages of fossil formation in order.',
             ['An organism dies', 'It is buried in sediment', 'Over a long time, minerals replace the organic material', 'The rock is worn away and the fossil is exposed'],
@@ -1083,7 +1340,7 @@
 
       // 5 · Minerals and rocks.
       {
-        name: 'Minerals and rocks',
+        name: 'Minerals and rocks', learn: 'minerals',
         items: [
           rng => C(rng, {
             prompt: 'What is the difference between a mineral and a rock?',
@@ -1106,7 +1363,7 @@
 
       // 6 · Soil.
       {
-        name: 'What soil is made of',
+        name: 'What soil is made of', learn: 'soil',
         items: [
           rng => C(rng, {
             prompt: 'Which of these is <strong>not</strong> normally part of soil?',
@@ -1123,7 +1380,7 @@
 
       // 7 · Using Earth materials.
       {
-        name: 'Using Earth materials',
+        name: 'Using Earth materials', learn: 'uses',
         items: [rng => match(rng, 'Match each material to why it is useful.', rng.sample([
           ['Pounamu', 'Very tough and takes a sharp edge and polish: used for tools and taonga'],
           ['Hāngī stones', 'Volcanic rock that holds heat without cracking'],
@@ -1135,7 +1392,7 @@
 
       // 8 · Spot the misconception.
       {
-        name: 'Spot the misconception',
+        name: 'Spot the misconception', learn: 'fossils',
         items: [
           rng => Sci.spot(rng, {
             prompt: 'A student describes a fossilised bone found in sandstone.',
@@ -1148,7 +1405,7 @@
             wrong: 2,
             explain: 'In a fossil, minerals have replaced the organic material over a long time. It has the shape of the bone, but it is now stone.'
           }),
-          rng => Sci.spot(rng, {
+          rng => Sci.spot(rng, { learn: 'layers',
             prompt: 'A student describes the Earth’s interior.',
             lines: [
               'The crust is the outer layer, made of minerals and rocks.',
@@ -1164,7 +1421,7 @@
 
       // 9 · Classify by observation.
       {
-        name: 'Identifying a rock',
+        name: 'Identifying a rock', learn: 'identify',
         items: [
           rng => C(rng, {
             prompt: 'A rock has clear layers and contains fossil shells. What type is it most likely to be?',
@@ -1186,15 +1443,15 @@
 
       // 10 · True or false.
       {
-        name: 'True or false',
+        name: 'True or false', learn: 'layers',
         items: [
           rng => TF(rng, { statement: 'The Earth’s interior has four main layers: the inner core, outer core, mantle and crust.', answer: true,
             explain: 'Those are the four main layers, from the centre outwards.' }),
-          rng => TF(rng, { statement: 'Rocks never change from one type to another.', answer: false,
+          rng => TF(rng, { learn: 'cycle', statement: 'Rocks never change from one type to another.', answer: false,
             explain: 'The rock cycle describes how rocks continuously change type through geological processes, over very long times.' }),
-          rng => TF(rng, { statement: 'Fossils form when organisms are buried in sediment and minerals slowly replace their material.', answer: true,
+          rng => TF(rng, { learn: 'fossils', statement: 'Fossils form when organisms are buried in sediment and minerals slowly replace their material.', answer: true,
             explain: 'That is how most fossils form, over long periods of time.' }),
-          rng => TF(rng, { statement: 'Soil contains living organisms as well as rock particles.', answer: true,
+          rng => TF(rng, { learn: 'soil', statement: 'Soil contains living organisms as well as rock particles.', answer: true,
             explain: 'Soil includes fungi, plants, animals and bacteria, along with rock particles, air and water.' })
         ]
       }
@@ -1217,6 +1474,57 @@
     hint: 'Individuals in a population vary, and some of that variation is inherited. A selection pressure, such as limited food, ' +
           'means individuals with helpful traits are more likely to survive and reproduce, so those traits become more common over ' +
           'many generations. Populations evolve; individuals do not.',
+
+    learn: [
+      {
+        id: 'variation', title: 'Variation and inheritance',
+        text: '<p>Individuals of a species <strong>vary</strong>: male wētā, for example, differ in the size of their heads and jaws.</p>' +
+              Sci.table(['Inherited: can be passed on', 'Acquired: cannot'], [['Natural eye and hair colour', 'A scar'], ['Blood group', 'Muscles from training'], ['A wētā’s jaw size', 'A tattoo, a language']])
+      },
+      {
+        id: 'pressure', title: 'Selection pressures',
+        text: '<p>A <strong>selection pressure</strong> is a feature of the environment that affects which individuals survive or reproduce: a shortage of food, a new predator, very cold winters.</p>'
+      },
+      {
+        id: 'selection', title: 'Natural selection',
+        text: '<ol class="learn-steps"><li>Individuals vary in a heritable trait</li><li>A selection pressure affects survival</li>' +
+              '<li>Those with a helpful version are more likely to survive and reproduce</li><li>They pass it to their offspring</li>' +
+              '<li>Over many generations, the trait becomes more common</li></ol>' +
+              '<p>Nobody chooses their traits: it is not a decision.</p>'
+      },
+      {
+        id: 'moths', title: 'An example: dark moths',
+        diagram: { w: 280, h: 200 },
+        draw(d) {
+          const pts = [[0, 8], [10, 15], [20, 38], [30, 64], [40, 78], [50, 82]];
+          SciDia.graph(d, { xMax: 50, yMax: 100, xStep: 10, yStep: 20, xLabel: 'Years after the bark darkened', yLabel: 'Dark moths (%)', series: [{ points: pts }] });
+        },
+        text: '<p>Soot darkened the tree bark. Birds spotted pale moths more easily, so dark moths survived and reproduced more, and the dark colour became more common.</p>'
+      },
+      {
+        id: 'populations', title: 'Populations evolve',
+        text: '<p>Evolution is a change in traits within a <strong>population</strong>, over <strong>many generations</strong>. A single animal does not evolve during its life.</p>'
+      },
+      {
+        id: 'darwin', title: 'Darwin, Wallace and Lamarck',
+        text: '<p><strong>Charles Darwin</strong> and <strong>Alfred Russel Wallace</strong> presented their theories of natural selection together.</p>' +
+              '<p><strong>Lamarck</strong> had proposed that traits acquired in a lifetime are passed on. That idea is contested: only inherited traits pass on.</p>'
+      },
+      {
+        id: 'evidence', title: 'The evidence',
+        text: '<ul><li><strong>Fossils:</strong> some resemble living things (crocodiles); others belong to groups that no longer exist (trilobites). Their features show how they lived.</li>' +
+              '<li><strong>Shared features:</strong> every vertebrate has a backbone, pointing to a common ancestor.</li>' +
+              '<li><strong>DNA</strong> adds further support.</li></ul>'
+      },
+      {
+        id: 'species', title: 'New species',
+        text: '<p>Over long periods, changes build up until a <strong>new species</strong> forms. Kākā, kea and kākāpō descend from a shared parrot ancestor.</p>'
+      },
+      {
+        id: 'extinction', title: 'Extinction',
+        text: '<p>Some species cannot survive a change in their environment, such as habitat destruction, and become <strong>extinct</strong>. The moa did not survive the changes after people arrived, including hunting and habitat loss.</p>'
+      }
+    ],
 
     examples: [
       {
@@ -1242,7 +1550,7 @@
     slots: [
       // 1 · Order natural selection.
       {
-        name: 'Natural selection in order',
+        name: 'Natural selection in order', learn: 'selection',
         items: [rng => order(rng, 'Put the steps of natural selection in order.', [
           'Individuals in a population vary in a heritable trait',
           'A selection pressure, such as limited food, affects survival',
@@ -1254,7 +1562,7 @@
 
       // 2 · Heritable or acquired?
       {
-        name: 'Inherited or acquired?',
+        name: 'Inherited or acquired?', learn: 'variation',
         items: [rng => Sci.sort(rng, {
           prompt: 'Is each trait inherited from parents, or acquired during a lifetime?',
           bins: ['Inherited', 'Acquired'],
@@ -1271,7 +1579,7 @@
 
       // 3 · Selection pressures.
       {
-        name: 'Selection pressures',
+        name: 'Selection pressures', learn: 'pressure',
         items: [
           rng => C(rng, {
             prompt: 'What is a selection pressure?',
@@ -1290,7 +1598,7 @@
 
       // 4 · Reading data on a population.
       {
-        name: 'Evidence from a population',
+        name: 'Evidence from a population', learn: 'moths',
         items: [Sci.gen(rng => {
           const years = [0, 10, 20, 30, 40, 50];
           const start = rng.int(5, 15), end = rng.int(70, 90);
@@ -1319,7 +1627,7 @@
 
       // 5 · Lamarck or Darwin?
       {
-        name: 'Darwin, Wallace and Lamarck',
+        name: 'Darwin, Wallace and Lamarck', learn: 'darwin',
         items: [
           rng => C(rng, {
             prompt: 'Who presented their theories of natural selection together?',
@@ -1337,7 +1645,7 @@
 
       // 6 · Populations, not individuals.
       {
-        name: 'Who evolves?',
+        name: 'Who evolves?', learn: 'populations',
         items: [
           rng => TF(rng, { statement: 'An individual animal can evolve during its lifetime.', answer: false,
             explain: 'Evolution is a change in traits within a population over generations, not a change within one individual.' }),
@@ -1351,7 +1659,7 @@
 
       // 7 · Evidence for evolution.
       {
-        name: 'The evidence',
+        name: 'The evidence', learn: 'evidence',
         items: [
           rng => C(rng, {
             prompt: 'Which of these is evidence that populations and species have changed over time?',
@@ -1373,7 +1681,7 @@
 
       // 8 · New species.
       {
-        name: 'New species',
+        name: 'New species', learn: 'species',
         items: [
           rng => C(rng, {
             prompt: 'Kākā, kea and kākāpō are different kinds of New Zealand parrot. What does evolution suggest about them?',
@@ -1387,7 +1695,7 @@
 
       // 9 · Extinction.
       {
-        name: 'Extinction',
+        name: 'Extinction', learn: 'extinction',
         items: [
           rng => C(rng, {
             prompt: 'Why did the moa become extinct?',
@@ -1405,15 +1713,15 @@
 
       // 10 · True or false.
       {
-        name: 'True or false',
+        name: 'True or false', learn: 'variation',
         items: [
           rng => TF(rng, { statement: 'Individuals within a species show variation in their traits.', answer: true,
             explain: 'No two individuals are exactly alike; for example, male wētā differ in head and jaw size.' }),
-          rng => TF(rng, { statement: 'Natural selection means individuals choose which traits to have.', answer: false,
+          rng => TF(rng, { learn: 'selection', statement: 'Natural selection means individuals choose which traits to have.', answer: false,
             explain: 'Natural selection is not a choice. Heritable differences affect which individuals survive and reproduce.' }),
-          rng => TF(rng, { statement: 'Some fossils are similar to organisms alive today.', answer: true,
+          rng => TF(rng, { learn: 'evidence', statement: 'Some fossils are similar to organisms alive today.', answer: true,
             explain: 'Crocodile fossils, for example, look much like crocodiles living now.' }),
-          rng => TF(rng, { statement: 'A trait that helps individuals survive and reproduce tends to become more common in a population over many generations.', answer: true,
+          rng => TF(rng, { learn: 'selection', statement: 'A trait that helps individuals survive and reproduce tends to become more common in a population over many generations.', answer: true,
             explain: 'Those individuals leave more offspring, who inherit the trait.' })
         ]
       }
@@ -1439,6 +1747,48 @@
           'one parent and gives offspring genetically identical to it. Flowering plants go from pollination to fertilisation, seeds, ' +
           'dispersal and germination. Most fungi reproduce by spores.',
 
+    learn: [
+      {
+        id: 'two', title: 'Sexual and asexual', wide: true,
+        text: Sci.table(['', 'Sexual', 'Asexual'], [['Parents', 'two', 'one'], ['How', 'gametes join at fertilisation', 'the parent makes new individuals directly'],
+                ['Offspring', 'a mix of both parents’ traits', 'genetically identical to the parent'],
+                ['Examples', 'a kiwi egg; seeds after pollination', 'strawberry runners; a bacterium splitting']]) +
+              '<p>All living organisms reproduce.</p>'
+      },
+      {
+        id: 'plants', title: 'A flowering plant', wide: true,
+        diagram: { w: 330, h: 200 },
+        draw(d) { SciDia.cycle(d, ['Pollination', 'Fertilisation', 'Seed formation', 'Seed dispersal', 'Germination'], { size: 10.5 }); },
+        text: '<p><strong>Pollination:</strong> pollen is carried to a flower, by wind, insects or birds such as tūī. <strong>Fertilisation:</strong> a male gamete joins a female gamete. ' +
+              'Seeds form and are <strong>dispersed</strong>, for example by kererū. <strong>Germination:</strong> a seed starts to grow.</p>'
+      },
+      {
+        id: 'mammals', title: 'How a mammal develops',
+        text: '<ol class="learn-steps"><li>Gametes form: sperm and ovum (egg)</li><li>Fertilisation: they join</li><li>Zygote: the first cell</li>' +
+              '<li>Embryo</li><li>Foetus</li><li>Birth</li></ol>'
+      },
+      {
+        id: 'fungi', title: 'Fungi',
+        text: '<p>Most fungi reproduce by <strong>spores</strong>, which spread and grow into new fungi.</p>' +
+              '<p>A mushroom makes its spores in a structure you can see, such as its gills. Moulds produce spores directly.</p>'
+      },
+      {
+        id: 'hormones', title: 'Hormones',
+        text: '<p>A <strong>hormone</strong> is a chemical carried in the <strong>blood</strong> that changes the activity of particular target cells or tissues.</p>' +
+              '<p>Hormones regulate sperm production in males and control the menstrual cycle in females.</p>'
+      },
+      {
+        id: 'puberty', title: 'Puberty and the menstrual cycle',
+        text: '<p><strong>Puberty</strong> is when a person develops the ability to reproduce.</p>' +
+              '<p>In the <strong>menstrual cycle</strong>, hormones control ovulation and the growth of the uterus lining. If fertilisation does not happen, the lining is shed: menstruation.</p>'
+      },
+      {
+        id: 'compare', title: 'Comparing the three',
+        text: Sci.table(['Organism', 'Usually reproduces by'], [['Flowering plants', 'seeds, after pollination and fertilisation'],
+                ['Animals', 'sperm and egg, then fertilisation'], ['Fungi', 'spores']])
+      }
+    ],
+
     examples: [
       {
         title: 'Example 1: sexual and asexual reproduction',
@@ -1461,7 +1811,7 @@
     slots: [
       // 1 · Sexual or asexual?
       {
-        name: 'Sexual or asexual?',
+        name: 'Sexual or asexual?', learn: 'two',
         items: [rng => Sci.sort(rng, {
           prompt: 'Is each one sexual or asexual reproduction?',
           bins: ['Sexual', 'Asexual'],
@@ -1482,7 +1832,7 @@
 
       // 2 · Flowering plant stages.
       {
-        name: 'A flowering plant’s life',
+        name: 'A flowering plant’s life', learn: 'plants',
         items: [rng => order(rng, 'Put these stages of reproduction in a flowering plant in order.',
           ['Pollination', 'Fertilisation', 'Seed formation', 'Seed dispersal', 'Germination'],
           'Pollen arrives, fertilisation happens, seeds form and are carried away, then they germinate.')]
@@ -1490,7 +1840,7 @@
 
       // 3 · Mammal development.
       {
-        name: 'Development of a mammal',
+        name: 'Development of a mammal', learn: 'mammals',
         items: [rng => order(rng, 'Put these stages in the development of a mammal in order.',
           ['Gamete formation (sperm and ovum)', 'Fertilisation', 'Zygote', 'Embryo', 'Foetus', 'Birth'],
           'Gametes form, fertilisation makes a zygote, which develops into an embryo, then a foetus, before birth.')]
@@ -1498,7 +1848,7 @@
 
       // 4 · What the offspring are like.
       {
-        name: 'What the offspring are like',
+        name: 'What the offspring are like', learn: 'two',
         items: [
           rng => C(rng, {
             prompt: 'What are offspring from <strong>sexual</strong> reproduction like?',
@@ -1515,7 +1865,7 @@
 
       // 5 · Fungi.
       {
-        name: 'How fungi reproduce',
+        name: 'How fungi reproduce', learn: 'fungi',
         items: [
           rng => C(rng, {
             prompt: 'How do most fungi reproduce?',
@@ -1529,7 +1879,7 @@
 
       // 6 · Hormones.
       {
-        name: 'Hormones',
+        name: 'Hormones', learn: 'hormones',
         items: [
           rng => C(rng, {
             prompt: 'What is a hormone?',
@@ -1544,7 +1894,7 @@
 
       // 7 · Puberty and the menstrual cycle.
       {
-        name: 'Puberty and the menstrual cycle',
+        name: 'Puberty and the menstrual cycle', learn: 'puberty',
         items: [
           rng => C(rng, {
             prompt: 'What is puberty?',
@@ -1561,7 +1911,7 @@
 
       // 8 · Match the plant stages.
       {
-        name: 'Plant reproduction words',
+        name: 'Plant reproduction words', learn: 'plants',
         items: [rng => match(rng, 'Match each stage to what happens.', [
           ['Pollination', 'Pollen is carried to a flower'],
           ['Fertilisation', 'A male gamete joins with a female gamete'],
@@ -1572,7 +1922,7 @@
 
       // 9 · Comparing organisms.
       {
-        name: 'Comparing plants, animals and fungi',
+        name: 'Comparing plants, animals and fungi', learn: 'compare',
         items: [
           rng => C(rng, {
             prompt: 'What do flowering plants, animals and fungi all have in common?',
@@ -1589,13 +1939,13 @@
 
       // 10 · True or false.
       {
-        name: 'True or false',
+        name: 'True or false', learn: 'two',
         items: [
           rng => TF(rng, { statement: 'All living organisms reproduce.', answer: true, explain: 'Reproduction is one of the life processes of every organism.' }),
           rng => TF(rng, { statement: 'Asexual reproduction needs two parents.', answer: false, explain: 'Asexual reproduction involves a single parent.' }),
-          rng => TF(rng, { statement: 'In animals, sexual reproduction involves sperm and egg formation, then fertilisation.', answer: true,
+          rng => TF(rng, { learn: 'mammals', statement: 'In animals, sexual reproduction involves sperm and egg formation, then fertilisation.', answer: true,
             explain: 'Animals reproduce sexually through sperm and egg formation, then fertilisation.' }),
-          rng => TF(rng, { statement: 'A zygote forms after fertilisation.', answer: true,
+          rng => TF(rng, { learn: 'mammals', statement: 'A zygote forms after fertilisation.', answer: true,
             explain: 'The zygote is the first cell formed when the gametes join; it then develops into an embryo.' })
         ]
       }
@@ -1630,6 +1980,49 @@
           'down dead organisms and waste, returning nutrients to the ecosystem. In mutualism both organisms benefit; in parasitism ' +
           'one benefits and the other is harmed.',
 
+    learn: [
+      {
+        id: 'roles', title: 'Three roles', wide: true,
+        text: Sci.table(['Role', 'Gets energy by', 'Examples'], [
+                ['<strong>Producer</strong>', 'making glucose by photosynthesis', 'kōwhai, grass, seaweed, phytoplankton'],
+                ['<strong>Consumer</strong>', 'feeding on producers or other consumers', 'kererū, rabbit, snapper, stoat'],
+                ['<strong>Decomposer</strong>', 'breaking down dead organisms and waste', 'fungi on a log, bacteria, mould']])
+      },
+      {
+        id: 'cycle', title: 'Matter cycles, energy flows',
+        diagram: { w: 260, h: 170 },
+        draw(d) { SciDia.cycle(d, ['Producers', 'Consumers', 'Decomposers', 'Nutrients in soil']); },
+        text: '<p><strong>Matter</strong> goes round and round. <strong>Energy</strong> is transferred through and does not cycle. In a food chain, arrows point from the food to the eater: the direction energy moves.</p>'
+      },
+      {
+        id: 'relations', title: 'Living together', wide: true,
+        text: Sci.table(['Relationship', 'Who gains', 'Example'], [
+                ['<strong>Predator and prey</strong>', 'one hunts and eats the other', 'kārearea and a small bird'],
+                ['<strong>Mutualism</strong>', 'both benefit', 'tūī and harakeke; bees and flowers'],
+                ['<strong>Parasitism</strong>', 'one benefits, the other is harmed', 'fleas on a dog']]) +
+              '<p>Organisms in an ecosystem are <strong>interdependent</strong>.</p>'
+      },
+      {
+        id: 'decomposers', title: 'Decomposers',
+        text: '<p>They break down dead organisms and waste, releasing <strong>nutrients</strong> that producers take up again.</p>' +
+              '<p>Without them, dead leaves and logs would pile up and nutrients would not return to the soil.</p>'
+      },
+      {
+        id: 'soil', title: 'Soil and nutrients',
+        text: '<p>Soil is decaying organic matter, living organisms, rock particles, air and water. Decomposers in it keep nutrients cycling.</p>'
+      },
+      {
+        id: 'quadrat', title: 'Estimating with quadrats',
+        text: '<ol class="learn-steps"><li>Place 1 m² quadrats at random and count in each</li><li>Average: (4 + 6 + 3 + 5 + 7) ÷ 5 = 5 per m²</li>' +
+              '<li>Area of the field: 20 m × 50 m = 1000 m²</li><li>Estimate: 5 × 1000 = 5000</li></ol>'
+      },
+      {
+        id: 'patterns', title: 'Where organisms live',
+        text: '<p>Conditions affect where organisms are found. Leaf litter gives shelter, moisture and food, so it holds more invertebrates than bare ground.</p>' +
+              '<p>Measure <strong>abiotic</strong> conditions, such as temperature and moisture, along a <strong>transect</strong> to explain the pattern.</p>'
+      }
+    ],
+
     examples: [
       {
         title: 'Example 1: three roles in an ecosystem',
@@ -1655,7 +2048,7 @@
     slots: [
       // 1 · Producer, consumer or decomposer?
       {
-        name: 'Producer, consumer or decomposer?',
+        name: 'Producer, consumer or decomposer?', learn: 'roles',
         items: [rng => Sci.sort(rng, {
           prompt: 'Is each one a producer, a consumer or a decomposer?',
           bins: ['Producer', 'Consumer', 'Decomposer'],
@@ -1672,7 +2065,7 @@
 
       // 2 · Name the relationship.
       {
-        name: 'Name the relationship',
+        name: 'Name the relationship', learn: 'relations',
         items: RELATIONS.map(([text, k]) => rng => ({
           prompt: `<em>${text}.</em> What kind of relationship is this?`,
           input: { kind: 'choice', options: REL_NAMES.map((r, i) => ({ html: r, right: i === k })), correct: k },
@@ -1684,7 +2077,7 @@
 
       // 3 · Match the relationships.
       {
-        name: 'Match the relationships',
+        name: 'Match the relationships', learn: 'relations',
         items: [rng => match(rng, 'Match each relationship to its meaning.', [
           ['Predator', 'An organism that hunts and eats other organisms'],
           ['Prey', 'An organism that is hunted and eaten'],
@@ -1695,7 +2088,7 @@
 
       // 4 · What decomposers do.
       {
-        name: 'Decomposers',
+        name: 'Decomposers', learn: 'decomposers',
         items: [
           rng => C(rng, {
             prompt: 'What do decomposers do in an ecosystem?',
@@ -1714,7 +2107,7 @@
 
       // 5 · Producers.
       {
-        name: 'Producers',
+        name: 'Producers', learn: 'roles',
         items: [
           rng => C(rng, {
             prompt: 'How do producers make glucose?',
@@ -1728,7 +2121,7 @@
 
       // 6 · Energy and matter.
       {
-        name: 'Energy and matter',
+        name: 'Energy and matter', learn: 'cycle',
         items: [
           rng => C(rng, {
             prompt: 'Grass → rabbit → stoat. What does each arrow show?',
@@ -1747,7 +2140,7 @@
 
       // 7 · Quadrat estimate.
       {
-        name: 'Estimating with quadrats',
+        name: 'Estimating with quadrats', learn: 'quadrat',
         items: [Sci.gen(rng => {
           const avg = rng.int(2, 9);
           const n = 5;
@@ -1773,7 +2166,7 @@
 
       // 8 · Soils.
       {
-        name: 'Soils and nutrients',
+        name: 'Soils and nutrients', learn: 'soil',
         items: [
           rng => C(rng, {
             prompt: 'How does soil support nutrient cycling in an ecosystem?',
@@ -1791,7 +2184,7 @@
 
       // 9 · Patterns in recorded data.
       {
-        name: 'Patterns in data',
+        name: 'Patterns in data', learn: 'patterns',
         items: [
           rng => C(rng, {
             prompt: 'Students count invertebrates in leaf litter under trees and on bare, exposed ground nearby. They find many more in the leaf litter. Which is the best explanation?',
@@ -1810,15 +2203,15 @@
 
       // 10 · True or false.
       {
-        name: 'True or false',
+        name: 'True or false', learn: 'relations',
         items: [
           rng => TF(rng, { statement: 'In parasitism, both organisms benefit.', answer: false,
             explain: 'In parasitism one organism benefits and the other is harmed. When both benefit, it is mutualism.' }),
           rng => TF(rng, { statement: 'Organisms in an ecosystem are interdependent.', answer: true,
             explain: 'They depend on each other for food, pollination, shelter and the cycling of nutrients.' }),
-          rng => TF(rng, { statement: 'Decomposers release nutrients back into the ecosystem.', answer: true,
+          rng => TF(rng, { learn: 'decomposers', statement: 'Decomposers release nutrients back into the ecosystem.', answer: true,
             explain: 'That is their role: breaking down dead material and waste.' }),
-          rng => TF(rng, { statement: 'A quadrat is used to sample a small area so a larger area can be estimated.', answer: true,
+          rng => TF(rng, { learn: 'quadrat', statement: 'A quadrat is used to sample a small area so a larger area can be estimated.', answer: true,
             explain: 'Counting in several quadrats and averaging gives an estimate for the whole area.' })
         ]
       }

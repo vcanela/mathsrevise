@@ -10,13 +10,17 @@
 //     id: 'u2e1', unit: 2,
 //     title: 'Collecting Like Terms',
 //     blurb: 'Group the terms that share a letter.',
+//     learn:    [ { id, title, text, draw, diagram:{w,h,caption} } ],   (optional)
 //     examples: [ { title, steps:[…], draw } ],
 //     hint: 'Only combine terms with the same letter.',
 //     generate(rng, difficulty) { return [ …question objects… ]; }
 //   });
 //
 // A question object:
-//   { prompt, note, tag, draw, diagram:{w,h}, input:{…}, explain }
+//   { prompt, note, tag, draw, diagram:{w,h}, input:{…}, explain, learn }
+//
+// `learn` names the "Learn it" card that answers the question; "Stuck?" then
+// links to it.
 //
 // Input kinds: number, fill, choice, expr, spot, match, order.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -575,6 +579,8 @@ const Exercise = (() => {
         const nudge = (topic && topic.hint) || state.hint ||
                       'Look back at the worked examples at the top of the page.';
         helpBody.innerHTML = '<p class="help-step"><strong>Where to start</strong>' + nudge + '</p>';
+        const link = learnLink(q);
+        if (link) helpBody.appendChild(h('p', { class: 'help-step help-learn' }, link));
         stuckBtn.textContent = 'Show me how';
       } else {
         helpBody.innerHTML +=
@@ -714,6 +720,90 @@ const Exercise = (() => {
       picker,
       set !== null ? h('span', { class: 'tool-note', text: 'Everyone gets the same questions in set ' + set + '.' })
                    : null);
+  }
+
+  // ── Learn it: the short reading section at the top of a page ──────────────
+  // Idea cards, each a heading, a sentence or two and usually a diagram. It
+  // starts closed, so a confident student goes straight to the questions;
+  // "Stuck?" opens it at the card that answers the question.
+
+  const page = { base: '', id: null, openLearn: null };
+
+  function learnBlock(cfg) {
+    if (!cfg.learn || !cfg.learn.length) return null;
+    const key = 'mrg_learn_open_' + cfg.id;
+    const wrap = h('section', { class: 'examples learn', id: 'learn' });
+    const body = h('div', { class: 'learn-body', style: 'display:none' });
+    const toggle = h('button', {
+      type: 'button', class: 'examples-toggle', 'aria-expanded': 'false',
+      onclick() {
+        setOpen(body.style.display === 'none');
+        try { localStorage.setItem(key, body.style.display === 'none' ? '0' : '1'); } catch (_) {}
+      }
+    }, 'Learn it', h('span', { class: 'learn-count', text: cfg.learn.length + ' key ideas' }));
+    wrap.appendChild(toggle);
+    wrap.appendChild(body);
+
+    const grid = h('div', { class: 'learn-grid' });
+    body.appendChild(grid);
+    for (const c of cfg.learn) {
+      const card = h('article', { class: 'learn-card' + (c.wide ? ' wide' : ''), id: 'learn-' + c.id });
+      if (c.draw) {
+        const svg = document.createElementNS(Geo.NS, 'svg');
+        svg.setAttribute('class', 'qdiagram');
+        const w = (c.diagram && c.diagram.w) || 240;
+        card.appendChild(h('figure', { class: 'learn-fig', style: `max-width:${w}px` }, svg,
+          c.diagram && c.diagram.caption ? h('figcaption', { class: 'dia-caption', html: c.diagram.caption }) : null));
+        try { c.draw(Geo.canvas(svg, w, (c.diagram && c.diagram.h) || 150), Geo); }
+        catch (err) { console.error('learn diagram failed', err); }
+      }
+      card.appendChild(h('h3', { html: c.title }));
+      card.appendChild(h('div', { class: 'learn-text', html: c.text }));
+      grid.appendChild(card);
+    }
+
+    let typeset = false;
+    function setOpen(on) {
+      body.style.display = on ? '' : 'none';
+      toggle.classList.toggle('open', on);
+      toggle.setAttribute('aria-expanded', on ? 'true' : 'false');
+      if (on && !typeset) { typeset = true; MJ.typeset([body]); }
+    }
+    let saved = null;
+    try { saved = localStorage.getItem(key); } catch (_) {}
+    if (saved === '1') setOpen(true);
+
+    page.openLearn = id => {
+      setOpen(true);
+      const card = document.getElementById('learn-' + id);
+      if (!card) return;
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      card.classList.remove('flash');
+      void card.offsetWidth;                 // restart the highlight
+      card.classList.add('flash');
+    };
+    // Arriving from a link in a mixed session: open at that card.
+    const m = /^#learn-(.+)$/.exec(location.hash);
+    if (m) setTimeout(() => page.openLearn(decodeURIComponent(m[1])), 120);
+    return wrap;
+  }
+
+  /** A "Read more" link to the card that answers `q`, or null. */
+  function learnLink(q) {
+    const topicId = (q.origin && q.origin.topicId) || page.id;
+    const topic = window.Topics && window.Topics[topicId];
+    const card = q.learn && topic && topic.learn && topic.learn.find(c => c.id === q.learn);
+    if (!card) return null;
+    const label = 'Read about it: ' + card.title;
+    if (topicId === page.id && page.openLearn) {
+      return h('a', { class: 'learn-link', href: '#learn-' + card.id,
+                      onclick(ev) { ev.preventDefault(); page.openLearn(card.id); } }, label);
+    }
+    // In a mixed session the card lives on the topic's own page.
+    const ex = typeof Manifest !== 'undefined' && Manifest.exercise(topicId);
+    if (!ex || !ex.href) return null;
+    return h('a', { class: 'learn-link', href: page.base + ex.href + '#learn-' + card.id,
+                    target: '_blank', rel: 'noopener' }, label + ' ↗');
   }
 
   function examplesBlock(cfg) {
@@ -857,6 +947,9 @@ const Exercise = (() => {
     root.appendChild(main);
 
     main.appendChild(xpHeader());
+    page.base = base; page.id = cfg.id;
+    const learn = learnBlock(cfg);
+    if (learn) main.appendChild(learn);
     const ex = examplesBlock(cfg);
     if (ex) main.appendChild(ex);
 
