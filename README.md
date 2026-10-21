@@ -1,4 +1,4 @@
-# Maths Revision
+# Revision
 
 A self-contained revision site for Year 8–10 maths: number, algebra, geometry, and the
 places where algebra and geometry meet. No frameworks, no build step, no server. Open
@@ -28,13 +28,49 @@ never position vertices by hand and label them with numbers chosen separately.
 
 ---
 
+## Two subjects
+
+The site carries **Maths** and **Science** on one engine. Both share the XP bar and the weekly
+target, so a day spent on either counts as a day practised; each has its own daily mix
+(`practice.html?subject=maths` or `?subject=science`).
+
+Maths keeps its original URLs (`units/unit-2.html`, `exercises/unit-2/exercise-4.html`) so links
+already handed out still work. Science lives under `science/` (`science/year-7.html`,
+`science/year-7/exercise-3.html`). Every path is built in `js/manifest.js`; nothing else
+constructs a URL by hand.
+
+### Science
+
+Science follows **Phase 3 (Years 7–8)** of the *Science Years 0–10* learning area (Ministry of
+Education, August 2026; in use from 1 January 2027). Units are by year; each exercise is one
+knowledge heading for that year, and its practice questions come from the matching practices
+column. Questions stay inside the knowledge statements: where the curriculum stops short of a
+formula or a term, so do the questions. The curriculum PDF itself sits in `reference/`, which
+is git-ignored and never published.
+
+Science questions come in two kinds. **Quantitative** ones (speed, mass, reading a graph) are
+generated with fresh numbers, like the maths. **Conceptual** ones cannot be, so each question
+*slot* holds a pool of authored items testing the same idea; a visit picks one per slot, and
+"Try one like it" picks another from the same slot. Topics are declared with `Sci.topic()` in
+`js/science.js`, giving `slots` instead of a `generate` function.
+
+Exercises not written yet are listed in the manifest with `soon: true`. They show on the year
+page as dashed placeholders, get no page, and are left out of the daily mix.
+
+**Reviewing content.** Authored science items can't be verified by a script: a wrong fact would
+pass every test. `tools/review-science.html` lists every item with all its options, the marked
+answer and the explanation, each with an ID such as `7.1·Q4·3` for reporting problems.
+
 ## Layout
 
 ```
 index.html              home page (rendered from the manifest)
-practice.html           the daily mixed practice session
-units/unit-N.html       one per unit
-exercises/unit-N/…      one per exercise; each is a ~20 line shell
+practice.html           the daily mix (?subject=maths or ?subject=science)
+units/unit-N.html       one per maths unit
+exercises/unit-N/…      one per maths exercise; each is a ~20 line shell
+science/year-N.html     one per science year
+science/year-N/…        one per science exercise
+reference/              the curriculum PDF; git-ignored, never published
 css/style.css           the whole stylesheet, light and dark
 js/
   manifest.js           the list of units and exercises — the single source of truth
@@ -48,6 +84,7 @@ js/
   algebra.js            parses and compares typed algebraic expressions
   geometry.js           builds and measures shapes; the SVG drawing surface
   diagrams.js           balance scales, tiles, number lines, nets, circles
+  science.js            science question builders; particle, state-change and graph diagrams
   format.js             turning numbers into the TeX a student expects to read
   mathjax.js            loads MathJax
   topics/
@@ -56,10 +93,13 @@ js/
     geometry.js         unit 3
     combined.js         unit 4
     words.js            unit 5
+    science-y7.js       Year 7 science
+    science-y8.js       Year 8 science
 tools/
   check-topics.js       generates ~200k questions and checks them (node)
   selftest.html         loads every page in a browser and checks it renders
   check-diagrams.html   measures every diagram against its own viewBox
+  review-science.html   every authored science item and its answer, for a teacher to read
   build-pages.js        regenerates the HTML shells from the manifest (node)
 ```
 
@@ -101,7 +141,7 @@ the question they came from so the record of where help was needed stays visible
 
 ## Question types
 
-The engine renders seven kinds of answer control. A generator picks whichever suits the question.
+The engine renders nine kinds of answer control. A generator picks whichever suits the question.
 
 - **`number`** — one box, optionally with a prefix or unit.
 - **`fill`** — a row of text and boxes, for example `= □x + □`. Also does stacked fractions.
@@ -112,6 +152,10 @@ The engine renders seven kinds of answer control. A generator picks whichever su
 - **`spot`** — a worked solution with one wrong line; click the mistake.
 - **`match`** — pair items across two columns.
 - **`order`** — click steps into sequence.
+- **`sort`** — put each item into one of a few groups (constant or changing speed; thermal
+  energy added or removed). Has an explicit Check button, since students often look back over
+  their sorting before committing.
+- **`label`** — numbered markers on a diagram, each named from a drop-down.
 
 ## Adding an exercise
 

@@ -31,10 +31,9 @@
     const SETS = Number(new URLSearchParams(location.search).get('runs')) || 1;
     const pages = [
       ...Array.from({ length: SETS }, (_, i) => ({ url: `../practice.html?r=${i + 1}`, id: 'practice' })),
-      ...Manifest.UNITS.flatMap(u => u.exercises.flatMap(ex =>
-        Array.from({ length: SETS }, (_, i) => ({
-          url: `../exercises/unit-${u.n}/exercise-${ex.n}.html?set=${i + 1}`, id: ex.id
-        }))))
+      ...Array.from({ length: SETS }, (_, i) => ({ url: `../practice.html?subject=science&r=${i + 1}`, id: 'practice-science' })),
+      ...Manifest.live().flatMap(ex =>
+        Array.from({ length: SETS }, (_, i) => ({ url: `../${ex.href}?set=${i + 1}`, id: ex.id })))
     ];
 
     const frame = document.getElementById('frame');

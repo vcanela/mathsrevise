@@ -246,7 +246,26 @@ main {
   font-size: 0.86rem; color: var(--ink-soft);
   margin-top: 0.2rem; max-width: 34rem;
 }
-.habit-go { flex: none; white-space: nowrap; }
+.habit-go { flex: none; white-space: nowrap; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+/* Subject sections on the home page */
+.subject { margin-top: 2.2rem; }
+.subject-blurb {
+  font-family: var(--font-sans);
+  font-size: 0.86rem; color: var(--ink-soft);
+  margin: -0.4rem 0 0.2rem;
+}
+
+/* An exercise not written yet: visible, so the year's shape is clear, but inert. */
+.card-soon {
+  box-shadow: none;
+  background: transparent;
+  border-style: dashed;
+  opacity: 0.62;
+}
+.card-soon:hover { transform: none; border-color: var(--rule); }
+.card-soon::before { display: none; }
+.card-soon .card-mark { background: transparent; }
 
 .habit-week {
   display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;
@@ -854,6 +873,69 @@ main {
 @media (max-width: 600px) {
   .qcard-follow { margin-left: 0.6rem; }
 }
+
+/* ── Sort into groups ─────────────────────────────────────────────────────── */
+.sort-list { display: flex; flex-direction: column; gap: 0.35rem; }
+.sort-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 0.6rem; flex-wrap: wrap;
+  padding: 0.45rem 0.6rem 0.45rem 0.8rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-s);
+  background: var(--surface);
+}
+.sort-row.placed { background: var(--surface-2); }
+.sort-row.ok  { border-color: var(--good); background: var(--good-soft); }
+.sort-row.bad { border-color: var(--bad);  background: var(--bad-soft); }
+.sort-item { flex: 1 1 14rem; font-size: 0.97rem; }
+.sort-bins { display: inline-flex; flex-wrap: wrap; gap: 0.3rem; }
+.sort-btn {
+  font-family: var(--font-sans); font-size: 0.78rem; font-weight: 500;
+  padding: 0.28rem 0.6rem;
+  border: 1px solid var(--rule); border-radius: var(--radius-s);
+  background: var(--surface); color: var(--ink-soft); cursor: pointer;
+}
+.sort-btn:hover:not(:disabled) { border-color: var(--brand); color: var(--brand-ink); }
+.sort-btn.picked { background: var(--brand); border-color: var(--brand); color: #fff; }
+.sort-btn:disabled { cursor: default; }
+.sort-foot { margin-top: 0.6rem; }
+.sort-check { margin-left: 0; padding: 0.42rem 0.85rem; font-family: var(--font-sans); font-size: 0.85rem; }
+
+/* ── Label the diagram ────────────────────────────────────────────────────── */
+.label-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr)); gap: 0.4rem; }
+.label-row {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.3rem 0.45rem;
+  border: 1px solid var(--rule); border-radius: var(--radius-s);
+  background: var(--surface);
+}
+.label-row.ok  { border-color: var(--good); background: var(--good-soft); }
+.label-row.bad { border-color: var(--bad);  background: var(--bad-soft); }
+.label-num {
+  flex: none; width: 1.45rem; height: 1.45rem; border-radius: 50%;
+  display: grid; place-items: center;
+  font-family: var(--font-sans); font-size: 0.75rem; font-weight: 600;
+  color: var(--accent-ink); background: var(--accent-soft);
+  border: 1px solid var(--accent);
+}
+.label-select {
+  flex: 1; min-width: 0;
+  font-family: var(--font-serif); font-size: 0.95rem;
+  padding: 0.25rem 0.35rem;
+  border: 1px solid var(--rule); border-radius: var(--radius-s);
+  background: var(--surface-2); color: var(--ink);
+}
+
+/* ── Data tables inside a question ────────────────────────────────────────── */
+.data-table {
+  border-collapse: collapse; margin: 0.6rem 0 0.2rem;
+  font-family: var(--font-sans); font-size: 0.85rem;
+}
+.data-table th, .data-table td {
+  border: 1px solid var(--rule); padding: 0.28rem 0.7rem; text-align: center;
+}
+.data-table th { background: var(--surface-2); font-weight: 600; color: var(--ink-soft); }
+.data-table td { font-family: var(--font-mono); }
 
 /* ── Feedback: a note in the margin, in pen ───────────────────────────────── */
 .qfeedback {

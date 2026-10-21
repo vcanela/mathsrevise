@@ -39,8 +39,9 @@ const Practice = (() => {
    *   time since seen   grows with the gap, which is the spacing part
    *   stars missing     a topic scraping one star comes round sooner
    */
-  function priorities() {
-    return Manifest.UNITS.flatMap(u => u.exercises.map(ex => {
+  function priorities(subject) {
+    // Only exercises that exist yet, and only from the subject being practised.
+    return Manifest.live(subject).map(ex => {
       const rec  = MRG.getExercise(ex.id);
       const seen = (rec.attempts || 0) > 0;
       const gap  = daysSince(rec.last);
@@ -54,8 +55,8 @@ const Practice = (() => {
         // everything else for weeks.
         score = Math.min(gap === null ? 30 : gap, 30) * 2 + (3 - stars) * 15;
       }
-      return { id: ex.id, unit: u.n, n: ex.n, title: ex.title, score, seen, gap, stars };
-    })).sort((a, b) => b.score - a.score);
+      return { id: ex.id, label: ex.label, href: ex.href, title: ex.title, score, seen, gap, stars };
+    }).sort((a, b) => b.score - a.score);
   }
 
   /** A short plain-English reason, for showing on the card. */
@@ -73,8 +74,8 @@ const Practice = (() => {
    * favoured, but the pick is weighted rather than strict, so two sessions in
    * the same week are not identical.
    */
-  function chooseTopics(rng, count) {
-    const pool = priorities();
+  function chooseTopics(rng, count, subject) {
+    const pool = priorities(subject);
     const picked = [];
     const taken = new Set();
     count = Math.min(count || TOPICS_PER_SESSION, pool.length);
@@ -103,7 +104,7 @@ const Practice = (() => {
   function session(rng, difficulty, opts) {
     opts = opts || {};
     const wanted = opts.questions || SESSION_QUESTIONS;
-    const topics = chooseTopics(rng, opts.topics || TOPICS_PER_SESSION);
+    const topics = chooseTopics(rng, opts.topics || TOPICS_PER_SESSION, opts.subject);
     const perTopic = Math.max(1, Math.round(wanted / Math.max(topics.length, 1)));
 
     const out = [];
@@ -126,9 +127,9 @@ const Practice = (() => {
           origin: { topicId: t.id, index: i },
           source: {
             id: t.id,
-            label: `${t.unit}.${t.n}`,
+            label: t.label,
             title: t.title,
-            href: `exercises/unit-${t.unit}/exercise-${t.n}.html`
+            href: t.href
           }
         });
       }
@@ -165,26 +166,31 @@ const Practice = (() => {
     const params = new URLSearchParams(location.search);
     const set = Seed.setNumber();
     const r   = params.get('r');
+    // Each subject has its own mix. Both count towards the same weekly target.
+    const subject = Manifest.subject(params.get('subject') || 'maths');
 
     let rng;
-    if (set !== null)      rng = Seed.rng('practice');
+    if (set !== null)      rng = Seed.rng('practice-' + subject.id);
     else if (r !== null)   rng = new RNG((Number(r) || 1) * 2654435761 >>> 0);
-    else                   rng = new RNG(todaySeed());
+    else                   rng = new RNG(todaySeed() ^ (subject.id === 'maths' ? 0 : 0x5bd1e995));
 
     const level = MRG.getCurrentLevel();
     const difficulty = level.level >= 4 ? 'expert' : level.level >= 3 ? 'hard' : 'core';
 
-    const s = session(rng, difficulty);
+    const s = session(rng, difficulty, { subject: subject.id });
     const done = MRG.practisedToday();
+    const word = subject.name.toLowerCase();
 
     Exercise.run({
       practice: true,
       base: '',
-      id: 'practice',
-      eyebrow: set !== null ? 'Shared practice set ' + set : 'Daily practice',
-      title: done ? 'More practice' : "Today's practice",
-      blurb: 'Five questions from across the units, chosen from what you have seen ' +
-             'least recently. Each one says which exercise it came from.',
+      id: 'practice-' + subject.id,
+      subject: subject.id,
+      eyebrow: set !== null ? `Shared ${word} set ${set}` : `Daily ${word} mix`,
+      title: done ? `More ${word}` : `Today's ${word}`,
+      footer: `Daily ${word} mix`,
+      blurb: `Five ${word} questions, chosen from what you have seen least recently. ` +
+             'Each one says which exercise it came from.',
       questions: s.questions,
       topicIds: s.topicIds,
       topics: s.topics

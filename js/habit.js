@@ -77,9 +77,14 @@ const Habit = (() => {
         h('h2', { text: done ? 'Practice done for today' : "Today's practice" }),
         h('p', { class: 'habit-sub', text: done
           ? 'Tomorrow is what counts. Go again now if you want more, but the day is already in.'
-          : 'Five questions, about two minutes, mixed across the topics you have seen least recently.' })),
-      h('a', { class: 'tool-btn primary habit-go', href: base + 'practice.html' },
-        done ? 'Practise again' : 'Start')));
+          : 'Five questions, about two minutes, mixed across the topics you have seen least recently. Either subject counts.' })),
+      // One mix per subject; finishing either counts as today's practice.
+      h('div', { class: 'habit-go' },
+        Manifest.SUBJECTS.filter(s => Manifest.count(s.id) > 0).map((s, i) =>
+          h('a', {
+            class: 'tool-btn' + (i === 0 && !done ? ' primary' : ''),
+            href: base + 'practice.html?subject=' + s.id
+          }, s.name + ' mix')))));
 
     box.appendChild(h('div', { class: 'habit-week' },
       weekDots(wk),

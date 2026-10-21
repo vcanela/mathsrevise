@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Science content review · Revision</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/mathjax.js"></script>
+  <style>
+    /* A plain, dense layout for reading, not for students. */
+    body { background: var(--paper); }
+    main { max-width: 1040px; }
+    .rv-intro { font-family: var(--font-sans); font-size: 0.9rem; color: var(--ink-soft); max-width: 46rem; }
+    .rv-intro li { margin: 0.2rem 0 0.2rem 1.2rem; }
+    .rv-toc { font-family: var(--font-sans); font-size: 0.85rem; margin: 1rem 0 2rem; }
+    .rv-toc a { margin-right: 1rem; }
+    .rv-topic { margin-top: 2.5rem; }
+    .rv-topic > h2 { font-size: 1.4rem; border-bottom: 2px solid var(--rule); padding-bottom: 0.3rem; }
+    .rv-hint { font-family: var(--font-sans); font-size: 0.85rem; color: var(--ink-soft); margin: 0.5rem 0 1rem; }
+    .rv-slot { margin: 1.4rem 0 0.4rem; font-family: var(--font-sans); font-size: 0.78rem; font-weight: 600;
+               letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-ink); }
+    .rv-item {
+      display: grid; grid-template-columns: 4.2rem 1fr; gap: 0.9rem;
+      background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius);
+      padding: 0.8rem 1rem; margin: 0.45rem 0;
+    }
+    .rv-id { font-family: var(--font-mono); font-size: 0.75rem; color: var(--ink-faint); padding-top: 0.15rem; }
+    .rv-gen { display: block; margin-top: 0.3rem; color: var(--brand-ink); }
+    .rv-prompt { font-size: 1rem; }
+    .rv-note { font-family: var(--font-sans); font-size: 0.82rem; color: var(--ink-faint); margin-top: 0.2rem; }
+    .rv-body { display: flex; gap: 1.2rem; flex-wrap: wrap; align-items: flex-start; margin-top: 0.5rem; }
+    .rv-ans { flex: 1 1 18rem; font-size: 0.92rem; }
+    .rv-ans ol, .rv-ans ul { margin-left: 1.3rem; }
+    .rv-ans li { margin: 0.12rem 0; }
+    .rv-right { color: var(--good); font-weight: 600; }
+    .rv-right::after { content: '  \2713'; }
+    .rv-wrong { color: var(--ink-soft); }
+    .rv-bad-line { color: var(--bad); font-weight: 600; }
+    .rv-bad-line::after { content: '  \2190 the mistake'; font-family: var(--font-sans); font-size: 0.75rem; font-weight: 500; }
+    .rv-explain { margin-top: 0.45rem; padding-left: 0.7rem; border-left: 2px solid var(--brand);
+                  font-size: 0.88rem; color: var(--ink-soft); font-style: italic; }
+    .rv-label { font-family: var(--font-sans); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em;
+                text-transform: uppercase; color: var(--ink-faint); display: block; margin-bottom: 0.15rem; }
+    .rv-example { background: var(--surface); border: 1px solid var(--rule); border-left: 3px solid var(--brand);
+                  border-radius: var(--radius); padding: 0.8rem 1rem; margin: 0.5rem 0; }
+    .rv-example h4 { font-size: 0.95rem; font-style: italic; margin-bottom: 0.4rem; }
+    .rv-example li { margin: 0.2rem 0 0.2rem 1.2rem; font-size: 0.92rem; color: var(--ink-soft); }
+    @media print {
+      .rv-item, .rv-example { break-inside: avoid; }
+      .rv-toc { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-head">
+    <span class="eyebrow">For teachers</span>
+    <h1>Science content review</h1>
+    <p>Every authored question, with its marked answer and explanation.</p>
+  </header>
+  <main>
+    <div class="rv-intro">
+      <p>
+        The maths questions are checked by a script against their own answer keys. Authored science
+        items cannot be checked that way: a wrong fact would pass every test. This page lists all of them
+        so they can be read, rather than found by clicking through quizzes.
+      </p>
+      <ul>
+        <li>Each <strong>slot</strong> is one question position in the exercise. A student sees one item from each slot per visit; "Try one like it" gives another item from the same slot.</li>
+        <li>Items marked <strong>generated</strong> have fresh numbers every time, so three samples are shown.</li>
+        <li>For multiple choice, every option is listed, so the distractors can be checked too. For sorting, the whole bank is listed; a student sees six.</li>
+        <li>Each item has an ID such as <code>7.1·Q4·3</code>, so a problem can be reported precisely.</li>
+      </ul>
+    </div>
+    <nav class="rv-toc" id="toc"></nav>
+    <div id="out"></div>
+  </main>
+
+  <script src="../js/rng.js"></script>
+  <script src="../js/format.js"></script>
+  <script src="../js/algebra.js"></script>
+  <script src="../js/geometry.js"></script>
+  <script src="../js/diagrams.js"></script>
+  <script src="../js/game.js"></script>
+  <script src="../js/manifest.js"></script>
+  <script src="../js/timer.js"></script>
+  <script src="../js/engine.js"></script>
+  <script src="../js/science.js"></script>
+  <script src="../js/topics/science-y7.js"></script>
+  <script src="../js/topics/science-y8.js"></script>
+  <script>
+    'use strict';
+    const h = Exercise.h;
+    const out = document.getElementById('out');
+    const toc = document.getElementById('toc');
+
+    /** The correct answer, written out in full for a reader. */
+    function answerBlock(q) {
+      const inp = q.input;
+      const box = h('div', { class: 'rv-ans' }, h('span', { class: 'rv-label', text: 'Answer' }));
+      switch (inp.kind) {
+        case 'number':
+          box.appendChild(h('div', { class: 'rv-right', html: `${Fmt.num(inp.answer)} ${inp.suffix || ''}` }));
+          break;
+        case 'fill': {
+          const bits = [];
+          for (const p of inp.parts) {
+            if (p.text !== undefined) bits.push(p.text);
+            else if (p.input) bits.push(`<strong class="rv-right">${Fmt.num(p.input.answer)}</strong>`);
+            else if (p.frac) bits.push(`<strong>${p.frac.num.answer}/${p.frac.den.answer}</strong>`);
+          }
+          box.appendChild(h('div', { html: bits.join(' ') }));
+          break;
+        }
+        case 'choice':
+          box.appendChild(h('ol', { type: 'a' }, inp.options.map((o, i) =>
+            h('li', { class: i === inp.correct ? 'rv-right' : 'rv-wrong', html: o.html !== undefined ? o.html : String(o) }))));
+          break;
+        case 'match':
+          box.appendChild(h('ul', {}, inp.left.map((l, i) =>
+            h('li', { html: `${l} &rarr; <span class="rv-right">${inp.right[inp.answer[i]]}</span>` }))));
+          break;
+        case 'order':
+          box.appendChild(h('ol', {}, inp.answer.map(i => h('li', { html: inp.items[i] }))));
+          break;
+        case 'spot':
+          box.appendChild(h('ol', {}, inp.lines.map((l, i) =>
+            h('li', { class: i === inp.wrong ? 'rv-bad-line' : '', html: l }))));
+          break;
+        case 'sort': {
+          const all = inp.bank || inp.items;
+          inp.bins.forEach((bin, b) => {
+            box.appendChild(h('div', { html: `<strong>${bin}</strong>` }));
+            box.appendChild(h('ul', {}, all.filter(it => it.bin === b).map(it => h('li', { html: it.html }))));
+          });
+          break;
+        }
+        case 'label':
+          box.appendChild(h('ol', {}, inp.markers.map(n => h('li', { class: 'rv-right', text: n }))));
+          break;
+        default:
+          box.appendChild(h('div', { text: '(' + inp.kind + ')' }));
+      }
+      if (q.explain) box.appendChild(h('div', { class: 'rv-explain', html: q.explain }));
+      return box;
+    }
+
+    function itemCard(id, q, generatedNote) {
+      const card = h('div', { class: 'rv-item' },
+        h('div', { class: 'rv-id' }, id, generatedNote ? h('span', { class: 'rv-gen', text: generatedNote }) : null));
+      const main = h('div', {},
+        h('div', { class: 'rv-prompt', html: q.prompt }),
+        q.note ? h('div', { class: 'rv-note', html: q.note }) : null);
+      const body = h('div', { class: 'rv-body' });
+      if (q.draw) {
+        const svg = document.createElementNS(Geo.NS, 'svg');
+        svg.setAttribute('class', 'qdiagram');
+        body.appendChild(h('figure', { class: 'qdia-wrap' }, svg,
+          q.diagram && q.diagram.caption ? h('figcaption', { class: 'dia-caption', html: q.diagram.caption }) : null));
+        try { q.draw(Geo.canvas(svg, (q.diagram && q.diagram.w) || 230, (q.diagram && q.diagram.h) || 180), Geo); }
+        catch (e) { body.appendChild(h('p', { class: 'rv-bad-line', text: 'Diagram failed: ' + e.message })); }
+      }
+      body.appendChild(answerBlock(q));
+      main.appendChild(body);
+      card.appendChild(main);
+      return card;
+    }
+
+    for (const ex of Manifest.live('science')) {
+      const t = Topics[ex.id];
+      if (!t || !t.slots) continue;
+      const anchor = 'topic-' + ex.label.replace('.', '-');
+      toc.appendChild(h('a', { href: '#' + anchor, text: `${ex.label} ${ex.title}` }));
+
+      const sec = h('section', { class: 'rv-topic', id: anchor },
+        h('h2', { text: `${ex.label} ${ex.title}` }),
+        h('p', { class: 'rv-hint', html: '<strong>Stuck? nudge:</strong> ' + t.hint }));
+
+      // Worked examples are authored content too.
+      (t.examples || []).forEach((e, i) => {
+        const box = h('div', { class: 'rv-example' },
+          h('span', { class: 'rv-id', text: `${ex.label}·Ex${i + 1}` }),
+          h('h4', { html: e.title || '' }));
+        if (e.draw) {
+          const svg = document.createElementNS(Geo.NS, 'svg');
+          svg.setAttribute('class', 'qdiagram');
+          box.appendChild(h('figure', { class: 'qdia-wrap' }, svg,
+            e.diagram && e.diagram.caption ? h('figcaption', { class: 'dia-caption', html: e.diagram.caption }) : null));
+          try { e.draw(Geo.canvas(svg, (e.diagram && e.diagram.w) || 250, (e.diagram && e.diagram.h) || 190), Geo); } catch (_) {}
+        }
+        box.appendChild(h('ol', {}, (e.steps || []).map(s => h('li', { html: s }))));
+        if (e.result) box.appendChild(h('p', { html: '<strong>' + e.result + '</strong>' }));
+        sec.appendChild(box);
+      });
+
+      t.slots.forEach((slot, si) => {
+        sec.appendChild(h('div', { class: 'rv-slot', text: `Q${si + 1} · ${slot.name}` }));
+        slot.items.forEach((item, ii) => {
+          const id = `${ex.label}·Q${si + 1}·${ii + 1}`;
+          const samples = item.generated ? 3 : 1;
+          for (let k = 0; k < samples; k++) {
+            const q = item(new RNG(1000 + 37 * ii + 101 * k + si), 'core');
+            sec.appendChild(itemCard(id, q, item.generated ? `generated, sample ${k + 1}` : null));
+          }
+        });
+      });
+      out.appendChild(sec);
+    }
+    MJ.typeset();
+  </script>
+</body>
+</html>

@@ -18,11 +18,16 @@ const ROOT = path.join(__dirname, '..');
 global.MRG = { getExercise: () => ({}) };
 vm.runInThisContext(fs.readFileSync(path.join(ROOT, 'js/manifest.js'), 'utf8'));
 
-/** Which topic file holds each unit's generators. */
-const TOPIC_FILE = { 1: 'number', 2: 'algebra', 3: 'geometry', 4: 'combined', 5: 'words' };
-
 const CORE = ['rng', 'format', 'algebra', 'geometry', 'diagrams', 'game', 'manifest', 'timer', 'engine'];
-const ALL_TOPICS = ['number', 'algebra', 'geometry', 'combined', 'words'].map(t => 'topics/' + t);
+// Science pages also need the helpers that build banked questions and the
+// science diagrams (particles, graphs and so on).
+const SCIENCE = ['science'];
+
+/** The scripts an exercise in this unit needs, in load order. */
+const scriptsFor = u => [...CORE, ...(u.subject === 'science' ? SCIENCE : []), 'topics/' + u.topicFile];
+
+// The daily mix can draw from any unit, so it loads every topic file.
+const ALL_TOPICS = [...new Set(Manifest.UNITS.map(u => 'topics/' + u.topicFile))];
 
 /**
  * A short hash of every script and stylesheet, stamped onto the asset links.
@@ -85,7 +90,7 @@ function write(rel, content) {
 
 // ── Home ─────────────────────────────────────────────────────────────────────
 write('index.html', shell({
-  title: 'Maths Revision',
+  title: 'Revision',
   up: '',
   scripts: ['game', 'manifest', 'engine', 'habit', 'nav'],
   boot: 'Nav.renderHome();'
@@ -94,48 +99,54 @@ write('index.html', shell({
 // ── Daily practice ───────────────────────────────────────────────────────────
 // Needs every topic loaded, since a session draws from across the whole site.
 write('practice.html', shell({
-  title: "Today's practice · Maths Revision",
+  title: "Today's practice · Revision",
   up: '',
-  scripts: [...CORE, ...ALL_TOPICS, 'practice'],
+  scripts: [...CORE, ...SCIENCE, ...ALL_TOPICS, 'practice'],
   boot: 'Practice.start();'
 }));
 
 // ── Unit pages ───────────────────────────────────────────────────────────────
 for (const u of Manifest.UNITS) {
-  write(`units/unit-${u.n}.html`, shell({
-    title: `${u.name} · Maths Revision`,
+  write(u.page, shell({
+    title: `${u.name} · Revision`,
     up: '../',
     scripts: ['game', 'manifest', 'engine', 'nav'],
-    boot: `Nav.renderUnit(${u.n});`
+    boot: `Nav.renderUnit(${JSON.stringify(u.key)});`
   }));
 }
 
 // ── Exercise pages ───────────────────────────────────────────────────────────
+// Exercises marked `soon` have no page yet; their cards show as placeholders.
 for (const u of Manifest.UNITS) {
   for (const ex of u.exercises) {
-    write(`exercises/unit-${u.n}/exercise-${ex.n}.html`, shell({
-      title: `${ex.title} · Maths Revision`,
+    if (ex.soon) continue;
+    write(ex.href, shell({
+      title: `${ex.title} · Revision`,
       up: '../../',
-      scripts: [...CORE, 'topics/' + TOPIC_FILE[u.n]],
+      scripts: scriptsFor(u),
       boot: `Exercise.run(Topics.${ex.id});`
     }));
   }
 }
 
 // ── Remove exercise pages the manifest no longer lists ───────────────────────
-const expected = new Set(Manifest.UNITS.flatMap(u =>
-  u.exercises.map(ex => path.join('exercises', 'unit-' + u.n, 'exercise-' + ex.n + '.html'))));
-for (const dir of fs.readdirSync(path.join(ROOT, 'exercises'))) {
-  const dirPath = path.join(ROOT, 'exercises', dir);
-  if (!fs.statSync(dirPath).isDirectory()) continue;
-  for (const f of fs.readdirSync(dirPath)) {
-    const rel = path.join('exercises', dir, f);
-    if (!expected.has(rel)) {
-      fs.unlinkSync(path.join(ROOT, rel));
-      written.push('  removed    ' + rel);
+const expected = new Set(Manifest.live().map(ex => path.normalize(ex.href)));
+for (const top of ['exercises', 'science']) {
+  const topPath = path.join(ROOT, top);
+  if (!fs.existsSync(topPath)) continue;
+  for (const dir of fs.readdirSync(topPath)) {
+    const dirPath = path.join(topPath, dir);
+    if (!fs.statSync(dirPath).isDirectory()) continue;
+    for (const f of fs.readdirSync(dirPath)) {
+      const rel = path.join(top, dir, f);
+      if (f.endsWith('.html') && !expected.has(path.normalize(rel))) {
+        fs.unlinkSync(path.join(ROOT, rel));
+        written.push('  removed    ' + rel);
+      }
     }
   }
 }
 
 console.log(written.join('\n'));
-console.log(`\n${Manifest.UNITS.length} units, ${Manifest.count()} exercises, asset version ${VERSION}.`);
+console.log(`\n${Manifest.UNITS.length} units, ${Manifest.count('maths')} maths and ` +
+            `${Manifest.count('science')} science exercises live, asset version ${VERSION}.`);

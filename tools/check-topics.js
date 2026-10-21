@@ -41,7 +41,7 @@ global.localStorage = {
 };
 
 for (const f of ['js/rng.js', 'js/format.js', 'js/algebra.js', 'js/geometry.js',
-                 'js/diagrams.js', 'js/game.js', 'js/manifest.js']) {
+                 'js/diagrams.js', 'js/game.js', 'js/manifest.js', 'js/science.js']) {
   vm.runInThisContext(fs.readFileSync(path.join(ROOT, f), 'utf8'), { filename: f });
 }
 
@@ -149,9 +149,34 @@ function checkQuestion(where, q) {
       if (new Set(inp.items).size !== inp.items.length) fail(where, 'order has two identical items');
       break;
     }
+    case 'sort': {
+      if (!Array.isArray(inp.bins) || inp.bins.length < 2) return fail(where, 'sort needs 2+ groups');
+      if (!Array.isArray(inp.items) || inp.items.length < 2) return fail(where, 'sort needs 2+ items');
+      inp.items.forEach((it, i) => {
+        if (!isInt(it.bin) || it.bin < 0 || it.bin >= inp.bins.length) fail(where, `sort item ${i + 1} has no valid group`);
+      });
+      if (new Set(inp.items.map(it => it.html)).size !== inp.items.length) fail(where, 'sort has two identical items');
+      // Every group should be the answer at least once, or a student can
+      // never be wrong by choosing it.
+      if (!inp.bins.every((_, b) => inp.items.some(it => it.bin === b))) fail(where, 'sort leaves a group with nothing in it');
+      break;
+    }
+    case 'label': {
+      if (!Array.isArray(inp.markers) || !inp.markers.length) return fail(where, 'label has no markers');
+      inp.markers.forEach((name, i) => {
+        if (!inp.options.includes(name)) fail(where, `label ${i + 1} answer "${name}" is not among the options`);
+      });
+      if (new Set(inp.options).size !== inp.options.length) fail(where, 'label options have duplicates');
+      if (new Set(inp.markers).size !== inp.markers.length) fail(where, 'two labels share the same answer');
+      break;
+    }
     default:
       fail(where, 'unknown input kind: ' + inp.kind);
   }
+
+  // Authored science items lean entirely on their explanation: it is the
+  // "Show me how" step and the feedback after a wrong answer.
+  if (where.startsWith('s') && !(q.explain && String(q.explain).trim())) fail(where, 'science question has no explanation');
 
   // Diagrams must draw without throwing and without emitting NaN coordinates.
   if (q.draw) {
@@ -179,9 +204,12 @@ const RUNS = Number(process.argv[2]) || 400;
 const ids = Object.keys(Topics).sort();
 if (!ids.length) { console.error('No topics loaded.'); process.exit(1); }
 
-const manifestIds = Manifest.UNITS.flatMap(u => u.exercises.map(e => e.id));
-for (const id of manifestIds) if (!Topics[id]) fail('manifest', 'no generator for ' + id);
-for (const id of ids) if (!manifestIds.includes(id)) fail('manifest', Topics[id].id + ' is not listed in the manifest');
+// Every live exercise needs a topic; every topic must be listed. Exercises
+// marked `soon` are allowed to have no topic yet.
+const liveIds = Manifest.live().map(e => e.id);
+const allIds = Manifest.UNITS.flatMap(u => u.exercises.map(e => e.id));
+for (const id of liveIds) if (!Topics[id]) fail('manifest', 'no generator for ' + id);
+for (const id of ids) if (!allIds.includes(id)) fail('manifest', Topics[id].id + ' is not listed in the manifest');
 
 for (const id of ids) {
   const topic = Topics[id];

@@ -39,10 +39,11 @@
     const pages = [
       { url: '../index.html', kind: 'home' },
       { url: '../practice.html', kind: 'exercise', id: 'practice' },
-      ...Manifest.UNITS.map(u => ({ url: `../units/unit-${u.n}.html`, kind: 'unit' })),
-      ...Manifest.UNITS.flatMap(u => u.exercises.flatMap(ex => sets.map(s => ({
-        url: `../exercises/unit-${u.n}/exercise-${ex.n}.html?set=${s}`, kind: 'exercise', id: ex.id
-      }))))
+      { url: '../practice.html?subject=science', kind: 'exercise', id: 'practice-science' },
+      ...Manifest.UNITS.map(u => ({ url: '../' + u.page, kind: 'unit' })),
+      ...Manifest.live().flatMap(ex => sets.map(s => ({
+        url: `../${ex.href}?set=${s}`, kind: 'exercise', id: ex.id
+      })))
     ];
 
     const frame = document.getElementById('frame');
@@ -95,7 +96,7 @@
         if (p.kind === 'exercise') {
           if (cards === 0) problems.push('no questions rendered');
           doc.querySelectorAll('.qcard').forEach((c, i) => {
-            if (!c.querySelector('.ans-box, .choice, .spot-line, .match-item, .order-chip')) {
+            if (!c.querySelector('.ans-box, .choice, .spot-line, .match-item, .order-chip, .sort-btn, .label-select')) {
               problems.push(`Q${i + 1} has no answer control`);
             }
             if (!c.querySelector('.qtext').textContent.trim()) problems.push(`Q${i + 1} has an empty prompt`);

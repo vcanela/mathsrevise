@@ -368,8 +368,15 @@ const Exercise = (() => {
     const topic = q.origin && window.Topics && window.Topics[q.origin.topicId];
     if (!topic) return null;
     try {
-      const fresh = topic.generate(new RNG((Math.random() * 2 ** 32) >>> 0), difficulty);
-      const twin = fresh[q.origin.index];
+      // A science slot draws from a pool of authored items, so a fresh draw
+      // can occasionally land on the very question the student just saw. Try
+      // a few times for a different one before settling.
+      let twin = null;
+      for (let t = 0; t < 8; t++) {
+        const fresh = topic.generate(new RNG((Math.random() * 2 ** 32) >>> 0), difficulty);
+        twin = fresh[q.origin.index];
+        if (!twin || twin.prompt !== q.prompt) break;
+      }
       if (!twin) return null;
       // Carry the provenance across so the new card behaves like its parent.
       return { ...twin, origin: q.origin, source: q.source };
@@ -378,6 +385,96 @@ const Exercise = (() => {
       return null;
     }
   }
+
+  /**
+   * sort — put each item into one of a few groups. Each item has a small set
+   * of buttons, one per group, which works the same with a mouse or a thumb.
+   * There is an explicit Check button: with several items, a student often
+   * wants to look back over their sorting before committing to it.
+   */
+  Inputs.sort = spec => {
+    const chosen = new Array(spec.items.length).fill(null);
+    const rows = [];
+    const allBtns = [];
+    const list = h('div', { class: 'sort-list' });
+
+    spec.items.forEach((item, i) => {
+      const btns = spec.bins.map((bin, b) => {
+        const btn = h('button', {
+          type: 'button', class: 'sort-btn', text: bin,
+          onclick() {
+            if (btn.disabled) return;
+            chosen[i] = b;
+            btns.forEach((x, k) => x.classList.toggle('picked', k === b));
+            row.classList.add('placed');
+          }
+        });
+        allBtns.push(btn);
+        return btn;
+      });
+      const row = h('div', { class: 'sort-row' },
+        h('span', { class: 'sort-item', html: item.html }),
+        h('span', { class: 'sort-bins' }, btns));
+      rows.push(row);
+      list.appendChild(row);
+    });
+
+    const check = h('button', { type: 'button', class: 'qsubmit sort-check', html: '&#10003; Check' });
+    check.addEventListener('click', () =>
+      check.dispatchEvent(new CustomEvent('ans-submit', { bubbles: true })));
+
+    return {
+      node: h('div', {}, h('p', { class: 'spot-cue', text: spec.cue || 'Choose a group for each one, then check.' }),
+                list, h('div', { class: 'sort-foot' }, check)),
+      filled: () => chosen.every(c => c !== null),
+      focus:  () => {},
+      lock:   () => { allBtns.forEach(b => { b.disabled = true; }); check.disabled = true; },
+      check() {
+        let ok = true;
+        const misses = [];
+        spec.items.forEach((item, i) => {
+          const good = chosen[i] === item.bin;
+          rows[i].classList.add(good ? 'ok' : 'bad');
+          if (!good) { ok = false; misses.push(`${item.html} → <em>${esc(spec.bins[item.bin])}</em>`); }
+        });
+        return { ok, correctHTML: ok ? '' : 'These belong elsewhere: ' + misses.join('; ') };
+      }
+    };
+  };
+
+  /**
+   * label — numbered markers on a diagram, each named from a drop-down. The
+   * diagram itself draws the numbers; this renders one row per number.
+   */
+  Inputs.label = spec => {
+    const selects = spec.markers.map((_, i) => h('select', {
+      class: 'label-select', 'aria-label': 'Name for label ' + (i + 1)
+    },
+      h('option', { value: '', text: 'choose…' }),
+      spec.options.map(o => h('option', { value: o, text: o }))));
+    const rows = selects.map((sel, i) => h('label', { class: 'label-row' },
+      h('span', { class: 'label-num', text: i + 1 }), sel));
+
+    const check = h('button', { type: 'button', class: 'qsubmit sort-check', html: '&#10003; Check' });
+    check.addEventListener('click', () =>
+      check.dispatchEvent(new CustomEvent('ans-submit', { bubbles: true })));
+
+    return {
+      node: h('div', {}, h('div', { class: 'label-list' }, rows), h('div', { class: 'sort-foot' }, check)),
+      filled: () => selects.every(s => s.value !== ''),
+      focus:  () => selects[0] && selects[0].focus(),
+      lock:   () => { selects.forEach(s => { s.disabled = true; }); check.disabled = true; },
+      check() {
+        let ok = true;
+        selects.forEach((s, i) => {
+          const good = s.value === spec.markers[i];
+          rows[i].classList.add(good ? 'ok' : 'bad');
+          if (!good) ok = false;
+        });
+        return { ok, correctHTML: 'Answer: ' + spec.markers.map((n, i) => `${i + 1} ${esc(n)}`).join(', ') };
+      }
+    };
+  };
 
   // ── One question card ─────────────────────────────────────────────────────
   // `n` is the label shown in the margin: "3" for an original question, "3a"
@@ -735,7 +832,7 @@ const Exercise = (() => {
     };
 
     // ── Page chrome ──
-    document.title = cfg.title + ' · Maths Revision';
+    document.title = cfg.title + ' · Revision';
     const root = document.getElementById('app') || document.body;
     root.innerHTML = '';
 
@@ -752,7 +849,7 @@ const Exercise = (() => {
       : h('nav', { class: 'crumbs' },
           h('a', { href: base + 'index.html', text: 'Home' }),
           h('span', { text: '/' }),
-          h('a', { href: `${base}units/unit-${cfg.unit}.html`, text: unit.short }),
+          h('a', { href: base + unit.page, text: unit.name }),
           h('span', { text: '/' }),
           h('span', { class: 'here', text: cfg.title })));
 
@@ -772,8 +869,8 @@ const Exercise = (() => {
         'Drawn from ',
         cfg.topics.map((t, i) => [
           i ? ', ' : '',
-          h('a', { href: base + `exercises/unit-${t.unit}/exercise-${t.n}.html`, title: Practice.reason(t) },
-            `${t.unit}.${t.n} ${t.title}`)
+          h('a', { href: base + t.href, title: Practice.reason(t) },
+            `${t.label} ${t.title}`)
         ]).flat()));
     }
 
@@ -815,11 +912,11 @@ const Exercise = (() => {
 
     main.appendChild(practice
       ? h('a', { class: 'back-link', href: base + 'index.html' }, '← Back to all units')
-      : h('a', { class: 'back-link', href: `${base}units/unit-${cfg.unit}.html` },
-          '← Back to ' + unit.short));
+      : h('a', { class: 'back-link', href: base + unit.page },
+          '← Back to ' + unit.name));
 
     root.appendChild(h('footer', { class: 'page-foot',
-      text: 'Maths Revision · ' + (unit ? unit.name : 'Daily practice') }));
+      text: 'Revision · ' + (unit ? unit.name : cfg.footer || 'Daily practice') }));
 
     const modal = levelUpModal();
     root.appendChild(modal.node);
@@ -925,7 +1022,7 @@ const Exercise = (() => {
         practice
           ? h('button', { type: 'button', class: 'tool-btn', onclick: freshSet },
               'Five more')
-          : h('a', { class: 'tool-btn', href: `${base}units/unit-${cfg.unit}.html` }, 'Back to ' + unit.short)));
+          : h('a', { class: 'tool-btn', href: base + unit.page }, 'Back to ' + unit.short)));
       results.style.display = '';
       results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
