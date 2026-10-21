@@ -1,10 +1,10 @@
 # Revision
 
-A self-contained revision site for Year 8–10 maths: number, algebra, geometry, and the
-places where algebra and geometry meet. No frameworks, no build step, no server. Open
+A self-contained revision site for Year 8–10 maths (number, algebra, geometry, and the
+places where algebra and geometry meet) and Year 7–8 science. No frameworks, no build step, no server. Open
 `index.html` or publish the folder to GitHub Pages.
 
-**5 units · 21 exercises · 10 questions each, generated fresh every time.**
+**Maths: 5 units · 21 exercises. Science: 2 years · 15 exercises. 10 questions each, fresh every time.**
 
 There is also a **daily practice** session: five questions, about two minutes, mixed across
 the units and chosen from whatever the student has seen least recently.
@@ -54,8 +54,8 @@ generated with fresh numbers, like the maths. **Conceptual** ones cannot be, so 
 "Try one like it" picks another from the same slot. Topics are declared with `Sci.topic()` in
 `js/science.js`, giving `slots` instead of a `generate` function.
 
-Exercises not written yet are listed in the manifest with `soon: true`. They show on the year
-page as dashed placeholders, get no page, and are left out of the daily mix.
+An exercise can be listed in the manifest with `soon: true` before it is written. It then shows on
+its unit page as a dashed placeholder, gets no page, and is left out of the daily mix.
 
 **Reviewing content.** Authored science items can't be verified by a script: a wrong fact would
 pass every test. `tools/review-science.html` lists every item with all its options, the marked

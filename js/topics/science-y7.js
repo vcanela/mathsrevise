@@ -787,4 +787,1350 @@
     ]
   });
 
+  // ═══ 7.2 Thermal energy and insulation ════════════════════════════════════
+  // Knowledge: Material properties and thermal energy (p. 19). Kinetic energy;
+  // temperature as average kinetic energy of particles; thermal energy;
+  // conduction, convection and radiation; conduction without the material
+  // moving; thermal conductivity; insulators have low conductivity.
+  // Practices: fair test of thermal conductivity for an application; choosing
+  // insulating materials for food, shelter, clothing.
+
+  const TRANSFERS = [
+    { text: 'The metal handle of a pot on the stove gets hot.', way: 'conduction' },
+    { text: 'A metal spoon left in a bowl of hot soup warms up all the way to its end.', way: 'conduction' },
+    { text: 'Your hand warms up when you hold a hot mug.', way: 'conduction' },
+    { text: 'Warm air from a heater rises and spreads around the room.', way: 'convection' },
+    { text: 'Hot water rises from the bottom of a pot on the stove, and cooler water sinks to take its place.', way: 'convection' },
+    { text: 'You feel the warmth of a campfire on your face from across the fire.', way: 'radiation' },
+    { text: 'Thermal energy from the Sun reaches the Earth across empty space.', way: 'radiation' }
+  ];
+  const WAY_EXPLAIN = {
+    conduction: 'Conduction: thermal energy passes through the material from particle to particle, without the material itself moving.',
+    convection: 'Convection: the warm liquid or gas itself moves, carrying thermal energy with it.',
+    radiation: 'Radiation: thermal energy travels as radiation, which needs no material at all and can cross empty space.'
+  };
+
+  const INSULATION = [
+    { name: 'polystyrene foam', k: 0.028 }, { name: 'wool', k: 0.035 }, { name: 'bubble wrap', k: 0.045 },
+    { name: 'cotton cloth', k: 0.06 }, { name: 'aluminium foil', k: 0.08 }, { name: 'nothing (a bare cup)', k: 0.095 }
+  ];
+
+  Sci.topic({
+    id: 's7e2', unit: 'y7',
+    title: 'Thermal Energy and Insulation',
+    blurb: 'How thermal energy moves, and how insulating materials slow it down.',
+    hint: 'Temperature tells you how fast the particles are moving on average. Thermal energy moves by conduction ' +
+          '(particle to particle through a material), convection (a warm liquid or gas moves) and radiation (no material needed). ' +
+          'A good insulator has a low thermal conductivity, so it passes thermal energy on slowly.',
+
+    examples: [
+      {
+        title: 'Example 1: conduction through a metal spoon',
+        steps: [
+          'The end of the spoon in the hot soup gets thermal energy, so its particles vibrate faster.',
+          'They jostle their neighbours, which then vibrate faster too, and so on along the spoon.',
+          'The particles stay in place: thermal energy passes along, but the metal itself does not move. That is conduction.',
+          'Metals have a high thermal conductivity, so the handle soon gets hot. A wooden spoon has a low one, so its handle stays cool.'
+        ]
+      },
+      {
+        title: 'Example 2: comparing insulators',
+        diagram: { w: 300, h: 210, caption: 'Three cups of hot water, wrapped in different materials' },
+        draw(d) {
+          const curve = k => Array.from({ length: 11 }, (_, i) => [i * 2, +(20 + 60 * Math.exp(-k * i * 2)).toFixed(1)]);
+          SciDia.graph(d, {
+            xMax: 20, yMax: 80, xStep: 4, yStep: 20, xLabel: 'Time (min)', yLabel: 'Temperature (°C)',
+            series: [{ points: curve(0.03), label: 'A' }, { points: curve(0.06), label: 'B' }, { points: curve(0.095), label: 'C' }]
+          });
+        },
+        steps: [
+          'All three cups started at 80 °C in a 20 °C room.',
+          'Cup A, wrapped in foam, cooled most slowly: its line stays highest.',
+          'Cup C, with nothing round it, cooled fastest.',
+          'The slower a cup cools, the better its wrapping is as an insulator.'
+        ],
+        result: 'Foam is the best insulator of the three'
+      }
+    ],
+
+    slots: [
+      // 1 · Which kind of transfer?
+      {
+        name: 'Conduction, convection or radiation?',
+        items: TRANSFERS.map(t => rng => C(rng, {
+          prompt: t.text + ' How is thermal energy being transferred?',
+          right: t.way, wrong: ['conduction', 'convection', 'radiation'].filter(w => w !== t.way),
+          keepOrder: false, wide: false,
+          explain: WAY_EXPLAIN[t.way]
+        }))
+      },
+
+      // 2 · Good or poor thermal conductor.
+      {
+        name: 'Conductor or insulator?',
+        items: [rng => Sci.sort(rng, {
+          prompt: 'Is each material a good conductor of thermal energy, or an insulator?',
+          bins: ['Good conductor', 'Insulator'],
+          items: [
+            { text: 'Copper', bin: 0 }, { text: 'Aluminium', bin: 0 }, { text: 'Steel', bin: 0 }, { text: 'Iron', bin: 0 },
+            { text: 'Wool', bin: 1 }, { text: 'Polystyrene foam', bin: 1 }, { text: 'Plastic', bin: 1 },
+            { text: 'Wood', bin: 1 }, { text: 'Rubber', bin: 1 }, { text: 'Cork', bin: 1 }, { text: 'Feathers', bin: 1 }
+          ],
+          pick: 6,
+          explain: 'Metals are good thermal conductors. Insulators, such as wool, foam, wood and plastic, have a low thermal conductivity; many work by trapping air.'
+        })]
+      },
+
+      // 3 · Temperature and thermal energy are different.
+      {
+        name: 'Temperature and thermal energy',
+        items: [
+          rng => TF(rng, { statement: 'A bath of warm water has more thermal energy than a cup of boiling water.', answer: true,
+            explain: 'The boiling water is hotter, so its particles move faster on average. But the bath has vastly more particles, so in total it has more thermal energy.' }),
+          rng => TF(rng, { statement: 'Temperature is a measure of the average kinetic energy of the particles in a substance.', answer: true,
+            explain: 'That is exactly what temperature measures: how fast the particles are moving, on average.' }),
+          rng => TF(rng, { statement: 'Temperature and thermal energy are two words for the same thing.', answer: false,
+            explain: 'Temperature is the average kinetic energy of the particles. Thermal energy is the energy of all their motion and interactions together, so it also depends on how much substance there is.' }),
+          rng => TF(rng, { statement: 'Kinetic energy is the energy an object has because it is moving.', answer: true,
+            explain: 'Kinetic energy is the energy associated with motion.' }),
+          rng => TF(rng, { statement: 'A spark from a sparkler is hotter than a pot of boiling water, so it has more thermal energy.', answer: false,
+            explain: 'The spark is at a higher temperature, but it is a tiny speck of material. The pot of water has far more particles and far more thermal energy.' })
+        ]
+      },
+
+      // 4 · Read the best insulator off cooling curves.
+      {
+        name: 'Best insulator from a graph',
+        items: [Sci.gen(rng => {
+          const three = rng.sample(INSULATION, 3);
+          const letters = ['A', 'B', 'C'];
+          const askBest = rng.chance();
+          const target = askBest ? three.reduce((a, b) => (b.k < a.k ? b : a)) : three.reduce((a, b) => (b.k > a.k ? b : a));
+          const curve = k => Array.from({ length: 11 }, (_, i) => [i * 2, +(20 + 60 * Math.exp(-k * i * 2)).toFixed(1)]);
+          const legend = three.map((m, i) => `cup ${letters[i]} in ${m.name}`).join(', ');
+          return {
+            prompt: `${Sci.name(rng)} wraps three cups of hot water: ${legend}. Which material is the ` +
+                    `<strong>${askBest ? 'best' : 'worst'}</strong> insulator?`,
+            diagram: { w: 290, h: 210 },
+            draw: d => SciDia.graph(d, {
+              xMax: 20, yMax: 80, xStep: 4, yStep: 20, xLabel: 'Time (min)', yLabel: 'Temperature (°C)',
+              series: three.map((m, i) => ({ points: curve(m.k), label: letters[i] }))
+            }),
+            input: {
+              kind: 'choice',
+              options: three.map(m => ({ html: m.name, right: m === target })),
+              correct: three.indexOf(target), wide: true
+            },
+            explain: askBest
+              ? `The best insulator lets thermal energy out most slowly, so its cup cools slowest and its line stays highest: ${target.name}.`
+              : `The worst insulator lets thermal energy out fastest, so its cup cools quickest and its line drops lowest: ${target.name}.`
+          };
+        })]
+      },
+
+      // 5 · Temperature drop from a table.
+      {
+        name: 'Reading a cooling table',
+        items: [Sci.gen(rng => {
+          const start = rng.int(70, 90);
+          const drops = [rng.int(8, 14), rng.int(5, 9), rng.int(3, 6), rng.int(2, 4)];
+          const temps = [start];
+          drops.forEach(dr => temps.push(temps[temps.length - 1] - dr));
+          const until = rng.pick([2, 3, 4]);
+          return {
+            prompt: 'A cup of hot water cools on the bench:' +
+                    Sci.table(['Time (min)', ...temps.map((_, i) => i * 5)], [['Temperature (°C)', ...temps]]) +
+                    `By how many degrees did it cool in the first ${until * 5} minutes?`,
+            input: { kind: 'number', answer: start - temps[until], suffix: '°C', width: 74 },
+            explain: `It started at ${start} °C and was ${temps[until]} °C after ${until * 5} minutes: ${m(`${start} - ${temps[until]} = ${start - temps[until]}`)}.`
+          };
+        })]
+      },
+
+      // 6 · Spot the misconception.
+      {
+        name: 'Spot the misconception',
+        items: [
+          rng => Sci.spot(rng, {
+            prompt: 'A student explains why the handle of a metal pan gets hot.',
+            lines: [
+              'The bottom of the pan is heated by the stove.',
+              'The metal particles there gain thermal energy and vibrate faster.',
+              'These hot particles travel along the handle towards your hand.',
+              'So thermal energy reaches the handle by conduction.'
+            ],
+            wrong: 2,
+            explain: 'In conduction the particles stay in place. Each one passes energy to its neighbours, so the energy travels along the handle, but the metal itself does not move.'
+          }),
+          rng => Sci.spot(rng, {
+            prompt: 'A student explains why a wool jumper keeps you warm.',
+            lines: [
+              'Your body is warmer than the cold air around you.',
+              'Thermal energy moves from your warm body to the colder air.',
+              'Wool produces its own heat, which warms you up.',
+              'So you stay warmer with a jumper on.'
+            ],
+            wrong: 2,
+            explain: 'Wool makes no heat of its own. It is a good insulator (it traps air), so it slows down the thermal energy leaving your body.'
+          }),
+          rng => Sci.spot(rng, {
+            prompt: 'A student explains why a cold drink warms up on a hot day.',
+            lines: [
+              'The drink is colder than the air around it.',
+              'Thermal energy moves from the warm air into the drink.',
+              'At the same time, cold moves out of the drink into the air.',
+              'The drink warms up until it is the same temperature as the air.'
+            ],
+            wrong: 2,
+            explain: '"Cold" does not move anywhere. Only thermal energy moves, always from the warmer thing to the colder thing.'
+          })
+        ]
+      },
+
+      // 7 · Choose a material for the job.
+      {
+        name: 'Choosing a material',
+        items: [
+          rng => C(rng, {
+            prompt: 'Which material is best for lining a chilly bin to keep food cold?',
+            right: 'Polystyrene foam', wrong: ['Aluminium', 'Steel', 'Copper'],
+            explain: 'Foam is an insulator with a low thermal conductivity, so it slows thermal energy getting in from outside.'
+          }),
+          rng => C(rng, {
+            prompt: 'Which is the best material for the base of a frying pan?',
+            right: 'Copper or aluminium', wrong: ['Wood', 'Plastic', 'Wool'],
+            explain: 'The base must pass thermal energy quickly from the stove to the food, so it needs a good conductor such as a metal.'
+          }),
+          rng => C(rng, {
+            prompt: 'Why do trampers wear several thin layers of merino wool instead of one thin cotton shirt?',
+            right: 'Wool and the air trapped between the layers are good insulators, so less thermal energy escapes.',
+            wrong: ['The layers make extra heat as you walk.', 'Cotton is a good insulator, so it lets the cold in.', 'Merino is a good conductor, so it spreads warmth around.'],
+            explain: 'Trapped air has a very low thermal conductivity. Layers of wool trap plenty of it, slowing the loss of thermal energy.'
+          }),
+          rng => C(rng, {
+            prompt: 'In a hāngī, the hot stones and food are covered with wet sacks and then a layer of earth. What does the earth do?',
+            right: 'It acts as an insulator, keeping thermal energy in so the food keeps cooking.',
+            wrong: ['It produces extra heat as it settles.', 'It conducts thermal energy away from the food quickly.', 'It lets cold air in to stop the food burning.'],
+            explain: 'The soil layer slows thermal energy escaping from the pit, so the stones stay hot long enough to cook the food.'
+          }),
+          rng => C(rng, {
+            prompt: 'Which would be best for the handle of a pot?',
+            right: 'Wood', wrong: ['Copper', 'Steel', 'Aluminium'],
+            explain: 'A handle should stay cool to hold, so it needs an insulator. Wood conducts thermal energy far more slowly than any metal.'
+          })
+        ]
+      },
+
+      // 8 · Particles and temperature.
+      {
+        name: 'Particles and temperature',
+        items: [
+          rng => C(rng, {
+            prompt: 'When a pot of water is heated, what happens to its particles?',
+            right: 'They move faster, so the average kinetic energy and the temperature go up.',
+            wrong: ['They get bigger, so the temperature goes up.', 'They move slower, so there is room for more energy.', 'Nothing happens to them; only the pot changes.'],
+            explain: 'Adding thermal energy speeds the particles up. Temperature measures their average kinetic energy.'
+          }),
+          rng => C(rng, {
+            prompt: 'Two cups of water are at 20 °C and 60 °C. What is different about the particles in the hotter one?',
+            right: 'On average, they are moving faster.',
+            wrong: ['They are bigger.', 'There are more of them in the same volume.', 'They have stopped moving.'],
+            explain: 'A higher temperature means a higher average kinetic energy: the particles move faster on average.'
+          }),
+          rng => C(rng, {
+            prompt: 'What does thermal energy describe?',
+            right: 'The energy of the motion and interactions of all the particles in a substance',
+            wrong: ['How hot the surface of an object feels', 'The speed of the fastest particle', 'The size of the particles'],
+            explain: 'Thermal energy is the energy associated with the motion and interactions of the particles.'
+          })
+        ]
+      },
+
+      // 9 · Fair test.
+      {
+        name: 'Planning a fair test',
+        items: (() => {
+          const sc = {
+            setup: 'To find the best material for a lunchbox cover, {n} wraps identical cans of hot water in different materials and measures the temperature after 20 minutes.',
+            iv: 'The material used to wrap the can', dv: 'The temperature after 20 minutes',
+            cv: ['The starting temperature of the water', 'The volume of water in each can', 'The thickness of each wrapping']
+          };
+          return [
+            rng => C(rng, {
+              prompt: sc.setup.replace('{n}', Sci.name(rng)) + ' What is the <strong>independent</strong> variable?',
+              right: sc.iv, wrong: [sc.dv, ...rng.sample(sc.cv, 2)],
+              explain: 'The independent variable is the one thing changed on purpose: the wrapping material.'
+            }),
+            rng => C(rng, {
+              prompt: sc.setup.replace('{n}', Sci.name(rng)) + ' What is the <strong>dependent</strong> variable?',
+              right: sc.dv, wrong: [sc.iv, ...rng.sample(sc.cv, 2)],
+              explain: 'The dependent variable is what is measured to see the effect: the temperature after 20 minutes.'
+            }),
+            rng => C(rng, {
+              prompt: sc.setup.replace('{n}', Sci.name(rng)) + ' Which of these must be kept the same?',
+              right: rng.pick(sc.cv), wrong: [sc.iv, sc.dv, 'Nothing, because the materials are different anyway'],
+              explain: 'Everything except the wrapping material must stay the same, or the test is not fair.'
+            }),
+            rng => C(rng, {
+              prompt: 'Why should every can start with water at the same temperature?',
+              right: 'Otherwise a can might end up hotter just because it started hotter, not because of its wrapping.',
+              wrong: ['So the cans all weigh the same.', 'Because hot water changes colour.', 'It does not matter, as long as you measure carefully.'],
+              explain: 'Keeping the starting temperature the same means any difference at the end is caused by the material.'
+            })
+          ];
+        })()
+      },
+
+      // 10 · True or false.
+      {
+        name: 'True or false',
+        items: [
+          rng => TF(rng, { statement: 'In conduction, the material itself moves to carry the thermal energy.', answer: false,
+            explain: 'Conduction passes energy between particles that stay in place. It is in convection that the liquid or gas moves.' }),
+          rng => TF(rng, { statement: 'Insulating materials have a low thermal conductivity.', answer: true,
+            explain: 'A low thermal conductivity means thermal energy passes through slowly, which is what makes a good insulator.' }),
+          rng => TF(rng, { statement: 'Thermal energy from the Sun reaches Earth by radiation.', answer: true,
+            explain: 'There is almost nothing between the Sun and Earth, so it cannot be conduction or convection.' }),
+          rng => TF(rng, { statement: 'Metals are generally good conductors of thermal energy.', answer: true,
+            explain: 'That is why pots and pans are made of metal, and their handles often are not.' }),
+          rng => TF(rng, { statement: 'Trapped air is a poor conductor of thermal energy.', answer: true,
+            explain: 'Air has a very low thermal conductivity, which is why so many insulators work by trapping it.' })
+        ]
+      }
+    ]
+  });
+
+
+  // ═══ 7.4 The Earth, Moon and Sun ══════════════════════════════════════════
+  // Knowledge: The Earth, Moon, Sun system (p. 20). The Moon as a satellite;
+  // its 29.5-day cycle of phases; why the shape appears to change; the Moon
+  // rising and setting at different times; Maramataka; lunar and solar
+  // eclipses.
+  // Practices: analysing lunar data; models of the lunar cycle; using a lunar
+  // calendar to predict a good time for a task.
+  //
+  // Maramataka is kept at the level of the knowledge statements: the names
+  // and order of the nights differ between iwi, so no particular version is
+  // quizzed. Moon pictures are drawn as seen from New Zealand.
+
+  const PHASE_DESC = {
+    'new Moon': 'The sunlit half faces away from Earth, so we can hardly see the Moon.',
+    'full Moon': 'The whole sunlit half faces Earth.',
+    'first quarter': 'Half of the disc is lit, and the lit part is growing each night.',
+    'last quarter': 'Half of the disc is lit, and the lit part is shrinking each night.'
+  };
+
+  Sci.topic({
+    id: 's7e4', unit: 'y7',
+    title: 'The Earth, Moon and Sun',
+    blurb: 'Why the Moon seems to change shape, how long its cycle takes, and what causes an eclipse.',
+    hint: 'Half of the Moon is always lit by the Sun. As the Moon orbits Earth, we see different amounts of that lit half: ' +
+          'that is the cycle of phases, about 29.5 days long. An eclipse happens when the Sun, Earth and Moon line up.',
+
+    examples: [
+      {
+        title: 'Example 1: the phases, as seen from New Zealand',
+        diagram: { w: 424, h: 96, caption: 'In New Zealand a waxing Moon is lit on the left. In the Northern Hemisphere it is lit on the right.' },
+        draw(d) {
+          SciDia.PHASES.forEach((p, i) => {
+            const x = 26 + i * 52.5;
+            SciDia.moon(d, [x, 32], 20, p.angle);
+            const words = p.name.split(' ');
+            words.forEach((w, k) => d.text([x, 66 + k * 12], w, { size: 9.5, fill: 'var(--dia-muted)', bold: false }));
+          });
+        },
+        steps: [
+          'The Sun always lights half of the Moon. What changes is how much of that lit half faces us.',
+          'At new Moon the lit half faces away. As the Moon moves round its orbit we see more of it each night (waxing), up to full Moon.',
+          'Then we see less each night (waning), back to new Moon.',
+          'The whole cycle takes about 29.5 days, and the quarter phases are about a week apart.'
+        ]
+      },
+      {
+        title: 'Example 2: a lunar eclipse',
+        diagram: { w: 300, h: 110, caption: 'Not to scale: the real distances are far larger.' },
+        draw(d) { SciDia.eclipse(d, 'lunar'); },
+        steps: [
+          'The Earth is between the Sun and the Moon.',
+          'The Moon passes directly into the Earth’s shadow, so sunlight cannot reach it.',
+          'In a solar eclipse it is the other way round: the Moon is between the Earth and the Sun, and blocks the Sun from view.'
+        ]
+      }
+    ],
+
+    slots: [
+      // 1 · Name the phase from its picture.
+      {
+        name: 'Name the phase',
+        items: SciDia.PHASES.filter(p => p.name !== 'new Moon').map(p => rng => C(rng, {
+          prompt: 'This is how the Moon looks one night in New Zealand. Which phase is it?',
+          diagram: { w: 120, h: 110 },
+          draw: d => SciDia.moon(d, [60, 55], 40, p.angle),
+          right: p.name,
+          wrong: rng.sample(SciDia.PHASES.filter(q => q.name !== p.name && q.name !== 'new Moon').map(q => q.name), 3),
+          wide: false,
+          explain: {
+            'waxing crescent': 'A thin sliver lit on the left: in New Zealand that is a waxing crescent, growing towards first quarter.',
+            'first quarter': 'The left half is lit: first quarter, about a week after new Moon.',
+            'waxing gibbous': 'More than half lit, on the left side: waxing gibbous, nearly full.',
+            'full Moon': 'The whole disc is lit: the whole sunlit half faces Earth.',
+            'waning gibbous': 'More than half lit, on the right side: waning gibbous, just after full Moon.',
+            'last quarter': 'The right half is lit: last quarter, about a week after full Moon.',
+            'waning crescent': 'A thin sliver lit on the right: a waning crescent, nearly back to new Moon.'
+          }[p.name]
+        }))
+      },
+
+      // 2 · Put the phases in order.
+      {
+        name: 'Order of the phases',
+        items: [
+          rng => {
+            const seq = ['waxing crescent', 'first quarter', 'waxing gibbous', 'full Moon'];
+            const order = rng.shuffle([0, 1, 2, 3]);
+            return {
+              prompt: 'Starting just after a new Moon, put these phases in the order they appear.',
+              input: { kind: 'order', items: order.map(i => seq[i]), answer: [0, 1, 2, 3].map(i => order.indexOf(i)),
+                       cue: 'Click them in order. Click one again to take it back.' },
+              explain: 'After new Moon the lit part grows: crescent, then first quarter, then gibbous, then full.'
+            };
+          },
+          rng => {
+            const seq = ['waning gibbous', 'last quarter', 'waning crescent', 'new Moon'];
+            const order = rng.shuffle([0, 1, 2, 3]);
+            return {
+              prompt: 'Starting just after a full Moon, put these phases in the order they appear.',
+              input: { kind: 'order', items: order.map(i => seq[i]), answer: [0, 1, 2, 3].map(i => order.indexOf(i)),
+                       cue: 'Click them in order. Click one again to take it back.' },
+              explain: 'After full Moon the lit part shrinks: gibbous, then last quarter, then crescent, then new Moon.'
+            };
+          }
+        ]
+      },
+
+      // 3 · Why the Moon appears to change shape.
+      {
+        name: 'Why the phases happen',
+        items: [
+          rng => C(rng, {
+            prompt: 'Why does the Moon appear to change shape during the month?',
+            right: 'As the Moon orbits Earth, we see different amounts of its sunlit half.',
+            wrong: ['The Earth’s shadow covers different amounts of the Moon.', 'Clouds block different parts of the Moon.', 'The Moon actually changes shape as it orbits.'],
+            explain: 'Half of the Moon is always lit by the Sun. Its position in its orbit decides how much of that lit half faces us.'
+          }),
+          rng => C(rng, {
+            prompt: 'At full Moon, where is the Moon compared with the Earth and the Sun?',
+            right: 'On the far side of the Earth from the Sun, so its whole lit half faces us',
+            wrong: ['Between the Earth and the Sun', 'Right next to the Sun in the sky', 'Inside the Earth’s shadow every time'],
+            explain: 'At full Moon the Sun lights the side of the Moon that faces us. (A lunar eclipse only happens when the line-up is exact, which is not every month.)'
+          }),
+          rng => C(rng, {
+            prompt: 'What is the Moon?',
+            right: 'A roughly spherical natural satellite that orbits the Earth',
+            wrong: ['A star that orbits the Sun', 'A planet that orbits the Earth', 'A flat disc that reflects sunlight'],
+            explain: 'The Moon is Earth’s natural satellite: a roughly spherical body in orbit around us.'
+          })
+        ]
+      },
+
+      // 4 · Using the length of the cycle.
+      {
+        name: 'Using the lunar cycle',
+        items: [
+          Sci.gen(rng => {
+            const day = rng.int(1, 6);
+            const month = rng.pick(['March', 'May', 'August', 'October']);
+            return {
+              prompt: `There is a full Moon on ${day} ${month}. About how many days later will the next full Moon be?`,
+              input: { kind: 'number', answer: 29.5, tol: 0.6, decimal: true, suffix: 'days', width: 74 },
+              explain: 'One complete cycle of phases takes about 29.5 days, so the next full Moon is 29 or 30 days later.'
+            };
+          }),
+          Sci.gen(rng => {
+            const from = rng.pick(['new Moon', 'first quarter', 'full Moon', 'last quarter']);
+            const next = { 'new Moon': 'first quarter', 'first quarter': 'full Moon', 'full Moon': 'last quarter', 'last quarter': 'new Moon' }[from];
+            return {
+              prompt: `About how many days are there between ${from} and ${next}?`,
+              note: 'The four main phases split the 29.5-day cycle into four.',
+              input: { kind: 'number', answer: 7.4, tol: 0.65, decimal: true, suffix: 'days', width: 74 },
+              explain: `${m('29.5 \\div 4 \\approx 7.4')}, so about a week: 7 or 8 days.`
+            };
+          })
+        ]
+      },
+
+      // 5 · Solar or lunar eclipse?
+      {
+        name: 'Solar or lunar eclipse?',
+        items: ['lunar', 'solar'].map(type => rng => ({
+          prompt: 'The diagram shows the Sun, Earth and Moon lined up. What kind of eclipse is this?',
+          diagram: { w: 300, h: 110, caption: 'Not to scale.' },
+          draw: d => SciDia.eclipse(d, type),
+          input: {
+            kind: 'choice',
+            options: [{ html: 'A solar eclipse', right: type === 'solar' }, { html: 'A lunar eclipse', right: type === 'lunar' },
+                      { html: 'Not an eclipse', right: false }],
+            correct: type === 'solar' ? 0 : 1
+          },
+          explain: type === 'lunar'
+            ? 'The Earth is in the middle, and the Moon is in the Earth’s shadow: a lunar eclipse.'
+            : 'The Moon is in the middle, blocking the Sun from part of the Earth: a solar eclipse.'
+        }))
+      },
+
+      // 6 · Moonrise data.
+      {
+        name: 'Moonrise data',
+        items: [Sci.gen(rng => {
+          const avg = rng.int(46, 54);
+          const gaps = rng.shuffle([avg - 2, avg + 1, avg + 1]);
+          let t = rng.int(17, 19) * 60 + rng.int(0, 5) * 10;
+          const times = [t];
+          gaps.forEach(g => { t += g; times.push(t); });
+          const fmt = x => `${Math.floor(x / 60) % 24}:${String(x % 60).padStart(2, '0')}`;
+          return {
+            prompt: 'Moonrise times over four nights:' +
+                    Sci.table(['Night', '1', '2', '3', '4'], [['Moonrise', ...times.map(fmt)]]) +
+                    'On average, how many minutes later does the Moon rise each night?',
+            input: { kind: 'number', answer: avg, tol: 0.6, suffix: 'min', width: 74 },
+            explain: `From night 1 to night 4 is ${avg * 3} minutes over 3 nights: ${m(`${avg * 3} \\div 3 = ${avg}`)}. ` +
+                     'The Moon rises later each night because it moves along its orbit.'
+          };
+        })]
+      },
+
+      // 7 · Maramataka.
+      {
+        name: 'Maramataka',
+        items: [
+          rng => C(rng, {
+            prompt: 'What is the Maramataka?',
+            right: 'The Māori lunar calendar, which uses the Moon’s phases and key stars to divide the year into days and months',
+            wrong: ['A calendar based only on the position of the Sun', 'A weather forecast for the coming week', 'A map of the stars used for navigation at sea'],
+            explain: 'Maramataka is the Māori lunar calendar, built from observing the Moon’s phases and key stars.'
+          }),
+          rng => C(rng, {
+            prompt: 'How is the Maramataka used?',
+            right: 'To guide daily practices and seasonal activities, such as fishing and planting, using the Moon’s phases and changes in the environment',
+            wrong: ['To set the date of school holidays', 'To work out the exact time of sunrise', 'To predict earthquakes'],
+            explain: 'Maramataka uses environmental changes and the Moon’s phases to guide activities like fishing, planting and harvesting.'
+          }),
+          rng => TF(rng, { statement: 'The Maramataka is exactly the same in every region of New Zealand.', answer: false,
+            explain: 'Maramataka guides activities for specific regions, and its details differ between iwi and places.' }),
+          rng => TF(rng, { statement: 'In many maramataka, the rising of Matariki, or of Puanga in some regions, marks the start of the new year.', answer: true,
+            explain: 'Key stars help divide the year. Which star marks the new year depends on the region.' })
+        ]
+      },
+
+      // 8 · True or false.
+      {
+        name: 'True or false',
+        items: [
+          rng => TF(rng, { statement: 'The Moon makes its own light, like the Sun.', answer: false,
+            explain: 'The Moon gives out no light of its own. We see it because it reflects sunlight.' }),
+          rng => TF(rng, { statement: 'A lunar eclipse happens when the Moon passes directly into the Earth’s shadow.', answer: true,
+            explain: 'With the Earth exactly between the Sun and the Moon, the Earth’s shadow falls on the Moon.' }),
+          rng => TF(rng, { statement: 'A solar eclipse happens when the Moon passes directly between the Earth and the Sun.', answer: true,
+            explain: 'The Moon blocks the Sun from view for people in its shadow.' }),
+          rng => TF(rng, { statement: 'The Moon rises at the same time every night.', answer: false,
+            explain: 'Because the Moon moves along its orbit, it rises at a different time each day: generally later.' }),
+          rng => TF(rng, { statement: 'A full cycle of the Moon’s phases takes about 29.5 days.', answer: true,
+            explain: 'That is the length of the lunar cycle, from one new Moon to the next.' }),
+          rng => TF(rng, { statement: 'Half of the Moon is lit by the Sun at all times.', answer: true,
+            explain: 'The Sun always lights the half facing it. The phases are about how much of that half we can see.' })
+        ]
+      },
+
+      // 9 · Spot the misconception.
+      {
+        name: 'Spot the misconception',
+        items: [
+          rng => Sci.spot(rng, {
+            prompt: 'A student explains the phases of the Moon.',
+            lines: [
+              'The Moon orbits the Earth about once a month.',
+              'The Moon does not make its own light; it reflects sunlight.',
+              'The Earth’s shadow covers part of the Moon, making the crescent shape.',
+              'At full Moon the shadow has moved off completely.'
+            ],
+            wrong: 2,
+            explain: 'The Earth’s shadow only falls on the Moon during a lunar eclipse. The phases come from seeing different amounts of the Moon’s sunlit half.'
+          }),
+          rng => Sci.spot(rng, {
+            prompt: 'A student explains a solar eclipse.',
+            lines: [
+              'In a solar eclipse, the Sun, Moon and Earth line up.',
+              'The Earth is in the middle, between the Sun and the Moon.',
+              'This blocks the Sun from view for some people on Earth.',
+              'It can only happen during the day.'
+            ],
+            wrong: 1,
+            explain: 'In a solar eclipse the Moon is in the middle, between the Earth and the Sun. With the Earth in the middle, it would be a lunar eclipse.'
+          })
+        ]
+      },
+
+      // 10 · Match each phase to what is happening.
+      {
+        name: 'Match the phases',
+        items: [rng => {
+          const names = Object.keys(PHASE_DESC);
+          const order = rng.shuffle([0, 1, 2, 3]);
+          return {
+            prompt: 'Match each phase to what is happening.',
+            input: {
+              kind: 'match', left: names, right: order.map(i => PHASE_DESC[names[i]]),
+              tags: ['A', 'B', 'C', 'D'], answer: [0, 1, 2, 3].map(i => order.indexOf(i))
+            },
+            explain: 'The phase depends on how much of the Moon’s sunlit half faces Earth, and whether that amount is growing or shrinking.'
+          };
+        }]
+      }
+    ]
+  });
+
+
+  // ═══ 7.5 Survival adaptations ═════════════════════════════════════════════
+  // Knowledge: Survival Adaptations (p. 21). Adaptations for resources,
+  // hazards and reproduction; structural, behavioural and physiological;
+  // suited to environments; variation; no guarantee of survival; environment
+  // affects how well an adaptation works; Lamarck.
+  // Practices: compare adaptations from different environments; advantages
+  // and limits in different conditions; explain how adaptations increase
+  // survival and reproduction.
+
+  const ADAPT = [
+    { text: 'A kiwi has nostrils at the tip of its long beak, to smell food under the ground', type: 0, purpose: 0 },
+    { text: 'A kererū can open its beak very wide, to swallow large fruit whole', type: 0, purpose: 0 },
+    { text: 'A kākā has a strong hooked beak, for tearing bark to reach grubs', type: 0, purpose: 0 },
+    { text: 'A tūī has a brush-tipped tongue, for collecting nectar from flowers', type: 0, purpose: 0 },
+    { text: 'A green gecko’s colour matches the leaves it lives among', type: 0, purpose: 1 },
+    { text: 'A kina is covered in sharp spines', type: 0, purpose: 1 },
+    { text: 'Ducks have webbed feet for swimming', type: 0, purpose: null },
+    { text: 'Penguins huddle together in a tight group in freezing weather', type: 1, purpose: 1 },
+    { text: 'A ruru hunts at night, when its prey is active', type: 1, purpose: 0 },
+    { text: 'A tree wētā raises its spiny back legs when it is threatened', type: 1, purpose: 1 },
+    { text: 'Bar-tailed godwits (kuaka) fly to Alaska each year to breed', type: 1, purpose: 2 },
+    { text: 'A male bird sings loudly in spring to attract a mate', type: 1, purpose: 2 },
+    { text: 'Penguin parents take turns keeping their egg warm', type: 1, purpose: 2 },
+    { text: 'A mountain stone wētā can survive being frozen solid in winter', type: 2, purpose: 1 },
+    { text: 'Some Antarctic fish make a natural antifreeze in their blood', type: 2, purpose: 1 },
+    { text: 'Some plants make bitter-tasting chemicals in their leaves', type: 2, purpose: 1 },
+    { text: 'People sweat to cool down on a hot day', type: 2, purpose: 1 }
+  ];
+  const TYPES = ['Structural', 'Behavioural', 'Physiological'];
+
+  Sci.topic({
+    id: 's7e5', unit: 'y7',
+    title: 'Survival Adaptations',
+    blurb: 'Features, behaviours and body processes that help living things survive and reproduce where they live.',
+    hint: 'An adaptation can be structural (a body feature), behavioural (something the organism does) or physiological ' +
+          '(a process inside its body). Adaptations help with getting resources, avoiding hazards, or reproducing. ' +
+          'They raise the chance of surviving, but do not guarantee it.',
+
+    examples: [
+      {
+        title: 'Example 1: three kinds of adaptation',
+        steps: [
+          '<strong>Structural:</strong> a physical feature. A kiwi’s nostrils are at the tip of its long beak, so it can smell worms underground.',
+          '<strong>Behavioural:</strong> something the organism does. Penguins huddle together to keep warm in freezing wind.',
+          '<strong>Physiological:</strong> a process inside the body. A mountain stone wētā can survive being frozen solid.'
+        ]
+      },
+      {
+        title: 'Example 2: an adaptation depends on where you live',
+        steps: [
+          'A green gecko is hard to spot among green leaves. That camouflage helps it avoid being eaten.',
+          'On a brown, bare branch the same green colour stands out.',
+          'So an adaptation that works well in one habitat can work less well in another. It increases the chance of survival; it does not guarantee it.'
+        ]
+      }
+    ],
+
+    slots: [
+      // 1 · Structural, behavioural or physiological.
+      {
+        name: 'What kind of adaptation?',
+        items: [rng => Sci.sort(rng, {
+          prompt: 'Is each adaptation structural, behavioural or physiological?',
+          bins: TYPES,
+          items: ADAPT.map(a => ({ text: a.text, bin: a.type })),
+          pick: 6,
+          explain: 'Structural: a body feature. Behavioural: something the organism does. Physiological: a process inside its body.'
+        })]
+      },
+
+      // 2 · What is the adaptation for?
+      {
+        name: 'What is it for?',
+        items: [rng => Sci.sort(rng, {
+          prompt: 'What does each adaptation mainly help with?',
+          bins: ['Getting resources', 'Avoiding danger', 'Reproducing'],
+          items: [
+            // Only adaptations with one clear purpose; webbed feet, say, could be argued either way.
+            ...ADAPT.filter(a => a.purpose !== null).map(a => ({ text: a.text, bin: a.purpose })),
+            { text: 'Dandelion seeds have fluffy parachutes that carry them on the wind', bin: 2 },
+            { text: 'Pōhutukawa flowers are bright red, which attracts birds that carry their pollen', bin: 2 },
+            { text: 'Some plants grow very long roots to reach water deep underground', bin: 0 }
+          ],
+          pick: 6,
+          explain: 'Adaptations help an organism get resources (food, water), avoid hazards (predators, cold), or reproduce (find mates, spread seeds, care for young).'
+        })]
+      },
+
+      // 3 · Match the beak to the food.
+      {
+        name: 'Beaks and food',
+        items: [rng => {
+          const rows = [
+            ['Kiwi', 'Long beak with nostrils at the tip, for finding worms underground'],
+            ['Kererū', 'Very wide gape, for swallowing large fruit whole'],
+            ['Kākā', 'Strong hooked beak, for tearing into wood to find grubs'],
+            ['Kārearea (NZ falcon)', 'Sharp hooked beak, for tearing meat'],
+            ['Tūī', 'Curved beak and brush-tipped tongue, for drinking nectar']
+          ];
+          const four = rng.sample(rows, 4);
+          const order = rng.shuffle([0, 1, 2, 3]);
+          return {
+            prompt: 'Match each bird to the beak that suits its food.',
+            input: { kind: 'match', left: four.map(r => r[0]), right: order.map(i => four[i][1]),
+                     tags: ['A', 'B', 'C', 'D'], answer: [0, 1, 2, 3].map(i => order.indexOf(i)) },
+            explain: 'Beak shapes are structural adaptations for obtaining food.'
+          };
+        }]
+      },
+
+      // 4 · Variation within a species.
+      {
+        name: 'Variation',
+        items: [
+          rng => C(rng, {
+            prompt: 'Why might two tūī of the same species not be equally good at surviving?',
+            right: 'Individuals of a species vary, and some variations suit the environment better than others.',
+            wrong: ['All individuals of a species are identical, so they must be equally good.', 'Only the oldest bird of a species can have adaptations.', 'Birds choose which adaptations they want.'],
+            explain: 'Organisms of the same species show variation in their traits. Some variations make an individual better suited to its environment.'
+          }),
+          rng => C(rng, {
+            prompt: 'A population of snails includes some with darker shells and some with lighter shells. They live on dark rocks. Which snails are most likely to survive?',
+            right: 'The darker ones, because they are harder for birds to spot',
+            wrong: ['The lighter ones, because they are easier to see', 'All of them equally, because they are the same species', 'None of them, because snails have no adaptations'],
+            explain: 'Variation means some individuals are better suited: on dark rock, darker shells are better camouflaged.'
+          })
+        ]
+      },
+
+      // 5 · An adaptation is not a guarantee.
+      {
+        name: 'Adaptations and survival',
+        items: [
+          rng => TF(rng, { statement: 'Having a good adaptation guarantees that an animal will survive.', answer: false,
+            explain: 'An adaptation increases the likelihood of surviving and reproducing. It does not guarantee it.' }),
+          rng => TF(rng, { statement: 'An adaptation can increase the chance of surviving and reproducing.', answer: true,
+            explain: 'That is what makes it an adaptation: it helps the organism survive and reproduce in its environment.' }),
+          rng => TF(rng, { statement: 'Camouflage that works well in one habitat may work less well in another.', answer: true,
+            explain: 'Environmental conditions affect how effective an adaptation is.' }),
+          rng => TF(rng, { statement: 'Organisms of the same species can differ in their adaptations.', answer: true,
+            explain: 'Individuals show variation in their traits, including their adaptations.' })
+        ]
+      },
+
+      // 6 · The environment changes how well it works.
+      {
+        name: 'When the environment changes',
+        items: [
+          rng => C(rng, {
+            prompt: 'A pale-coloured moth is well camouflaged on pale lichen-covered trees. The lichen dies and the bark underneath is dark. What is most likely?',
+            right: 'The pale moths become easier for birds to see, so fewer survive.',
+            wrong: ['The pale moths decide to become darker.', 'Nothing changes, because camouflage works everywhere.', 'The birds stop eating moths.'],
+            explain: 'An adaptation that worked in one environment may not work as well when the environment changes.'
+          }),
+          rng => C(rng, {
+            prompt: 'Thick fur keeps an animal warm in a cold place. What could be a disadvantage of thick fur?',
+            right: 'In hot weather the animal could overheat.',
+            wrong: ['It has no disadvantages at all.', 'It makes the animal colder.', 'It stops the animal from eating.'],
+            explain: 'Adaptations have advantages and limitations, which depend on the conditions.'
+          })
+        ]
+      },
+
+      // 7 · Lamarck.
+      {
+        name: 'Lamarck’s idea',
+        items: [
+          rng => C(rng, {
+            prompt: 'A student says: "A giraffe’s neck gets longer during its life from stretching up to reach leaves, and it passes this longer neck on to its young." Whose idea is this?',
+            right: 'Lamarck’s, and it has been contested',
+            wrong: ['Darwin’s, and it is accepted science', 'Robert Hooke’s, from looking at cells', 'It is how all scientists explain it today'],
+            explain:'This is Lamarck’s idea, that traits gained during a lifetime are passed on. It has been contested: stretching does not change what is passed to offspring.'
+          }),
+          rng => C(rng, {
+            prompt: 'What did Jean-Baptiste Lamarck propose?',
+            right: 'That traits acquired during an organism’s lifetime could be inherited by its offspring',
+            wrong: ['That cells are the basic unit of life', 'That the Earth orbits the Sun', 'That all organisms are made of particles'],
+            explain: 'Lamarck proposed that acquired traits are inherited. The idea was later contested.'
+          })
+        ]
+      },
+
+      // 8 · Explain how an adaptation helps.
+      {
+        name: 'How does it help?',
+        items: [
+          rng => C(rng, {
+            prompt: 'How does huddling help penguins survive a freezing storm?',
+            right: 'Each penguin loses less thermal energy, because much of its body is sheltered by others.',
+            wrong: ['Huddling makes the penguins produce food.', 'The penguins in the middle get colder so the outside ones get warmer.', 'It makes them harder for predators to find.'],
+            explain: 'Huddling is a behavioural adaptation that reduces the loss of thermal energy, helping each penguin survive the cold.'
+          }),
+          rng => C(rng, {
+            prompt: 'How do the spines on a kina help it survive?',
+            right: 'They make it hard for predators to eat.',
+            wrong: ['They help it swim faster.', 'They collect sunlight to make food.', 'They keep it warm.'],
+            explain: 'Spines are a structural adaptation for avoiding being eaten.'
+          }),
+          rng => C(rng, {
+            prompt: 'How does a kererū’s very wide gape help it?',
+            right: 'It can swallow large fruits whole that smaller-mouthed birds cannot eat.',
+            wrong: ['It lets it drink nectar.', 'It keeps it warm.', 'It scares away predators.'],
+            explain: 'A wide gape is a structural adaptation for obtaining food: kererū can eat fruits too big for most other birds.'
+          })
+        ]
+      },
+
+      // 9 · Adaptations from different environments.
+      {
+        name: 'Comparing environments',
+        items: [
+          rng => C(rng, {
+            prompt: 'Plants growing on exposed, windy coasts often have small, tough leaves. Which is the best explanation?',
+            right: 'Small, tough leaves are less likely to be torn by the wind and lose less water.',
+            wrong: ['Small leaves catch more sunlight.', 'The wind makes the leaves shrink during the plant’s life.', 'Tough leaves are tastier to animals.'],
+            explain: 'Leaf structure is a structural adaptation suited to the conditions where the plant lives.'
+          }),
+          rng => C(rng, {
+            prompt: 'Birds that wade in water often have long legs. Which is the best explanation?',
+            right: 'Long legs let them stand in deeper water to find food while keeping their bodies dry.',
+            wrong: ['Their legs got longer from standing in water.', 'Long legs help them fly faster.', 'Long legs keep them warm.'],
+            explain: 'Long legs are a structural adaptation suited to feeding in water.'
+          })
+        ]
+      },
+
+      // 10 · Name the kind of adaptation (one at a time).
+      {
+        name: 'Which kind is this?',
+        items: ADAPT.map(a => rng => ({
+          prompt: a.text + '. What kind of adaptation is this?',
+          input: {
+            kind: 'choice',
+            options: TYPES.map((t, i) => ({ html: t, right: i === a.type })),
+            correct: a.type
+          },
+          explain: ['It is a physical feature of the body, so it is structural.',
+                    'It is something the organism does, so it is behavioural.',
+                    'It is a process inside the body, so it is physiological.'][a.type]
+        }))
+      }
+    ]
+  });
+
+
+  // ═══ 7.6 Cells ════════════════════════════════════════════════════════════
+  // Knowledge: Cells (pp. 21–22). The microscope and Hooke, van Leeuwenhoek;
+  // cells as the fundamental unit, with organelles that carry out functions;
+  // specialised cells; cells to tissues to organs to systems;
+  // microorganisms.
+  // Practices: finding patterns in cell structures; labelling diagrams of
+  // different types of cells.
+
+  const FUNCTION = {
+    'nucleus': 'Controls the cell’s activities',
+    'cell membrane': 'Controls what enters and leaves the cell',
+    'cytoplasm': 'Jelly-like substance where many of the cell’s chemical reactions happen',
+    'cell wall': 'A tough layer that supports and strengthens a plant cell',
+    'vacuole': 'Stores water and dissolved substances, and helps keep a plant cell firm',
+    'chloroplast': 'Where photosynthesis happens, making food using light'
+  };
+
+  Sci.topic({
+    id: 's7e6', unit: 'y7',
+    title: 'Cells',
+    blurb: 'The building blocks of living things, the parts inside them, and how they build up into whole organisms.',
+    hint: 'Every living thing is made of cells. Plant and animal cells both have a nucleus, cytoplasm and a cell membrane; ' +
+          'plant cells also have a cell wall, chloroplasts and a large vacuole. Cells build up into tissues, organs, systems and organisms.',
+
+    examples: [
+      {
+        title: 'Example 1: a plant cell',
+        diagram: { w: 424, h: 200, caption: 'A leaf cell. The large vacuole pushes everything else to the edges.' },
+        draw(d) { SciDia.cell(d, 'plant', Object.fromEntries(SciDia.PLANT_PARTS.map(p => [p, p]))); },
+        steps: [
+          'Like all cells, it has a <strong>nucleus</strong>, <strong>cytoplasm</strong> and a <strong>cell membrane</strong>.',
+          'Plant cells also have a <strong>cell wall</strong> for support, <strong>chloroplasts</strong> for photosynthesis, and a large <strong>vacuole</strong>.',
+          'The structures inside a cell that carry out its functions are called organelles.'
+        ]
+      },
+      {
+        title: 'Example 2: an animal cell',
+        diagram: { w: 424, h: 200, caption: 'A cheek cell. No cell wall, so no fixed shape.' },
+        draw(d) { SciDia.cell(d, 'animal', Object.fromEntries(SciDia.ANIMAL_PARTS.map(p => [p, p]))); },
+        steps: [
+          'An animal cell has a nucleus, cytoplasm and a cell membrane.',
+          'It has no cell wall, no chloroplasts and no large vacuole.',
+          'Without a cell wall, it has no fixed shape.'
+        ]
+      }
+    ],
+
+    slots: [
+      // 1 · Label a plant cell.
+      {
+        name: 'Label a plant cell',
+        items: [rng => {
+          const order = rng.shuffle(SciDia.PLANT_PARTS);
+          const labels = Object.fromEntries(order.map((p, i) => [p, String(i + 1)]));
+          return Sci.label(rng, {
+            prompt: 'Name each part of this plant cell.',
+            diagram: { w: 300, h: 200 },
+            draw: d => SciDia.cell(d, 'plant', labels),
+            markers: order, options: SciDia.PLANT_PARTS,
+            explain: 'The cell wall is the thick outer layer; the membrane is just inside it; the large vacuole fills the middle; chloroplasts are the small green bodies; the nucleus sits in the cytoplasm.'
+          });
+        }]
+      },
+
+      // 2 · Label an animal cell.
+      {
+        name: 'Label an animal cell',
+        items: [rng => {
+          const order = rng.shuffle(SciDia.ANIMAL_PARTS);
+          const labels = Object.fromEntries(order.map((p, i) => [p, String(i + 1)]));
+          return Sci.label(rng, {
+            prompt: 'Name each part of this animal cell.',
+            diagram: { w: 300, h: 200 },
+            draw: d => SciDia.cell(d, 'animal', labels),
+            markers: order, options: [...SciDia.ANIMAL_PARTS, 'cell wall', 'chloroplast'],
+            explain: 'The membrane is the outer boundary, the cytoplasm fills the cell, and the nucleus is the large body inside. An animal cell has no cell wall or chloroplasts.'
+          });
+        }]
+      },
+
+      // 3 · Plant cells only, or both?
+      {
+        name: 'Plant cells only, or both?',
+        items: [rng => Sci.sort(rng, {
+          prompt: 'Is each part found only in plant cells, or in both plant and animal cells?',
+          bins: ['Plant cells only', 'Both'],
+          items: [
+            { text: 'Cell wall', bin: 0 }, { text: 'Chloroplasts', bin: 0 }, { text: 'A large permanent vacuole', bin: 0 },
+            { text: 'Nucleus', bin: 1 }, { text: 'Cell membrane', bin: 1 }, { text: 'Cytoplasm', bin: 1 }
+          ],
+          pick: 6,
+          explain: 'Both have a nucleus, cytoplasm and a cell membrane. Only plant cells have a cell wall, chloroplasts and a large vacuole.'
+        })]
+      },
+
+      // 4 · What does each part do?
+      {
+        name: 'What each part does',
+        items: [rng => {
+          const four = rng.sample(Object.keys(FUNCTION), 4);
+          const order = rng.shuffle([0, 1, 2, 3]);
+          return {
+            prompt: 'Match each part of a cell to its job.',
+            input: { kind: 'match', left: four, right: order.map(i => FUNCTION[four[i]]),
+                     tags: ['A', 'B', 'C', 'D'], answer: [0, 1, 2, 3].map(i => order.indexOf(i)) },
+            explain: 'Each organelle carries out a particular function for the cell.'
+          };
+        }]
+      },
+
+      // 5 · From cells to organisms.
+      {
+        name: 'From cells to organisms',
+        items: [rng => {
+          const seq = ['Cell', 'Tissue', 'Organ', 'Organ system', 'Organism'];
+          const order = rng.shuffle([0, 1, 2, 3, 4]);
+          return {
+            prompt: 'Put these in order, from smallest to largest.',
+            input: { kind: 'order', items: order.map(i => seq[i]), answer: [0, 1, 2, 3, 4].map(i => order.indexOf(i)) },
+            explain: 'Cells group into tissues, tissues into organs, organs into systems, and systems make up the organism.'
+          };
+        }]
+      },
+
+      // 6 · Specialised cells.
+      {
+        name: 'Specialised cells',
+        items: [
+          rng => C(rng, {
+            prompt: 'A sperm cell has a long tail. What is it specialised for?',
+            right: 'Movement: swimming to reach an egg', wrong: ['Storing food', 'Making food using light', 'Carrying oxygen'],
+            explain: 'The tail lets the sperm cell swim, a specialisation for movement.'
+          }),
+          rng => C(rng, {
+            prompt: 'Cells in a potato are packed with starch. What are they specialised for?',
+            right: 'Storage of food', wrong: ['Movement', 'Carrying messages', 'Photosynthesis'],
+            explain: 'Potato cells store food, as starch, for the plant to use later.'
+          }),
+          rng => C(rng, {
+            prompt: 'A nerve cell is very long and thin. What is it specialised for?',
+            right: 'Carrying signals around the body', wrong: ['Storing water', 'Photosynthesis', 'Making the body move by itself'],
+            explain: 'Its length lets it carry signals over long distances in the body.'
+          }),
+          rng => C(rng, {
+            prompt: 'Root hair cells have a long thin extension into the soil. What does this help with?',
+            right: 'Absorbing water from the soil', wrong: ['Photosynthesis', 'Anchoring the leaves', 'Making seeds'],
+            explain: 'The extension gives a large surface for taking in water from the soil.'
+          })
+        ]
+      },
+
+      // 7 · History of cells.
+      {
+        name: 'Discovering cells',
+        items: [
+          rng => C(rng, {
+            prompt: 'Who first observed and named cells, looking at thin slices of cork through a microscope?',
+            right: 'Robert Hooke', wrong: ['Antonie van Leeuwenhoek', 'Charles Darwin', 'Jean-Baptiste Lamarck'],
+            explain: 'Robert Hooke described the tiny compartments he saw in cork and called them cells.'
+          }),
+          rng => C(rng, {
+            prompt: 'What did Antonie van Leeuwenhoek do?',
+            right: 'Built powerful microscopes and was among the first to see microorganisms',
+            wrong: ['Invented the telescope', 'Proposed the theory of natural selection', 'First named the parts of a flower'],
+            explain: 'Van Leeuwenhoek’s microscopes let him see living single-celled organisms for the first time, building on Hooke’s work.'
+          }),
+          rng => C(rng, {
+            prompt: 'Why did the invention of the microscope lead to major advances in biology?',
+            right: 'It let scientists see cells, which are too small to see with the naked eye.',
+            wrong: ['It made cells bigger.', 'It let scientists see inside the Earth.', 'It proved that animals do not have cells.'],
+            explain: 'Cells are too small to see unaided, so the microscope opened up a whole new level of living things.'
+          })
+        ]
+      },
+
+      // 8 · Single-celled or multicellular?
+      {
+        name: 'Single-celled or many cells?',
+        items: [rng => Sci.sort(rng, {
+          prompt: 'Is each organism single-celled or made of many cells?',
+          bins: ['Single-celled', 'Many cells'],
+          items: [
+            { text: 'Bacteria', bin: 0 }, { text: 'Yeast (a fungus)', bin: 0 }, { text: 'Some pond algae', bin: 0 },
+            { text: 'A mushroom', bin: 1 }, { text: 'Kelp (a large seaweed)', bin: 1 }, { text: 'A human', bin: 1 },
+            { text: 'A pōhutukawa tree', bin: 1 }, { text: 'A wētā', bin: 1 }
+          ],
+          pick: 6,
+          explain: 'Microorganisms are single-celled: bacteria, and some fungi and algae. Mushrooms and kelp are a fungus and an alga too, but made of many cells.'
+        })]
+      },
+
+      // 9 · Patterns in cell structures.
+      {
+        name: 'Patterns in cells',
+        items: [
+          rng => C(rng, {
+            prompt: 'Cells from a leaf contain chloroplasts, but cells from an onion bulb do not. Which is the best explanation?',
+            right: 'The bulb grows underground in the dark, so its cells do not photosynthesise.',
+            wrong: ['Onions are not plants.', 'Onion cells are too small for chloroplasts.', 'The chloroplasts fall out when the onion is cut.'],
+            explain: 'Chloroplasts are where photosynthesis happens, which needs light. Cells that get no light have no need for them.'
+          }),
+          rng => C(rng, {
+            prompt: 'Under a microscope, a sample of cells all have cell walls and a large vacuole. What kind of organism did they come from?',
+            right: 'A plant', wrong: ['An animal', 'A human', 'A wētā'],
+            explain: 'Cell walls and a large permanent vacuole are features of plant cells.'
+          })
+        ]
+      },
+
+      // 10 · True or false.
+      {
+        name: 'True or false',
+        items: [
+          rng => TF(rng, { statement: 'Cells are the basic unit that all living things are made of.', answer: true,
+            explain: 'Cells are the fundamental unit of organisms.' }),
+          rng => TF(rng, { statement: 'Animal cells have a cell wall.', answer: false,
+            explain: 'Only plant cells (and fungi and bacteria) have a cell wall. Animal cells have just a membrane.' }),
+          rng => TF(rng, { statement: 'All the cells in a multicellular organism are exactly the same.', answer: false,
+            explain: 'Cells are specialised for different functions, so they differ in shape and contents.' }),
+          rng => TF(rng, { statement: 'Bacteria are single-celled organisms.', answer: true,
+            explain: 'Bacteria are microorganisms: each one is a single cell.' }),
+          rng => TF(rng, { statement: 'The structures inside a cell that carry out functions are called organelles.', answer: true,
+            explain: 'The nucleus, chloroplasts and vacuole are examples of organelles.' })
+        ]
+      }
+    ]
+  });
+
+
+  // ═══ 7.7 Organisms in an ecosystem ════════════════════════════════════════
+  // Knowledge: Organisms in an ecosystem (p. 22). Population; community;
+  // ecosystem, with biotic and abiotic components.
+  // Practices: pattern seeking from food webs, abundance of organism roles;
+  // interdependence in a local ecosystem.
+
+  // Two New Zealand food webs. Arrows run from food to eater.
+  const WEBS = {
+    forest: {
+      title: 'a New Zealand forest',
+      nodes: {
+        tawa:   { label: 'Tawa', x: 0.24, y: 0.88, role: 'producer' },
+        mahoe:  { label: 'Māhoe', x: 0.70, y: 0.88, role: 'producer' },
+        kereru: { label: 'Kererū', x: 0.12, y: 0.52 },
+        rat:    { label: 'Ship rat', x: 0.44, y: 0.52 },
+        weta:   { label: 'Tree wētā', x: 0.80, y: 0.52 },
+        stoat:  { label: 'Stoat', x: 0.26, y: 0.13 },
+        ruru:   { label: 'Ruru', x: 0.70, y: 0.13 }
+      },
+      links: [['tawa', 'kereru'], ['tawa', 'rat'], ['mahoe', 'weta'], ['weta', 'rat'], ['weta', 'ruru'],
+              ['rat', 'stoat'], ['rat', 'ruru'], ['kereru', 'stoat']]
+    },
+    shore: {
+      title: 'a rocky shore',
+      nodes: {
+        seaweed: { label: 'Seaweed', x: 0.22, y: 0.9, role: 'producer' },
+        plankton: { label: 'Phytoplankton', x: 0.72, y: 0.9, role: 'producer' },
+        limpet:  { label: 'Limpet', x: 0.08, y: 0.58 },
+        kina:    { label: 'Kina', x: 0.32, y: 0.58 },
+        mussel:  { label: 'Mussel', x: 0.6, y: 0.58 },
+        barnacle: { label: 'Barnacle', x: 0.87, y: 0.58 },
+        whelk:   { label: 'Whelk', x: 0.72, y: 0.3 },
+        crab:    { label: 'Crab', x: 0.92, y: 0.3 },
+        snapper: { label: 'Snapper', x: 0.38, y: 0.1 },
+        oyster:  { label: 'Oystercatcher', x: 0.17, y: 0.22 }
+      },
+      links: [['seaweed', 'limpet'], ['seaweed', 'kina'], ['plankton', 'mussel'], ['plankton', 'barnacle'],
+              ['mussel', 'whelk'], ['barnacle', 'whelk'], ['mussel', 'oyster'], ['limpet', 'oyster'],
+              ['barnacle', 'crab'], ['kina', 'snapper'], ['crab', 'snapper']]
+    }
+  };
+  const eats = (w, id) => w.links.filter(([, e]) => e === id).map(([f]) => f);
+  const eatenBy = (w, id) => w.links.filter(([f]) => f === id).map(([, e]) => e);
+  const lab = (w, id) => w.nodes[id].label;
+  const webDiagram = w => ({ diagram: { w: 340, h: 230, caption: 'Arrows point from the food to the organism that eats it.' },
+                             draw: d => SciDia.web(d, w) });
+
+  Sci.topic({
+    id: 's7e7', unit: 'y7',
+    title: 'Organisms in an Ecosystem',
+    blurb: 'Populations, communities and ecosystems, and reading the food webs that connect them.',
+    hint: 'A population is one kind of organism in one place; a community is all the populations living there together; ' +
+          'an ecosystem is the community plus its non-living surroundings. In a food web, each arrow points from the food to the eater.',
+
+    examples: [
+      {
+        title: 'Example 1: population, community, ecosystem',
+        steps: [
+          '<strong>Population:</strong> all the kererū living in one patch of forest.',
+          '<strong>Community:</strong> all the populations in that forest together: kererū, tawa, wētā, fungi, and so on.',
+          '<strong>Ecosystem:</strong> the community interacting with the biotic (living) and abiotic (non-living) parts of its environment: water, soil, air, light.'
+        ]
+      },
+      {
+        title: 'Example 2: reading a food web',
+        ...webDiagram(WEBS.forest),
+        steps: [
+          'Each arrow points from the food to the organism that eats it, which is the way energy moves.',
+          'Tawa and māhoe are the producers: nothing points into them.',
+          'Ship rats eat tawa fruit and tree wētā, and are eaten by stoats and ruru.',
+          'Every organism depends on others: that is interdependence.'
+        ]
+      }
+    ],
+
+    slots: [
+      // 1 · Match the terms.
+      {
+        name: 'Population, community, ecosystem',
+        items: [rng => {
+          const rows = [
+            ['Population', 'A group of the same type of organism living in the same place at the same time'],
+            ['Community', 'All the different populations living in the same place and interacting'],
+            ['Ecosystem', 'A community interacting with the living and non-living parts of its environment']
+          ];
+          const order = rng.shuffle([0, 1, 2]);
+          return {
+            prompt: 'Match each term to its meaning.',
+            input: { kind: 'match', left: rows.map(r => r[0]), right: order.map(i => rows[i][1]),
+                     tags: ['A', 'B', 'C'], answer: [0, 1, 2].map(i => order.indexOf(i)) },
+            explain: 'Each term includes the one before it: a community is made of populations, and an ecosystem includes the community.'
+          };
+        }]
+      },
+
+      // 2 · Which is it?
+      {
+        name: 'Which term fits?',
+        items: [
+          ['All the tuatara living on Takapourewa (Stephens Island)', 0],
+          ['All the kina on one reef', 0],
+          ['Every plant, animal and fungus living in a patch of bush', 1],
+          ['All the seaweeds, crabs, fish and snails in a rock pool', 1],
+          ['A rock pool: its seaweeds, crabs and snails, together with the water, rocks and sunlight', 2],
+          ['A wetland, including its plants and birds, the water, the mud and the weather', 2]
+        ].map(([text, k]) => rng => ({
+          prompt: `<em>${text}.</em> Is this a population, a community or an ecosystem?`,
+          input: { kind: 'choice', options: ['Population', 'Community', 'Ecosystem'].map((o, i) => ({ html: o, right: i === k })), correct: k },
+          explain: ['One type of organism in one place: a population.',
+                    'Many types of organisms living together: a community.',
+                    'Living things together with their non-living surroundings: an ecosystem.'][k]
+        }))
+      },
+
+      // 3 · Biotic or abiotic.
+      {
+        name: 'Biotic or abiotic?',
+        items: [rng => Sci.sort(rng, {
+          prompt: 'Is each part of a forest ecosystem biotic (living) or abiotic (non-living)?',
+          bins: ['Biotic', 'Abiotic'],
+          items: [
+            { text: 'Kererū', bin: 0 }, { text: 'Fungi growing on a log', bin: 0 }, { text: 'Bacteria in the soil', bin: 0 },
+            { text: 'A tree fern', bin: 0 }, { text: 'Tree wētā', bin: 0 },
+            { text: 'Rainfall', bin: 1 }, { text: 'Temperature', bin: 1 }, { text: 'Sunlight', bin: 1 },
+            { text: 'Wind', bin: 1 }, { text: 'Rocks', bin: 1 }
+          ],
+          pick: 6,
+          explain: 'Biotic components are living organisms. Abiotic components are the non-living parts: water, air, land, light, temperature.'
+        })]
+      },
+
+      // 4 · What does it eat?
+      {
+        name: 'What does it eat?',
+        items: Object.values(WEBS).map(w => rng => {
+          const eaters = Object.keys(w.nodes).filter(id => eats(w, id).length > 0);
+          const id = rng.pick(eaters);
+          const food = rng.pick(eats(w, id));
+          const notFood = Object.keys(w.nodes).filter(x => x !== id && !eats(w, id).includes(x));
+          return C(rng, {
+            prompt: `In this food web from ${w.title}, which of these does the <strong>${lab(w, id).toLowerCase()}</strong> eat?`,
+            ...webDiagram(w),
+            right: lab(w, food), wrong: rng.sample(notFood, 3).map(x => lab(w, x)), wide: false,
+            explain: `Follow the arrows that point into ${lab(w, id).toLowerCase()}: it eats ${eats(w, id).map(x => lab(w, x).toLowerCase()).join(' and ')}.`
+          });
+        })
+      },
+
+      // 5 · What eats it?
+      {
+        name: 'What eats it?',
+        items: Object.values(WEBS).map(w => rng => {
+          const prey = Object.keys(w.nodes).filter(id => eatenBy(w, id).length > 0);
+          const id = rng.pick(prey);
+          const eater = rng.pick(eatenBy(w, id));
+          const notEater = Object.keys(w.nodes).filter(x => x !== id && !eatenBy(w, id).includes(x));
+          return C(rng, {
+            prompt: `In this food web from ${w.title}, which of these eats the <strong>${lab(w, id).toLowerCase()}</strong>?`,
+            ...webDiagram(w),
+            right: lab(w, eater), wrong: rng.sample(notEater, 3).map(x => lab(w, x)), wide: false,
+            explain: `Follow the arrows that leave ${lab(w, id).toLowerCase()}: it is eaten by ${eatenBy(w, id).map(x => lab(w, x).toLowerCase()).join(' and ')}.`
+          });
+        })
+      },
+
+      // 6 · Count the producers.
+      {
+        name: 'Counting producers and consumers',
+        items: Object.values(WEBS).map(w => rng => {
+          const askProducers = rng.chance();
+          const producers = Object.values(w.nodes).filter(n => n.role === 'producer').length;
+          const consumers = Object.keys(w.nodes).length - producers;
+          return {
+            prompt: `How many <strong>${askProducers ? 'producers' : 'consumers'}</strong> are in this food web from ${w.title}?`,
+            ...webDiagram(w),
+            input: { kind: 'number', answer: askProducers ? producers : consumers, width: 70 },
+            explain: askProducers
+              ? `Producers make their own food, so no arrows point into them: there are ${producers}.`
+              : `Every organism that eats something is a consumer: there are ${consumers}.`
+          };
+        })
+      },
+
+      // 7 · What happens if one is removed?
+      {
+        name: 'If one were removed',
+        items: Object.values(WEBS).map(w => rng => {
+          // Remove a predator and ask about an animal it eats: freed from one of
+          // its predators, that population would most likely grow. Producers
+          // are never asked about. Removing kererū, for instance, would not
+          // help tawa, because kererū are what spread tawa seeds; the simple
+          // food-web answer would be wrong there.
+          const preyOf = id => eats(w, id).filter(x => w.nodes[x].role !== 'producer');
+          const candidates = Object.keys(w.nodes).filter(id => preyOf(id).length > 0);
+          const gone = rng.pick(candidates);
+          const affected = rng.pick(preyOf(gone));
+          return {
+            prompt: `In ${w.title}, all the ${lab(w, gone).toLowerCase()}s are removed. What would most likely happen to the number of ${lab(w, affected).toLowerCase()}?`,
+            ...webDiagram(w),
+            input: {
+              kind: 'choice',
+              options: [{ html: 'It would increase', right: true }, { html: 'It would decrease', right: false }, { html: 'It would stay exactly the same', right: false }],
+              correct: 0
+            },
+            explain: `The ${lab(w, gone).toLowerCase()} eats ${lab(w, affected).toLowerCase()}. With one of its consumers gone, more ${lab(w, affected).toLowerCase()} survive, so its numbers would most likely rise.`
+          };
+        })
+      },
+
+      // 8 · Patterns in abundance.
+      {
+        name: 'Patterns in food webs',
+        items: [
+          rng => C(rng, {
+            prompt: 'In most ecosystems there are far more producers than top predators. Which is the best explanation?',
+            right: 'Each step up the food web passes on only part of the energy, so there is enough to support fewer and fewer organisms.',
+            wrong: ['Predators are too large to fit in an ecosystem.', 'Producers reproduce only once in their lives.', 'Top predators do not need food.'],
+            explain: 'Energy is lost at each step, so the higher up a food web, the fewer organisms it can support.'
+          }),
+          rng => C(rng, {
+            prompt: 'Why does every food web start with producers?',
+            right: 'Producers make their own food using sunlight, and every other organism depends on that food.',
+            wrong: ['Producers are the biggest organisms.', 'Producers eat everything else.', 'It is just a convention for drawing food webs.'],
+            explain: 'Producers bring energy into the ecosystem; consumers get theirs, directly or indirectly, from producers.'
+          })
+        ]
+      },
+
+      // 9 · Interdependence.
+      {
+        name: 'Depending on each other',
+        items: [
+          rng => C(rng, {
+            prompt: 'Many native plants rely on birds such as tūī and bellbirds (korimako) to carry their pollen. What would most likely happen to these plants if the birds disappeared?',
+            right: 'Fewer of their flowers would be pollinated, so fewer seeds would form.',
+            wrong: ['Nothing, because plants do not need animals.', 'The plants would grow faster.', 'The plants would start producing their own pollinators.'],
+            explain: 'This is interdependence: the plants depend on the birds for pollination, and the birds depend on the plants for nectar.'
+          }),
+          rng => C(rng, {
+            prompt: 'Kererū eat the large fruit of trees such as tawa and drop the seeds elsewhere. Why does this matter for the forest?',
+            right: 'It spreads tawa seeds to new places where young trees can grow.',
+            wrong: ['It stops tawa from growing at all.', 'It means tawa no longer needs sunlight.', 'It does not matter to the forest.'],
+            explain: 'Kererū are among the few birds big enough to swallow tawa fruit, so the trees depend on them to spread their seeds.'
+          }),
+          rng => C(rng, {
+            prompt: 'Which shows an animal depending on a plant for shelter?',
+            right: 'Tree wētā living in holes in tree trunks', wrong: ['A kina eating seaweed', 'A stoat eating a rat', 'Rain falling on a forest'],
+            explain: 'Animals depend on plants for food, but also for shelter, as tree wētā do.'
+          })
+        ]
+      },
+
+      // 10 · True or false.
+      {
+        name: 'True or false',
+        items: [
+          rng => TF(rng, { statement: 'A community is made up of many different populations.', answer: true,
+            explain: 'A community is all the populations living in the same place and interacting.' }),
+          rng => TF(rng, { statement: 'Sunlight and water are biotic parts of an ecosystem.', answer: false,
+            explain: 'Biotic means living. Sunlight and water are abiotic: non-living.' }),
+          rng => TF(rng, { statement: 'In a food web, the arrows point from the food to the organism that eats it.', answer: true,
+            explain: 'The arrows show the direction energy moves: from food to eater.' }),
+          rng => TF(rng, { statement: 'A population can contain several different species.', answer: false,
+            explain: 'A population is one type of organism. Several species living together form a community.' })
+        ]
+      }
+    ]
+  });
+
 })();

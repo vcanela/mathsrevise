@@ -89,12 +89,12 @@ const Manifest = (() => {
       blurb: 'Particles, thermal energy, speed, the Moon, adaptations, cells and ecosystems.',
       exercises: [
         { n: 1, id: 's7e1', title: 'Particles and States of Matter', tag: 'Materials' },
-        { n: 2, id: 's7e2', title: 'Thermal Energy and Insulation', tag: 'Matter, interactions and energy', soon: true },
+        { n: 2, id: 's7e2', title: 'Thermal Energy and Insulation', tag: 'Matter, interactions and energy' },
         { n: 3, id: 's7e3', title: 'Speed', tag: 'Motion and forces' },
-        { n: 4, id: 's7e4', title: 'The Earth, Moon and Sun', tag: 'Earth and space', soon: true },
-        { n: 5, id: 's7e5', title: 'Survival Adaptations', tag: 'Organism diversity', soon: true },
-        { n: 6, id: 's7e6', title: 'Cells', tag: 'Life processes', soon: true },
-        { n: 7, id: 's7e7', title: 'Organisms in an Ecosystem', tag: 'Ecosystems', soon: true }
+        { n: 4, id: 's7e4', title: 'The Earth, Moon and Sun', tag: 'Earth and space' },
+        { n: 5, id: 's7e5', title: 'Survival Adaptations', tag: 'Organism diversity' },
+        { n: 6, id: 's7e6', title: 'Cells', tag: 'Life processes' },
+        { n: 7, id: 's7e7', title: 'Organisms in an Ecosystem', tag: 'Ecosystems' }
       ]
     },
     {
@@ -102,14 +102,14 @@ const Manifest = (() => {
       topicFile: 'science-y8',
       blurb: 'Mixtures, solutions, light, forces, the Earth’s surface, evolution, reproduction and ecosystems.',
       exercises: [
-        { n: 1, id: 's8e1', title: 'Mixtures and Separating Them', tag: 'Materials', soon: true },
-        { n: 2, id: 's8e2', title: 'Solutions and Concentration', tag: 'Materials', soon: true },
-        { n: 3, id: 's8e3', title: 'Behaviour of Light', tag: 'Matter, interactions and energy', soon: true },
-        { n: 4, id: 's8e4', title: 'Balanced and Unbalanced Forces', tag: 'Motion and forces', soon: true },
-        { n: 5, id: 's8e5', title: 'The Surface of the Earth', tag: 'Earth and space', soon: true },
-        { n: 6, id: 's8e6', title: 'Evolution', tag: 'Organism diversity', soon: true },
-        { n: 7, id: 's8e7', title: 'Reproduction and Development', tag: 'Life processes', soon: true },
-        { n: 8, id: 's8e8', title: 'Relationships in an Ecosystem', tag: 'Ecosystems', soon: true }
+        { n: 1, id: 's8e1', title: 'Mixtures and Separating Them', tag: 'Materials' },
+        { n: 2, id: 's8e2', title: 'Solutions and Concentration', tag: 'Materials' },
+        { n: 3, id: 's8e3', title: 'Behaviour of Light', tag: 'Matter, interactions and energy' },
+        { n: 4, id: 's8e4', title: 'Balanced and Unbalanced Forces', tag: 'Motion and forces' },
+        { n: 5, id: 's8e5', title: 'The Surface of the Earth', tag: 'Earth and space' },
+        { n: 6, id: 's8e6', title: 'Evolution', tag: 'Organism diversity' },
+        { n: 7, id: 's8e7', title: 'Reproduction and Development', tag: 'Life processes' },
+        { n: 8, id: 's8e8', title: 'Relationships in an Ecosystem', tag: 'Ecosystems' }
       ]
     }
   ];

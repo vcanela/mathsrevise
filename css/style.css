@@ -54,6 +54,25 @@
   --dia-fill:    rgba(15, 92, 99, 0.10);
   --dia-muted:   #7d8b92;
 
+  /* Science diagram fills */
+  --moon-lit:    #f1e7c4;
+  --moon-dark:   #4a5560;
+  --sun:         #f6d58a;
+  --earth:       #7fa7c4;
+  --shadow-fill: rgba(30, 42, 51, 0.22);
+  --cell-wall:   #7d9a4e;
+  --cytoplasm:   rgba(15, 92, 99, 0.07);
+  --vacuole:     rgba(120, 170, 210, 0.28);
+  --nucleus:     rgba(107, 74, 158, 0.30);
+  --chloroplast: #8dbb68;
+  --crust:       #b08a5b;
+  --mantle:      #d6a066;
+  --outer-core:  #e6c278;
+  --inner-core:  #f3e0a6;
+  --water:       rgba(100, 160, 210, 0.20);
+  --plank:       #c9a774;
+  --paper-strip: #fffef9;
+
   --radius:   4px;
   --radius-s: 3px;
   --shadow:   0 1px 1px rgba(40, 32, 18, .05), 0 6px 18px -8px rgba(40, 32, 18, .18);
@@ -94,6 +113,24 @@
     --dia-unknown: #b79ae0;
     --dia-fill:    rgba(92, 179, 184, 0.17);
     --dia-muted:   #8c979c;
+
+    --moon-lit:    #e9e0bd;
+    --moon-dark:   #2b3339;
+    --sun:         #b8913c;
+    --earth:       #3f6b8c;
+    --shadow-fill: rgba(0, 0, 0, 0.35);
+    --cell-wall:   #8fae5e;
+    --cytoplasm:   rgba(92, 179, 184, 0.10);
+    --vacuole:     rgba(120, 170, 210, 0.22);
+    --nucleus:     rgba(183, 154, 224, 0.30);
+    --chloroplast: #6f9a4c;
+    --crust:       #8a6a44;
+    --mantle:      #9c7340;
+    --outer-core:  #a8893e;
+    --inner-core:  #b9a462;
+    --water:       rgba(100, 160, 210, 0.16);
+    --plank:       #8a7148;
+    --paper-strip: #222a2f;
 
     --shadow: 0 1px 1px rgba(0, 0, 0, .3), 0 8px 22px -10px rgba(0, 0, 0, .6);
   }

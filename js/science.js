@@ -396,3 +396,410 @@ const SciDia = (() => {
 
   return { particles, stateCycle, CHANGES, graph, arrow, niceStep };
 })();
+
+
+// ── More science diagrams ───────────────────────────────────────────────────
+// Added for the rest of Years 7 and 8. Same rule as everything else: the
+// picture is computed from what it claims to show.
+
+(() => {
+  const INK = 'var(--dia-ink)', MUTED = 'var(--dia-muted)';
+  const RAD = Math.PI / 180;
+
+  /** A rounded box with centred text, sized to the text. Returns its bounds. */
+  function box(d, c, text, o) {
+    o = o || {};
+    const size = o.size || 11.5;
+    const w = Math.max(o.minW || 0, String(text).length * size * 0.58 + 14), hgt = o.h || 22;
+    d.add('rect', { x: (c[0] - w / 2).toFixed(1), y: (c[1] - hgt / 2).toFixed(1), width: w.toFixed(1), height: hgt,
+                    rx: 5, fill: o.fill || 'var(--surface-2)', stroke: o.stroke || INK, 'stroke-width': 1.3 });
+    d.text(c, text, { size, fill: o.colour || INK });
+    return { c, w, h: hgt };
+  }
+
+  /** Where the line from a box's centre towards `p` leaves the box. */
+  function boxEdge(b, p) {
+    const u = Geo.norm(Geo.sub(p, b.c));
+    const tx = Math.abs(u[0]) > 1e-6 ? (b.w / 2 + 3) / Math.abs(u[0]) : Infinity;
+    const ty = Math.abs(u[1]) > 1e-6 ? (b.h / 2 + 3) / Math.abs(u[1]) : Infinity;
+    return Geo.add(b.c, Geo.scale(u, Math.min(tx, ty)));
+  }
+
+  /** A label with a leader line to the thing it names. */
+  function leader(d, labelAt, anchor, text, side) {
+    d.line(labelAt, anchor, { stroke: MUTED, width: 1 });
+    d.dot(anchor, { r: 2, fill: MUTED });
+    if (/^\d+$/.test(String(text))) {
+      d.add('circle', { cx: labelAt[0].toFixed(1), cy: labelAt[1].toFixed(1), r: 9,
+                        fill: 'var(--accent-soft)', stroke: 'var(--accent)', 'stroke-width': 1.3 });
+      d.text(labelAt, text, { size: 11, fill: 'var(--accent-ink)' });
+    } else {
+      const off = side === 'left' ? -4 : 4;
+      d.add('rect', { x: side === 'left' ? labelAt[0] - String(text).length * 6.2 - 6 : labelAt[0] - 2,
+                      y: labelAt[1] - 9, width: String(text).length * 6.2 + 8, height: 18,
+                      fill: 'var(--surface)', stroke: 'none' });
+      d.text([labelAt[0] + off, labelAt[1]], text,
+             { size: 11, fill: 'var(--accent-ink)', anchor: side === 'left' ? 'end' : 'start' });
+    }
+  }
+
+  // ── The Moon ──────────────────────────────────────────────────────────────
+  /**
+   * The Moon as it looks from New Zealand at a given phase angle: 0° new,
+   * 90° first quarter, 180° full, 270° last quarter.
+   *
+   * In the Southern Hemisphere a waxing Moon is lit on the left. Most images
+   * in books and online are drawn for the Northern Hemisphere, where it is
+   * the other way round.
+   *
+   * The lit region is bounded by the bright limb (a semicircle) and the
+   * terminator, which from Earth looks like half an ellipse whose width is
+   * r·cos(phase). Both are sampled into one polygon.
+   */
+  function moon(d, c, r, phase) {
+    phase = ((phase % 360) + 360) % 360;
+    d.add('circle', { cx: c[0], cy: c[1], r, fill: 'var(--moon-dark)', stroke: INK, 'stroke-width': 1.1 });
+    if (phase < 1 || phase > 359) return;                // new Moon: nothing lit
+    const waxing = phase < 180;
+    const s = waxing ? -1 : 1;                            // lit limb: left when waxing (NZ)
+    const k = Math.cos(phase * RAD);
+    const pts = [];
+    const N = 48;
+    for (let i = 0; i <= N; i++) {                         // bright limb, top to bottom
+      const phi = -90 + (180 * i) / N;
+      pts.push([c[0] + s * r * Math.cos(phi * RAD), c[1] + r * Math.sin(phi * RAD)]);
+    }
+    for (let i = N; i >= 0; i--) {                         // terminator, bottom to top
+      const phi = -90 + (180 * i) / N;
+      pts.push([c[0] + s * r * k * Math.cos(phi * RAD), c[1] + r * Math.sin(phi * RAD)]);
+    }
+    d.add('polygon', { points: pts.map(p => p.map(v => v.toFixed(2)).join(',')).join(' '),
+                       fill: 'var(--moon-lit)', stroke: 'none' });
+    d.add('circle', { cx: c[0], cy: c[1], r, fill: 'none', stroke: INK, 'stroke-width': 1.1 });
+  }
+
+  const PHASES = [
+    { name: 'new Moon', angle: 0 },
+    { name: 'waxing crescent', angle: 45 },
+    { name: 'first quarter', angle: 90 },
+    { name: 'waxing gibbous', angle: 135 },
+    { name: 'full Moon', angle: 180 },
+    { name: 'waning gibbous', angle: 225 },
+    { name: 'last quarter', angle: 270 },
+    { name: 'waning crescent', angle: 315 }
+  ];
+
+  /**
+   * Sun, Earth and Moon in a line, for an eclipse. Sizes and distances are
+   * not to scale (they could not be, and still fit), which the caption says.
+   */
+  function eclipse(d, type) {
+    const y = d.h / 2;
+    const sun = [40, y];
+    d.add('circle', { cx: sun[0], cy: y, r: 26, fill: 'var(--sun)', stroke: 'var(--accent)', 'stroke-width': 1.2 });
+    for (let a = 0; a < 360; a += 30) {
+      const p1 = Geo.add(sun, Geo.fromDir(a, 30)), p2 = Geo.add(sun, Geo.fromDir(a, 36));
+      d.line(p1, p2, { stroke: 'var(--accent)', width: 1.2 });
+    }
+    const earthX = type === 'lunar' ? d.w * 0.58 : d.w * 0.82;
+    const moonX  = type === 'lunar' ? d.w * 0.86 : d.w * 0.54;
+    const er = 15, mr = 6;
+    // The shadow cast away from the Sun by whichever body is in the middle.
+    const casterX = type === 'lunar' ? earthX : moonX;
+    const cr = type === 'lunar' ? er : mr;
+    const tipX = type === 'lunar' ? d.w - 4 : earthX + 2;
+    const tipHalf = type === 'lunar' ? er * 0.55 : 1.5;
+    d.add('polygon', {
+      points: `${casterX},${y - cr} ${tipX},${y - tipHalf} ${tipX},${y + tipHalf} ${casterX},${y + cr}`,
+      fill: 'var(--shadow-fill)', stroke: 'none'
+    });
+    d.add('circle', { cx: earthX, cy: y, r: er, fill: 'var(--earth)', stroke: INK, 'stroke-width': 1.1 });
+    d.add('circle', { cx: moonX, cy: y, r: mr, fill: 'var(--moon-lit)', stroke: INK, 'stroke-width': 1.1 });
+    d.text([sun[0], y + 46], 'Sun', { size: 11, fill: MUTED, bold: false });
+    d.text([earthX, y + 30], 'Earth', { size: 11, fill: MUTED, bold: false });
+    d.text([moonX, y - 18], 'Moon', { size: 11, fill: MUTED, bold: false });
+  }
+
+  // ── Food webs ─────────────────────────────────────────────────────────────
+  /**
+   * A food web. Positions are fractions of the canvas; arrows point from the
+   * food to the organism that eats it, the direction energy flows.
+   */
+  function web(d, w, o) {
+    o = o || {};
+    const boxes = {};
+    for (const [id, n] of Object.entries(w.nodes)) {
+      const c = [n.x * d.w, n.y * d.h];
+      const isProducer = n.role === 'producer';
+      boxes[id] = box(d, c, n.label, {
+        size: 11, fill: isProducer ? 'var(--good-soft)' : 'var(--surface-2)',
+        stroke: o.highlight === id ? 'var(--accent)' : INK
+      });
+    }
+    // Arrows drawn after the boxes would cross their text, so draw beneath.
+    const arrows = [];
+    for (const [food, eater] of w.links) {
+      const a = boxes[food], b = boxes[eater];
+      const from = boxEdge(a, b.c), to = boxEdge(b, a.c);
+      arrows.push([from, to]);
+    }
+    for (const [from, to] of arrows) SciDia.arrow(d, from, to, { colour: MUTED, width: 1.3, head: 5 });
+  }
+
+  // ── Cells ─────────────────────────────────────────────────────────────────
+  /**
+   * A plant or animal cell, with labels on leader lines. `labels` maps each
+   * part to the text to show at its label (a number for a question, or the
+   * name for a worked example).
+   *
+   * The plant cell's large vacuole pushes the nucleus and chloroplasts out
+   * into a thin layer of cytoplasm against the membrane, as in a real leaf
+   * cell. The canvas is 300 × 200.
+   */
+  const PLANT_PARTS = ['cell wall', 'cell membrane', 'cytoplasm', 'nucleus', 'vacuole', 'chloroplast'];
+  const ANIMAL_PARTS = ['cell membrane', 'cytoplasm', 'nucleus'];
+
+  function cell(d, type, labels) {
+    labels = labels || {};
+    // The geometry below is laid out for a 300-wide canvas and shifted to
+    // the centre of whatever canvas it is given. Numbered labels fit in 300;
+    // written-out names need about 420.
+    const X = x => x + (d.w - 300) / 2;
+    const P = p => [X(p[0]), p[1]];
+    const side = p => (p[0] < d.w / 2 ? 'left' : 'right');
+    if (type === 'plant') {
+      d.add('rect', { x: X(80), y: 18, width: 140, height: 164, rx: 8, fill: 'none',
+                      stroke: 'var(--cell-wall)', 'stroke-width': 5 });
+      d.add('rect', { x: X(86), y: 24, width: 128, height: 152, rx: 6, fill: 'var(--cytoplasm)',
+                      stroke: INK, 'stroke-width': 1.3 });
+      d.add('rect', { x: X(108), y: 44, width: 88, height: 118, rx: 16, fill: 'var(--vacuole)',
+                      stroke: MUTED, 'stroke-width': 1.1 });
+      d.add('circle', { cx: X(97), cy: 58, r: 10, fill: 'var(--nucleus)', stroke: INK, 'stroke-width': 1.1 });
+      for (const [x, y, rot] of [[97, 95, 90], [97, 128, 90], [97, 160, 90], [132, 34, 0], [166, 34, 0],
+                                 [205, 80, 90], [205, 122, 90], [140, 169, 0], [176, 169, 0]]) {
+        d.add('ellipse', { cx: X(x), cy: y, rx: 7, ry: 3.6, fill: 'var(--chloroplast)', stroke: 'var(--dia-known)',
+                           'stroke-width': 0.8, transform: `rotate(${rot} ${X(x)} ${y})` });
+      }
+      const spots = {
+        'nucleus':       [[26, 40],  [97, 58]],
+        'cell wall':     [[26, 84],  [80, 84]],
+        'cell membrane': [[26, 128], [86, 112]],
+        'cytoplasm':     [[26, 172], [97, 145]],
+        'chloroplast':   [[274, 48], [166, 34]],
+        'vacuole':       [[274, 120], [160, 104]]
+      };
+      for (const [part, [at, anchor]] of Object.entries(spots)) {
+        if (labels[part] !== undefined) leader(d, P(at), P(anchor), labels[part], side(P(at)));
+      }
+    } else {
+      // An animal cell has no fixed shape; a slightly irregular outline says so.
+      const pts = [];
+      for (let a = 0; a < 360; a += 6) {
+        const wob = 1 + 0.05 * Math.sin(3 * a * RAD) + 0.03 * Math.cos(5 * a * RAD);
+        pts.push([X(150 + 72 * wob * Math.cos(a * RAD)), 100 + 58 * wob * Math.sin(a * RAD)]);
+      }
+      d.add('polygon', { points: pts.map(p => p.map(v => v.toFixed(1)).join(',')).join(' '),
+                         fill: 'var(--cytoplasm)', stroke: INK, 'stroke-width': 1.4 });
+      d.add('circle', { cx: X(134), cy: 92, r: 18, fill: 'var(--nucleus)', stroke: INK, 'stroke-width': 1.1 });
+      const edge = pts[Math.round(340 / 6) % pts.length];
+      const spots = {
+        'nucleus':       [P([26, 56]),  P([126, 86])],
+        'cell membrane': [P([274, 62]), edge],
+        'cytoplasm':     [P([274, 150]), P([178, 122])]
+      };
+      for (const [part, [at, anchor]] of Object.entries(spots)) {
+        if (labels[part] !== undefined) leader(d, at, anchor, labels[part], side(at));
+      }
+    }
+  }
+
+  // ── The Earth's layers ────────────────────────────────────────────────────
+  /**
+   * The Earth's interior with the inner core, outer core and mantle at their
+   * true proportions of the radius (1220, 3480 and about 6340 km of 6371 km).
+   * The crust is far too thin to see at this scale, so it is drawn thicker,
+   * and the caption has to say so.
+   */
+  const LAYERS = ['crust', 'mantle', 'outer core', 'inner core'];
+
+  function earthLayers(d, labels) {
+    labels = labels || {};
+    const c = [d.w * 0.38, d.h / 2], R = Math.min(d.w * 0.34, d.h * 0.46);
+    const crustDrawn = Math.max(4, R * 0.06);
+    const rings = [
+      { r: R, fill: 'var(--crust)' },
+      { r: R - crustDrawn, fill: 'var(--mantle)' },
+      { r: R * 3480 / 6371, fill: 'var(--outer-core)' },
+      { r: R * 1220 / 6371, fill: 'var(--inner-core)' }
+    ];
+    for (const ring of rings) d.add('circle', { cx: c[0], cy: c[1], r: ring.r.toFixed(1), fill: ring.fill, stroke: INK, 'stroke-width': 1 });
+    const anchorAt = rr => Geo.add(c, Geo.fromDir(-35, rr));
+    const mids = {
+      'crust': R - crustDrawn / 2,
+      'mantle': (R - crustDrawn + R * 3480 / 6371) / 2,
+      'outer core': (R * 3480 / 6371 + R * 1220 / 6371) / 2,
+      'inner core': R * 1220 / 6371 * 0.5
+    };
+    const x = d.w - 30;
+    LAYERS.forEach((layer, i) => {
+      if (labels[layer] === undefined) return;
+      const anchor = Geo.add(c, Geo.fromDir(-50 + i * 30, mids[layer]));
+      leader(d, [/^\d+$/.test(String(labels[layer])) ? x : x - 70, 26 + i * ((d.h - 52) / 3)], anchor, labels[layer], 'right');
+    });
+  }
+
+  // ── Light ─────────────────────────────────────────────────────────────────
+  /**
+   * A ray striking a flat mirror at angle `i` to the normal. Drawn from the
+   * real angle; with `reflected` it also draws the reflected ray at the same
+   * angle on the other side of the normal.
+   */
+  function mirror(d, i, o) {
+    o = o || {};
+    const hit = [d.w / 2, d.h - 40];
+    d.line([24, hit[1]], [d.w - 24, hit[1]], { stroke: INK, width: 2.4 });
+    for (let x = 30; x < d.w - 24; x += 10) d.line([x, hit[1] + 1], [x - 7, hit[1] + 9], { stroke: MUTED, width: 1 });
+    d.line([hit[0], hit[1]], [hit[0], 18], { stroke: MUTED, width: 1.2, dash: '4 3' });
+    d.text([hit[0], 11], 'normal', { size: 10, fill: MUTED, bold: false });
+    const L = Math.min(d.h - 70, 140);
+    const start = [hit[0] - L * Math.sin(i * RAD), hit[1] - L * Math.cos(i * RAD)];
+    SciDia.arrow(d, start, Geo.add(hit, Geo.scale(Geo.norm(Geo.sub(start, hit)), 2)), { colour: 'var(--dia-accent)', width: 2 });
+    d.markAngle(hit, -90 - i, i, { r: 30, label: o.iLabel || i + '°', colour: 'var(--dia-accent)' });
+    if (o.reflected) {
+      const end = [hit[0] + L * Math.sin(i * RAD), hit[1] - L * Math.cos(i * RAD)];
+      SciDia.arrow(d, hit, end, { colour: 'var(--brand)', width: 2 });
+      d.markAngle(hit, -90, i, { r: 30, label: o.rLabel || i + '°', colour: 'var(--brand)' });
+    }
+  }
+
+  /**
+   * Light going from air into water. Three possible paths are drawn below
+   * the surface: straight on, bent towards the normal (the real one,
+   * calculated with refractive index 1.33), and bent away from it.
+   * `order` says which letter goes on which path.
+   */
+  function refraction(d, i, order) {
+    const hit = [d.w / 2, d.h * 0.46];
+    d.add('rect', { x: 14, y: hit[1], width: d.w - 28, height: d.h - hit[1] - 8, fill: 'var(--water)', stroke: 'none' });
+    d.line([14, hit[1]], [d.w - 14, hit[1]], { stroke: INK, width: 1.6 });
+    d.text([24, hit[1] - 10], 'air', { size: 11, fill: MUTED, bold: false, anchor: 'start' });
+    d.text([24, hit[1] + 14], 'water', { size: 11, fill: MUTED, bold: false, anchor: 'start' });
+    d.line([hit[0], 10], [hit[0], d.h - 10], { stroke: MUTED, width: 1.1, dash: '4 3' });
+    const L = hit[1] - 14;
+    const start = [hit[0] - L * Math.sin(i * RAD), hit[1] - L * Math.cos(i * RAD)];
+    SciDia.arrow(d, start, hit, { colour: 'var(--dia-accent)', width: 2 });
+    const real = Math.asin(Math.sin(i * RAD) / 1.33) / RAD;
+    const away = Math.min(80, i + (i - real) * 1.6);
+    const angles = { towards: real, straight: i, away };
+    const L2 = d.h - hit[1] - 20;
+    for (const [kind, a] of Object.entries(angles)) {
+      const end = [hit[0] + L2 * Math.sin(a * RAD), hit[1] + L2 * Math.cos(a * RAD)];
+      d.line(hit, end, { stroke: INK, width: 1.4 });
+      const lab = Geo.add(end, Geo.scale(Geo.norm(Geo.sub(end, hit)), 10));
+      d.text(lab, order[kind], { size: 12, fill: 'var(--accent-ink)' });
+    }
+    return { real, away };
+  }
+
+  // ── Forces ────────────────────────────────────────────────────────────────
+  /**
+   * A free body diagram: a box with force arrows whose lengths are in
+   * proportion to the forces. `forces` is { left, right, up, down } in
+   * newtons; any can be omitted.
+   */
+  function forceDiagram(d, forces, o) {
+    o = o || {};
+    const c = [d.w / 2, d.h / 2];
+    const bw = 54, bh = 40;
+    d.add('rect', { x: c[0] - bw / 2, y: c[1] - bh / 2, width: bw, height: bh, rx: 4,
+                    fill: 'var(--dia-fill)', stroke: INK, 'stroke-width': 1.6 });
+    if (o.label) d.text(c, o.label, { size: 11, fill: MUTED, bold: false });
+    const max = Math.max(...Object.values(forces).filter(v => v > 0), 1);
+    // Every arrow shares one scale, set by whichever direction has least
+    // room. Otherwise a vertical arrow squeezed by the canvas height would
+    // look smaller than a horizontal one for a bigger force.
+    const vertical = forces.up || forces.down;
+    const room = Math.min(c[0] - bw / 2 - 20, 100, vertical ? c[1] - bh / 2 - 12 : Infinity);
+    const len = v => (v / max) * room;
+    const dirs = { left: [-1, 0, bw / 2], right: [1, 0, bw / 2], up: [0, -1, bh / 2], down: [0, 1, bh / 2] };
+    for (const [k, v] of Object.entries(forces)) {
+      if (!v) continue;
+      const [dx, dy, off] = dirs[k];
+      const from = [c[0] + dx * off, c[1] + dy * off];
+      const L = len(v);
+      const to = [from[0] + dx * L, from[1] + dy * L];
+      SciDia.arrow(d, from, to, { colour: 'var(--dia-accent)', width: 2.2, head: 7 });
+      const lab = k === 'left' || k === 'right'
+        ? [ (from[0] + to[0]) / 2, from[1] - 10 ]
+        : [ from[0] + 24, (from[1] + to[1]) / 2 ];
+      d.text(lab, v + ' N', { size: 11.5, fill: 'var(--dia-accent)' });
+    }
+  }
+
+  /**
+   * A seesaw, level, with stacks of identical blocks at whole-number
+   * distances (in metres) either side of the pivot. Drawn to scale along
+   * the plank, with distance marks.
+   */
+  function seesaw(d, left, right, o) {
+    o = o || {};
+    const y = d.h - 46, c = d.w / 2, half = d.w / 2 - 22;
+    const span = o.span || 4;                          // metres each side
+    const unit = half / span;
+    d.add('rect', { x: c - half, y: y - 4, width: half * 2, height: 8, rx: 2, fill: 'var(--plank)', stroke: INK, 'stroke-width': 1.2 });
+    d.add('polygon', { points: `${c},${y + 4} ${c - 14},${y + 30} ${c + 14},${y + 30}`, fill: 'var(--surface-2)', stroke: INK, 'stroke-width': 1.3 });
+    for (let m = 1; m <= span; m++) {
+      for (const s of [-1, 1]) {
+        const x = c + s * m * unit;
+        d.line([x, y + 6], [x, y + 11], { stroke: MUTED, width: 1 });
+        d.text([x, y + 20], m + ' m', { size: 9.5, fill: MUTED, bold: false });
+      }
+    }
+    const blk = Math.min(20, unit * 0.7);
+    const stack = (side, n, dist) => {
+      const x = c + side * dist * unit;
+      for (let k = 0; k < n; k++) {
+        d.add('rect', { x: (x - blk / 2).toFixed(1), y: (y - 4 - (k + 1) * (blk + 1)).toFixed(1), width: blk, height: blk,
+                        rx: 2, fill: 'var(--brand)', stroke: 'var(--brand-ink)', 'stroke-width': 1 });
+      }
+    };
+    stack(-1, left.n, left.d);
+    stack(1, right.n, right.d);
+  }
+
+  // ── Chromatography ────────────────────────────────────────────────────────
+  /**
+   * A paper chromatogram. Each reference dye travels a fixed fraction of the
+   * way to the solvent front; a mixture shows a spot at the height of each
+   * dye it contains, in that dye's colour.
+   */
+  const DYE_COLOURS = ['var(--dia-accent)', 'var(--brand)', 'var(--dia-unknown)', 'var(--dia-known)', 'var(--accent)'];
+
+  function chromatogram(d, dyes, mixtures) {
+    const top = 22, base = d.h - 30;
+    const cols = dyes.length + mixtures.length;
+    const x0 = 34, x1 = d.w - 22;
+    d.add('rect', { x: x0 - 16, y: 10, width: x1 - x0 + 32, height: d.h - 16, rx: 2, fill: 'var(--paper-strip)', stroke: INK, 'stroke-width': 1.1 });
+    d.line([x0 - 10, base], [x1 + 10, base], { stroke: MUTED, width: 1.1 });
+    d.line([x0 - 10, top], [x1 + 10, top], { stroke: MUTED, width: 1.1, dash: '4 3' });
+    d.text([x1 + 6, top + 9], 'solvent front', { size: 9, fill: MUTED, bold: false, anchor: 'end' });
+    d.text([x1 + 6, base + 11], 'start line', { size: 9, fill: MUTED, bold: false, anchor: 'end' });
+    const step = (x1 - x0) / (cols - 1 || 1);
+    const yOf = rf => base - rf * (base - top);
+    const all = [...dyes.map((dy, i) => ({ label: dy.label, spots: [{ rf: dy.rf, col: DYE_COLOURS[i % DYE_COLOURS.length] }] })),
+                 ...mixtures.map(mx => ({ label: mx.label, spots: mx.contains.map(i => ({ rf: dyes[i].rf, col: DYE_COLOURS[i % DYE_COLOURS.length] })) }))];
+    all.forEach((col, k) => {
+      const x = x0 + k * step;
+      d.dot([x, base], { r: 1.6, fill: MUTED });
+      for (const sp of col.spots) {
+        d.add('ellipse', { cx: x.toFixed(1), cy: yOf(sp.rf).toFixed(1), rx: 6, ry: 4.5, fill: sp.col, 'fill-opacity': 0.85, stroke: 'none' });
+      }
+      d.text([x, d.h - 8], col.label, { size: 11.5 });
+    });
+  }
+
+  Object.assign(SciDia, {
+    moon, PHASES, eclipse, web, cell, PLANT_PARTS, ANIMAL_PARTS,
+    earthLayers, LAYERS, mirror, refraction, forceDiagram, seesaw, chromatogram, box
+  });
+})();
