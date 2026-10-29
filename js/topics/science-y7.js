@@ -1868,6 +1868,26 @@
             right: 'The darker ones, because they are harder for birds to spot',
             wrong: ['The lighter ones, because they are easier to see', 'All of them equally, because they are the same species', 'None of them, because snails have no adaptations'],
             explain: 'Variation means some individuals are better suited: on dark rock, darker shells are better camouflaged.'
+          }),
+          rng => C(rng, {
+            prompt: "In a population of kina, some have longer spines than others. What does this show?",
+            right: "Individuals of the same species vary in their traits.", wrong: ["The kina must belong to different species.", "Kina choose how long to grow their spines.", "All kina are identical."],
+            explain: "Organisms of the same species show variation in their traits, such as spine length."
+          }),
+          rng => C(rng, {
+            prompt: "A cold snap hits a population of geckos. Some survive it better than others. What is the most likely reason?",
+            right: "They vary, and some have traits that suit cold conditions better.", wrong: ["The survivors decided to be tougher.", "Geckos of one species are all identical.", "The cold turned the survivors into a new species."],
+            explain: "Variation means some individuals are better suited to the conditions than others."
+          }),
+          rng => C(rng, {
+            prompt: "Why is variation within a species useful when the environment changes?",
+            right: "Some individuals are more likely to have traits that suit the new conditions.", wrong: ["It guarantees every individual survives.", "It stops the environment from changing.", "It lets individuals change their traits whenever they need to."],
+            explain: "With variation, some individuals are likely to cope better with the change."
+          }),
+          rng => C(rng, {
+            prompt: "One tūī has a slightly longer beak than another tūī. Which statement is correct?",
+            right: "Both are tūī: individuals of a species vary.", wrong: ["The longer-beaked bird must be a different species.", "The tūī grew its longer beak by stretching it.", "Beak length cannot vary within a species."],
+            explain: "Individuals of the same species differ in their traits."
           })
         ]
       },
@@ -1922,6 +1942,26 @@
             right: 'In hot weather the animal could overheat.',
             wrong: ['It has no disadvantages at all.', 'It makes the animal colder.', 'It stops the animal from eating.'],
             explain: 'Adaptations have advantages and limitations, which depend on the conditions.'
+          }),
+          rng => C(rng, {
+            prompt: "A bird with dark feathers is well hidden in a dark forest. The forest is cleared, leaving open, pale grassland. What is most likely?",
+            right: "The dark bird becomes easier for predators to see.", wrong: ["Its feathers turn pale to match during its life.", "Camouflage works the same everywhere.", "Predators stop hunting in grassland."],
+            explain: "An adaptation that works in one environment may work less well when the environment changes."
+          }),
+          rng => C(rng, {
+            prompt: "A plant with large, thin leaves grows well in a shady, damp forest. What problem might it have on a hot, dry, exposed hillside?",
+            right: "It could lose too much water through its large leaves.", wrong: ["It would get too little light.", "Its leaves would turn thick and tough straight away.", "It would have no problems at all."],
+            explain: "Large thin leaves suit shade and damp, but lose a lot of water where it is hot, dry and windy."
+          }),
+          rng => C(rng, {
+            prompt: "Huddling helps penguins survive freezing storms. Why might huddling be less useful in much warmer weather?",
+            right: "There is less need to save thermal energy, and they could overheat.", wrong: ["Huddling makes food harder to find in warm weather.", "Penguins cannot huddle when it is warm.", "Huddling works equally well in any weather."],
+            explain: "How useful an adaptation is depends on the conditions."
+          }),
+          rng => C(rng, {
+            prompt: "Which statement about adaptations is correct?",
+            right: "How well an adaptation works depends on the environment.", wrong: ["An adaptation works equally well in every environment.", "An adaptation guarantees survival.", "Only animals have adaptations, not plants."],
+            explain: "Environmental conditions affect how effective an adaptation is, and it never guarantees survival."
           })
         ]
       },
@@ -1941,6 +1981,26 @@
             right: 'That traits acquired during an organism’s lifetime could be inherited by its offspring',
             wrong: ['That cells are the basic unit of life', 'That the Earth orbits the Sun', 'That all organisms are made of particles'],
             explain: 'Lamarck proposed that acquired traits are inherited. The idea was later contested.'
+          }),
+          rng => C(rng, {
+            prompt: "A blacksmith builds strong arm muscles through years of work. According to Lamarck’s idea, what would the blacksmith’s children inherit?",
+            right: "Strong arm muscles", wrong: ["Nothing at all from their parents", "The blacksmith’s tools", "Weaker arms"],
+            explain: "Lamarck proposed that traits gained during a lifetime are passed on. The idea is contested: muscles built during life are not inherited."
+          }),
+          rng => C(rng, {
+            prompt: "Why is Lamarck’s idea contested?",
+            right: "Traits acquired during a lifetime are not passed on to offspring.", wrong: ["Organisms never change during their lives.", "Offspring never look like their parents.", "Lamarck only studied plants."],
+            explain: "Only inherited traits can be passed to offspring; acquired ones cannot."
+          }),
+          rng => C(rng, {
+            prompt: "Which explanation follows Lamarck’s idea?",
+            right: "A bird stretched its legs while wading, so its chicks were born with longer legs.", wrong: ["Birds with longer legs found more food, survived and had more chicks.", "Leg length varies among birds of the same species.", "Leg length never changes over generations."],
+            explain: "Passing on a trait gained by use during a lifetime is Lamarck’s idea, which has been contested."
+          }),
+          rng => C(rng, {
+            prompt: "A tree is pruned into a ball shape every year. Will its seeds grow into ball-shaped trees?",
+            right: "No: the shape was gained during its lifetime, so it is not inherited.", wrong: ["Yes, because the parent tree had that shape.", "Yes, but only after many years of pruning.", "Only half of the seeds will."],
+            explain: "Changes made to an organism during its life are not passed on, which is why Lamarck’s idea is contested."
           })
         ]
       },
@@ -1966,6 +2026,21 @@
             right: 'It can swallow large fruits whole that smaller-mouthed birds cannot eat.',
             wrong: ['It lets it drink nectar.', 'It keeps it warm.', 'It scares away predators.'],
             explain: 'A wide gape is a structural adaptation for obtaining food: kererū can eat fruits too big for most other birds.'
+          }),
+          rng => C(rng, {
+            prompt: "How does hunting at night help a ruru survive?",
+            right: "It hunts when its prey is active.", wrong: ["It means it needs no food.", "It keeps it warm.", "It lets it make its own food."],
+            explain: "Hunting at night is a behavioural adaptation for getting food."
+          }),
+          rng => C(rng, {
+            prompt: "How does a tūī’s brush-tipped tongue help it?",
+            right: "It can collect nectar from flowers.", wrong: ["It can crack hard seeds.", "It keeps the bird warm.", "It scares predators away."],
+            explain: "A brush-tipped tongue is a structural adaptation for feeding on nectar."
+          }),
+          rng => C(rng, {
+            prompt: "How does being able to survive being frozen help a mountain stone wētā?",
+            right: "It can survive cold alpine winters.", wrong: ["It can fly further.", "It can find more food in summer.", "It can attract a mate more easily."],
+            explain: "This physiological adaptation helps it survive a hazard: freezing cold."
           })
         ]
       },
@@ -1985,6 +2060,26 @@
             right: 'Long legs let them stand in deeper water to find food while keeping their bodies dry.',
             wrong: ['Their legs got longer from standing in water.', 'Long legs help them fly faster.', 'Long legs keep them warm.'],
             explain: 'Long legs are a structural adaptation suited to feeding in water.'
+          }),
+          rng => C(rng, {
+            prompt: "Many plants in very dry places have thick, waxy leaves. Which is the best explanation?",
+            right: "A waxy layer reduces water loss in a dry environment.", wrong: ["Wax makes the leaves catch more rain.", "The dry air makes the leaves waxy during the plant’s life.", "Waxy leaves are easier for animals to eat."],
+            explain: "Leaf structure is a structural adaptation suited to how much water is available."
+          }),
+          rng => C(rng, {
+            prompt: "Animals living in very cold places often have thick fur or a layer of fat. Which is the best explanation?",
+            right: "Fur and fat insulate them, reducing the loss of thermal energy.", wrong: ["The cold makes their fur grow during their lives, and they pass it on.", "Fur and fat make them faster swimmers.", "Thick fur helps them see in the dark."],
+            explain: "Insulating fur and fat are structural adaptations to cold environments."
+          }),
+          rng => C(rng, {
+            prompt: "Fish have streamlined bodies and fins. How does this suit where they live?",
+            right: "It helps them move easily through water.", wrong: ["It keeps them dry.", "It helps them breathe air.", "It lets them walk on the sea floor."],
+            explain: "Body shape is a structural adaptation suited to moving in water."
+          }),
+          rng => C(rng, {
+            prompt: "Plants on a dark forest floor often have large, broad leaves. Which is the best explanation?",
+            right: "Large leaves catch as much of the little light there is.", wrong: ["Large leaves lose less water.", "Large leaves keep insects away.", "The shade makes all plants grow big leaves."],
+            explain: "Leaf size is a structural adaptation suited to the amount of light."
           })
         ]
       },

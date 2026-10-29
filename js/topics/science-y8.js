@@ -839,7 +839,19 @@
             'Light travels from the source to your face, reflects to the mirror, and reflects again into your eyes.'),
           rng => order(rng, 'You see a boat reflected in a still lake on a sunny day. Put the path of the light in order.',
             ['The Sun', 'The boat', 'The surface of the lake', 'Your eyes'],
-            'The Sun lights the boat; light from the boat reflects off the water into your eyes.')
+            'The Sun lights the boat; light from the boat reflects off the water into your eyes.'),
+          rng => order(rng, "A dentist looks at the back of a tooth in a small mirror, with a lamp shining into the mouth. Put the path of the light in order.",
+            ["The lamp", "The back of the tooth", "The small mirror", "The dentist’s eyes"],
+            "Light from the lamp reflects off the tooth to the mirror, then into the dentist’s eyes."),
+          rng => order(rng, "On a sunny day, a driver sees a car behind them in the rear-view mirror. Put the path of the light in order.",
+            ["The Sun", "The car behind", "The rear-view mirror", "The driver’s eyes"],
+            "Sunlight reflects off the car behind, then off the mirror into the driver’s eyes."),
+          rng => order(rng, "At night, you see a cat reflected in a window. The cat is lit by a street light. Put the path of the light in order.",
+            ["The street light", "The cat", "The window", "Your eyes"],
+            "Light travels from the source to the object, reflects to the window, then into your eyes."),
+          rng => order(rng, "You see the Moon reflected in a still lake. Put the path of the light in order.",
+            ["The Sun", "The Moon", "The surface of the lake", "Your eyes"],
+            "The Moon reflects sunlight; the lake reflects that light into your eyes.")
         ]
       },
 
@@ -889,7 +901,24 @@
             explain: 'Ibn al-Haytham contested the older idea, associated with Plato, that sight works by the eye sending something out.'
           }),
           rng => TF(rng, { statement: 'Plato’s understanding of sight was that our eyes send out rays towards the things we see.', answer: true,
-            explain: 'That idea was later contested by Ibn al-Haytham, who argued that light enters the eye from objects.' })
+            explain: 'That idea was later contested by Ibn al-Haytham, who argued that light enters the eye from objects.' }),
+          rng => C(rng, {
+            prompt: "Whose idea was it that light travels from objects into our eyes?",
+            right: "Ibn al-Haytham", wrong: ["Plato", "Jean-Baptiste Lamarck", "Robert Hooke"],
+            explain: "Ibn al-Haytham contested the older idea, associated with Plato, that the eyes send out rays."
+          }),
+          rng => C(rng, {
+            prompt: "Plato’s understanding of sight was that…",
+            right: "the eyes send out rays towards the things we see.", wrong: ["light from the Sun reflects off objects into our eyes.", "we can only ever see light sources.", "sound lets us see in the dark."],
+            explain: "Ibn al-Haytham later argued the opposite: light travels into the eye."
+          }),
+          rng => C(rng, {
+            prompt: "Which observation supports Ibn al-Haytham’s idea rather than Plato’s?",
+            right: "We cannot see anything in a completely dark room, even with our eyes open.", wrong: ["We can see a lit candle.", "We can close our eyes.", "Mirrors are shiny."],
+            explain: "If the eyes sent out rays, we could see in total darkness. We cannot, because no light reaches our eyes."
+          }),
+          rng => TF(rng, { statement: "Ibn al-Haytham contested Plato’s idea about how we see.", answer: true,
+            explain: "Plato’s understanding was that the eyes send out rays; Ibn al-Haytham argued that light enters the eye." })
         ]
       },
 
@@ -918,6 +947,30 @@
             ],
             wrong: 1,
             explain: 'The Moon gives out no light of its own. We see it because it reflects sunlight towards us.'
+          }),
+          rng => Sci.spot(rng, { learn: "reflection",
+            prompt: "A student explains how they see their face in a mirror.",
+            lines: ["A mirror reflects light.", "Light from a lamp hits my face and reflects towards the mirror.", "The mirror makes its own light, which lets me see my face.", "That light reflects off the mirror into my eyes."],
+            wrong: 2,
+            explain: "A mirror gives out no light. It reflects light that came from a source, via your face."
+          }),
+          rng => Sci.spot(rng, { learn: "everyday",
+            prompt: "A student explains why a straw looks broken in a glass of water.",
+            lines: ["A straw stands in a glass of water.", "Light from the straw travels to my eyes.", "The water bends the straw itself.", "So the straw looks broken at the surface."],
+            wrong: 2,
+            explain: "The straw is not bent. Light from the part under water changes direction as it leaves the water."
+          }),
+          rng => Sci.spot(rng, { learn: "sources",
+            prompt: "A student explains how they see a glowing clock in a dark room.",
+            lines: ["At night with the lights off, the room is dark.", "I can still see the glowing numbers on my clock.", "That is because my eyes send out light onto them.", "The numbers give out their own light."],
+            wrong: 2,
+            explain: "Eyes send out no light. The glowing numbers are a light source, so their light travels into your eyes."
+          }),
+          rng => Sci.spot(rng, { learn: "reflection",
+            prompt: "A student works out an angle of reflection.",
+            lines: ["A ray hits a flat mirror at 30° to the normal.", "The normal is a line at right angles to the mirror.", "The ray reflects at 60° to the normal.", "Angles are always measured from the normal."],
+            wrong: 2,
+            explain: "Light leaves at the same angle to the normal as it arrives: 30°."
           })
         ]
       },
@@ -937,6 +990,26 @@
             right: 'Light from the bottom changes direction as it leaves the water, so the bottom appears closer.',
             wrong: ['The water reflects the sky.', 'Water makes things look smaller.', 'The tiles are painted to look closer.'],
             explain: 'Refraction at the surface changes the light’s direction, so we see the bottom higher up than it really is.'
+          }),
+          rng => C(rng, {
+            prompt: "Why does a coin at the bottom of a cup of water seem higher than it really is?",
+            right: "Light from the coin changes direction as it leaves the water.", wrong: ["The water lifts the coin.", "The cup acts as a mirror.", "The coin floats slightly."],
+            explain: "Refraction at the surface makes the coin appear closer to the top."
+          }),
+          rng => C(rng, {
+            prompt: "A spearfisher aims at where a fish appears to be, and misses. Why?",
+            right: "Refraction at the surface means the fish is not where it appears to be.", wrong: ["The fish saw the spear and moved.", "Water absorbs all the light from the fish.", "Light travels in curves underwater."],
+            explain: "Light from the fish changes direction as it leaves the water, so the fish appears in a different place."
+          }),
+          rng => C(rng, { learn: "refraction",
+            prompt: "What happens to light when it passes at an angle from air into a glass block?",
+            right: "It changes direction.", wrong: ["It stops completely.", "It reflects straight back every time.", "It carries on in exactly the same direction."],
+            explain: "Light changes direction when it passes from one material into another: refraction."
+          }),
+          rng => C(rng, {
+            prompt: "Your legs look shorter when you stand in a swimming pool. Why?",
+            right: "Light from your legs changes direction at the water’s surface.", wrong: ["Cold water makes your legs shrink.", "The water reflects your legs upwards.", "The pool’s tiles are painted to trick you."],
+            explain: "Refraction makes the part under water look closer to the surface."
           })
         ]
       },
@@ -1481,6 +1554,21 @@
             prompt: 'What gives rocks their different properties, such as colour, texture and hardness?',
             right: 'The types and arrangement of the minerals they contain', wrong: ['Their age only', 'Their size', 'How far they are from the sea'],
             explain: 'The types and arrangement of minerals, including any crystals or layers, give a rock its properties.'
+          }),
+          rng => C(rng, {
+            prompt: "Granite is made of several different minerals. What does this tell you?",
+            right: "A rock can be made of more than one mineral.", wrong: ["Granite is a mineral, not a rock.", "Minerals are made of rocks.", "Every rock contains the same minerals."],
+            explain: "Rocks are made of one or more minerals combined."
+          }),
+          rng => C(rng, {
+            prompt: "Quartz is a mineral. What is true of its particles?",
+            right: "They are arranged in a repeating pattern.", wrong: ["They are arranged randomly.", "They are always melted.", "They are alive."],
+            explain: "Minerals have repeating patterns that give them their shapes and properties."
+          }),
+          rng => C(rng, {
+            prompt: "Two rocks are made of the same minerals but look different. What could explain this?",
+            right: "Their minerals are arranged differently, for example as larger or smaller crystals.", wrong: ["One of them must be a mineral.", "Rocks with the same minerals always look identical.", "One is older, and age alone changes colour."],
+            explain: "The types and the arrangement of minerals give a rock its properties."
           })
         ]
       },
@@ -1539,6 +1627,30 @@
             ],
             wrong: 1,
             explain: 'The crust is the thinnest layer by far. The mantle is the thickest.'
+          }),
+          rng => Sci.spot(rng, { learn: "types",
+            prompt: "A student explains how sandstone forms.",
+            lines: ["Sandstone is made of grains of sand.", "The grains were laid down in layers.", "Over time they melted and cooled into rock.", "So sandstone is a sedimentary rock."],
+            wrong: 2,
+            explain: "Sandstone forms when layers of sand are pressed and cemented together, not melted. Melting and cooling makes igneous rock."
+          }),
+          rng => Sci.spot(rng, { learn: "cycle",
+            prompt: "A student describes marble.",
+            lines: ["Marble is a metamorphic rock.", "It forms from limestone.", "Limestone is changed by heat and pressure.", "Once a rock has formed, it can never change again."],
+            wrong: 3,
+            explain: "Through the rock cycle, rocks keep changing from one type to another over very long times."
+          }),
+          rng => Sci.spot(rng, { learn: "identify",
+            prompt: "A student describes pumice.",
+            lines: ["Pumice comes from volcanoes.", "It formed when frothy lava cooled quickly.", "Gas bubbles were trapped inside it.", "So pumice is a sedimentary rock."],
+            wrong: 3,
+            explain: "Rock that forms from cooling melted rock is igneous."
+          }),
+          rng => Sci.spot(rng, { learn: "soil",
+            prompt: "A student describes soil.",
+            lines: ["Soil covers much of the land.", "It contains rock particles, air and water.", "It contains nothing living.", "Decaying plants add to it."],
+            wrong: 2,
+            explain: "Soil is full of living things: fungi, bacteria, earthworms and plant roots."
           })
         ]
       },
@@ -1798,7 +1910,24 @@
             right: 'Traits acquired during a lifetime, such as bigger muscles, are not inherited.',
             wrong: ['Animals never change during their lives.', 'Offspring never resemble their parents.', 'Darwin proved that traits are not inherited at all.'],
             explain: 'Only heritable traits can be passed on. Thick fur in cold places spread because individuals that inherited thicker fur survived better and had more offspring.'
-          })
+          }),
+          rng => C(rng, {
+            prompt: "What did Jean-Baptiste Lamarck propose?",
+            right: "That traits acquired during a lifetime are passed to offspring", wrong: ["That populations change by natural selection", "That all organisms are made of cells", "That light travels into the eye"],
+            explain: "Lamarck’s idea was later contested: acquired traits are not inherited."
+          }),
+          rng => C(rng, {
+            prompt: "Which explanation fits natural selection?",
+            right: "Giraffes with longer necks reached more food, survived and had more young, so long necks became more common.", wrong: ["Giraffes stretched their necks and passed the longer necks on.", "Giraffes decided to grow longer necks.", "Necks get longer in every generation, whatever happens."],
+            explain: "Natural selection: heritable variation, then the better-suited individuals survive and reproduce more."
+          }),
+          rng => C(rng, {
+            prompt: "Which explanation fits Lamarck’s idea?",
+            right: "Giraffes stretched their necks and passed the longer necks on.", wrong: ["Giraffes with longer necks survived and had more young.", "Neck length varies among giraffes.", "Giraffe necks never change over generations."],
+            explain: "Passing on a trait gained during a lifetime is Lamarck’s idea, which has been contested."
+          }),
+          rng => TF(rng, { statement: "Alfred Russel Wallace developed a theory of natural selection at the same time as Charles Darwin.", answer: true,
+            explain: "Darwin and Wallace presented their theories of natural selection together." })
         ]
       },
 
@@ -1812,7 +1941,24 @@
             prompt: 'Evolution describes changes in traits…',
             right: 'within populations, over many generations', wrong: ['within one animal, during its life', 'that happen overnight', 'only in plants'],
             explain: 'Evolution happens to populations, over generations.'
-          })
+          }),
+          rng => C(rng, {
+            prompt: "A single moth is born with darker wings than its parents. Has the moth evolved?",
+            right: "No: evolution is a change in a population over many generations.", wrong: ["Yes: any change in one animal is evolution.", "Yes, but only if its wings get darker during its life.", "No: moths cannot vary."],
+            explain: "One individual differing is variation. Evolution is the population changing over generations."
+          }),
+          rng => C(rng, {
+            prompt: "Over 50 years, the share of dark moths in a population rose from 10% to 80%. What has evolved?",
+            right: "The population", wrong: ["Each individual moth", "Only the oldest moth", "Nothing: this is not evolution"],
+            explain: "Evolution is a change in the traits of a population over generations."
+          }),
+          rng => C(rng, {
+            prompt: "How long does evolution usually take?",
+            right: "Many generations", wrong: ["One lifetime", "A single day", "No time: it happens instantly when the environment changes"],
+            explain: "Traits become more or less common in a population over many generations."
+          }),
+          rng => TF(rng, { statement: "Evolution changes the traits within a population over generations.", answer: true,
+            explain: "That is what evolution means. Individuals do not evolve." })
         ]
       },
 
@@ -1834,6 +1980,21 @@
             prompt: 'A fossil animal has long, thin legs and webbed feet. What environment did it most likely live in?',
             right: 'Shallow water, such as a wetland or shore', wrong: ['A dry desert', 'High in the treetops', 'Deep underground'],
             explain: 'Fossil features let us infer how an organism lived: wading legs and webbed feet suit shallow water.'
+          }),
+          rng => C(rng, {
+            prompt: "What can the features of a fossil tell us?",
+            right: "How the organism probably lived, such as what it ate or where it lived", wrong: ["The exact day it died", "What colour it was, every time", "Nothing at all"],
+            explain: "Fossil features, such as teeth or feet, let us infer how an organism lived."
+          }),
+          rng => C(rng, {
+            prompt: "Trilobites are found as fossils but are not alive today. What does this show?",
+            right: "Some groups of organisms that once lived no longer exist.", wrong: ["Trilobites are still common in the sea.", "Fossils are not real organisms.", "Nothing has changed since trilobites lived."],
+            explain: "Fossils show organisms in many forms through Earth’s history, including groups that have died out."
+          }),
+          rng => C(rng, {
+            prompt: "Besides fossils and shared features, what other evidence supports evolution?",
+            right: "DNA evidence", wrong: ["The weather", "The positions of the stars", "The colour of rocks"],
+            explain: "Fossils, shared traits and DNA all support the theory that species have changed over time."
           })
         ]
       },
@@ -1848,7 +2009,24 @@
             explain: 'Over long periods, trait changes accumulate, and new species can form from a shared ancestor.'
           }),
           rng => TF(rng, { statement: 'Over long periods, trait changes can build up until a new species forms.', answer: true,
-            explain: 'This is how species such as kākā, kea and kākāpō arose from a shared ancestor.' })
+            explain: 'This is how species such as kākā, kea and kākāpō arose from a shared ancestor.' }),
+          rng => C(rng, {
+            prompt: "How do new species form?",
+            right: "Over long periods, trait changes build up in populations until a new species forms.", wrong: ["One individual changes into a new species during its life.", "New species appear from nothing.", "Animals choose to become a new species."],
+            explain: "Changes accumulate over long periods of time."
+          }),
+          rng => C(rng, {
+            prompt: "Kea live in mountains and kākā in forests. They share an ancestor. Which best explains why they differ?",
+            right: "Over long periods, their populations changed in different ways in different environments.", wrong: ["Kea decided to live in the mountains.", "They have always been exactly as they are now.", "One kākā turned into a kea during its life."],
+            explain: "Populations in different environments face different selection pressures, so they change in different ways."
+          }),
+          rng => TF(rng, { statement: "New species usually form over long periods of time.", answer: true,
+            explain: "Trait changes build up over many generations." }),
+          rng => C(rng, {
+            prompt: "What do kākā, kea and kākāpō have in common?",
+            right: "They descend from a shared parrot ancestor.", wrong: ["They are the same species.", "They have never changed.", "They are not related."],
+            explain: "They are different species that developed from a common ancestor."
+          })
         ]
       },
 
@@ -1866,7 +2044,24 @@
             prompt: 'Which change in the environment is most likely to cause a species to become extinct?',
             right: 'Its habitat being destroyed', wrong: ['A new park being named after it', 'Scientists studying it', 'A sunny day'],
             explain: 'Environmental changes such as habitat destruction or changes in temperature can drive species to extinction.'
-          })
+          }),
+          rng => C(rng, {
+            prompt: "What does it mean when a species is extinct?",
+            right: "No living members of the species are left anywhere.", wrong: ["It lives only in zoos.", "It has moved to another country.", "Its numbers are low but stable."],
+            explain: "An extinct species has no living members."
+          }),
+          rng => C(rng, {
+            prompt: "Which is most likely to lead to a species becoming extinct?",
+            right: "A change in its environment that it cannot survive, such as losing its habitat", wrong: ["Being studied by scientists", "Having a long lifespan", "Living in a large population"],
+            explain: "Species that cannot survive environmental change become extinct."
+          }),
+          rng => C(rng, {
+            prompt: "Why are fossils of extinct organisms useful to scientists?",
+            right: "They show that some species that lived in the past no longer exist.", wrong: ["They prove nothing has ever changed.", "They show what the weather was like each day.", "They can bring the species back to life."],
+            explain: "Fossils record organisms through Earth’s history, including those now extinct."
+          }),
+          rng => TF(rng, { statement: "Introduced predators such as stoats and rats threaten some New Zealand species with extinction.", answer: true,
+            explain: "A new predator is a change in the environment that some species may not survive." })
         ]
       },
 
@@ -1963,7 +2158,7 @@
       {
         id: 'puberty', title: 'Puberty and the menstrual cycle',
         text: '<p><strong>Puberty</strong> is when a person develops the ability to reproduce.</p>' +
-              '<p>In the <strong>menstrual cycle</strong>, hormones control ovulation and the growth of the uterus lining. If fertilisation does not happen, the lining is shed: menstruation.</p>'
+              '<p>In the <strong>menstrual cycle</strong>, hormones control <strong>ovulation</strong> (the release of an egg from an ovary) and the growth of the uterus lining. If fertilisation does not happen, the lining is shed: menstruation.</p>'
       },
       {
         id: 'compare', title: 'Comparing the three',
@@ -2042,6 +2237,26 @@
             prompt: 'What are offspring from <strong>asexual</strong> reproduction like?',
             right: 'Genetically identical to their single parent', wrong: ['A mix of two parents', 'Completely different from the parent', 'Always bigger than the parent'],
             explain: 'With only one parent, asexual offspring are genetically identical to it.'
+          }),
+          rng => C(rng, {
+            prompt: "Why do brothers and sisters with the same two parents usually look different from each other?",
+            right: "Each one gets a different mix of the parents’ traits.", wrong: ["They have different parents.", "They are produced asexually.", "Only the oldest child gets traits from the parents."],
+            explain: "In sexual reproduction, each offspring has its own mix of both parents’ traits."
+          }),
+          rng => C(rng, {
+            prompt: "Cuttings taken from one plant all grow into plants that are…",
+            right: "genetically identical to the parent plant.", wrong: ["a mix of two parents.", "a new species.", "completely unlike the parent."],
+            explain: "Cuttings are asexual reproduction: one parent, genetically identical offspring."
+          }),
+          rng => C(rng, {
+            prompt: "A gardener wants new plants exactly like a prize-winning plant. Which is the best method?",
+            right: "Taking cuttings (asexual reproduction)", wrong: ["Planting its seeds", "Cross-pollinating it with another plant", "Waiting for spores"],
+            explain: "Asexual reproduction gives offspring genetically identical to the parent; seeds come from sexual reproduction and vary."
+          }),
+          rng => C(rng, {
+            prompt: "Which kind of reproduction gives offspring a mix of traits from two parents?",
+            right: "Sexual reproduction", wrong: ["Asexual reproduction", "Splitting in two", "Growing from a runner"],
+            explain: "Sexual reproduction joins gametes from two parents."
           })
         ]
       },
@@ -2056,7 +2271,24 @@
             explain: 'Most fungi form spores, which disperse and germinate to form new fungi.'
           }),
           rng => TF(rng, { statement: 'Mushrooms produce their spores from structures you can see, while moulds produce spores directly.', answer: true,
-            explain: 'Both reproduce by spores; a mushroom makes them in a visible structure such as its gills.' })
+            explain: 'Both reproduce by spores; a mushroom makes them in a visible structure such as its gills.' }),
+          rng => C(rng, {
+            prompt: "Where does a mushroom make its spores?",
+            right: "In a structure you can see, such as its gills", wrong: ["In its roots underground", "In flowers", "In seeds"],
+            explain: "Mushrooms produce spores from visible structures such as gills."
+          }),
+          rng => C(rng, {
+            prompt: "Why does mould often appear on bread left out for several days?",
+            right: "Mould spores land on the bread and grow.", wrong: ["The bread turns into mould by itself.", "Mould grows from seeds in the flour.", "The bread makes its own spores."],
+            explain: "Spores spread and, where conditions suit them, grow into new fungi."
+          }),
+          rng => C(rng, {
+            prompt: "How do fungal spores reach new places?",
+            right: "They are spread, for example by air or water.", wrong: ["They walk.", "They are planted by people only.", "They never leave the parent fungus."],
+            explain: "Spores are tiny and spread easily before they grow into new fungi."
+          }),
+          rng => TF(rng, { statement: "Fungi reproduce by making seeds.", answer: false,
+            explain: "Most fungi reproduce by spores. Seeds are made by plants." })
         ]
       },
 
@@ -2071,7 +2303,24 @@
             explain: 'Hormones are chemical messengers carried in the blood to particular target cells or tissues.'
           }),
           rng => TF(rng, { statement: 'Sperm production in males is regulated by hormones.', answer: true,
-            explain: 'Hormones regulate sperm production, just as they control the menstrual cycle in females.' })
+            explain: 'Hormones regulate sperm production, just as they control the menstrual cycle in females.' }),
+          rng => C(rng, {
+            prompt: "How do hormones travel around the body?",
+            right: "In the blood", wrong: ["Along the bones", "In the air we breathe", "Through the skin"],
+            explain: "A hormone is a chemical carried by the blood to its target cells or tissues."
+          }),
+          rng => C(rng, {
+            prompt: "What does a hormone do when it reaches its target cells?",
+            right: "It changes their activity.", wrong: ["It destroys them.", "It turns them into blood.", "Nothing at all."],
+            explain: "Hormones change the activity of specific target cells or tissues."
+          }),
+          rng => C(rng, {
+            prompt: "Which of these is controlled by hormones?",
+            right: "The menstrual cycle", wrong: ["The colour of your eyes", "Your blood group", "The number of bones in your hand"],
+            explain: "Hormones control the menstrual cycle and regulate sperm production."
+          }),
+          rng => TF(rng, { statement: "A hormone is a chemical substance.", answer: true,
+            explain: "It is a chemical carried by the blood that changes the activity of target cells." })
         ]
       },
 
@@ -2088,6 +2337,23 @@
             prompt: 'In the menstrual cycle, what happens to the lining of the uterus if fertilisation does not occur?',
             right: 'It is shed (menstruation).', wrong: ['It keeps growing until the next year.', 'It turns into an embryo.', 'It moves to the ovary.'],
             explain: 'Hormones control ovulation and the growth and shedding of the uterine lining. Without fertilisation, the lining is shed.'
+          }),
+          rng => C(rng, {
+            prompt: "What is ovulation?",
+            right: "The release of an egg (ovum) from an ovary", wrong: ["The shedding of the uterus lining", "The joining of sperm and egg", "The birth of a baby"],
+            explain: "Ovulation releases an egg. Hormones control it as part of the menstrual cycle."
+          }),
+          rng => C(rng, {
+            prompt: "What controls the menstrual cycle?",
+            right: "Hormones", wrong: ["The digestive system", "The bones", "The weather"],
+            explain: "Hormones control ovulation and the growth and shedding of the uterus lining."
+          }),
+          rng => TF(rng, { statement: "In the menstrual cycle, the lining of the uterus grows, and is shed if fertilisation does not happen.", answer: true,
+            explain: "That shedding is menstruation." }),
+          rng => C(rng, {
+            prompt: "What changes during puberty?",
+            right: "The body develops the ability to reproduce.", wrong: ["The body stops making hormones.", "A person’s blood group changes.", "The body stops growing completely."],
+            explain: "Puberty is the stage when the ability to reproduce develops."
           })
         ]
       },
@@ -2117,6 +2383,26 @@
             prompt: 'Which is a difference between how a flowering plant and a fungus usually reproduce?',
             right: 'The plant makes seeds; most fungi make spores.', wrong: ['The fungus makes seeds; the plant makes spores.', 'Only the plant reproduces.', 'There is no difference.'],
             explain: 'Organising information shows both reproduce, but flowering plants form seeds while most fungi form spores.'
+          }),
+          rng => C(rng, {
+            prompt: "Which of these usually reproduce using spores?",
+            right: "Fungi", wrong: ["Flowering plants", "Mammals", "Birds"],
+            explain: "Most fungi form spores. Flowering plants make seeds; animals use sperm and eggs."
+          }),
+          rng => C(rng, {
+            prompt: "Which of these reproduce sexually using sperm and egg cells?",
+            right: "Animals", wrong: ["Mushrooms", "Moulds", "Bacteria splitting in two"],
+            explain: "Animals reproduce sexually through sperm and egg formation, then fertilisation."
+          }),
+          rng => C(rng, {
+            prompt: "What do flowering plants make after fertilisation?",
+            right: "Seeds", wrong: ["Spores", "Eggs in shells", "Runners"],
+            explain: "After fertilisation, seeds form and are dispersed."
+          }),
+          rng => C(rng, {
+            prompt: "What must flowering plants, animals and fungi all do for their kind to continue?",
+            right: "Reproduce", wrong: ["Make seeds", "Make spores", "Make flowers"],
+            explain: "All living organisms reproduce, in different ways."
           })
         ]
       },
