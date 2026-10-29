@@ -157,13 +157,19 @@
           { text: 'the angles on a straight line',             total: 180 },
           { text: 'the angles meeting at a point',             total: 360 },
           { text: 'the four angles of a quadrilateral',        total: 360 },
-          { text: 'the five angles of a pentagon',             total: 540 }
+          { text: 'the five angles of a pentagon',             total: 540 },
+          { text: 'the six angles of a hexagon',               total: 720 },
+          { text: 'the exterior angles of any polygon',        total: 360 },
+          { text: 'the two angles that make up a right angle', total: 90 },
+          { text: 'the angles in a full turn',                 total: 360 }
         ]);
-        const opts = rng.shuffle([90, 180, 360, 540].map(v => ({ html: deg(v), right: v === setting.total })));
+        // The right total and three others from the usual totals.
+        const values = [setting.total, ...rng.sample([90, 180, 360, 540, 720].filter(v => v !== setting.total), 3)];
+        const opts = rng.shuffle(values.map(v => ({ html: deg(v), right: v === setting.total })));
         out.push({
           prompt: `What do ${setting.text} add up to?`,
           input: { kind: 'choice', options: opts, correct: opts.findIndex(o => o.right) },
-          explain: `<span class="work">${setting.total === 180 ? 'Half a turn.' : setting.total === 360 ? 'A full turn.' : `\\(180(n - 2)\\) with \\(n = ${setting.total / 180 + 2}\\).`}</span>`
+          explain: `<span class="work">${setting.total === 90 ? 'A right angle is 90°.' : setting.total === 180 ? 'Half a turn.' : setting.total === 360 ? 'A full turn.' : `\\(180(n - 2)\\) with \\(n = ${setting.total / 180 + 2}\\).`}</span>`
         });
       }
 
@@ -262,7 +268,7 @@
           tag: 'Challenge',
           diagram: pts ? { w: 250, h: 195 } : undefined,
           draw: pts ? ((d, G) => {
-            const p = G.fit(pts, 250, 195, 46);
+            const p = G.fit(pts, 250, 195, 50);
             d.polygon(p);
             e.parts.forEach((part, k) => d.angleArc(p, k, { label: part.tex, r: 16, size: 11 }));
           }) : undefined,
@@ -483,7 +489,7 @@
           tag: 'Challenge',
           diagram: pts ? { w: 250, h: 195 } : undefined,
           draw: pts ? ((d, G) => {
-            const p = G.fit(pts, 250, 195, 46);
+            const p = G.fit(pts, 250, 195, 50);
             d.polygon(p);
             e.parts.forEach((part, k) => d.angleArc(p, k, { label: part.tex, r: 16, size: 11 }));
           }) : undefined,
@@ -687,19 +693,31 @@
       })();
 
       // Q10: which expression is the perimeter?
+      // The rectangle's sides are (ax + b) and (cx + d), drawn from a few
+      // shapes so it is not always x by x + k.
       (() => {
-        const k = rng.int(1, 7);
-        const opts = rng.shuffle([
-          { html: m(`4x + ${2 * k}`), right: true },
-          { html: m(`2x + ${k}`),     right: false },
-          { html: m(`x^2 + ${k}x`),   right: false },
-          { html: m(`4x + ${k}`),     right: false }
+        const shape = rng.pick([
+          { a: 1, b: 0, c: 1, d: rng.int(1, 7) },                 // x by x + k
+          { a: 2, b: 0, c: 1, d: rng.int(1, 7) },                 // 2x by x + k
+          { a: 1, b: rng.int(1, 5), c: 1, d: rng.int(1, 5) },     // x + p by x + q
+          { a: 3, b: 0, c: 1, d: rng.int(1, 6) }                  // 3x by x + k
         ]);
+        let { a, b, c, d } = shape;
+        if (a === c && b === d) d += 1;                          // keep it a rectangle, not a square
+        const lin = (p, q) => (p === 1 ? 'x' : p + 'x') + (q ? ' + ' + q : '');
+        const side = (p, q) => q ? lin(p, q) : (p === 1 ? 'x' : p + 'x');
+        const P = lin(2 * (a + c), 2 * (b + d));
+        const half = lin(a + c, b + d);
+        const area = `${a * c === 1 ? '' : a * c}x^2` + (a * d + b * c ? ` + ${a * d + b * c === 1 ? '' : a * d + b * c}x` : '') + (b * d ? ` + ${b * d}` : '');
+        const xOnly = lin(2 * (a + c), b + d);
+        const cands = [P, half, area, xOnly].filter((v, i, all) => all.indexOf(v) === i);
+        while (cands.length < 4) cands.push(lin(a + c + cands.length, 2 * (b + d)));
+        const opts = rng.shuffle(cands.map((v, i) => ({ html: m(v), right: i === 0 })));
         out.push({
-          prompt: `Which expression is the perimeter of a rectangle ${m('x')} cm by ${m(`x + ${k}`)} cm?`,
+          prompt: `Which expression is the perimeter of a rectangle ${m(side(a, b))} cm by ${m(side(c, d))} cm?`,
           tag: 'Challenge',
           input: { kind: 'choice', options: opts, correct: opts.findIndex(o => o.right) },
-          explain: `<span class="work">Four sides: \\(x + (x+${k}) + x + (x+${k}) = 4x + ${2 * k}\\). The \\(x^2\\) option is the area.</span>`
+          explain: `<span class="work">Four sides, two of each: \\(2(${side(a, b)}) + 2(${side(c, d)}) = ${P}\\). The \\(x^2\\) option is the area.</span>`
         });
       })();
 

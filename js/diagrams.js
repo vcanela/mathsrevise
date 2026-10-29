@@ -345,13 +345,33 @@ const Dia = (() => {
   }
 
   /**
-   * Nets of common solids, drawn on a square grid so the faces line up.
-   * Each net is a list of [col, row] cells plus, for prisms and pyramids,
-   * triangular flaps.
+   * Nets of common solids, drawn on a grid so the faces line up. A net is a
+   * list of [col, row] unit squares, plus triangular flaps for prisms and
+   * pyramids, plus `rects` ([x, y, w, h] in grid units) for faces that are
+   * not square, plus `polys` for any other shape.
+   *
+   * A cube has eleven different nets; several are listed, so the picture
+   * is not always the same cross. The cuboid uses rectangles of two sizes,
+   * or it would be indistinguishable from a cube.
    */
+  // A cuboid 1.6 long, 1 deep and 0.7 high: a band of four side faces with
+  // the top and bottom folding off the second one.
+  const CL = 1.6, CW = 1, CH = 0.7;
+  const TRI = Math.sqrt(3);
   const NETS = {
     cube:            { cells: [[1, 0], [0, 1], [1, 1], [2, 1], [3, 1], [1, 2]], w: 4, h: 3, solid: 'cube' },
-    cuboid:          { cells: [[1, 0], [0, 1], [1, 1], [2, 1], [3, 1], [1, 2]], w: 4, h: 3, solid: 'cuboid', wide: true },
+    cube2:           { cells: [[0, 0], [0, 1], [1, 1], [2, 1], [3, 1], [0, 2]], w: 4, h: 3, solid: 'cube' },
+    cube3:           { cells: [[0, 0], [0, 1], [1, 1], [2, 1], [3, 1], [3, 2]], w: 4, h: 3, solid: 'cube' },
+    cube4:           { cells: [[0, 0], [0, 1], [1, 1], [2, 1], [3, 1], [2, 2]], w: 4, h: 3, solid: 'cube' },
+    cube5:           { cells: [[1, 0], [0, 1], [1, 1], [2, 1], [3, 1], [2, 2]], w: 4, h: 3, solid: 'cube' },
+    cube6:           { cells: [[0, 0], [1, 0], [1, 1], [2, 1], [2, 2], [3, 2]], w: 4, h: 3, solid: 'cube' },
+    cube7:           { cells: [[0, 0], [1, 0], [2, 0], [2, 1], [3, 1], [4, 1]], w: 5, h: 2, solid: 'cube' },
+    cuboid:          { rects: [[0, CW, CW, CH], [CW, CW, CL, CH], [CW + CL, CW, CW, CH], [2 * CW + CL, CW, CL, CH],
+                               [CW, 0, CL, CW], [CW, CW + CH, CL, CW]],
+                       w: 2 * CW + 2 * CL, h: 2 * CW + CH, solid: 'cuboid' },
+    tetrahedron:     { polys: [[[0, TRI], [1, TRI], [0.5, TRI / 2]], [[1, TRI], [2, TRI], [1.5, TRI / 2]],
+                               [[0.5, TRI / 2], [1.5, TRI / 2], [1, 0]], [[0.5, TRI / 2], [1.5, TRI / 2], [1, TRI]]],
+                       w: 2, h: TRI, solid: 'triangular-based pyramid' },
     squarePyramid:   { cells: [[1, 1]], tris: [[1, 1, 'up'], [1, 1, 'down'], [1, 1, 'left'], [1, 1, 'right']], w: 3, h: 3, solid: 'square-based pyramid' },
     triangularPrism: { cells: [[0, 1], [1, 1], [2, 1]], tris: [[1, 1, 'up'], [1, 1, 'down']], w: 3, h: 3, solid: 'triangular prism' },
     openBox:         { cells: [[1, 0], [0, 1], [1, 1], [2, 1], [1, 2]], w: 3, h: 3, solid: 'open box' }
@@ -366,9 +386,19 @@ const Dia = (() => {
     const ox = (d.w - spec.w * s) / 2, oy = (d.h - spec.h * s) / 2;
     const cell = (c, r) => [ox + c * s, oy + r * s];
 
-    for (const [c, r] of spec.cells) {
+    for (const [c, r] of (spec.cells || [])) {
       const [x, y] = cell(c, r);
       d.add('rect', { x, y, width: s, height: s, fill: 'var(--dia-fill)', stroke: INK, 'stroke-width': 1.8 });
+    }
+    for (const [c, r, w, h] of (spec.rects || [])) {
+      const [x, y] = cell(c, r);
+      d.add('rect', { x, y, width: w * s, height: h * s, fill: 'var(--dia-fill)', stroke: INK, 'stroke-width': 1.8 });
+    }
+    for (const poly of (spec.polys || [])) {
+      d.add('polygon', {
+        points: poly.map(([c, r]) => cell(c, r).map(v => v.toFixed(1)).join(',')).join(' '),
+        fill: 'var(--dia-fill)', stroke: INK, 'stroke-width': 1.8, 'stroke-linejoin': 'round'
+      });
     }
     for (const [c, r, side] of (spec.tris || [])) {
       const [x, y] = cell(c, r);

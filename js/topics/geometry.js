@@ -195,21 +195,27 @@
         });
       })();
 
-      // Q10: equal angles round a point.
+      // Q10: equal angles round a point, or along a straight line. Only
+      // counts that divide the total exactly, so every answer is whole.
       (() => {
-        const n = rng.pick([4, 5, 6, 8]);
-        const each = 360 / n;
+        const hard = diff !== 'core';
+        const onLine = rng.chance(0.35);
+        const total = onLine ? 180 : 360;
+        const n = onLine ? rng.pick(hard ? [2, 3, 4, 5, 6, 9, 10] : [2, 3, 4, 5, 6])
+                         : rng.pick(hard ? [3, 4, 5, 6, 8, 9, 10, 12, 15, 18] : [3, 4, 5, 6, 8, 9, 10, 12]);
+        const each = total / n;
         out.push({
-          prompt: `${n} equal angles meet at a point. How big is each one?`,
+          prompt: onLine ? `${n} equal angles sit along a straight line. How big is each one?`
+                         : `${n} equal angles meet at a point. How big is each one?`,
           tag: 'Challenge',
-          diagram: { w: 200, h: 175 },
-          draw: d => Dia.angleFan(d, {
-            lowCentre: false,
-            rays: Array.from({ length: n }, (_, i) => i * each),
-            marks: [{ from: 0, to: 1, label: '?', unknown: true, r: 26 }]
-          }),
+          diagram: { w: 200, h: onLine ? 140 : 175 },
+          draw: d => onLine
+            ? Dia.angleFan(d, { baseline: true, rays: Array.from({ length: n + 1 }, (_, i) => i * each),
+                                marks: [{ from: 0, to: 1, label: '?', unknown: true, r: 26 }] })
+            : Dia.angleFan(d, { lowCentre: false, rays: Array.from({ length: n }, (_, i) => i * each),
+                                marks: [{ from: 0, to: 1, label: '?', unknown: true, r: 26 }] }),
           input: { kind: 'number', suffix: '°', answer: each, width: 76 },
-          explain: `<span class="work">\\(360 \\div ${n} = ${each}\\)</span>`
+          explain: `<span class="work">\\(${total} \\div ${n} = ${each}\\)</span>`
         });
       })();
 
@@ -609,11 +615,16 @@
 
       // Q7: match the name to the shape it makes.
       (() => {
+        // Each name has two descriptions, one shown at random.
         const rows = [
-          { n: 'corresponding', d: 'makes an F shape; the angles are equal' },
-          { n: 'alternate',     d: 'makes a Z shape; the angles are equal' },
-          { n: 'co-interior',   d: 'makes a C shape; the angles add to 180°' },
-          { n: 'vertically opposite', d: 'formed where two lines cross; the angles are equal' }
+          { n: 'corresponding', d: rng.pick(['makes an F shape; the angles are equal',
+                                             'in the same position at each crossing; the angles are equal']) },
+          { n: 'alternate',     d: rng.pick(['makes a Z shape; the angles are equal',
+                                             'between the parallel lines, on opposite sides of the crossing line; the angles are equal']) },
+          { n: 'co-interior',   d: rng.pick(['makes a C shape; the angles add to 180°',
+                                             'between the parallel lines, on the same side of the crossing line; they add to 180°']) },
+          { n: 'vertically opposite', d: rng.pick(['formed where two lines cross; the angles are equal',
+                                                   'opposite each other where two lines cross; the angles are equal']) }
         ];
         const order = rng.shuffle([0, 1, 2, 3]);
         out.push({
@@ -625,7 +636,7 @@
             tags: ['A', 'B', 'C', 'D'],
             answer: [0, 1, 2, 3].map(i => order.indexOf(i))
           },
-          explain: ''
+          explain: '<span class="work">Corresponding (F) and alternate (Z) angles are equal; co-interior (C) angles add to 180°; vertically opposite angles are equal.</span>'
         });
       })();
 
@@ -732,18 +743,41 @@
       })();
 
       // Q2: which formula?
+      // Q2: the angle-sum rule, asked one of several ways.
       (() => {
-        const opts = rng.shuffle([
-          { html: m('180(n - 2)'), right: true },
-          { html: m('180n - 2'),   right: false },
-          { html: m('360(n - 2)'), right: false },
-          { html: m('180(n + 2)'), right: false }
-        ]);
-        out.push({
-          prompt: 'Which formula gives the sum of the interior angles of a polygon with ' + m('n') + ' sides?',
-          input: { kind: 'choice', options: opts, correct: opts.findIndex(o => o.right) },
-          explain: '<span class="work">The shape splits into \\(n - 2\\) triangles, each worth 180°.</span>'
-        });
+        const choice = (prompt, right, wrong, explain) => {
+          const opts = rng.shuffle([{ html: right, right: true }, ...wrong.map(w => ({ html: w, right: false }))]);
+          out.push({ prompt, input: { kind: 'choice', options: opts, correct: opts.findIndex(o => o.right) },
+                     explain: `<span class="work">${explain}</span>` });
+        };
+        const n = rng.int(5, 10);
+        switch (rng.int(0, 4)) {
+          case 0:
+            choice('Which formula gives the sum of the interior angles of a polygon with ' + m('n') + ' sides?',
+              m('180(n - 2)'), [m('180n - 2'), m('360(n - 2)'), m('180(n + 2)')],
+              'The shape splits into \\(n - 2\\) triangles, each worth 180°.');
+            break;
+          case 1:
+            choice(`Lines are drawn from one corner of ${Fmt.an(Fmt.polyName(n))} to every other corner. How many triangles does it split into?`,
+              String(n - 2), [String(n), String(n - 1), String(n - 3)],
+              `From one corner, any polygon splits into \\(n - 2\\) triangles: \\(${n} - 2 = ${n - 2}\\).`);
+            break;
+          case 2:
+            choice('Why does the angle-sum formula ' + m('180(n - 2)') + ' subtract 2?',
+              'From one corner, a polygon with ' + m('n') + ' sides splits into ' + m('n - 2') + ' triangles.',
+              ['Two of the angles are always right angles.', 'Two of the sides never count.', 'It takes off 2° to make the answer more accurate.'],
+              'Each of the \\(n - 2\\) triangles has angles adding to 180°.');
+            break;
+          case 3:
+            choice('What do the <strong>exterior</strong> angles of any polygon add up to?',
+              '360°', ['180°', '540°', 'It depends on the number of sides'],
+              'Walking round any polygon, you turn through one full turn: 360°.');
+            break;
+          default:
+            choice(`Which calculation gives the angle sum of ${Fmt.an(Fmt.polyName(n))}?`,
+              m(`180(${n} - 2)`), [m(`180 \\times ${n}`), m(`180(${n} - 1)`), m(`360(${n} - 2)`)],
+              `\\(180(n - 2)\\) with \\(n = ${n}\\).`);
+        }
       })();
 
       // Q3–4: missing angle in an irregular polygon, built to have exact angles.
@@ -778,12 +812,17 @@
         });
       }
 
+      // Regular polygons whose angles are whole numbers: n divides 360. The
+      // bigger ones are kept for the harder levels.
+      const REG = hard ? [3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 24] : [3, 4, 5, 6, 8, 9, 10, 12];
+      const regular = n => n === 3 ? 'an equilateral triangle' : n === 4 ? 'a square' : 'a regular ' + Fmt.polyName(n);
+
       // Q5: one angle of a regular polygon.
       (() => {
-        const n = rng.pick([5, 6, 8, 9, 10, 12]);
+        const n = rng.pick(REG);
         const each = 180 * (n - 2) / n;
         out.push({
-          prompt: `How big is each interior angle of a <strong>regular</strong> ${Fmt.polyName(n)}?`,
+          prompt: `How big is each interior angle of ${regular(n).replace('regular', '<strong>regular</strong>')}?`,
           diagram: { w: 175, h: 155 },
           draw: (d, G) => {
             const p = G.fit(G.regularPolygon(n), 175, 155, 20);
@@ -797,7 +836,7 @@
 
       // Q6: find n from the angle sum.
       (() => {
-        const n = rng.pick([5, 6, 7, 8, 9, 10, 11, 12]);
+        const n = hard ? rng.int(4, 20) : rng.int(4, 12);
         out.push({
           prompt: `The interior angles of a polygon add to ${deg(180 * (n - 2))}. How many sides does it have?`,
           note: 'Solve ' + m(`180(n - 2) = ${180 * (n - 2)}`) + ' for ' + m('n') + '.',
@@ -808,9 +847,9 @@
 
       // Q7: exterior angle of a regular polygon.
       (() => {
-        const n = rng.pick([5, 6, 8, 9, 10, 12]);
+        const n = rng.pick(REG);
         out.push({
-          prompt: `How big is each <strong>exterior</strong> angle of a regular ${Fmt.polyName(n)}?`,
+          prompt: `How big is each <strong>exterior</strong> angle of ${regular(n)}?`,
           note: 'The exterior angles of any polygon add to 360°.',
           diagram: { w: 190, h: 165 },
           draw: (d, G) => {
@@ -831,7 +870,7 @@
 
       // Q8: spot the mistake — 180n instead of 180(n-2).
       (() => {
-        const n = rng.pick([5, 6, 7, 8]);
+        const n = rng.pick([5, 6, 7, 8, 9, 10, 12]);
         const lines = [
           `The shape has ${n} sides.`,
           m(`\\text{Sum} = 180 \\times ${n}`),
@@ -847,7 +886,7 @@
 
       // Q9: find n from one interior angle.
       (() => {
-        const n = rng.pick([6, 8, 9, 10, 12]);
+        const n = rng.pick(hard ? [5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36] : [5, 6, 8, 9, 10, 12]);
         const each = 180 * (n - 2) / n;
         out.push({
           prompt: `Each interior angle of a regular polygon is ${deg(each)}. How many sides does it have?`,
@@ -860,7 +899,7 @@
 
       // Q10: match polygons to their angle sums.
       (() => {
-        const ns = rng.sample([4, 5, 6, 7, 8, 9, 10], 4);
+        const ns = rng.sample([3, 4, 5, 6, 7, 8, 9, 10, 12], 4);
         const order = rng.shuffle([0, 1, 2, 3]);
         out.push({
           prompt: 'Match each polygon to the sum of its interior angles.',
@@ -957,16 +996,20 @@
 
       // Q7–8: radius and diameter arithmetic.
       for (let i = 0; i < 2; i++) {
-        const r = rng.int(3, 24);
+        // Whole centimetres at core; at the harder levels, sometimes a half.
+        const r = diff === 'core' ? rng.int(2, 40) : rng.int(3, 80) / 2;
+        const unit = rng.chance(0.2) ? 'mm' : 'cm';
         const fromRadius = i === 0;
+        const R = Fmt.num(r), D = Fmt.num(2 * r);
         out.push({
           prompt: fromRadius
-            ? `A circle has a radius of ${r} cm. What is its diameter?`
-            : `A circle has a diameter of ${2 * r} cm. What is its radius?`,
-          input: { kind: 'number', suffix: 'cm', answer: fromRadius ? 2 * r : r, width: 76 },
+            ? `A circle has a radius of ${R} ${unit}. What is its diameter?`
+            : `A circle has a diameter of ${D} ${unit}. What is its radius?`,
+          input: { kind: 'number', suffix: unit, answer: fromRadius ? 2 * r : r, tol: 0.01,
+                   decimal: !Number.isInteger(fromRadius ? 2 * r : r), width: 80 },
           explain: fromRadius
-            ? `<span class="work">\\(2 \\times ${r} = ${2 * r}\\)</span>`
-            : `<span class="work">\\(${2 * r} \\div 2 = ${r}\\)</span>`
+            ? `<span class="work">\\(2 \\times ${R} = ${D}\\)</span>`
+            : `<span class="work">\\(${D} \\div 2 = ${R}\\)</span>`
         });
       }
 
@@ -977,7 +1020,14 @@
           { text: 'Every chord is also a diameter.',        ok: false, why: 'Only chords that pass through the centre are diameters.' },
           { text: 'A tangent crosses the circle twice.',    ok: false, why: 'A tangent touches at exactly one point.' },
           { text: 'A sector is bounded by two radii.',      ok: true,  why: 'Two radii and the arc between them.' },
-          { text: 'An arc is a straight line.',             ok: false, why: 'An arc is part of the curved edge.' }
+          { text: 'An arc is a straight line.',             ok: false, why: 'An arc is part of the curved edge.' },
+          { text: 'Every radius of a circle is the same length.', ok: true, why: 'Every point on the circle is the same distance from the centre.' },
+          { text: 'The diameter is half the radius.',       ok: false, why: 'It is the other way round: the diameter is twice the radius.' },
+          { text: 'A chord always passes through the centre.', ok: false, why: 'Only a diameter does. Most chords miss the centre.' },
+          { text: 'The circumference is the distance all the way round the circle.', ok: true, why: 'That is what circumference means.' },
+          { text: 'A segment is bounded by a chord and an arc.', ok: true, why: 'A chord cuts the segment off; the arc is its curved edge.' },
+          { text: 'A tangent touches the circle at exactly one point.', ok: true, why: 'It touches the circle once without crossing into it.' },
+          { text: 'A sector and a segment are the same thing.', ok: false, why: 'A sector is bounded by two radii and an arc; a segment by a chord and an arc.' }
         ];
         const c = rng.pick(claims);
         out.push({
@@ -988,21 +1038,30 @@
         });
       })();
 
-      // Q10: perimeter of a sector in words.
+      // Q10: what makes up a part of the circle, asked one of several ways.
       (() => {
-        const opts = rng.shuffle([
-          { html: 'two radii and an arc', right: true },
-          { html: 'two chords and an arc', right: false },
-          { html: 'a chord and an arc',    right: false },
-          { html: 'three radii',           right: false }
+        const ask = rng.pick([
+          { prompt: 'The edge of a <strong>sector</strong> is made up of what?', part: 'sector',
+            right: 'two radii and an arc', wrong: ['two chords and an arc', 'a chord and an arc', 'three radii'],
+            why: 'Two straight radii, plus the arc joining their ends.' },
+          { prompt: 'The edge of a <strong>segment</strong> is made up of what?', part: 'segment',
+            right: 'a chord and an arc', wrong: ['two radii and an arc', 'two chords', 'a radius and a tangent'],
+            why: 'A straight chord cuts it off, and the arc is its curved edge.' },
+          { prompt: 'What is the longest chord a circle can have?', part: 'diameter',
+            right: 'a diameter', wrong: ['a radius', 'a tangent', 'an arc'],
+            why: 'A diameter is a chord through the centre, and no chord is longer.' },
+          { prompt: 'How many radii laid end to end make one diameter?', part: 'diameter',
+            right: '2', wrong: ['1', '3', '4'],
+            why: 'The diameter is twice the radius.' }
         ]);
+        const opts = rng.shuffle([{ html: ask.right, right: true }, ...ask.wrong.map(w => ({ html: w, right: false }))]);
         out.push({
-          prompt: 'The edge of a <strong>sector</strong> is made up of what?',
+          prompt: ask.prompt,
           tag: 'Challenge',
           diagram: { w: 150, h: 135 },
-          draw: d => Dia.circlePart(d, 'sector'),
+          draw: d => Dia.circlePart(d, ask.part),
           input: { kind: 'choice', options: opts, correct: opts.findIndex(o => o.right), wide: true },
-          explain: '<span class="work">Two straight radii, plus the arc joining their ends.</span>'
+          explain: `<span class="work">${ask.why}</span>`
         });
       })();
 
@@ -1016,8 +1075,14 @@
     cuboid:          { name: 'cuboid',                 faces: 6, edges: 12, vertices: 8 },
     squarePyramid:   { name: 'square-based pyramid',   faces: 5, edges: 8,  vertices: 5 },
     triangularPrism: { name: 'triangular prism',       faces: 5, edges: 9,  vertices: 6 },
-    openBox:         { name: 'open box (no lid)',      faces: 5, edges: 12, vertices: 8 }
+    openBox:         { name: 'open box (no lid)',      faces: 5, edges: 12, vertices: 8 },
+    tetrahedron:     { name: 'triangular-based pyramid', faces: 4, edges: 6, vertices: 4 },
+    pentagonalPrism: { name: 'pentagonal prism',       faces: 7, edges: 15, vertices: 10, noNet: true },
+    hexagonalPrism:  { name: 'hexagonal prism',        faces: 8, edges: 18, vertices: 12, noNet: true }
   };
+  // The cube is drawn from one of several different nets.
+  const CUBE_NETS = ['cube', 'cube2', 'cube3', 'cube4', 'cube5', 'cube6', 'cube7'];
+  const netFor = (rng, k) => (k === 'cube' ? rng.pick(CUBE_NETS) : k);
 
   Topics.u3e6 = {
     id: 'u3e6', unit: 3,
@@ -1049,17 +1114,19 @@
     generate(rng, diff) {
       const out = [];
       const kinds = Object.keys(SOLIDS);
+      const withNets = kinds.filter(k => !SOLIDS[k].noNet);
 
       // Q1–3: which solid does this net fold into?
-      rng.sample(kinds, 3).forEach(k => {
-        const wrong = rng.sample(kinds.filter(x => x !== k), 3).map(x => SOLIDS[x].name);
+      rng.sample(withNets, 3).forEach(k => {
+        const wrong = rng.sample(withNets.filter(x => x !== k), 3).map(x => SOLIDS[x].name);
         const opts = rng.shuffle([SOLIDS[k].name, ...wrong]);
+        const drawn = netFor(rng, k);
         out.push({
           prompt: 'Which solid does this net fold into?',
           diagram: { w: 180, h: 160 },
-          draw: d => Dia.net(d, k),
+          draw: d => Dia.net(d, drawn),
           input: { kind: 'choice', options: opts, correct: opts.indexOf(SOLIDS[k].name), wide: true },
-          explain: `<span class="work">It has ${SOLIDS[k].faces} faces, which makes ${Fmt.an(SOLIDS[k].name)}.</span>`
+          explain: `<span class="work">It has ${SOLIDS[k].faces} faces${k === 'cuboid' ? ', in rectangles of different sizes,' : k === 'cube' ? ', all identical squares,' : ''} which makes ${Fmt.an(SOLIDS[k].name)}.</span>`
         });
       });
 
@@ -1067,10 +1134,11 @@
       (() => {
         const k = rng.pick(kinds);
         const s = SOLIDS[k];
+        const drawn = netFor(rng, k);
         out.push({
           prompt: `How many faces, edges and vertices does ${Fmt.an(s.name)} have?`,
-          diagram: { w: 165, h: 145 },
-          draw: d => Dia.net(d, k),
+          diagram: s.noNet ? undefined : { w: 165, h: 145 },
+          draw: s.noNet ? undefined : d => Dia.net(d, drawn),
           input: {
             kind: 'fill',
             parts: [
@@ -1111,7 +1179,7 @@
 
       // Q8: spot the mistake — scaled area by k instead of k².
       (() => {
-        const k = rng.int(2, 4), A = rng.int(5, 15);
+        const k = rng.int(2, 5), A = rng.int(3, 20);
         const lines = [
           `The scale factor is ${k}.`,
           m(`\\text{New area} = ${A} \\times ${k}`),
@@ -1154,7 +1222,7 @@
             tags: ['A', 'B', 'C', 'D'],
             answer: [0, 1, 2, 3].map(i => order.indexOf(i))
           },
-          explain: ''
+          explain: '<span class="work">Count them on each solid: the faces, the edges where two faces meet, and the corners (vertices).</span>'
         });
       })();
 
