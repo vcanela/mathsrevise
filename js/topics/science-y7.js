@@ -181,25 +181,24 @@
       // 2 · Match each state to its particle picture or property.
       {
         name: 'Match the state to its description', learn: 'states',
-        items: [STATE_TEXT, STATE_PROPS].map(table => rng => {
+        // Each row shows either how the particles behave or how the state
+        // behaves, chosen afresh each time, so the three rows rarely repeat.
+        items: [Sci.gen(rng => {
           const left = ['Solid', 'Liquid', 'Gas'];
           const order = rng.shuffle([0, 1, 2]);
           const keys = ['solid', 'liquid', 'gas'];
+          const desc = Object.fromEntries(keys.map(k => [k, (rng.chance() ? STATE_TEXT : STATE_PROPS)[k]]));
           return {
-            prompt: table === STATE_TEXT
-              ? 'Match each state to how its particles behave.'
-              : 'Match each state to how it behaves.',
+            prompt: 'Match each state to its description.',
             input: {
               kind: 'match', left,
-              right: order.map(i => table[keys[i]]),
+              right: order.map(i => desc[keys[i]]),
               tags: ['A', 'B', 'C'],
               answer: [0, 1, 2].map(i => order.indexOf(i))
             },
-            explain: table === STATE_TEXT
-              ? 'Solid: fixed and vibrating. Liquid: close but sliding. Gas: far apart and fast.'
-              : 'Each property comes from the particles: fixed particles keep a shape, sliding ones flow, spread-out ones fill the space.'
+            explain: 'Solid: fixed and vibrating, so it keeps its shape. Liquid: close but sliding, so it flows. Gas: far apart and fast, so it fills its container.'
           };
-        })
+        })]
       },
 
       // 3 · Label the six changes of state.
@@ -340,7 +339,23 @@
           rng => TF(rng, { learn: 'changes', statement: 'Water vapour can turn straight into ice without becoming a liquid first.', answer: true,
             explain: 'That is deposition, gas straight to solid, which is how frost forms.' }),
           rng => TF(rng, { statement: 'Everything around us is made of particles too small to see, even with an ordinary microscope.', answer: true,
-            explain: 'All matter is made of sub-microscopic particles.' })
+            explain: 'All matter is made of sub-microscopic particles.' }),
+          rng => TF(rng, { statement: "Particles in a liquid can slide past each other.", answer: true, learn: 'states',
+            explain: "That is why a liquid flows and takes the shape of its container." }),
+          rng => TF(rng, { statement: "A gas keeps its own shape.", answer: false, learn: 'states',
+            explain: "A gas spreads out to fill its whole container, because its particles are far apart and moving fast." }),
+          rng => TF(rng, { statement: "Evaporation is a change from liquid to gas.", answer: true, learn: 'changes',
+            explain: "Liquid to gas is evaporation; gas back to liquid is condensation." }),
+          rng => TF(rng, { statement: "Condensation needs thermal energy to be added.", answer: false, learn: 'energy',
+            explain: "Condensation happens when thermal energy is removed, so the particles slow down and come together." }),
+          rng => TF(rng, { statement: "When a solid melts, its particles become softer.", answer: false, learn: 'same',
+            explain: "The particles do not change at all. They break free of their fixed arrangement and slide past each other." }),
+          rng => TF(rng, { statement: "Frost forming straight from water vapour is an example of sublimation.", answer: false, learn: 'changes',
+            explain: "Gas straight to solid is deposition. Sublimation is the other way: solid straight to gas." }),
+          rng => TF(rng, { statement: "When a puddle evaporates, its water is spread through the air as water vapour.", answer: true, learn: 'mass',
+            explain: "Nothing is destroyed. The water particles are still there, as a gas." }),
+          rng => TF(rng, { statement: "A tight metal lid on a glass jar can be loosened by warming it, because the metal expands.", answer: true, learn: 'expand',
+            explain: "Warming makes the metal’s particles move more and push slightly further apart, so the lid gets a little bigger." })
         ]
       },
 
@@ -926,6 +941,12 @@
     radiation: 'Radiation: thermal energy travels as radiation, which needs no material at all and can cross empty space.'
   };
 
+  const CONDUCTORS = [
+    { text: 'Copper', bin: 0 }, { text: 'Aluminium', bin: 0 }, { text: 'Steel', bin: 0 }, { text: 'Iron', bin: 0 },
+    { text: 'Wool', bin: 1 }, { text: 'Polystyrene foam', bin: 1 }, { text: 'Plastic', bin: 1 },
+    { text: 'Wood', bin: 1 }, { text: 'Rubber', bin: 1 }, { text: 'Cork', bin: 1 }, { text: 'Feathers', bin: 1 }
+  ];
+
   const INSULATION = [
     { name: 'polystyrene foam', k: 0.028 }, { name: 'wool', k: 0.035 }, { name: 'bubble wrap', k: 0.045 },
     { name: 'cotton cloth', k: 0.06 }, { name: 'aluminium foil', k: 0.08 }, { name: 'nothing (a bare cup)', k: 0.095 }
@@ -1056,11 +1077,7 @@
         items: [rng => Sci.sort(rng, {
           prompt: 'Is each material a good conductor of thermal energy, or an insulator?',
           bins: ['Good conductor', 'Insulator'],
-          items: [
-            { text: 'Copper', bin: 0 }, { text: 'Aluminium', bin: 0 }, { text: 'Steel', bin: 0 }, { text: 'Iron', bin: 0 },
-            { text: 'Wool', bin: 1 }, { text: 'Polystyrene foam', bin: 1 }, { text: 'Plastic', bin: 1 },
-            { text: 'Wood', bin: 1 }, { text: 'Rubber', bin: 1 }, { text: 'Cork', bin: 1 }, { text: 'Feathers', bin: 1 }
-          ],
+          items: CONDUCTORS,
           pick: 6,
           explain: 'Metals are good thermal conductors. Insulators, such as wool, foam, wood and plastic, have a low thermal conductivity; many work by trapping air.'
         })]
@@ -1202,6 +1219,19 @@
             prompt: 'Which would be best for the handle of a pot?',
             right: 'Wood', wrong: ['Copper', 'Steel', 'Aluminium'],
             explain: 'A handle should stay cool to hold, so it needs an insulator. Wood conducts thermal energy far more slowly than any metal.'
+          }),
+          Sci.gen(rng => {
+            // One material from one group among three from the other.
+            const wantInsulator = rng.chance();
+            const right = rng.pick(CONDUCTORS.filter(x => x.bin === (wantInsulator ? 1 : 0))).text;
+            const wrong = rng.sample(CONDUCTORS.filter(x => x.bin === (wantInsulator ? 0 : 1)), 3).map(x => x.text);
+            return C(rng, {
+              prompt: wantInsulator ? 'Which of these is a good thermal <strong>insulator</strong>?' : 'Which of these is a good <strong>conductor</strong> of thermal energy?',
+              right, wrong, wide: false, learn: 'conductors',
+              explain: wantInsulator
+                ? `${right} has a low thermal conductivity. The others are metals, which are good conductors.`
+                : `${right} is a metal, and metals are good thermal conductors. The others are insulators.`
+            });
           })
         ]
       },
@@ -1279,7 +1309,29 @@
           rng => TF(rng, { learn: 'conductors', statement: 'Metals are generally good conductors of thermal energy.', answer: true,
             explain: 'That is why pots and pans are made of metal, and their handles often are not.' }),
           rng => TF(rng, { learn: 'conductors', statement: 'Trapped air is a poor conductor of thermal energy.', answer: true,
-            explain: 'Air has a very low thermal conductivity, which is why so many insulators work by trapping it.' })
+            explain: 'Air has a very low thermal conductivity, which is why so many insulators work by trapping it.' }),
+          rng => TF(rng, { statement: "Convection can happen in a solid.", answer: false, learn: 'convection',
+            explain: "Convection needs the material itself to move, so it happens only in liquids and gases." }),
+          rng => TF(rng, { statement: "Radiation needs a material to travel through.", answer: false, learn: 'radiation',
+            explain: "Radiation needs no material, which is how energy from the Sun crosses empty space." }),
+          rng => TF(rng, { statement: "Warm air rises above cooler air in a room.", answer: true, learn: 'convection',
+            explain: "That rising warm air carries thermal energy round the room: convection." }),
+          rng => TF(rng, { statement: "A wooden spoon is a poorer conductor of thermal energy than a metal spoon.", answer: true, learn: 'conductors',
+            explain: "Wood has a much lower thermal conductivity than metal, so its handle stays cool." }),
+          rng => TF(rng, { statement: "A good insulator produces its own heat.", answer: false, learn: 'conductors',
+            explain: "An insulator makes no heat. It slows down the movement of thermal energy." }),
+          rng => TF(rng, { statement: "Thermal energy moves from a colder object to a hotter one.", answer: false, learn: 'direction',
+            explain: "Thermal energy always moves from the hotter object to the colder one." }),
+          rng => TF(rng, { statement: "A hot drink left on the bench ends up at the same temperature as the room.", answer: true, learn: 'direction',
+            explain: "Thermal energy flows out of the drink until they are at the same temperature." }),
+          rng => TF(rng, { statement: "Feathers and wool insulate well partly because they trap air.", answer: true, learn: 'conductors',
+            explain: "Trapped air has a very low thermal conductivity." }),
+          rng => TF(rng, { statement: "Two cups of water at the same temperature always have the same thermal energy.", answer: false, learn: 'thermal',
+            explain: "Thermal energy also depends on how much substance there is. A bigger cup at the same temperature has more." }),
+          rng => TF(rng, { statement: "A higher temperature means the particles are moving faster on average.", answer: true, learn: 'temp',
+            explain: "Temperature measures the average kinetic energy of the particles." }),
+          rng => TF(rng, { statement: "In conduction, energy passes from particle to particle.", answer: true, learn: 'conduction',
+            explain: "The particles stay in place and pass energy to their neighbours." })
         ]
       }
     ]
@@ -1302,7 +1354,11 @@
     'new Moon': 'The sunlit half faces away from Earth, so we can hardly see the Moon.',
     'full Moon': 'The whole sunlit half faces Earth.',
     'first quarter': 'Half of the disc is lit, and the lit part is growing each night.',
-    'last quarter': 'Half of the disc is lit, and the lit part is shrinking each night.'
+    'last quarter': 'Half of the disc is lit, and the lit part is shrinking each night.',
+    'waxing crescent': 'A thin sliver is lit, and it is growing each night.',
+    'waning crescent': 'A thin sliver is lit, and it is shrinking each night.',
+    'waxing gibbous': 'More than half is lit, and it is growing towards full.',
+    'waning gibbous': 'More than half is lit, and it is shrinking after full.'
   };
 
   Sci.topic({
@@ -1423,28 +1479,20 @@
       // 2 · Put the phases in order.
       {
         name: 'Order of the phases', learn: 'phases',
-        items: [
-          rng => {
-            const seq = ['waxing crescent', 'first quarter', 'waxing gibbous', 'full Moon'];
-            const order = rng.shuffle([0, 1, 2, 3]);
-            return {
-              prompt: 'Starting just after a new Moon, put these phases in the order they appear.',
-              input: { kind: 'order', items: order.map(i => seq[i]), answer: [0, 1, 2, 3].map(i => order.indexOf(i)),
-                       cue: 'Click them in order. Click one again to take it back.' },
-              explain: 'After new Moon the lit part grows: crescent, then first quarter, then gibbous, then full.'
-            };
-          },
-          rng => {
-            const seq = ['waning gibbous', 'last quarter', 'waning crescent', 'new Moon'];
-            const order = rng.shuffle([0, 1, 2, 3]);
-            return {
-              prompt: 'Starting just after a full Moon, put these phases in the order they appear.',
-              input: { kind: 'order', items: order.map(i => seq[i]), answer: [0, 1, 2, 3].map(i => order.indexOf(i)),
-                       cue: 'Click them in order. Click one again to take it back.' },
-              explain: 'After full Moon the lit part shrinks: gibbous, then last quarter, then crescent, then new Moon.'
-            };
-          }
-        ]
+        // Four phases in a row, starting anywhere in the cycle of eight.
+        items: [Sci.gen(rng => {
+          const names = SciDia.PHASES.map(p => p.name);
+          const from = rng.int(0, 7);
+          const seq = [1, 2, 3, 4].map(k => names[(from + k) % 8]);
+          const order = rng.shuffle([0, 1, 2, 3]);
+          return {
+            prompt: `Starting just after ${names[from].startsWith('new') || names[from].startsWith('full') ? 'a ' : 'the '}${names[from]}, put these phases in the order they appear.`,
+            input: { kind: 'order', items: order.map(i => seq[i]), answer: [0, 1, 2, 3].map(i => order.indexOf(i)),
+                     cue: 'Click them in order. Click one again to take it back.' },
+            explain: 'The cycle runs new Moon, waxing crescent, first quarter, waxing gibbous, full Moon, waning gibbous, last quarter, waning crescent, and back to new Moon. ' +
+                     `After ${names[from]}: ${seq.join(', ')}.`
+          };
+        })]
       },
 
       // 3 · Why the Moon appears to change shape.
@@ -1577,7 +1625,27 @@
           rng => TF(rng, { learn: 'cycle', statement: 'A full cycle of the Moon’s phases takes about 29.5 days.', answer: true,
             explain: 'That is the length of the lunar cycle, from one new Moon to the next.' }),
           rng => TF(rng, { statement: 'Half of the Moon is lit by the Sun at all times.', answer: true,
-            explain: 'The Sun always lights the half facing it. The phases are about how much of that half we can see.' })
+            explain: 'The Sun always lights the half facing it. The phases are about how much of that half we can see.' }),
+          rng => TF(rng, { statement: "The Moon orbits the Earth.", answer: true, learn: 'moon',
+            explain: "The Moon is Earth’s natural satellite." }),
+          rng => TF(rng, { statement: "The Moon is a star.", answer: false, learn: 'moon',
+            explain: "The Moon is a natural satellite. It makes no light of its own; it reflects sunlight." }),
+          rng => TF(rng, { statement: "At new Moon, the Moon is between the Earth and the Sun.", answer: true, learn: 'why',
+            explain: "Its sunlit half faces away from us, so we can hardly see it." }),
+          rng => TF(rng, { statement: "At full Moon, the Moon’s sunlit half faces away from Earth.", answer: false, learn: 'why',
+            explain: "At full Moon the whole sunlit half faces Earth." }),
+          rng => TF(rng, { statement: "In New Zealand, a waxing crescent Moon is lit on the left.", answer: true, learn: 'phases',
+            explain: "In the Southern Hemisphere a waxing Moon is lit on the left." }),
+          rng => TF(rng, { statement: "Waning means the lit part we see is getting bigger each night.", answer: false, learn: 'phases',
+            explain: "Waning means shrinking. Waxing means growing." }),
+          rng => TF(rng, { statement: "First quarter and last quarter are about two weeks apart.", answer: true, learn: 'cycle',
+            explain: "They are half a cycle apart: about 29.5 ÷ 2, or roughly 15 days." }),
+          rng => TF(rng, { statement: "A lunar eclipse can only be seen in the daytime.", answer: false, learn: 'lunar',
+            explain: "A lunar eclipse is seen at night, when the Moon is up and passes into Earth’s shadow." }),
+          rng => TF(rng, { statement: "During a solar eclipse, the Moon blocks the Sun from view.", answer: true, learn: 'solar',
+            explain: "The Moon passes between the Earth and the Sun." }),
+          rng => TF(rng, { statement: "Maramataka uses the Moon’s phases to help guide activities such as fishing and planting.", answer: true, learn: 'mara',
+            explain: "It uses the Moon’s phases and changes in the environment to guide daily and seasonal activities." })
         ]
       },
 
@@ -1613,8 +1681,9 @@
       // 10 · Match each phase to what is happening.
       {
         name: 'Match the phases', learn: 'why',
-        items: [rng => {
-          const names = Object.keys(PHASE_DESC);
+        // Four of the eight phases each time.
+        items: [Sci.gen(rng => {
+          const names = rng.sample(Object.keys(PHASE_DESC), 4);
           const order = rng.shuffle([0, 1, 2, 3]);
           return {
             prompt: 'Match each phase to what is happening.',
@@ -1624,7 +1693,7 @@
             },
             explain: 'The phase depends on how much of the Moon’s sunlit half faces Earth, and whether that amount is growing or shrinking.'
           };
-        }]
+        })]
       }
     ]
   });
@@ -1814,7 +1883,27 @@
           rng => TF(rng, { statement: 'Camouflage that works well in one habitat may work less well in another.', answer: true,
             explain: 'Environmental conditions affect how effective an adaptation is.' }),
           rng => TF(rng, { learn: 'variation', statement: 'Organisms of the same species can differ in their adaptations.', answer: true,
-            explain: 'Individuals show variation in their traits, including their adaptations.' })
+            explain: 'Individuals show variation in their traits, including their adaptations.' }),
+          rng => TF(rng, { statement: "A kiwi’s long beak with nostrils at the tip is a structural adaptation.", answer: true, learn: 'kinds',
+            explain: "It is a body feature, so it is structural." }),
+          rng => TF(rng, { statement: "Penguins huddling together is a physiological adaptation.", answer: false, learn: 'kinds',
+            explain: "Huddling is something penguins do, so it is behavioural." }),
+          rng => TF(rng, { statement: "Sweating to cool down is a physiological adaptation.", answer: true, learn: 'kinds',
+            explain: "It is a process inside the body, so it is physiological." }),
+          rng => TF(rng, { statement: "A behavioural adaptation is something an organism does.", answer: true, learn: 'kinds',
+            explain: "For example, a ruru hunting at night." }),
+          rng => TF(rng, { statement: "Adaptations can help an organism reproduce, not just survive.", answer: true, learn: 'what',
+            explain: "Bird song that attracts a mate is an adaptation for reproducing." }),
+          rng => TF(rng, { statement: "Individuals of the same species are always identical.", answer: false, learn: 'variation',
+            explain: "Individuals vary, and some variations suit the environment better than others." }),
+          rng => TF(rng, { statement: "An adaptation that helps in a cold place could be a disadvantage in a hot place.", answer: true, learn: 'chance',
+            explain: "Thick fur keeps an animal warm in the cold but can make it overheat in the heat." }),
+          rng => TF(rng, { statement: "Lamarck’s idea that traits acquired during a lifetime are passed on is accepted science today.", answer: false, learn: 'lamarck',
+            explain: "Lamarck’s idea has been contested. Traits gained during a lifetime are not passed on." }),
+          rng => TF(rng, { statement: "Bright red pōhutukawa flowers attract birds that carry their pollen.", answer: true, learn: 'what',
+            explain: "This is an adaptation for reproducing." }),
+          rng => TF(rng, { statement: "Camouflage can help an animal avoid being seen by predators.", answer: true, learn: 'what',
+            explain: "A green gecko among green leaves is hard to spot." })
         ]
       },
 
@@ -2060,7 +2149,7 @@
             { text: 'Cell wall', bin: 0 }, { text: 'Chloroplasts', bin: 0 }, { text: 'A large permanent vacuole', bin: 0 },
             { text: 'Nucleus', bin: 1 }, { text: 'Cell membrane', bin: 1 }, { text: 'Cytoplasm', bin: 1 }
           ],
-          pick: 6,
+          pick: 4,
           explain: 'Both have a nucleus, cytoplasm and a cell membrane. Only plant cells have a cell wall, chloroplasts and a large vacuole.'
         })]
       },
@@ -2083,15 +2172,20 @@
       // 5 · From cells to organisms.
       {
         name: 'From cells to organisms', learn: 'levels',
-        items: [rng => {
-          const seq = ['Cell', 'Tissue', 'Organ', 'Organ system', 'Organism'];
-          const order = rng.shuffle([0, 1, 2, 3, 4]);
+        // Four of the five levels, smallest first or largest first.
+        items: [Sci.gen(rng => {
+          const all = ['Cell', 'Tissue', 'Organ', 'Organ system', 'Organism'];
+          const drop = rng.int(0, 4);
+          const up = rng.chance();
+          let seq = all.filter((_, k) => k !== drop);
+          if (!up) seq = seq.reverse();
+          const order = rng.shuffle([0, 1, 2, 3]);
           return {
-            prompt: 'Put these in order, from smallest to largest.',
-            input: { kind: 'order', items: order.map(i => seq[i]), answer: [0, 1, 2, 3, 4].map(i => order.indexOf(i)) },
+            prompt: `Put these in order, from ${up ? 'smallest to largest' : 'largest to smallest'}.`,
+            input: { kind: 'order', items: order.map(i => seq[i]), answer: [0, 1, 2, 3].map(i => order.indexOf(i)) },
             explain: 'Cells group into tissues, tissues into organs, organs into systems, and systems make up the organism.'
           };
-        }]
+        })]
       },
 
       // 6 · Specialised cells.
@@ -2192,7 +2286,29 @@
           rng => TF(rng, { learn: 'micro', statement: 'Bacteria are single-celled organisms.', answer: true,
             explain: 'Bacteria are microorganisms: each one is a single cell.' }),
           rng => TF(rng, { statement: 'The structures inside a cell that carry out functions are called organelles.', answer: true,
-            explain: 'The nucleus, chloroplasts and vacuole are examples of organelles.' })
+            explain: 'The nucleus, chloroplasts and vacuole are examples of organelles.' }),
+          rng => TF(rng, { statement: "Plant cells have chloroplasts, where photosynthesis happens.", answer: true, learn: 'jobs',
+            explain: "Chloroplasts use light to make food." }),
+          rng => TF(rng, { statement: "The nucleus controls the cell’s activities.", answer: true, learn: 'jobs',
+            explain: "It is the control centre of the cell." }),
+          rng => TF(rng, { statement: "The cell wall controls what enters and leaves the cell.", answer: false, learn: 'jobs',
+            explain: "That is the cell membrane. The cell wall supports and strengthens a plant cell." }),
+          rng => TF(rng, { statement: "Animal cells have a cell membrane.", answer: true, learn: 'compare',
+            explain: "Both plant and animal cells have a nucleus, cytoplasm and a cell membrane." }),
+          rng => TF(rng, { statement: "Onion bulb cells contain chloroplasts.", answer: false, learn: 'compare',
+            explain: "The bulb grows in the dark, so its cells have no chloroplasts." }),
+          rng => TF(rng, { statement: "A tissue is a group of similar cells working together.", answer: true, learn: 'levels',
+            explain: "Cells of the same kind group together to form a tissue." }),
+          rng => TF(rng, { statement: "An organ is made of several tissues.", answer: true, learn: 'levels',
+            explain: "Tissues make up organs, which work together in organ systems." }),
+          rng => TF(rng, { statement: "A nerve cell is long and thin, which suits carrying signals.", answer: true, learn: 'special',
+            explain: "Its length lets it carry signals over long distances in the body." }),
+          rng => TF(rng, { statement: "Robert Hooke named cells after looking at thin slices of cork.", answer: true, learn: 'history',
+            explain: "He saw tiny compartments and called them cells." }),
+          rng => TF(rng, { statement: "Most cells can easily be seen without a microscope.", answer: false, learn: 'cell',
+            explain: "Most cells are far too small to see without a microscope." }),
+          rng => TF(rng, { statement: "Yeast is a single-celled organism.", answer: true, learn: 'micro',
+            explain: "Yeast is a fungus made of a single cell." })
         ]
       }
     ]
@@ -2334,7 +2450,21 @@
                      tags: ['A', 'B', 'C'], answer: [0, 1, 2].map(i => order.indexOf(i)) },
             explain: 'Each term includes the one before it: a community is made of populations, and an ecosystem includes the community.'
           };
-        }]
+        }, Sci.gen(rng => {
+          // The same terms, matched to examples from the "Which term fits?" bank.
+          const ex = [
+            rng.pick(['All the tuatara living on Takapourewa (Stephens Island)', 'All the kina on one reef']),
+            rng.pick(['Every plant, animal and fungus living in a patch of bush', 'All the seaweeds, crabs, fish and snails in a rock pool']),
+            rng.pick(['A rock pool: its seaweeds, crabs and snails, together with the water, rocks and sunlight', 'A wetland, including its plants and birds, the water, the mud and the weather'])
+          ];
+          const order = rng.shuffle([0, 1, 2]);
+          return {
+            prompt: 'Match each term to an example.',
+            input: { kind: 'match', left: ['Population', 'Community', 'Ecosystem'], right: order.map(i => ex[i]),
+                     tags: ['A', 'B', 'C'], answer: [0, 1, 2].map(i => order.indexOf(i)) },
+            explain: 'One kind of organism is a population; many kinds living together are a community; add the non-living surroundings and it is an ecosystem.'
+          };
+        })]
       },
 
       // 2 · Which is it?
@@ -2505,7 +2635,31 @@
           rng => TF(rng, { learn: 'web', statement: 'In a food web, the arrows point from the food to the organism that eats it.', answer: true,
             explain: 'The arrows show the direction energy moves: from food to eater.' }),
           rng => TF(rng, { statement: 'A population can contain several different species.', answer: false,
-            explain: 'A population is one type of organism. Several species living together form a community.' })
+            explain: 'A population is one type of organism. Several species living together form a community.' }),
+          rng => TF(rng, { statement: "All the kererū in one forest form a population.", answer: true, learn: 'levels',
+            explain: "A population is one kind of organism in one place." }),
+          rng => TF(rng, { statement: "An ecosystem includes both living and non-living things.", answer: true, learn: 'levels',
+            explain: "It is the community together with its non-living surroundings." }),
+          rng => TF(rng, { statement: "A community includes the rocks and water in an area.", answer: false, learn: 'levels',
+            explain: "A community is only the living populations. Adding the non-living parts makes an ecosystem." }),
+          rng => TF(rng, { statement: "Temperature is an abiotic factor.", answer: true, learn: 'biotic',
+            explain: "Abiotic means non-living: temperature, light, water, wind." }),
+          rng => TF(rng, { statement: "Fungi are abiotic.", answer: false, learn: 'biotic',
+            explain: "Fungi are living organisms, so they are biotic." }),
+          rng => TF(rng, { statement: "Producers make their own food using sunlight.", answer: true, learn: 'producers',
+            explain: "Every food web starts with them." }),
+          rng => TF(rng, { statement: "Every food web starts with a consumer.", answer: false, learn: 'producers',
+            explain: "Every food web starts with producers, which make their own food." }),
+          rng => TF(rng, { statement: "An arrow in a food web shows the direction energy moves.", answer: true, learn: 'web',
+            explain: "It points from the food to the organism that eats it." }),
+          rng => TF(rng, { statement: "There are usually more top predators than producers in an ecosystem.", answer: false, learn: 'abundance',
+            explain: "Only part of the energy passes on at each step, so there are far fewer top predators." }),
+          rng => TF(rng, { statement: "All the energy in one organism passes on to the organism that eats it.", answer: false, learn: 'abundance',
+            explain: "Only part of it passes on at each step up a food web." }),
+          rng => TF(rng, { statement: "Tūī and some native flowering plants depend on each other.", answer: true, learn: 'depend',
+            explain: "The birds get nectar; the plants get their pollen carried." }),
+          rng => TF(rng, { statement: "If a predator is removed, the animals it ate usually become less common.", answer: false, learn: 'removed',
+            explain: "With fewer of them being eaten, they usually become more common." })
         ]
       }
     ]

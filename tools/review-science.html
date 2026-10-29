@@ -15,6 +15,11 @@
     .rv-toc { font-family: var(--font-sans); font-size: 0.85rem; margin: 1rem 0 2rem; }
     .rv-toc a { margin-right: 1rem; }
     .rv-topic { margin-top: 2.5rem; }
+    .rv-newtag { display: inline-block; font-family: var(--font-sans); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+                 text-transform: uppercase; color: #fff; background: var(--accent); border-radius: 3px; padding: 0.05rem 0.35rem; margin-left: 0.5rem; }
+    .rv-newsum { font-family: var(--font-sans); font-weight: 600; margin-top: 0.8rem; }
+    .rv-newonly { font-family: var(--font-sans); font-size: 0.88rem; display: block; margin-top: 0.3rem; }
+    body.new-only .rv-old { display: none; }
     .rv-learn { margin-left: 0.6rem; color: var(--brand-ink); font-weight: 500; }
     .rv-topic .learn-grid { margin: 0.6rem 0 1.2rem; }
     .rv-topic > h2 { font-size: 1.4rem; border-bottom: 2px solid var(--rule); padding-bottom: 0.3rem; }
@@ -71,24 +76,24 @@
         <li>Items marked <strong>generated</strong> have fresh numbers every time, so three samples are shown.</li>
         <li>For multiple choice, every option is listed, so the distractors can be checked too. For sorting, the whole bank is listed; a student sees six.</li>
         <li>Each item has an ID such as <code>7.1·Q4·3</code>, so a problem can be reported precisely.</li>
+        <li>Items and cards added or changed since the last approved review are marked <span class="rv-newtag">new</span>.</li>
       </ul>
+      <p id="rv-newsum" class="rv-newsum"></p>
+      <label class="rv-newonly"><input type="checkbox" id="newonly"> Show only new items</label>
     </div>
     <nav class="rv-toc" id="toc"></nav>
     <div id="out"></div>
   </main>
 
-  <script src="../js/rng.js"></script>
-  <script src="../js/format.js"></script>
-  <script src="../js/algebra.js"></script>
-  <script src="../js/geometry.js"></script>
-  <script src="../js/diagrams.js"></script>
-  <script src="../js/game.js"></script>
-  <script src="../js/manifest.js"></script>
-  <script src="../js/timer.js"></script>
-  <script src="../js/engine.js"></script>
-  <script src="../js/science.js"></script>
-  <script src="../js/topics/science-y7.js"></script>
-  <script src="../js/topics/science-y8.js"></script>
+  <script>
+    // Always load the current content, never a cached copy: this page exists
+    // to review what was just written.
+    for (const f of ['../js/rng.js', '../js/format.js', '../js/algebra.js', '../js/geometry.js', '../js/diagrams.js',
+                     '../js/game.js', '../js/manifest.js', '../js/timer.js', '../js/engine.js', '../js/science.js',
+                     '../js/topics/science-y7.js', '../js/topics/science-y8.js', 'review-key.js']) {
+      document.write(`<script src="${f}?_=${Date.now()}"><\/script>`);
+    }
+  </script>
   <script>
     'use strict';
     const h = Exercise.h;
@@ -168,6 +173,18 @@
       return card;
     }
 
+    (async () => {
+    let base = null;
+    try { base = new Set((await (await fetch('review-baseline.json', { cache: 'no-store' })).json()).keys); } catch (_) {}
+    const fresh = new Set();
+    const mark = (el, key) => {
+      if (!base) return el;
+      if (base.has(key)) el.classList.add('rv-old');
+      else { fresh.add(key); (el.querySelector('.rv-id') || el).appendChild(h('span', { class: 'rv-newtag', text: 'new' })); }
+      return el;
+    };
+    document.getElementById('newonly').addEventListener('change', e => document.body.classList.toggle('new-only', e.target.checked));
+
     for (const ex of Manifest.live('science')) {
       const t = Topics[ex.id];
       if (!t || !t.slots) continue;
@@ -195,7 +212,7 @@
           }
           card.appendChild(h('h3', { html: c.title }));
           card.appendChild(h('div', { class: 'learn-text', html: c.text }));
-          grid.appendChild(card);
+          grid.appendChild(mark(card, ReviewKey.card(ex.id, c)));
         }
         sec.appendChild(grid);
       }
@@ -226,14 +243,18 @@
             const q = item(new RNG(1000 + 37 * ii + 101 * k + si), 'core');
             const cid = q.learn || slot.learn;
             const card = cid && t.learn && t.learn.find(c => c.id === cid);
-            sec.appendChild(itemCard(id, q, item.generated ? `generated, sample ${k + 1}` : null,
-                                     card ? 'Learn it: ' + card.title : null));
+            sec.appendChild(mark(itemCard(id, q, item.generated ? `generated, sample ${k + 1}` : null,
+                                     card ? 'Learn it: ' + card.title : null), ReviewKey.item(ex.id, item)));
           }
         });
       });
       out.appendChild(sec);
     }
+    document.getElementById('rv-newsum').textContent = base
+      ? (fresh.size ? `${fresh.size} new or changed item${fresh.size === 1 ? '' : 's'} since the last review.` : 'Nothing new since the last review.')
+      : 'No review snapshot found, so nothing is marked new.';
     MJ.typeset();
+    })();
   </script>
 </body>
 </html>

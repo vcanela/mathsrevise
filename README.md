@@ -68,6 +68,15 @@ and lists any card no question links to.
 pass every test. `tools/review-science.html` lists every item with all its options, the marked
 answer and the explanation, each with an ID such as `7.1·Q4·3` for reporting problems.
 
+**Marking what is new.** `tools/review-baseline.json` is a fingerprint of every science item and card
+as last approved. The review page marks anything not in it as *new*, with a "Show only new items"
+filter. After a batch has been reviewed, take a fresh snapshot with `node tools/review-baseline.js`
+and commit it.
+
+**Not seen recently.** In free practice and the daily mix, each science slot prefers items the
+student has not yet answered (remembered per topic in the browser), then the ones answered longest
+ago. Fixed sets (`?set=N`) ignore this, so they stay identical for a whole class.
+
 ## Layout
 
 ```

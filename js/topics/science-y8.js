@@ -24,6 +24,18 @@
     };
   };
 
+  /** `k` of the items in `list`, keeping their order. */
+  const some = (rng, list, k) => {
+    const keep = new Set(rng.sample(list.map((_, i) => i), k));
+    return list.filter((_, i) => keep.has(i));
+  };
+
+  /** Pick from a bank of { text, bin }: one from bin `b`, three from the rest. */
+  const oneOf = (rng, bank, b) => ({
+    right: rng.pick(bank.filter(x => x.bin === b)).text,
+    wrong: rng.sample(bank.filter(x => x.bin !== b), 3).map(x => x.text)
+  });
+
   /** A match question from rows of [left, right]. */
   const match = (rng, prompt, rows, explain) => {
     const ord = rng.shuffle(rows.map((_, i) => i));
@@ -199,12 +211,13 @@
       // 4 · What property does each method use?
       {
         name: 'How each method works', learn: 'choose',
-        items: [rng => match(rng, 'Match each separation method to the difference it uses.', [
+        items: [Sci.gen(rng => match(rng, 'Match each separation method to the difference it uses.', some(rng, [
           ['Sieving', 'Different particle sizes: bigger pieces stay in the sieve'],
           ['Filtration', 'An insoluble solid is trapped, while the liquid passes through'],
           ['Settling and decanting', 'Different densities: the denser solid sinks'],
-          ['Evaporation', 'A dissolved solid is left behind when the liquid turns to gas']
-        ], 'Every separation uses some difference between the substances in the mixture.')]
+          ['Evaporation', 'A dissolved solid is left behind when the liquid turns to gas'],
+          ['Using a magnet', 'One substance is magnetic and the others are not']
+        ], 4), 'Every separation uses some difference between the substances in the mixture.'))]
       },
 
       // 5 · Read a chromatogram.
@@ -295,7 +308,31 @@
           rng => TF(rng, { statement: 'Filtration can separate dissolved salt from water.', answer: false,
             explain: 'Dissolved salt passes through filter paper. Evaporation is needed instead.', learn: 'filter' }),
           rng => TF(rng, { statement: 'Mixtures can be separated using differences such as particle size or density.', answer: true,
-            explain: 'Sieving and filtration use particle size; settling and decanting use density.', learn: 'choose' })
+            explain: 'Sieving and filtration use particle size; settling and decanting use density.', learn: 'choose' }),
+          rng => TF(rng, { statement: "Air is a mixture.", answer: true, learn: 'states',
+            explain: "Air is a mixture of gases, such as nitrogen and oxygen." }),
+          rng => TF(rng, { statement: "Distilled water is a mixture.", answer: false, learn: 'mixture',
+            explain: "Distilled water is a pure substance: just water." }),
+          rng => TF(rng, { statement: "Sieving separates solids with different particle sizes.", answer: true, learn: 'sieve',
+            explain: "Big pieces stay in the sieve; small ones fall through." }),
+          rng => TF(rng, { statement: "Sieving can separate salt that has dissolved in water.", answer: false, learn: 'sieve',
+            explain: "Dissolved salt passes through any sieve. Evaporation is needed." }),
+          rng => TF(rng, { statement: "A magnet can separate salt from sand.", answer: false, learn: 'magnet',
+            explain: "Neither salt nor sand is magnetic. A magnet separates iron from a mixture." }),
+          rng => TF(rng, { statement: "Decanting means carefully pouring a liquid off a solid that has settled.", answer: true, learn: 'decant',
+            explain: "The denser solid settles first, then the liquid is poured off." }),
+          rng => TF(rng, { statement: "In filtration, the solid trapped in the filter paper is called the filtrate.", answer: false, learn: 'filter',
+            explain: "The trapped solid is the residue. The liquid that passes through is the filtrate." }),
+          rng => TF(rng, { statement: "Evaporation removes the salt from salt water and leaves the water behind.", answer: false, learn: 'evaporate',
+            explain: "It is the other way round: the water evaporates and the salt is left behind." }),
+          rng => TF(rng, { statement: "Salt can be separated from rock salt by dissolving, filtering and then evaporating.", answer: true, learn: 'plan',
+            explain: "Dissolving lets the salt pass through the filter; evaporating gets it back." }),
+          rng => TF(rng, { statement: "In chromatography, a spot level with a known dye shows that dye is in the ink.", answer: true, learn: 'chroma',
+            explain: "Each dye travels its own distance up the paper." }),
+          rng => TF(rng, { statement: "A mixture can contain substances in different states.", answer: true, learn: 'states',
+            explain: "A fizzy drink is a gas mixed into a liquid." }),
+          rng => TF(rng, { statement: "When salt is separated from sand, some salt is usually lost.", answer: true, learn: 'effective',
+            explain: "Some solution soaks into the filter paper and sand, and crystals can spit out of the dish." })
         ]
       },
 
@@ -542,7 +579,31 @@
           rng => TF(rng, { statement: 'A solution is a kind of mixture.', answer: true,
             explain: 'The solute and solvent are mixed, not chemically joined, so a solution is a mixture.' }),
           rng => TF(rng, { learn: 'dissolve', statement: 'When sugar dissolves in water, the sugar no longer exists.', answer: false,
-            explain: 'Its particles are spread through the water. You can taste it, and you can get it back by evaporating the water.' })
+            explain: 'Its particles are spread through the water. You can taste it, and you can get it back by evaporating the water.' }),
+          rng => TF(rng, { statement: "In salt water, water is the solvent.", answer: true, learn: 'words',
+            explain: "The water is the solvent; the salt is the solute." }),
+          rng => TF(rng, { statement: "In salt water, salt is the solvent.", answer: false, learn: 'words',
+            explain: "Salt is the solute: the substance that dissolves. Water is the solvent." }),
+          rng => TF(rng, { statement: "Flour stirred into water makes a solution.", answer: false, learn: 'suspension',
+            explain: "Flour does not dissolve. It makes a suspension, which settles." }),
+          rng => TF(rng, { statement: "A more concentrated coloured solution usually looks darker.", answer: true, learn: 'conc',
+            explain: "More solute in the same volume gives a stronger colour." }),
+          rng => TF(rng, { statement: "Adding more water to a solution makes it more concentrated.", answer: false, learn: 'change',
+            explain: "Adding water makes it less concentrated: the same solute is spread through more water." }),
+          rng => TF(rng, { statement: "Evaporating some of the solvent makes a solution more concentrated.", answer: true, learn: 'change',
+            explain: "The same amount of solute is now in less solvent." }),
+          rng => TF(rng, { statement: "10 g of solute in 100 mL has the same concentration as 20 g in 200 mL.", answer: true, learn: 'compare',
+            explain: "Both are 10 g in every 100 mL." }),
+          rng => TF(rng, { statement: "Pouring half of a solution away halves its concentration.", answer: false, learn: 'change',
+            explain: "The solute and solvent are halved together, so the concentration stays the same." }),
+          rng => TF(rng, { statement: "How much solute will dissolve can depend on the temperature.", answer: true, learn: 'saturated',
+            explain: "A saturated solution holds the most it can at that temperature." }),
+          rng => TF(rng, { statement: "Dissolving and melting are the same thing.", answer: false, learn: 'dissolve',
+            explain: "Melting is one substance turning from solid to liquid. Dissolving is a solute spreading through a solvent." }),
+          rng => TF(rng, { statement: "Mass is conserved when a solute dissolves.", answer: true, learn: 'dissolve',
+            explain: "200 g of water plus 20 g of salt makes 220 g of solution." }),
+          rng => TF(rng, { statement: "In chromatography, the start line should be drawn in ink.", answer: false, learn: 'chroma',
+            explain: "It is drawn in pencil, which does not dissolve and run up the paper." })
         ]
       },
 
@@ -648,6 +709,13 @@
   // Practices: investigating reflection and refraction by changing conditions
   // (mirrors, angles); drawing the path of light with scientific conventions.
 
+  const SOURCES = [
+    { text: 'The Sun', bin: 0 }, { text: 'A candle flame', bin: 0 }, { text: 'A glowing light bulb', bin: 0 },
+    { text: 'Lightning', bin: 0 }, { text: 'Glow-worms (titiwai) in a cave', bin: 0 }, { text: 'A star', bin: 0 },
+    { text: 'The Moon', bin: 1 }, { text: 'A mirror', bin: 1 }, { text: 'A book', bin: 1 },
+    { text: 'The planet Venus', bin: 1 }, { text: 'Your face', bin: 1 }, { text: 'A road sign', bin: 1 }
+  ];
+
   Sci.topic({
     id: 's8e3', unit: 'y8',
     title: 'Behaviour of Light',
@@ -730,12 +798,7 @@
         items: [rng => Sci.sort(rng, {
           prompt: 'Does each one give out its own light, or only reflect light?',
           bins: ['Light source', 'Reflects light'],
-          items: [
-            { text: 'The Sun', bin: 0 }, { text: 'A candle flame', bin: 0 }, { text: 'A glowing light bulb', bin: 0 },
-            { text: 'Lightning', bin: 0 }, { text: 'Glow-worms (titiwai) in a cave', bin: 0 }, { text: 'A star', bin: 0 },
-            { text: 'The Moon', bin: 1 }, { text: 'A mirror', bin: 1 }, { text: 'A book', bin: 1 },
-            { text: 'The planet Venus', bin: 1 }, { text: 'Your face', bin: 1 }, { text: 'A road sign', bin: 1 }
-          ],
+          items: SOURCES,
           pick: 6,
           explain: 'Light sources give out their own light. Everything else, including the Moon and the planets, is seen by the light it reflects.'
         })]
@@ -754,6 +817,15 @@
             prompt: 'Which shows the path of light when you look at a lit candle?',
             right: 'Candle flame → eye', wrong: ['Eye → candle flame', 'Candle flame → wall → candle flame', 'Eye → candle flame → eye'],
             explain: 'The flame is a light source, so its light can travel straight to your eye.'
+          }),
+          Sci.gen(rng => {
+            const src = rng.chance();
+            return C(rng, {
+              prompt: src ? 'Which of these gives out its own light?' : 'Which of these can only be seen by the light it reflects?',
+              ...oneOf(rng, SOURCES, src ? 0 : 1), wide: false, learn: 'sources',
+              explain: src ? 'Only a light source gives out its own light; the others are seen by reflected light.'
+                           : 'It gives out no light of its own. The others are light sources.'
+            });
           })
         ]
       },
@@ -897,7 +969,31 @@
           rng => TF(rng, { statement: 'We see a book because light travels from our eyes to the book.', answer: false,
             explain: 'Light travels from a source to the book and then into our eyes.' }),
           rng => TF(rng, { learn: 'reflection', statement: 'When we see something in a mirror, the light has travelled from a source to the object, then to the mirror, then to our eyes.', answer: true,
-            explain: 'That is the path of light for a reflection.' })
+            explain: 'That is the path of light for a reflection.' }),
+          rng => TF(rng, { statement: "The Moon is a light source.", answer: false, learn: 'sources',
+            explain: "The Moon gives out no light of its own. It reflects sunlight." }),
+          rng => TF(rng, { statement: "A candle flame is a light source.", answer: true, learn: 'sources',
+            explain: "It gives out its own light." }),
+          rng => TF(rng, { statement: "In a room with no light at all, you can see a book if you wait long enough.", answer: false, learn: 'seeing',
+            explain: "With no light, nothing reflects into your eyes, however long you wait." }),
+          rng => TF(rng, { statement: "Ibn al-Haytham argued that light travels from objects into the eye.", answer: true, learn: 'ideas',
+            explain: "He contested the older idea that the eye sends out rays." }),
+          rng => TF(rng, { statement: "Plato’s understanding was that light enters the eye from objects.", answer: false, learn: 'ideas',
+            explain: "Plato’s understanding was that the eyes send out rays. Ibn al-Haytham later argued the opposite." }),
+          rng => TF(rng, { statement: "Light leaves a flat mirror at the same angle to the normal as it arrives.", answer: true, learn: 'reflection',
+            explain: "The two angles, measured from the normal, are equal." }),
+          rng => TF(rng, { statement: "Angles of reflection are measured from the surface of the mirror.", answer: false, learn: 'reflection',
+            explain: "They are measured from the normal, a line at right angles to the mirror." }),
+          rng => TF(rng, { statement: "The normal is a line at right angles to the mirror.", answer: true, learn: 'reflection',
+            explain: "Angles of light rays are measured from it." }),
+          rng => TF(rng, { statement: "Light passing from air into water bends towards the normal.", answer: true, learn: 'refraction',
+            explain: "It changes direction at the boundary: that is refraction." }),
+          rng => TF(rng, { statement: "A swimming pool looks deeper than it really is.", answer: false, learn: 'everyday',
+            explain: "Refraction makes it look shallower than it is." }),
+          rng => TF(rng, { statement: "A straw in a glass of water can look bent because of refraction.", answer: true, learn: 'everyday',
+            explain: "Light from the part under water changes direction as it leaves the water." }),
+          rng => TF(rng, { statement: "In a ray diagram, light rays are drawn as straight lines with arrows.", answer: true, learn: 'rays',
+            explain: "The arrow shows which way the light travels." })
         ]
       }
     ]
@@ -1189,7 +1285,31 @@
           rng => TF(rng, { learn: 'seesaw', statement: 'A seesaw is a type of lever.', answer: true,
             explain: 'A seesaw is a lever with forces acting on both sides of a pivot.' }),
           rng => TF(rng, { learn: 'seesaw', statement: 'A small push far from the pivot can balance a larger push close to it.', answer: true,
-            explain: 'The turning effect depends on both the size of the force and its distance from the pivot.' })
+            explain: 'The turning effect depends on both the size of the force and its distance from the pivot.' }),
+          rng => TF(rng, { statement: "Forces of 30 N to the left and 30 N to the right are balanced.", answer: true, learn: 'balanced',
+            explain: "They are equal and opposite, so the net force is zero." }),
+          rng => TF(rng, { statement: "If the net force on an object is zero, it must be standing still.", answer: false, learn: 'balanced',
+            explain: "It could also be moving at a steady speed in a straight line." }),
+          rng => TF(rng, { statement: "A car going round a corner at a steady speed has unbalanced forces on it.", answer: true, learn: 'unbalanced',
+            explain: "Its direction is changing, which needs an unbalanced force." }),
+          rng => TF(rng, { statement: "An unbalanced force can change the direction an object moves in.", answer: true, learn: 'unbalanced',
+            explain: "It can change speed, direction, or both." }),
+          rng => TF(rng, { statement: "Forces of 50 N to the right and 20 N to the left give a net force of 70 N.", answer: false, learn: 'net',
+            explain: "Opposite forces subtract: 50 − 20 = 30 N, to the right." }),
+          rng => TF(rng, { statement: "A full trolley needs a bigger force than an empty one to speed up by the same amount.", answer: true, learn: 'mass',
+            explain: "More mass needs a larger unbalanced force for the same change in motion." }),
+          rng => TF(rng, { statement: "Pushing further from the pivot gives a bigger turning effect.", answer: true, learn: 'seesaw',
+            explain: "The turning effect depends on the force and its distance from the pivot." }),
+          rng => TF(rng, { statement: "A lighter child can balance a heavier child by sitting further from the pivot.", answer: true, learn: 'balance',
+            explain: "Weight × distance must match on both sides." }),
+          rng => TF(rng, { statement: "Two children of equal weight balance when they sit at equal distances from the pivot.", answer: true, learn: 'balance',
+            explain: "Their turning effects are then equal." }),
+          rng => TF(rng, { statement: "A rolling ball stops because it runs out of force.", answer: false, learn: 'myths',
+            explain: "Friction is an unbalanced force that slows it down until it stops." }),
+          rng => TF(rng, { statement: "A car at a steady speed in a straight line needs a bigger forward force than backward force.", answer: false, learn: 'myths',
+            explain: "At steady speed the forces are balanced. A bigger forward force would make it speed up." }),
+          rng => TF(rng, { statement: "In a fair test, only the independent variable is changed on purpose.", answer: true, learn: 'fair',
+            explain: "Everything else is kept the same." })
         ]
       }
     ]
@@ -1325,7 +1445,11 @@
           ['Igneous', 'Melted rock cools and hardens'],
           ['Sedimentary', 'Layers of sediment are pressed and cemented together'],
           ['Metamorphic', 'Existing rock is changed by heat and pressure']
-        ], 'The rock cycle links all three: each can, over a very long time, become another.')]
+        ], 'The rock cycle links all three: each can, over a very long time, become another.'),
+        Sci.gen(rng => Object.assign(match(rng, 'Match each type of rock to an example.',
+          ROCK_TYPES.map((t, k) => [t, rng.pick(ROCKS.filter(r => r.type === k)).name]),
+          'Igneous: granite, basalt, pumice, obsidian. Sedimentary: sandstone, limestone, mudstone, conglomerate. Metamorphic: marble, slate, schist, gneiss.'),
+          { learn: 'types' }))]
       },
 
       // 4 · How a fossil forms.
@@ -1433,6 +1557,17 @@
             right: 'Igneous (it is pumice)', wrong: ['Sedimentary', 'Metamorphic', 'A mineral, not a rock'],
             explain: 'Pumice forms when frothy lava cools quickly, trapping gas bubbles. It is igneous.'
           }),
+          Sci.gen(rng => {
+            const k = rng.int(0, 2);
+            const pool = ROCKS.map(r => ({ text: r.name, bin: r.type }));
+            return C(rng, {
+              prompt: `Which of these rocks is <strong>${ROCK_TYPES[k].toLowerCase()}</strong>?`,
+              ...oneOf(rng, pool, k), wide: false, learn: 'types',
+              explain: ['Igneous rocks form when melted rock cools: granite, basalt, pumice, obsidian.',
+                        'Sedimentary rocks form from layers of sediment: sandstone, limestone, mudstone, conglomerate.',
+                        'Metamorphic rocks form when rock is changed by heat and pressure: marble, slate, schist, gneiss.'][k]
+            });
+          }),
           rng => C(rng, {
             prompt: 'A rock has interlocking crystals that formed as melted rock slowly cooled underground. What type is it?',
             right: 'Igneous', wrong: ['Sedimentary', 'Metamorphic', 'Soil'],
@@ -1452,7 +1587,31 @@
           rng => TF(rng, { learn: 'fossils', statement: 'Fossils form when organisms are buried in sediment and minerals slowly replace their material.', answer: true,
             explain: 'That is how most fossils form, over long periods of time.' }),
           rng => TF(rng, { learn: 'soil', statement: 'Soil contains living organisms as well as rock particles.', answer: true,
-            explain: 'Soil includes fungi, plants, animals and bacteria, along with rock particles, air and water.' })
+            explain: 'Soil includes fungi, plants, animals and bacteria, along with rock particles, air and water.' }),
+          rng => TF(rng, { statement: "The crust is the thickest layer of the Earth.", answer: false, learn: 'layers',
+            explain: "The crust is the thinnest layer. The mantle is the thickest." }),
+          rng => TF(rng, { statement: "The mantle lies between the crust and the outer core.", answer: true, learn: 'layers',
+            explain: "From the outside in: crust, mantle, outer core, inner core." }),
+          rng => TF(rng, { statement: "A rock can be made of more than one mineral.", answer: true, learn: 'minerals',
+            explain: "Rocks are made of one or more minerals." }),
+          rng => TF(rng, { statement: "The particles in a mineral form a repeating pattern.", answer: true, learn: 'minerals',
+            explain: "That pattern gives a mineral its regular crystal shape." }),
+          rng => TF(rng, { statement: "Granite is a sedimentary rock.", answer: false, learn: 'types',
+            explain: "Granite is igneous: it forms when melted rock cools." }),
+          rng => TF(rng, { statement: "Marble is a metamorphic rock.", answer: true, learn: 'types',
+            explain: "Marble forms when rock is changed by heat and pressure." }),
+          rng => TF(rng, { statement: "Sedimentary rocks form when melted rock cools.", answer: false, learn: 'types',
+            explain: "That is igneous rock. Sedimentary rock forms from layers of sediment pressed together." }),
+          rng => TF(rng, { statement: "Fossils are most often found in sedimentary rock.", answer: true, learn: 'identify',
+            explain: "Organisms are buried in layers of sediment, which become sedimentary rock." }),
+          rng => TF(rng, { statement: "Pumice is a metamorphic rock.", answer: false, learn: 'identify',
+            explain: "Pumice is igneous. It forms when frothy lava cools quickly, trapping gas bubbles." }),
+          rng => TF(rng, { statement: "Slow cooling underground gives igneous rock larger crystals.", answer: true, learn: 'identify',
+            explain: "The crystals have longer to grow." }),
+          rng => TF(rng, { statement: "Soil contains air and water.", answer: true, learn: 'soil',
+            explain: "Soil is rock particles, air, water, decaying organisms and living things." }),
+          rng => TF(rng, { statement: "Hāngī stones are chosen because they hold heat without cracking.", answer: true, learn: 'uses',
+            explain: "They are volcanic rocks with properties suited to the job." })
         ]
       }
     ]
@@ -1551,13 +1710,13 @@
       // 1 · Order natural selection.
       {
         name: 'Natural selection in order', learn: 'selection',
-        items: [rng => order(rng, 'Put the steps of natural selection in order.', [
+        items: [Sci.gen(rng => order(rng, 'Put these steps of natural selection in order.', some(rng, [
           'Individuals in a population vary in a heritable trait',
           'A selection pressure, such as limited food, affects survival',
           'Individuals with a helpful version of the trait are more likely to survive and reproduce',
           'They pass the trait on to their offspring',
           'Over many generations, the trait becomes more common'
-        ], 'Variation, then selection, then reproduction and inheritance, repeated over many generations.')]
+        ], 4), 'Variation, then selection, then reproduction and inheritance, repeated over many generations.'))]
       },
 
       // 2 · Heritable or acquired?
@@ -1722,7 +1881,31 @@
           rng => TF(rng, { learn: 'evidence', statement: 'Some fossils are similar to organisms alive today.', answer: true,
             explain: 'Crocodile fossils, for example, look much like crocodiles living now.' }),
           rng => TF(rng, { learn: 'selection', statement: 'A trait that helps individuals survive and reproduce tends to become more common in a population over many generations.', answer: true,
-            explain: 'Those individuals leave more offspring, who inherit the trait.' })
+            explain: 'Those individuals leave more offspring, who inherit the trait.' }),
+          rng => TF(rng, { statement: "A scar is an inherited trait.", answer: false, learn: 'variation',
+            explain: "A scar is acquired during a lifetime, so it cannot be passed on." }),
+          rng => TF(rng, { statement: "Muscles built at the gym can be passed on to offspring.", answer: false, learn: 'variation',
+            explain: "They are acquired, not inherited." }),
+          rng => TF(rng, { statement: "A shortage of food can be a selection pressure.", answer: true, learn: 'pressure',
+            explain: "It affects which individuals survive and reproduce." }),
+          rng => TF(rng, { statement: "In natural selection, individuals with helpful traits are more likely to survive and reproduce.", answer: true, learn: 'selection',
+            explain: "They pass those traits on, so the traits become more common." }),
+          rng => TF(rng, { statement: "Evolution happens over many generations.", answer: true, learn: 'populations',
+            explain: "It is a change in a population’s traits over generations." }),
+          rng => TF(rng, { statement: "An individual animal evolves as it gets older.", answer: false, learn: 'populations',
+            explain: "Populations evolve, over many generations. Individuals do not." }),
+          rng => TF(rng, { statement: "Darwin and Wallace both developed theories of natural selection.", answer: true, learn: 'darwin',
+            explain: "They presented their theories together." }),
+          rng => TF(rng, { statement: "Lamarck proposed the theory of natural selection.", answer: false, learn: 'darwin',
+            explain: "Darwin and Wallace did. Lamarck proposed that acquired traits are passed on, an idea since contested." }),
+          rng => TF(rng, { statement: "All vertebrates have a backbone, which suggests a shared ancestor.", answer: true, learn: 'evidence',
+            explain: "Shared features support common ancestry." }),
+          rng => TF(rng, { statement: "Kākā, kea and kākāpō descend from a shared ancestor.", answer: true, learn: 'species',
+            explain: "Over long periods, new species formed from that ancestor." }),
+          rng => TF(rng, { statement: "The moa is extinct.", answer: true, learn: 'extinction',
+            explain: "It did not survive the changes after people arrived." }),
+          rng => TF(rng, { statement: "Habitat destruction can cause a species to become extinct.", answer: true, learn: 'extinction',
+            explain: "Some species cannot survive changes to their environment." })
         ]
       }
     ]
@@ -1833,17 +2016,17 @@
       // 2 · Flowering plant stages.
       {
         name: 'A flowering plant’s life', learn: 'plants',
-        items: [rng => order(rng, 'Put these stages of reproduction in a flowering plant in order.',
-          ['Pollination', 'Fertilisation', 'Seed formation', 'Seed dispersal', 'Germination'],
-          'Pollen arrives, fertilisation happens, seeds form and are carried away, then they germinate.')]
+        items: [Sci.gen(rng => order(rng, 'Put these stages of reproduction in a flowering plant in order.',
+          some(rng, ['Pollination', 'Fertilisation', 'Seed formation', 'Seed dispersal', 'Germination'], 4),
+          'The full order: pollination, fertilisation, seed formation, seed dispersal, germination.'))]
       },
 
       // 3 · Mammal development.
       {
         name: 'Development of a mammal', learn: 'mammals',
-        items: [rng => order(rng, 'Put these stages in the development of a mammal in order.',
-          ['Gamete formation (sperm and ovum)', 'Fertilisation', 'Zygote', 'Embryo', 'Foetus', 'Birth'],
-          'Gametes form, fertilisation makes a zygote, which develops into an embryo, then a foetus, before birth.')]
+        items: [Sci.gen(rng => order(rng, 'Put these stages in the development of a mammal in order.',
+          some(rng, ['Gamete formation (sperm and ovum)', 'Fertilisation', 'Zygote', 'Embryo', 'Foetus', 'Birth'], 4),
+          'The full order: gametes form, fertilisation makes a zygote, which develops into an embryo, then a foetus, before birth.'))]
       },
 
       // 4 · What the offspring are like.
@@ -1912,12 +2095,13 @@
       // 8 · Match the plant stages.
       {
         name: 'Plant reproduction words', learn: 'plants',
-        items: [rng => match(rng, 'Match each stage to what happens.', [
+        items: [Sci.gen(rng => match(rng, 'Match each stage to what happens.', some(rng, [
           ['Pollination', 'Pollen is carried to a flower'],
           ['Fertilisation', 'A male gamete joins with a female gamete'],
+          ['Seed formation', 'Seeds develop in the flower after fertilisation'],
           ['Seed dispersal', 'Seeds are carried away from the parent plant'],
           ['Germination', 'A seed starts to grow into a new plant']
-        ], 'Pollination comes before fertilisation; dispersal comes before germination.')]
+        ], 4), 'In order: pollination, fertilisation, seed formation, seed dispersal, germination.'))]
       },
 
       // 9 · Comparing organisms.
@@ -1946,7 +2130,31 @@
           rng => TF(rng, { learn: 'mammals', statement: 'In animals, sexual reproduction involves sperm and egg formation, then fertilisation.', answer: true,
             explain: 'Animals reproduce sexually through sperm and egg formation, then fertilisation.' }),
           rng => TF(rng, { learn: 'mammals', statement: 'A zygote forms after fertilisation.', answer: true,
-            explain: 'The zygote is the first cell formed when the gametes join; it then develops into an embryo.' })
+            explain: 'The zygote is the first cell formed when the gametes join; it then develops into an embryo.' }),
+          rng => TF(rng, { statement: "A strawberry plant growing new plants from runners is asexual reproduction.", answer: true, learn: 'two',
+            explain: "There is only one parent." }),
+          rng => TF(rng, { statement: "Offspring of asexual reproduction are genetically identical to their parent.", answer: true, learn: 'two',
+            explain: "With only one parent, there is no mixing of traits." }),
+          rng => TF(rng, { statement: "Sexual reproduction involves only one parent.", answer: false, learn: 'two',
+            explain: "Sexual reproduction involves two parents, each making gametes." }),
+          rng => TF(rng, { statement: "Pollination happens after fertilisation.", answer: false, learn: 'plants',
+            explain: "Pollination comes first: pollen must arrive before fertilisation can happen." }),
+          rng => TF(rng, { statement: "Germination is when a seed starts to grow into a new plant.", answer: true, learn: 'plants',
+            explain: "It is the last stage, after seeds are dispersed." }),
+          rng => TF(rng, { statement: "Birds such as tūī can carry pollen between flowers.", answer: true, learn: 'plants',
+            explain: "Pollen is carried by wind, insects or birds." }),
+          rng => TF(rng, { statement: "An embryo develops into a foetus.", answer: true, learn: 'mammals',
+            explain: "Zygote, embryo, foetus, then birth." }),
+          rng => TF(rng, { statement: "The zygote forms before fertilisation.", answer: false, learn: 'mammals',
+            explain: "The zygote is the first cell formed by fertilisation." }),
+          rng => TF(rng, { statement: "Most fungi reproduce by spores.", answer: true, learn: 'fungi',
+            explain: "Spores spread and grow into new fungi." }),
+          rng => TF(rng, { statement: "Hormones are carried around the body in the blood.", answer: true, learn: 'hormones',
+            explain: "They change the activity of particular target cells or tissues." }),
+          rng => TF(rng, { statement: "Puberty is when a person develops the ability to reproduce.", answer: true, learn: 'puberty',
+            explain: "Hormones control the changes." }),
+          rng => TF(rng, { statement: "Flowering plants usually reproduce by spores.", answer: false, learn: 'compare',
+            explain: "Flowering plants make seeds. Most fungi reproduce by spores." })
         ]
       }
     ]
@@ -1971,6 +2179,12 @@
     ['A tapeworm lives in another animal’s gut, taking its food', 2]
   ];
   const REL_NAMES = ['Predator and prey', 'Mutualism', 'Parasitism'];
+  const ROLES = [
+    { text: 'A kōwhai tree', bin: 0 }, { text: 'Seaweed', bin: 0 }, { text: 'Grass', bin: 0 }, { text: 'Phytoplankton', bin: 0 },
+    { text: 'A kererū', bin: 1 }, { text: 'A rabbit', bin: 1 }, { text: 'A snapper', bin: 1 }, { text: 'A stoat', bin: 1 },
+    { text: 'Fungi growing on a fallen log', bin: 2 }, { text: 'Bacteria breaking down a dead leaf', bin: 2 },
+    { text: 'Mould on an old orange', bin: 2 }
+  ];
 
   Sci.topic({
     id: 's8e8', unit: 'y8',
@@ -2052,12 +2266,7 @@
         items: [rng => Sci.sort(rng, {
           prompt: 'Is each one a producer, a consumer or a decomposer?',
           bins: ['Producer', 'Consumer', 'Decomposer'],
-          items: [
-            { text: 'A kōwhai tree', bin: 0 }, { text: 'Seaweed', bin: 0 }, { text: 'Grass', bin: 0 }, { text: 'Phytoplankton', bin: 0 },
-            { text: 'A kererū', bin: 1 }, { text: 'A rabbit', bin: 1 }, { text: 'A snapper', bin: 1 }, { text: 'A stoat', bin: 1 },
-            { text: 'Fungi growing on a fallen log', bin: 2 }, { text: 'Bacteria breaking down a dead leaf', bin: 2 },
-            { text: 'Mould on an old orange', bin: 2 }
-          ],
+          items: ROLES,
           pick: 6,
           explain: 'Producers make their own food by photosynthesis; consumers eat other organisms; decomposers break down dead material and waste.'
         })]
@@ -2083,7 +2292,10 @@
           ['Prey', 'An organism that is hunted and eaten'],
           ['Mutualism', 'Two organisms both benefit from helping each other'],
           ['Parasitism', 'One organism benefits while the other is harmed']
-        ], 'These are some of the ways organisms in an ecosystem are connected.')]
+        ], 'These are some of the ways organisms in an ecosystem are connected.'),
+        Sci.gen(rng => match(rng, 'Match each relationship to an example.',
+          REL_NAMES.map((nm, k) => [nm, rng.pick(RELATIONS.filter(r => r[1] === k))[0]]),
+          'Predator and prey: one hunts and eats the other. Mutualism: both benefit. Parasitism: one benefits and the other is harmed.'))]
       },
 
       // 4 · What decomposers do.
@@ -2101,7 +2313,12 @@
             right: 'Dead leaves and logs would pile up, and nutrients would not return to the soil.',
             wrong: ['Plants would grow faster.', 'There would be more sunlight.', 'Nothing would change.'],
             explain: 'Without decomposers, matter is not cycled back into the soil for producers to use.'
-          })
+          }),
+          Sci.gen(rng => C(rng, {
+            prompt: 'Which of these is <strong>a decomposer</strong>?',
+            ...oneOf(rng, ROLES, 2), wide: false,
+            explain: 'It is a decomposer: it breaks down dead material and waste.'
+          }))
         ]
       },
 
@@ -2115,7 +2332,12 @@
             explain: 'A producer makes glucose, a carbohydrate, through photosynthesis.'
           }),
           rng => TF(rng, { statement: 'A consumer gets its energy and nutrients by feeding on producers or other consumers.', answer: true,
-            explain: 'Consumers cannot make their own food, so they feed on other organisms.' })
+            explain: 'Consumers cannot make their own food, so they feed on other organisms.' }),
+          Sci.gen(rng => C(rng, {
+            prompt: 'Which of these is <strong>a producer</strong>?',
+            ...oneOf(rng, ROLES, 0), wide: false,
+            explain: 'It is a producer: it makes its own food by photosynthesis.'
+          }))
         ]
       },
 
@@ -2212,7 +2434,31 @@
           rng => TF(rng, { learn: 'decomposers', statement: 'Decomposers release nutrients back into the ecosystem.', answer: true,
             explain: 'That is their role: breaking down dead material and waste.' }),
           rng => TF(rng, { learn: 'quadrat', statement: 'A quadrat is used to sample a small area so a larger area can be estimated.', answer: true,
-            explain: 'Counting in several quadrats and averaging gives an estimate for the whole area.' })
+            explain: 'Counting in several quadrats and averaging gives an estimate for the whole area.' }),
+          rng => TF(rng, { statement: "Producers make glucose by photosynthesis.", answer: true, learn: 'roles',
+            explain: "That is how producers get their energy." }),
+          rng => TF(rng, { statement: "A rabbit is a producer.", answer: false, learn: 'roles',
+            explain: "A rabbit eats plants, so it is a consumer." }),
+          rng => TF(rng, { statement: "Fungi growing on a fallen log are decomposers.", answer: true, learn: 'roles',
+            explain: "They break down dead material." }),
+          rng => TF(rng, { statement: "Energy is recycled round and round an ecosystem.", answer: false, learn: 'cycle',
+            explain: "Matter cycles; energy is transferred through the ecosystem." }),
+          rng => TF(rng, { statement: "Matter is cycled in an ecosystem.", answer: true, learn: 'cycle',
+            explain: "Nutrients pass from producers to consumers to decomposers and back to the soil." }),
+          rng => TF(rng, { statement: "Bees and flowers are an example of mutualism.", answer: true, learn: 'relations',
+            explain: "Bees get nectar and the flowers get pollinated: both benefit." }),
+          rng => TF(rng, { statement: "Fleas feeding on a dog’s blood is an example of mutualism.", answer: false, learn: 'relations',
+            explain: "The fleas benefit and the dog is harmed: parasitism." }),
+          rng => TF(rng, { statement: "Without decomposers, nutrients would not return to the soil.", answer: true, learn: 'decomposers',
+            explain: "Dead material would pile up instead." }),
+          rng => TF(rng, { statement: "Soil contains living organisms.", answer: true, learn: 'soil',
+            explain: "Fungi, bacteria and earthworms live in soil." }),
+          rng => TF(rng, { statement: "To estimate a population with quadrats, multiply the average count per m² by the area.", answer: true, learn: 'quadrat',
+            explain: "An average of 5 per m² in a 1000 m² field gives about 5000." }),
+          rng => TF(rng, { statement: "Quadrats should be placed only where the most plants are growing.", answer: false, learn: 'quadrat',
+            explain: "They are placed at random, so the sample is fair." }),
+          rng => TF(rng, { statement: "Abiotic conditions can affect where organisms are found.", answer: true, learn: 'patterns',
+            explain: "Light, temperature and moisture all affect where organisms live." })
         ]
       }
     ]
