@@ -204,7 +204,19 @@
             'Dissolve first, so the salt can pass through the filter while the sand is trapped; then evaporate to get the salt back.'),
           rng => order(rng, 'A mixture contains iron filings, sand and salt. Put the steps for separating all three in order.',
             ['Use a magnet to pull out the iron filings', 'Add water and stir to dissolve the salt', 'Filter to collect the sand', 'Evaporate the water to collect the salt'],
-            'Take out the magnetic iron first. Then dissolving lets the salt pass through the filter, the sand stays behind, and evaporation recovers the salt.')
+            'Take out the magnetic iron first. Then dissolving lets the salt pass through the filter, the sand stays behind, and evaporation recovers the salt.'),
+          rng => order(rng, "A mixture contains sand, salt and gravel. Put the steps for separating all three in order.",
+            ["Sieve out the gravel", "Add water and stir to dissolve the salt", "Filter to collect the sand", "Evaporate the water to collect the salt"],
+            "Take the biggest pieces out first, then dissolve, filter and evaporate."),
+          rng => order(rng, "Put the steps for getting clean water from muddy water in order.",
+            ["Leave it to stand so the mud settles", "Pour the water off carefully (decant)", "Filter the water to remove fine particles"],
+            "Settling and decanting remove most of the mud; filtering catches the finer bits."),
+          rng => order(rng, "A mixture contains iron filings, sand and water. Put the steps for separating them in order.",
+            ["Use a magnet to pull out the iron filings", "Leave the rest to stand so the sand settles", "Pour off the water"],
+            "The magnet removes the iron; settling and decanting separate the sand from the water."),
+          rng => order(rng, "Put the steps for getting sugar back from a mixture of sugar and sand in order.",
+            ["Add warm water and stir to dissolve the sugar", "Filter to remove the sand", "Gently evaporate the water to leave the sugar"],
+            "Dissolving lets the sugar pass through the filter; evaporating gets it back.")
         ]
       },
 
@@ -263,6 +275,26 @@
             prompt: 'Which mixture is made of substances all in the <strong>same</strong> state?',
             right: 'Air, which is a mixture of gases', wrong: ['Salt water', 'Muddy water', 'A fizzy drink'],
             explain: 'Air is a mixture of gases such as nitrogen and oxygen, all in the same state.'
+          }),
+          rng => C(rng, {
+            prompt: "Muddy water is a mixture of…",
+            right: "a solid and a liquid", wrong: ["two gases", "two solids", "a gas and a solid"],
+            explain: "Mud is solid; water is liquid."
+          }),
+          rng => C(rng, {
+            prompt: "Which mixture is made of two solids?",
+            right: "Sand mixed with salt", wrong: ["Air", "Muddy water", "A fizzy drink"],
+            explain: "Sand and salt are both solids."
+          }),
+          rng => C(rng, {
+            prompt: "Which mixture is a solid mixed into a liquid?",
+            right: "Muddy water", wrong: ["Air", "Sand and gravel", "A fizzy drink"],
+            explain: "Mud particles are spread through liquid water."
+          }),
+          rng => C(rng, {
+            prompt: "Air is a mixture of…",
+            right: "gases", wrong: ["solids", "liquids", "a solid and a gas"],
+            explain: "Air is a mixture of gases such as nitrogen and oxygen."
           })
         ]
       },
@@ -293,6 +325,30 @@
             wrong: 2,
             explain: 'A dissolved substance is spread through the water as particles far too small to be caught, so it passes straight through. Evaporation is needed to get it back.',
             learn: 'filter'
+          }),
+          rng => Sci.spot(rng, { learn: "choose",
+            prompt: "A student plans how to separate sand from gravel.",
+            lines: ["Sand and gravel are mixed together.", "Their grains are different sizes.", "A magnet will separate them.", "A sieve would also work."],
+            wrong: 2,
+            explain: "Neither sand nor gravel is magnetic. A sieve works, because the particle sizes differ."
+          }),
+          rng => Sci.spot(rng, { learn: "evaporate",
+            prompt: "A student plans how to get salt out of salt water.",
+            lines: ["Salt water is a mixture.", "The salt is dissolved in the water.", "Leaving it to settle will make the salt sink to the bottom.", "Evaporating the water leaves the salt behind."],
+            wrong: 2,
+            explain: "Dissolved salt does not settle. It stays spread through the water until the water evaporates."
+          }),
+          rng => Sci.spot(rng, { learn: "decant",
+            prompt: "A student describes separating muddy water.",
+            lines: ["Muddy water is left to stand.", "The mud settles at the bottom.", "The water is poured off the top.", "This method is called evaporation."],
+            wrong: 3,
+            explain: "Pouring a liquid off a settled solid is decanting."
+          }),
+          rng => Sci.spot(rng, { learn: "mixture",
+            prompt: "A student describes a mixture of iron filings and sand.",
+            lines: ["Iron filings and sand are mixed together.", "The iron is still magnetic in the mixture.", "Mixing them made a new substance.", "A magnet can pull the iron out."],
+            wrong: 2,
+            explain: "Mixing does not make a new substance. Each keeps its own properties."
           })
         ]
       },
@@ -370,6 +426,21 @@
             prompt: 'Which equipment separates the coloured dyes in a felt-tip pen ink?',
             right: 'Chromatography paper standing in a solvent', wrong: ['A sieve', 'A magnet', 'Filter paper in a funnel'],
             explain: 'Chromatography separates the dyes as the solvent carries them different distances up the paper.', learn: 'chroma'
+          }),
+          rng => C(rng, { learn: "sieve",
+            prompt: "Which equipment separates gravel from sand?",
+            right: "A sieve", wrong: ["An evaporating dish", "A thermometer", "A magnet"],
+            explain: "The gravel pieces are too big to pass through the sieve."
+          }),
+          rng => C(rng, { learn: "magnet",
+            prompt: "Which equipment separates iron filings from sand?",
+            right: "A magnet", wrong: ["A sieve with large holes", "An evaporating dish", "A thermometer"],
+            explain: "Iron is magnetic; sand is not."
+          }),
+          rng => C(rng, { learn: "decant",
+            prompt: "What is it called when you carefully pour a liquid off a settled solid?",
+            right: "Decanting", wrong: ["Filtering", "Evaporating", "Sieving"],
+            explain: "Settling and decanting uses a difference in density."
           })
         ]
       }
@@ -388,7 +459,9 @@
     { solute: 'Salt', solvent: 'Water', solution: 'Salt water' },
     { solute: 'Sugar', solvent: 'Tea', solution: 'Sweet tea' },
     { solute: 'Drink powder', solvent: 'Water', solution: 'The drink' },
-    { solute: 'Copper sulfate crystals', solvent: 'Water', solution: 'Blue copper sulfate solution' }
+    { solute: 'Copper sulfate crystals', solvent: 'Water', solution: 'Blue copper sulfate solution' },
+    { solute: 'Instant coffee granules', solvent: 'Hot water', solution: 'A cup of instant coffee' },
+    { solute: 'Sugar', solvent: 'Water', solution: 'Sugar water' }
   ];
 
   Sci.topic({
@@ -564,6 +637,21 @@
             prompt: 'Half of a jug of salt solution is poured away. What happens to the concentration of what is left?',
             right: 'It stays the same', wrong: ['It halves', 'It doubles', 'It becomes saturated'],
             explain: 'Both the salt and the water are halved together, so the amount of salt in each millilitre does not change.'
+          }),
+          rng => C(rng, {
+            prompt: "A cordial drink tastes too strong. How can you make it less concentrated?",
+            right: "Add more water", wrong: ["Add more cordial", "Pour half of it away", "Stir it for longer"],
+            explain: "The same amount of cordial spread through more water is less concentrated."
+          }),
+          rng => C(rng, {
+            prompt: "Salt water is left in the sun and some of the water evaporates. What happens to the concentration?",
+            right: "It increases", wrong: ["It decreases", "It stays the same", "It drops to zero"],
+            explain: "The same salt is now in less water."
+          }),
+          rng => C(rng, {
+            prompt: "A jug has 20 g of sugar dissolved in 500 mL of water. Another 20 g of sugar dissolves in it. What happens to the concentration?",
+            right: "It doubles", wrong: ["It halves", "It stays the same", "It becomes zero"],
+            explain: "Twice as much solute in the same volume of solvent."
           })
         ]
       },
@@ -632,6 +720,30 @@
             ],
             wrong: 2,
             explain: 'The salt is still there, spread through the water, so the mass is 220 g. Nothing is destroyed by dissolving.'
+          }),
+          rng => Sci.spot(rng, { learn: "words",
+            prompt: "A student describes salt water.",
+            lines: ["Salt is stirred into water.", "The salt dissolves.", "The dissolved salt can be removed by filtering.", "Evaporating the water gets the salt back."],
+            wrong: 2,
+            explain: "Dissolved salt passes straight through filter paper."
+          }),
+          rng => Sci.spot(rng, { learn: "suspension",
+            prompt: "A student describes sand in water.",
+            lines: ["Sand is stirred into water.", "The sand dissolves.", "Over time it settles to the bottom.", "So this is a suspension."],
+            wrong: 1,
+            explain: "Sand does not dissolve. It is spread through the water as a suspension, then settles."
+          }),
+          rng => Sci.spot(rng, { learn: "saturated",
+            prompt: "A student describes a saturated solution.",
+            lines: ["A solution is saturated at 20 °C.", "No more solute will dissolve at that temperature.", "So adding more solute makes it more concentrated.", "The extra solute stays as a solid."],
+            wrong: 2,
+            explain: "A saturated solution cannot get more concentrated at that temperature; the extra stays solid."
+          }),
+          rng => Sci.spot(rng, { learn: "compare",
+            prompt: "A student compares two glasses of drink.",
+            lines: ["Glass A has 10 g of drink powder in 100 mL of water.", "Glass B has 10 g in 200 mL.", "Both have 10 g, so they are equally concentrated.", "Concentration is the amount of solute in a volume."],
+            wrong: 2,
+            explain: "B has its 10 g in twice the volume, so it is half as concentrated."
           })
         ]
       },
@@ -676,6 +788,26 @@
             right: 'Pencil does not dissolve in the solvent, so it will not run up the paper and confuse the result.',
             wrong: ['Pencil is easier to rub out.', 'Ink would make the paper too heavy.', 'Pencil makes the dyes travel faster.'],
             explain: 'Ink would itself separate into dyes and spoil the result; graphite does not dissolve.'
+          }),
+          rng => C(rng, {
+            prompt: "In chromatography, which dye travels furthest up the paper?",
+            right: "The one most soluble in the solvent and least attracted to the paper", wrong: ["The heaviest dye", "The darkest dye", "The dye that went on the paper first"],
+            explain: "Solubility in the solvent and attraction to the paper decide how far each dye travels."
+          }),
+          rng => C(rng, {
+            prompt: "An ink makes three separate spots on a chromatogram. What does this tell you?",
+            right: "The ink is a mixture of at least three dyes.", wrong: ["The ink is a pure substance.", "The ink has evaporated.", "The paper is faulty."],
+            explain: "Each spot is a different dye that travelled its own distance."
+          }),
+          rng => C(rng, {
+            prompt: "Why must the start line be above the level of the solvent?",
+            right: "Otherwise the dyes would dissolve into the solvent in the container instead of moving up the paper.", wrong: ["So the paper does not get wet.", "So the solvent moves faster.", "It does not matter where it is."],
+            explain: "The solvent must soak up the paper and carry the dyes with it."
+          }),
+          rng => C(rng, {
+            prompt: "A dye stays on the start line and does not move. What does that suggest?",
+            right: "It does not dissolve in this solvent.", wrong: ["It is the most soluble dye.", "It has evaporated.", "It is attracted to the solvent."],
+            explain: "A dye has to dissolve in the solvent to be carried up the paper."
           })
         ]
       },
@@ -695,6 +827,26 @@
             right: 'It is a suspension, and the solid settles out when it stands.',
             wrong: ['It is a saturated solution.', 'Shaking makes the medicine stronger.', 'The medicine evaporates if not shaken.'],
             explain: 'The solid in a suspension settles, so it must be spread through the liquid again before each dose.'
+          }),
+          rng => C(rng, {
+            prompt: "Why can more sugar dissolve in hot tea than in cold tea?",
+            right: "For sugar, more solute can dissolve at a higher temperature.", wrong: ["Hot tea has more water in it.", "Sugar melts in hot tea.", "Cold tea is already saturated with tea."],
+            explain: "How much solute dissolves depends on temperature."
+          }),
+          rng => C(rng, { learn: "words",
+            prompt: "Sea water tastes salty. What is it?",
+            right: "A solution, with salt and other substances dissolved in water", wrong: ["A pure substance", "A suspension of sand", "A gas"],
+            explain: "The salt is the solute and the water is the solvent."
+          }),
+          rng => C(rng, { learn: "suspension",
+            prompt: "A jar of muddy river water is left overnight. By morning the water is clearer. Why?",
+            right: "The mud was in suspension and has settled.", wrong: ["The mud dissolved.", "The mud evaporated.", "The water became saturated."],
+            explain: "In a suspension, the solid settles if left to stand."
+          }),
+          rng => C(rng, { learn: "suspension",
+            prompt: "Paint has to be stirred before use because some of the colour settles at the bottom. What kind of mixture is the paint?",
+            right: "A suspension", wrong: ["A saturated solution", "A pure substance", "A gas"],
+            explain: "Solids that settle out of a liquid show it is a suspension."
           })
         ]
       }
@@ -1280,7 +1432,24 @@
             explain: 'An object with more mass needs a larger unbalanced force to produce the same change in motion.'
           }),
           rng => TF(rng, { statement: 'A heavier object needs a larger unbalanced force to change its motion by the same amount.', answer: true,
-            explain: 'Objects with greater mass require larger unbalanced forces to produce the same change in motion.' })
+            explain: 'Objects with greater mass require larger unbalanced forces to produce the same change in motion.' }),
+          rng => C(rng, {
+            prompt: "A truck and a car are pushed with the same unbalanced force. Which speeds up more?",
+            right: "The car, because it has less mass", wrong: ["The truck, because it is bigger", "They speed up equally", "Neither moves"],
+            explain: "More mass needs a larger unbalanced force for the same change in motion."
+          }),
+          rng => C(rng, {
+            prompt: "A loaded trolley and an empty one are stopped with the same braking force. Which takes longer to stop?",
+            right: "The loaded trolley", wrong: ["The empty trolley", "They stop in the same time", "Neither can be stopped"],
+            explain: "The loaded trolley has more mass, so the same force changes its motion less quickly."
+          }),
+          rng => C(rng, {
+            prompt: "To give a heavy box the same change in motion as a light box, you need…",
+            right: "a larger unbalanced force.", wrong: ["a smaller force.", "the same force.", "no force at all."],
+            explain: "Objects with greater mass need larger unbalanced forces for the same change."
+          }),
+          rng => TF(rng, { statement: "With the same unbalanced force, a lighter object speeds up more than a heavier one.", answer: true,
+            explain: "Less mass means a bigger change in motion for the same force." })
         ]
       },
 
@@ -1309,6 +1478,30 @@
             ],
             wrong: 3,
             explain: 'A moving object does not carry a supply of force that runs out. The unbalanced force of friction slows it down until it stops.'
+          }),
+          rng => Sci.spot(rng, { learn: "balanced",
+            prompt: "A student describes a book on a table.",
+            lines: ["A book rests on a table.", "Gravity pulls it down.", "The table pushes it up.", "Because it is not moving, there are no forces on it."],
+            wrong: 3,
+            explain: "There are forces on it, but they are balanced, so the net force is zero."
+          }),
+          rng => Sci.spot(rng, { learn: "balanced",
+            prompt: "A student describes a skydiver.",
+            lines: ["A skydiver is falling at a steady speed.", "Air resistance pushes up.", "Gravity pulls down.", "Gravity must be bigger, or the skydiver would not be falling."],
+            wrong: 3,
+            explain: "At a steady speed the forces are balanced. Falling at a steady speed needs no unbalanced force."
+          }),
+          rng => Sci.spot(rng, { learn: "seesaw",
+            prompt: "A student predicts a seesaw.",
+            lines: ["Two children sit on a seesaw.", "The heavier child is 1 m from the pivot.", "The lighter child is 2 m from the pivot.", "So the heavier child’s side must go down."],
+            wrong: 3,
+            explain: "It depends on weight and distance together. The lighter child, twice as far out, could balance or even win."
+          }),
+          rng => Sci.spot(rng, { learn: "myths",
+            prompt: "A student describes a puck sliding on ice.",
+            lines: ["A puck slides across smooth ice.", "Ice has very little friction.", "So the puck slides a long way.", "It keeps moving because a force pushes it forward the whole time."],
+            wrong: 3,
+            explain: "No forward force is needed to keep moving. It slows only because of the small friction acting against it."
           })
         ]
       },
@@ -1326,6 +1519,26 @@
             prompt: 'A hockey player hits a moving ball sideways. What can the unbalanced force change?',
             right: 'Its speed, its direction, or both', wrong: ['Only its speed', 'Only its mass', 'Nothing, unless the ball was still'],
             explain: 'A change in motion can be a change in speed, a change in direction, or both.'
+          }),
+          rng => C(rng, {
+            prompt: "A cyclist brakes and slows down. Which is true of the forces?",
+            right: "They are unbalanced, with the bigger force acting against the motion.", wrong: ["They are balanced.", "There are no forces.", "The forward force is bigger."],
+            explain: "Slowing down is a change in motion, so the forces are unbalanced."
+          }),
+          rng => C(rng, {
+            prompt: "A rugby ball is kicked. What does the kick do?",
+            right: "Gives an unbalanced force that changes the ball’s motion", wrong: ["Balances the forces on the ball", "Makes the ball lighter", "Nothing, until the ball lands"],
+            explain: "An unbalanced force changes speed, direction or both."
+          }),
+          rng => C(rng, { learn: "balanced",
+            prompt: "A kayak moves at a steady speed in a straight line. Which is true of the forces?",
+            right: "They are balanced.", wrong: ["The forward force is bigger.", "The backward force is bigger.", "There are no forces on it."],
+            explain: "Steady speed in a straight line means the motion is not changing."
+          }),
+          rng => C(rng, {
+            prompt: "A bus pulls away from a stop and speeds up. Which is true?",
+            right: "The forward force is bigger than the backward force.", wrong: ["The forces are balanced.", "The backward force is bigger.", "There are no forces on the bus."],
+            explain: "Speeding up needs an unbalanced force in the direction of motion."
           })
         ]
       },
@@ -2642,7 +2855,24 @@
             right: 'Matter is cycled, while energy is transferred through the system.',
             wrong: ['Energy is recycled forever, but matter is used up.', 'Neither energy nor matter moves.', 'Only animals take part.'],
             explain: 'Nutrients go round again and again through decomposers and producers; energy flows through and does not cycle.'
-          })
+          }),
+          rng => C(rng, {
+            prompt: "A kōwhai tree dies and decays. Where do its nutrients go?",
+            right: "Back into the soil, where plants can use them again", wrong: ["They disappear completely.", "Into the air as sunlight", "They stay locked in the wood for ever"],
+            explain: "Decomposers release the nutrients: matter is cycled."
+          }),
+          rng => C(rng, {
+            prompt: "Which is cycled through an ecosystem?",
+            right: "Matter, such as nutrients", wrong: ["Energy", "Sunlight", "Heat"],
+            explain: "Matter goes round again and again; energy flows through."
+          }),
+          rng => C(rng, { learn: "roles",
+            prompt: "Where does the energy for almost every ecosystem first come from?",
+            right: "The Sun", wrong: ["The soil", "Decomposers", "The top predators"],
+            explain: "Producers capture the Sun’s energy by photosynthesis."
+          }),
+          rng => TF(rng, { statement: "Energy flows through an ecosystem rather than cycling round it.", answer: true,
+            explain: "Matter cycles; energy is transferred through the system." })
         ]
       },
 
@@ -2686,6 +2916,26 @@
             prompt: 'Which is <strong>not</strong> part of a healthy soil?',
             right: 'Plastic bags', wrong: ['Decaying organic matter', 'Fungi and bacteria', 'Rock particles'],
             explain: 'Soil contains decaying organic matter, living organisms, rock particles, air and water.'
+          }),
+          rng => C(rng, { learn: "decomposers",
+            prompt: "What do earthworms, fungi and bacteria in soil help to do?",
+            right: "Break down dead material, returning nutrients to the soil", wrong: ["Make glucose by photosynthesis", "Remove all water from the soil", "Turn soil into rock"],
+            explain: "They are decomposers, keeping nutrients cycling."
+          }),
+          rng => C(rng, { learn: "decomposers",
+            prompt: "Why does a forest floor covered in leaf litter usually have rich soil?",
+            right: "Decaying leaves are broken down and release nutrients.", wrong: ["Leaves keep all nutrients out of the soil.", "Leaf litter is made of rock.", "Sunlight adds nutrients to the leaves on the ground."],
+            explain: "Decomposers break down the litter, releasing nutrients."
+          }),
+          rng => C(rng, {
+            prompt: "Which of these is a living part of soil?",
+            right: "Bacteria", wrong: ["Sand", "Water", "Air"],
+            explain: "Soil contains living organisms as well as rock particles, air and water."
+          }),
+          rng => C(rng, { learn: "decomposers",
+            prompt: "Plants take up nutrients from the soil. Where did many of those nutrients come from?",
+            right: "Dead organisms and waste, broken down by decomposers", wrong: ["The Sun", "The rain alone", "Nowhere: plants make nutrients from nothing"],
+            explain: "Nutrients cycle from organisms back into the soil."
           })
         ]
       },
@@ -2705,6 +2955,26 @@
             right: 'Abiotic conditions such as temperature, moisture and how far from the sea each zone is',
             wrong: ['The colour of their clipboards', 'How many students are in the group', 'The time the bus arrived'],
             explain: 'Measuring abiotic conditions along a transect helps explain why organisms are found where they are.'
+          }),
+          rng => C(rng, {
+            prompt: "Students find more ferns in a shady gully than on an open, sunny ridge. What should they measure to help explain this?",
+            right: "Abiotic conditions such as light and moisture in both places", wrong: ["The colour of the ferns only", "How long the walk took", "The number of students in each group"],
+            explain: "Measuring abiotic conditions helps explain where organisms are found."
+          }),
+          rng => C(rng, {
+            prompt: "What is a transect?",
+            right: "A line across an area along which organisms and conditions are recorded", wrong: ["A square frame for counting plants", "A type of decomposer", "A chart of a food chain"],
+            explain: "Recording along a transect shows how organisms change as conditions change."
+          }),
+          rng => C(rng, { learn: "quadrat",
+            prompt: "Why do scientists count in several quadrats, not just one?",
+            right: "One quadrat may not be typical, so several give a fairer estimate.", wrong: ["One quadrat is always enough.", "To find the biggest plant.", "Because quadrats wear out."],
+            explain: "Averaging several random quadrats gives a better estimate."
+          }),
+          rng => C(rng, {
+            prompt: "Records show fewer wētā on an island after rats arrived. What does this pattern suggest?",
+            right: "Rats may be preying on the wētā.", wrong: ["Wētā were never on the island.", "Rats make wētā bigger.", "Rats and wētā never interact."],
+            explain: "Data over time can reveal patterns, such as a predator affecting its prey."
           })
         ]
       },

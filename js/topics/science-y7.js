@@ -434,6 +434,16 @@
               'The gaps make the bridge lighter so that it does not sink.'
             ],
             explain: 'Materials expand when their thermal energy increases, because their particles move more and push further apart. The particles do not grow.'
+          }),
+          rng => C(rng, { learn: "expand",
+            prompt: "Power lines sag lower on a hot summer day. Which is the best explanation?",
+            right: "The wires expand as their thermal energy increases, so they get slightly longer.", wrong: ["The wires get heavier in the heat.", "The particles in the wires get bigger.", "The poles shrink in the heat."],
+            explain: "Heated particles move more and push slightly further apart, so the wire gets longer. The particles themselves do not grow."
+          }),
+          rng => C(rng, { learn: "everyday",
+            prompt: "Why does a wet towel dry faster on a warm, windy day?",
+            right: "More water particles gain enough energy to escape, and the wind carries the water vapour away.", wrong: ["The wind pushes the water particles out of existence.", "The warmth makes the water particles shrink.", "The towel absorbs the water into its fibres."],
+            explain: "This is evaporation. Warmth speeds the particles up, and wind moves the vapour away."
           })
         ]
       },
@@ -1096,7 +1106,9 @@
           rng => TF(rng, { statement: 'Kinetic energy is the energy an object has because it is moving.', answer: true,
             explain: 'Kinetic energy is the energy associated with motion.' }),
           rng => TF(rng, { statement: 'A spark from a sparkler is hotter than a pot of boiling water, so it has more thermal energy.', answer: false,
-            explain: 'The spark is at a higher temperature, but it is a tiny speck of material. The pot of water has far more particles and far more thermal energy.' })
+            explain: 'The spark is at a higher temperature, but it is a tiny speck of material. The pot of water has far more particles and far more thermal energy.' }),
+          rng => TF(rng, { statement: "A large iceberg can have more thermal energy than a cup of hot tea.", answer: true, learn: "thermal",
+            explain: "The iceberg is far colder, but it has vastly more particles, so in total it can have more thermal energy." })
         ]
       },
 
@@ -1185,6 +1197,24 @@
             ],
             wrong: 2,
             explain: '"Cold" does not move anywhere. Only thermal energy moves, always from the warmer thing to the colder thing.'
+          }),
+          rng => Sci.spot(rng, { learn: "convection",
+            prompt: "A student describes convection.",
+            lines: ["A heater warms the air near it.", "The warm air rises.", "Cooler air sinks to take its place.", "Convection also carries thermal energy along a solid metal bar."],
+            wrong: 3,
+            explain: "Convection needs the material to flow, so it happens only in liquids and gases. Energy moves along a metal bar by conduction."
+          }),
+          rng => Sci.spot(rng, { learn: "radiation",
+            prompt: "A student explains how the Sun warms the Earth.",
+            lines: ["The Sun is about 150 million km away.", "The space between the Sun and Earth is almost empty.", "So thermal energy reaches Earth by conduction through space.", "This energy warms the Earth’s surface."],
+            wrong: 2,
+            explain: "Conduction needs a material. Across empty space, energy travels by radiation."
+          }),
+          rng => Sci.spot(rng, { learn: "thermal",
+            prompt: "A student compares a bath and a cup of water.",
+            lines: ["The water in a bath is at 40 °C.", "A cup of water is at 80 °C.", "The cup’s particles move faster on average.", "So the cup has more thermal energy than the bath."],
+            wrong: 3,
+            explain: "The cup is hotter, but the bath has far more particles, so the bath has more thermal energy."
           })
         ]
       },
@@ -1257,6 +1287,21 @@
             right: 'The energy of the motion and interactions of all the particles in a substance',
             wrong: ['How hot the surface of an object feels', 'The speed of the fastest particle', 'The size of the particles'],
             explain: 'Thermal energy is the energy associated with the motion and interactions of the particles.'
+          }),
+          rng => C(rng, {
+            prompt: "A cup of tea cools down. What happens to its particles?",
+            right: "They move more slowly on average.", wrong: ["They shrink.", "They stop moving completely.", "They turn into different particles."],
+            explain: "A lower temperature means a lower average kinetic energy: slower particles."
+          }),
+          rng => C(rng, {
+            prompt: "In which of these do the particles have the highest average kinetic energy?",
+            right: "Water at 90 °C", wrong: ["Water at 20 °C", "Water at 50 °C", "Ice at 0 °C"],
+            explain: "The highest temperature means the fastest particles on average."
+          }),
+          rng => C(rng, {
+            prompt: "What does a thermometer measure?",
+            right: "Temperature: how fast the particles are moving on average", wrong: ["The total thermal energy of a substance", "The size of the particles", "The mass of a substance"],
+            explain: "Temperature is the average kinetic energy of the particles. Total thermal energy also depends on the amount."
           })
         ]
       },
@@ -1516,6 +1561,21 @@
             right: 'A roughly spherical natural satellite that orbits the Earth',
             wrong: ['A star that orbits the Sun', 'A planet that orbits the Earth', 'A flat disc that reflects sunlight'],
             explain: 'The Moon is Earth’s natural satellite: a roughly spherical body in orbit around us.'
+          }),
+          rng => C(rng, {
+            prompt: "How much of the Moon is lit by the Sun at any time?",
+            right: "Half of it", wrong: ["All of it at full Moon, and none at new Moon", "A quarter of it", "It changes from none to all of it each month"],
+            explain: "The Sun always lights the half facing it. The phases are about how much of that half we can see."
+          }),
+          rng => C(rng, {
+            prompt: "At new Moon, why can we hardly see the Moon?",
+            right: "Its sunlit half faces away from Earth.", wrong: ["Earth’s shadow covers it.", "It has moved behind the Sun.", "It stops reflecting light."],
+            explain: "At new Moon, the Moon is between the Earth and the Sun."
+          }),
+          rng => C(rng, { learn: "cycle",
+            prompt: "Roughly how long does the Moon take to go through all its phases?",
+            right: "About a month (29.5 days)", wrong: ["A day", "A week", "A year"],
+            explain: "One full cycle of phases takes about 29.5 days."
           })
         ]
       },
@@ -1549,7 +1609,8 @@
       // 5 · Solar or lunar eclipse?
       {
         name: 'Solar or lunar eclipse?', learn: 'lunar',
-        items: ['lunar', 'solar'].map(type => rng => ({
+        items: [
+          ...['lunar', 'solar'].map(type => rng => ({
           prompt: 'The diagram shows the Sun, Earth and Moon lined up. What kind of eclipse is this?',
           diagram: { w: 300, h: 110, caption: 'Not to scale.' },
           draw: d => SciDia.eclipse(d, type),
@@ -1563,7 +1624,28 @@
           explain: type === 'lunar'
             ? 'The Earth is in the middle, and the Moon is in the Earth’s shadow: a lunar eclipse.'
             : 'The Moon is in the middle, blocking the Sun from part of the Earth: a solar eclipse.'
-        }))
+        })),
+          rng => C(rng, { learn: "lunar",
+            prompt: "During an eclipse, the Moon passes into the Earth’s shadow. What kind of eclipse is this?",
+            right: "A lunar eclipse", wrong: ["A solar eclipse", "Not an eclipse", "A new Moon"],
+            explain: "With the Earth in the middle, its shadow falls on the Moon: a lunar eclipse."
+          }),
+          rng => C(rng, { learn: "solar",
+            prompt: "During an eclipse, the Moon blocks the Sun from view for some people on Earth. What kind of eclipse is this?",
+            right: "A solar eclipse", wrong: ["A lunar eclipse", "Not an eclipse", "A full Moon"],
+            explain: "With the Moon in the middle, it blocks the Sun: a solar eclipse."
+          }),
+          rng => C(rng, { learn: "solar",
+            prompt: "Which body is in the middle during a solar eclipse?",
+            right: "The Moon", wrong: ["The Earth", "The Sun", "Mars"],
+            explain: "In a solar eclipse, the Moon passes between the Earth and the Sun."
+          }),
+          rng => C(rng, { learn: "lunar",
+            prompt: "Which body is in the middle during a lunar eclipse?",
+            right: "The Earth", wrong: ["The Moon", "The Sun", "Venus"],
+            explain: "In a lunar eclipse, the Earth is between the Sun and the Moon."
+          })
+        ]
       },
 
       // 6 · Moonrise data.
@@ -1606,7 +1688,14 @@
           rng => TF(rng, { statement: 'The Maramataka is exactly the same in every region of New Zealand.', answer: false,
             explain: 'Maramataka guides activities for specific regions, and its details differ between iwi and places.' }),
           rng => TF(rng, { statement: 'In many maramataka, the rising of Matariki, or of Puanga in some regions, marks the start of the new year.', answer: true,
-            explain: 'Key stars help divide the year. Which star marks the new year depends on the region.' })
+            explain: 'Key stars help divide the year. Which star marks the new year depends on the region.' }),
+          rng => TF(rng, { statement: "The Maramataka is based on observing the Moon and changes in the environment.", answer: true,
+            explain: "It uses the Moon’s phases, key stars and environmental changes." }),
+          rng => C(rng, {
+            prompt: "Why might the maramataka of one region differ from another’s?",
+            right: "It guides activities for its own region, and its details differ between iwi and places.", wrong: ["One of them must be wrong.", "The Moon has different phases in different regions.", "Only one region uses the Moon."],
+            explain: "Maramataka guides activities for specific regions."
+          })
         ]
       },
 
@@ -1674,6 +1763,30 @@
             ],
             wrong: 1,
             explain: 'In a solar eclipse the Moon is in the middle, between the Earth and the Sun. With the Earth in the middle, it would be a lunar eclipse.'
+          }),
+          rng => Sci.spot(rng, { learn: "moon",
+            prompt: "A student describes the Moon.",
+            lines: ["The Moon is a natural satellite of Earth.", "It shines because it gives out its own light.", "It goes through its phases in about 29.5 days.", "Half of it is lit by the Sun at any time."],
+            wrong: 1,
+            explain: "The Moon gives out no light. We see it because it reflects sunlight."
+          }),
+          rng => Sci.spot(rng, { learn: "lunar",
+            prompt: "A student describes a lunar eclipse.",
+            lines: ["A lunar eclipse happens when the Earth is between the Sun and the Moon.", "The Moon passes into the Earth’s shadow.", "This happens at every full Moon.", "During it, sunlight cannot reach the Moon directly."],
+            wrong: 2,
+            explain: "A lunar eclipse needs an exact line-up, which does not happen every month."
+          }),
+          rng => Sci.spot(rng, { learn: "phases",
+            prompt: "A student describes the phases.",
+            lines: ["In New Zealand, a waxing Moon is lit on the left.", "Waxing means the lit part is growing.", "After full Moon, the Moon is waxing.", "Then it shrinks back to new Moon."],
+            wrong: 2,
+            explain: "After full Moon the lit part shrinks: the Moon is waning."
+          }),
+          rng => Sci.spot(rng, { learn: "rise",
+            prompt: "A student describes moonrise.",
+            lines: ["The Moon rises in the east.", "It rises at the same time every night.", "Its phase changes over about 29.5 days.", "We see it by reflected sunlight."],
+            wrong: 1,
+            explain: "Because the Moon moves along its orbit, it rises at a different time each day, usually later."
           })
         ]
       },
@@ -2306,6 +2419,16 @@
             prompt: 'Root hair cells have a long thin extension into the soil. What does this help with?',
             right: 'Absorbing water from the soil', wrong: ['Photosynthesis', 'Anchoring the leaves', 'Making seeds'],
             explain: 'The extension gives a large surface for taking in water from the soil.'
+          }),
+          rng => C(rng, {
+            prompt: "Red blood cells have no nucleus, which leaves more room inside. What are they specialised for?",
+            right: "Carrying oxygen", wrong: ["Making food using light", "Swimming to an egg", "Absorbing water from the soil"],
+            explain: "Their shape and contents suit carrying oxygen around the body."
+          }),
+          rng => C(rng, {
+            prompt: "Cells near the top surface of a leaf are packed with chloroplasts. What are they specialised for?",
+            right: "Photosynthesis", wrong: ["Carrying signals", "Storing starch underground", "Movement"],
+            explain: "Chloroplasts are where photosynthesis happens, and the top of the leaf gets the most light."
           })
         ]
       },
@@ -2330,6 +2453,21 @@
             right: 'It let scientists see cells, which are too small to see with the naked eye.',
             wrong: ['It made cells bigger.', 'It let scientists see inside the Earth.', 'It proved that animals do not have cells.'],
             explain: 'Cells are too small to see unaided, so the microscope opened up a whole new level of living things.'
+          }),
+          rng => C(rng, {
+            prompt: "What did Robert Hooke look at when he first described cells?",
+            right: "Thin slices of cork", wrong: ["Drops of pond water", "Human blood", "The leaves of a kōwhai tree"],
+            explain: "He saw tiny compartments in cork and called them cells."
+          }),
+          rng => C(rng, {
+            prompt: "Antonie van Leeuwenhoek was among the first people to see what?",
+            right: "Microorganisms, such as bacteria", wrong: ["The planets", "Atoms", "Fossils"],
+            explain: "His powerful microscopes showed living single-celled organisms."
+          }),
+          rng => C(rng, {
+            prompt: "Why could no one see cells before the microscope was invented?",
+            right: "Most cells are far too small to see with the naked eye.", wrong: ["Cells only formed after microscopes were invented.", "Cells are invisible in daylight.", "People did not have glasses."],
+            explain: "The microscope revealed a whole level of life too small to see unaided."
           })
         ]
       },
@@ -2364,6 +2502,26 @@
             prompt: 'Under a microscope, a sample of cells all have cell walls and a large vacuole. What kind of organism did they come from?',
             right: 'A plant', wrong: ['An animal', 'A human', 'A wētā'],
             explain: 'Cell walls and a large permanent vacuole are features of plant cells.'
+          }),
+          rng => C(rng, {
+            prompt: "Root cells have a cell wall but no chloroplasts. Why no chloroplasts?",
+            right: "Roots grow underground, where there is no light for photosynthesis.", wrong: ["Roots are not part of the plant.", "Chloroplasts only grow in flowers.", "The soil dissolves them."],
+            explain: "Chloroplasts are needed only where there is light for photosynthesis."
+          }),
+          rng => C(rng, {
+            prompt: "Under a microscope, some cells have a membrane, nucleus and cytoplasm, but no cell wall. Where are they most likely from?",
+            right: "An animal", wrong: ["A leaf", "A tree trunk", "An onion"],
+            explain: "Animal cells have no cell wall."
+          }),
+          rng => C(rng, {
+            prompt: "Which parts do both plant and animal cells have?",
+            right: "A nucleus, cytoplasm and a cell membrane", wrong: ["A cell wall", "Chloroplasts", "A large vacuole"],
+            explain: "The cell wall, chloroplasts and large vacuole are found only in plant cells."
+          }),
+          rng => C(rng, { learn: "jobs",
+            prompt: "What does the cell wall give a plant cell?",
+            right: "Support and a fixed shape", wrong: ["The ability to move", "Its green colour", "Control of the cell’s activities"],
+            explain: "The tough cell wall supports and strengthens the cell."
           })
         ]
       },
@@ -2691,6 +2849,26 @@
             right: 'Producers make their own food using sunlight, and every other organism depends on that food.',
             wrong: ['Producers are the biggest organisms.', 'Producers eat everything else.', 'It is just a convention for drawing food webs.'],
             explain: 'Producers bring energy into the ecosystem; consumers get theirs, directly or indirectly, from producers.'
+          }),
+          rng => C(rng, {
+            prompt: "Why are there usually far fewer stoats than rats in a forest?",
+            right: "Each step up a food web passes on only part of the energy, so fewer predators can be supported.", wrong: ["Stoats are too big to fit in the forest.", "Stoats do not need food.", "Rats eat stoats."],
+            explain: "Less energy is available higher up a food web."
+          }),
+          rng => C(rng, { learn: "producers",
+            prompt: "Where does the energy in a forest food web first come from?",
+            right: "The Sun, captured by producers", wrong: ["The soil", "The top predators", "The rain"],
+            explain: "Producers capture sunlight to make food; every consumer depends on that."
+          }),
+          rng => C(rng, { learn: "web",
+            prompt: "In a food web, several arrows point into the ruru. What does this tell you?",
+            right: "The ruru eats several different kinds of food.", wrong: ["Many animals eat the ruru.", "The ruru is a producer.", "The ruru makes its own food."],
+            explain: "Arrows point from the food to the eater, so arrows into the ruru show what it eats."
+          }),
+          rng => C(rng, { learn: "producers",
+            prompt: "A disease kills most of the producers in an ecosystem. What would most likely happen?",
+            right: "The consumers would have less food, so their numbers would fall.", wrong: ["The consumers would grow in number.", "Nothing would change.", "The consumers would start making their own food."],
+            explain: "All consumers depend, directly or indirectly, on producers."
           })
         ]
       },
@@ -2715,6 +2893,21 @@
             prompt: 'Which shows an animal depending on a plant for shelter?',
             right: 'Tree wētā living in holes in tree trunks', wrong: ['A kina eating seaweed', 'A stoat eating a rat', 'Rain falling on a forest'],
             explain: 'Animals depend on plants for food, but also for shelter, as tree wētā do.'
+          }),
+          rng => C(rng, {
+            prompt: "Hihi (stitchbirds) feed on nectar from native flowers. How do the flowers benefit?",
+            right: "The birds carry their pollen to other flowers.", wrong: ["The birds water the flowers.", "The birds protect the flowers from the sun.", "The flowers do not benefit."],
+            explain: "The birds and the plants depend on each other."
+          }),
+          rng => C(rng, {
+            prompt: "Why could fewer kererū be a problem for some native trees?",
+            right: "Kererū are among the few birds that can swallow large fruit and spread the seeds.", wrong: ["Kererū eat the trees’ leaves.", "Kererū make the trees’ flowers.", "It would not affect the trees."],
+            explain: "Trees with large fruit depend on kererū to spread their seeds."
+          }),
+          rng => C(rng, {
+            prompt: "Which of these shows interdependence?",
+            right: "Bees pollinate flowers and feed on their nectar.", wrong: ["A rock warming in the sun", "Rain filling a stream", "Wind blowing sand"],
+            explain: "Interdependence is organisms depending on each other."
           })
         ]
       },
