@@ -33,18 +33,59 @@ const Sci = (() => {
   /** Mark an item as generated, so the review page shows several samples of it. */
   const gen = fn => { fn.generated = true; return fn; };
 
+  // ── Not seen recently ─────────────────────────────────────────────────────
+  // Each slot draws from a small pool of authored items. Picking at random,
+  // a student meets the same item again long before the pool runs out. So
+  // the browser remembers which items this student has answered, in order,
+  // and a slot prefers items not yet met; once all have been, it picks among
+  // the oldest half, which spaces repeats as far apart as possible.
+  //
+  // `memory` is switched on by the engine for free practice and the daily
+  // mix. It stays off for ?set=N, where everyone must get the same questions,
+  // and for the checker and the review page.
+  let memory = false;
+  const seenKey = id => 'mrg_seen_' + id;
+
+  function readSeen(topicId) {
+    try { return JSON.parse(localStorage.getItem(seenKey(topicId))) || {}; }
+    catch (_) { return {}; }
+  }
+
+  /** Record that an item was answered: move it to the end of its slot's list. */
+  function markSeen(pick) {
+    if (!memory || !pick) return;
+    const seen = readSeen(pick.topic);
+    const list = (seen[pick.slot] || []).filter(k => k !== pick.item);
+    list.push(pick.item);
+    seen[pick.slot] = list;
+    try { localStorage.setItem(seenKey(pick.topic), JSON.stringify(seen)); } catch (_) {}
+  }
+
+  function pickIndex(rng, n, list) {
+    if (!memory || n < 2) return rng.int(0, n - 1);
+    const order = (list || []).filter(k => k < n);           // oldest first
+    const unseen = [];
+    for (let k = 0; k < n; k++) if (!order.includes(k)) unseen.push(k);
+    if (unseen.length) return rng.pick(unseen);
+    return rng.pick(order.slice(0, Math.ceil(n / 2)));
+  }
+
   /** Turn a declaration with slots into a topic the engine can run. */
   function topic(def) {
     const t = Object.assign({}, def);
-    t.generate = (rng, diff) => def.slots.map((slot, i) => {
-      const item = rng.pick(slot.items);
-      const q = item(rng, diff);
-      q.slot = slot.name || 'Slot ' + (i + 1);
-      // Which "Learn it" card answers this question. An item can name its
-      // own card; otherwise it takes the slot's.
-      if (!q.learn && slot.learn) q.learn = slot.learn;
-      return q;
-    });
+    t.generate = (rng, diff) => {
+      const seen = memory ? readSeen(def.id) : {};
+      return def.slots.map((slot, i) => {
+        const idx = pickIndex(rng, slot.items.length, seen[i]);
+        const q = slot.items[idx](rng, diff);
+        q.pick = { topic: def.id, slot: i, item: idx };
+        q.slot = slot.name || 'Slot ' + (i + 1);
+        // Which "Learn it" card answers this question. An item can name its
+        // own card; otherwise it takes the slot's.
+        if (!q.learn && slot.learn) q.learn = slot.learn;
+        return q;
+      });
+    };
     const Topics = window.Topics || (window.Topics = {});
     Topics[def.id] = t;
     return t;
@@ -138,7 +179,8 @@ const Sci = (() => {
                  'Hemi', 'Grace', 'Losa', 'Arjun', 'Kiri', 'Noah', 'Isla', 'Tane', 'Mei', 'Oliver'];
   const name = rng => rng.pick(NAMES);
 
-  return { topic, gen, choice, tf, sort, label, spot, table, name, NAMES, m };
+  return { topic, gen, choice, tf, sort, label, spot, table, name, NAMES, m, markSeen,
+           set memory(on) { memory = !!on; }, get memory() { return memory; } };
 })();
 
 

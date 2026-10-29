@@ -177,6 +177,9 @@ const Practice = (() => {
     const level = MRG.getCurrentLevel();
     const difficulty = level.level >= 4 ? 'expert' : level.level >= 3 ? 'hard' : 'core';
 
+    // Prefer science items this student has not met, except in a shared set.
+    if (typeof Sci !== 'undefined') Sci.memory = set === null;
+
     const s = session(rng, difficulty, { subject: subject.id });
     const done = MRG.practisedToday();
     const word = subject.name.toLowerCase();

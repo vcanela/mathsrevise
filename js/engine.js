@@ -598,7 +598,8 @@ const Exercise = (() => {
           fb.className = 'qfeedback';
           fb.innerHTML = '<strong>Answered with help</strong>' +
             'No marks for this one, and none lost. Try the next one to earn them.';
-          state.onAnswered();
+          if (typeof Sci !== 'undefined') Sci.markSeen(q.pick);
+      state.onAnswered();
         }
         offerTwin();
       }
@@ -666,6 +667,7 @@ const Exercise = (() => {
 
       floatPoints(card, pts);
       MJ.typeset([fb]);
+      if (typeof Sci !== 'undefined') Sci.markSeen(q.pick);
       state.onAnswered();
     }
 
@@ -888,6 +890,8 @@ const Exercise = (() => {
     const unit  = practice ? null : Manifest.unit(cfg.unit);
     const level = MRG.getCurrentLevel();
     const rng   = Seed.rng(cfg.id);
+    // Prefer science items this student has not met, except in a shared set.
+    if (typeof Sci !== 'undefined') Sci.memory = Seed.setNumber() === null;
     const difficulty = level.level >= 4 ? 'expert' : level.level >= 3 ? 'hard' : 'core';
 
     let questions;
