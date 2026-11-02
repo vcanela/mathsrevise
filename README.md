@@ -35,14 +35,16 @@ target, so a day spent on either counts as a day practised; each has its own dai
 (`practice.html?subject=maths` or `?subject=science`).
 
 Maths keeps its original URLs (`units/unit-2.html`, `exercises/unit-2/exercise-4.html`) so links
-already handed out still work. Science lives under `science/` (`science/year-7.html`,
-`science/year-7/exercise-3.html`). Every path is built in `js/manifest.js`; nothing else
-constructs a URL by hand.
+already handed out still work. Science lives under `science/`, one page per subject
+(`science/physics.html`, `science/physics/speed.html`). Science was first grouped by year; the build
+leaves a small forwarding page at each old address (`science/year-7/exercise-3.html` and so on),
+keeping any `?set=N`, so links already shared still work. Every path is built in `js/manifest.js`;
+nothing else constructs a URL by hand.
 
 ### Science
 
 Science follows **Phase 3 (Years 7–8)** of the *Science Years 0–10* learning area (Ministry of
-Education, August 2026; in use from 1 January 2027). Units are by year; each exercise is one
+Education, August 2026; in use from 1 January 2027). Units are by subject (Chemistry, Physics, Earth and Space, Biology), because schools sequence the years differently; within a subject, topics sit under their curriculum sub-strand, Year 7 before Year 8, and each card is tagged with its year. Each exercise is one
 knowledge heading for that year, and its practice questions come from the matching practices
 column. Questions stay inside the knowledge statements: where the curriculum stops short of a
 formula or a term, so do the questions. The curriculum PDF itself sits in `reference/`, which

@@ -887,7 +887,9 @@ const Exercise = (() => {
     // root rather than two levels down.
     const practice = !!cfg.practice;
     const base  = cfg.base === undefined ? '../../' : cfg.base;
-    const unit  = practice ? null : Manifest.unit(cfg.unit);
+    // The manifest says which unit an exercise belongs to; the topic's own
+    // `unit` field is only a fallback.
+    const unit  = practice ? null : ((Manifest.exercise(cfg.id) || {}).unit || Manifest.unit(cfg.unit));
     const level = MRG.getCurrentLevel();
     const rng   = Seed.rng(cfg.id);
     // Prefer science items this student has not met, except in a shared set.

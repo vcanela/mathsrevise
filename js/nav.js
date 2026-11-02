@@ -43,6 +43,7 @@ const Nav = (() => {
     const rec = MRG.getExercise(ex.id);
     return h('a', { class: 'card', href: prefix + ex.href },
       h('div', { class: 'card-mark', text: ex.label }),
+      ex.year ? h('span', { class: 'card-year', text: 'Year ' + ex.year }) : null,
       h('h3', { text: ex.title }),
       h('p', { text: ex.tag }),
       h('div', { class: 'card-foot' },
@@ -141,11 +142,24 @@ const Nav = (() => {
     main.appendChild(xpStrip());
 
     const p = Manifest.progress(u.key);
-    main.appendChild(progressBar(u.subject === 'maths' ? 'This unit' : 'This year', p.stars, p.max));
+    main.appendChild(progressBar(u.subject === 'maths' ? 'This unit' : 'This subject', p.stars, p.max));
 
-    const grid = h('div', { class: 'grid' });
-    for (const ex of u.exercises) grid.appendChild(exerciseCard(ex, '../'));
-    main.appendChild(grid);
+    // Science subjects are laid out by curriculum sub-strand, each with its
+    // Year 7 topic before the Year 8 one it leads into.
+    const strands = [...new Set(u.exercises.map(ex => ex.strand).filter(Boolean))];
+    // A lone sub-strand is still named, unless it just repeats the subject's name.
+    if (strands.length > 1 || (strands.length === 1 && strands[0].toLowerCase() !== u.name.toLowerCase())) {
+      for (const st of strands) {
+        main.appendChild(h('h2', { class: 'strand-head', text: st }));
+        const grid = h('div', { class: 'grid' });
+        for (const ex of u.exercises.filter(e => e.strand === st)) grid.appendChild(exerciseCard(ex, '../'));
+        main.appendChild(grid);
+      }
+    } else {
+      const grid = h('div', { class: 'grid' });
+      for (const ex of u.exercises) grid.appendChild(exerciseCard(ex, '../'));
+      main.appendChild(grid);
+    }
 
     main.appendChild(h('a', { class: 'back-link', href: '../index.html#' + u.subject }, '← All ' + subj.name.toLowerCase()));
 

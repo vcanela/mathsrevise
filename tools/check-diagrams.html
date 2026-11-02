@@ -24,8 +24,10 @@
   </table>
   <iframe id="frame" title="page under test"></iframe>
 
-  <script src="../js/game.js"></script>
-  <script src="../js/manifest.js"></script>
+  <script>
+    // Load the current manifest, never a cached one: it decides which pages are tested.
+    for (const f of ['../js/game.js', '../js/manifest.js']) document.write(`<script src="${f}?_=${Date.now()}"><\/script>`);
+  </script>
   <script>
     'use strict';
     const SETS = Number(new URLSearchParams(location.search).get('runs')) || 1;

@@ -24,10 +24,10 @@ const CORE = ['rng', 'format', 'algebra', 'geometry', 'diagrams', 'game', 'manif
 const SCIENCE = ['science'];
 
 /** The scripts an exercise in this unit needs, in load order. */
-const scriptsFor = u => [...CORE, ...(u.subject === 'science' ? SCIENCE : []), 'topics/' + u.topicFile];
+const scriptsFor = u => [...CORE, ...(u.subject === 'science' ? SCIENCE : []), ...u.topicFiles.map(f => 'topics/' + f)];
 
 // The daily mix can draw from any unit, so it loads every topic file.
-const ALL_TOPICS = [...new Set(Manifest.UNITS.map(u => 'topics/' + u.topicFile))];
+const ALL_TOPICS = [...new Set(Manifest.UNITS.flatMap(u => u.topicFiles.map(f => 'topics/' + f)))];
 
 /**
  * A short hash of every script and stylesheet, stamped onto the asset links.
@@ -146,8 +146,39 @@ for (const u of Manifest.UNITS) {
   }
 }
 
+// ── Forward the old addresses ────────────────────────────────────────────────
+// Science used to be grouped by year. Links to those pages may be saved in
+// bookmarks or class pages, so each old address forwards to the new one,
+// keeping any ?set=N so a shared set still opens the same questions.
+function forward(rel, target) {
+  const up = '../'.repeat(rel.split('/').length - 1);
+  const to = up + target;
+  write(rel, `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Moved · Revision</title>
+  <meta http-equiv="refresh" content="0; url=${to}" />
+  <link rel="canonical" href="${to}" />
+  <script>location.replace(${JSON.stringify(to)} + location.search + location.hash);</script>
+</head>
+<body><p style="font-family:sans-serif;padding:2rem">This page has moved: <a href="${to}">continue</a>.</p></body>
+</html>
+`);
+}
+const forwarded = [];
+for (const ex of Manifest.live('science')) {
+  if (!ex.old) continue;
+  forward(ex.old, ex.href);
+  forwarded.push(ex.old);
+}
+for (const y of [7, 8]) {
+  forward(`science/year-${y}.html`, 'index.html#science');
+  forwarded.push(`science/year-${y}.html`);
+}
+
 // ── Remove exercise pages the manifest no longer lists ───────────────────────
-const expected = new Set(Manifest.live().map(ex => path.normalize(ex.href)));
+const expected = new Set([...Manifest.live().map(ex => ex.href), ...forwarded].map(p => path.normalize(p)));
 for (const top of ['exercises', 'science']) {
   const topPath = path.join(ROOT, top);
   if (!fs.existsSync(topPath)) continue;

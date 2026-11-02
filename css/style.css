@@ -1191,6 +1191,21 @@ main {
   font-family: var(--font-serif);
   font-size: 0.95rem; font-weight: 600; font-style: italic;
 }
+/* Science cards carry the year the knowledge belongs to, top right. */
+.card-year {
+  position: absolute; top: 1rem; right: 1rem;
+  font-family: var(--font-sans); font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--brand-ink); background: var(--brand-soft);
+  border-radius: 999px; padding: 0.15rem 0.55rem;
+}
+/* Curriculum sub-strand headings on a science subject page. */
+.strand-head {
+  font-family: var(--font-sans); font-size: 0.78rem; font-weight: 600;
+  letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink-soft);
+  margin: 2rem 0 0.8rem;
+}
+.strand-head:first-of-type { margin-top: 1.4rem; }
 .card h3 {
   font-family: var(--font-serif);
   font-size: 1.06rem; font-weight: 600; line-height: 1.35;

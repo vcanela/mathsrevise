@@ -6,16 +6,16 @@
 //
 // Two subjects share one engine. Each unit says which subject it belongs to
 // and where its pages live. Maths keeps its original URLs (units/unit-2.html,
-// exercises/unit-2/exercise-4.html) so links already handed out still work;
-// science lives under science/ (science/year-7.html,
-// science/year-7/exercise-3.html).
+// exercises/unit-2/exercise-4.html) so links already handed out still work.
+// Science lives under science/, one page per subject (science/physics.html,
+// science/physics/speed.html); the old year-based addresses forward there.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const Manifest = (() => {
 
   const SUBJECTS = [
     { id: 'maths',   name: 'Maths',   blurb: 'Number, algebra, geometry, and where they meet.' },
-    { id: 'science', name: 'Science', blurb: 'Years 7 and 8, following the 2027 NZ Curriculum.' }
+    { id: 'science', name: 'Science', blurb: 'Years 7 and 8, following the 2027 NZ Curriculum, grouped by subject.' }
   ];
 
   // `key` identifies a unit everywhere (topic files, URLs, progress). Maths
@@ -81,35 +81,49 @@ const Manifest = (() => {
 
     // ── Science ─────────────────────────────────────────────────────────────
     // Topics follow the knowledge headings of Phase 3 (Years 7–8) in the
-    // Science Years 0–10 learning area, August 2026. Year 8 Materials has two
-    // headings (Mixtures; Concentration and solubility) and is split to match.
+    // Science Years 0–10 learning area, August 2026, grouped by subject rather
+    // than by year, since schools sequence the years differently. Within a
+    // subject, topics sit under their curriculum sub-strand, the Year 7 topic
+    // before the Year 8 one it leads into. Codes (7.1, 8.3) keep the year the
+    // knowledge belongs to. Year 8 Materials has two headings (Mixtures;
+    // Concentration and solubility) and is split to match.
     {
-      key: 'y7', subject: 'science', label: '7', short: 'Year 7', name: 'Year 7 Science', icon: '7',
-      topicFile: 'science-y7',
-      blurb: 'Particles, thermal energy, speed, the Moon, adaptations, cells and ecosystems.',
+      key: 'chemistry', subject: 'science', short: 'Chemistry', name: 'Chemistry', icon: 'C',
+      blurb: 'Particles and states of matter, mixtures and solutions.',
       exercises: [
-        { n: 1, id: 's7e1', title: 'Particles and States of Matter', tag: 'Materials' },
-        { n: 2, id: 's7e2', title: 'Thermal Energy and Insulation', tag: 'Matter, interactions and energy' },
-        { n: 3, id: 's7e3', title: 'Speed', tag: 'Motion and forces' },
-        { n: 4, id: 's7e4', title: 'The Earth, Moon and Sun', tag: 'Earth and space' },
-        { n: 5, id: 's7e5', title: 'Survival Adaptations', tag: 'Organism diversity' },
-        { n: 6, id: 's7e6', title: 'Cells', tag: 'Life processes' },
-        { n: 7, id: 's7e7', title: 'Organisms in an Ecosystem', tag: 'Ecosystems' }
+        { id: 's7e1', slug: 'particles', title: 'Particles and States of Matter', tag: 'Solids, liquids, gases and changes of state', strand: 'Materials' },
+        { id: 's8e1', slug: 'mixtures', title: 'Mixtures and Separating Them', tag: 'Sieving, filtering, evaporating, chromatography', strand: 'Materials' },
+        { id: 's8e2', slug: 'solutions', title: 'Solutions and Concentration', tag: 'Dissolving, concentration, saturation', strand: 'Materials' }
       ]
     },
     {
-      key: 'y8', subject: 'science', label: '8', short: 'Year 8', name: 'Year 8 Science', icon: '8',
-      topicFile: 'science-y8',
-      blurb: 'Mixtures, solutions, light, forces, the Earth’s surface, evolution, reproduction and ecosystems.',
+      key: 'physics', subject: 'science', short: 'Physics', name: 'Physics', icon: 'P',
+      blurb: 'Thermal energy, light, speed and forces.',
       exercises: [
-        { n: 1, id: 's8e1', title: 'Mixtures and Separating Them', tag: 'Materials' },
-        { n: 2, id: 's8e2', title: 'Solutions and Concentration', tag: 'Materials' },
-        { n: 3, id: 's8e3', title: 'Behaviour of Light', tag: 'Matter, interactions and energy' },
-        { n: 4, id: 's8e4', title: 'Balanced and Unbalanced Forces', tag: 'Motion and forces' },
-        { n: 5, id: 's8e5', title: 'The Surface of the Earth', tag: 'Earth and space' },
-        { n: 6, id: 's8e6', title: 'Evolution', tag: 'Organism diversity' },
-        { n: 7, id: 's8e7', title: 'Reproduction and Development', tag: 'Life processes' },
-        { n: 8, id: 's8e8', title: 'Relationships in an Ecosystem', tag: 'Ecosystems' }
+        { id: 's7e2', slug: 'thermal-energy', title: 'Thermal Energy and Insulation', tag: 'Temperature, conduction, convection, radiation', strand: 'Matter, interactions and energy' },
+        { id: 's8e3', slug: 'light', title: 'Behaviour of Light', tag: 'Seeing, reflection, refraction', strand: 'Matter, interactions and energy' },
+        { id: 's7e3', slug: 'speed', title: 'Speed', tag: 'Distance, time and graphs', strand: 'Motion and forces' },
+        { id: 's8e4', slug: 'forces', title: 'Balanced and Unbalanced Forces', tag: 'Net force, motion, seesaws', strand: 'Motion and forces' }
+      ]
+    },
+    {
+      key: 'earth-space', subject: 'science', short: 'Earth and Space', name: 'Earth and Space', icon: 'E',
+      blurb: 'The Earth, Moon and Sun, and the rocks and soils of the Earth’s surface.',
+      exercises: [
+        { id: 's7e4', slug: 'earth-moon-sun', title: 'The Earth, Moon and Sun', tag: 'Phases, eclipses, Maramataka', strand: 'Earth and space' },
+        { id: 's8e5', slug: 'earth-surface', title: 'The Surface of the Earth', tag: 'Layers, rocks, fossils, soils', strand: 'Earth and space' }
+      ]
+    },
+    {
+      key: 'biology', subject: 'science', short: 'Biology', name: 'Biology', icon: 'B',
+      blurb: 'Adaptations and evolution, cells and reproduction, and ecosystems.',
+      exercises: [
+        { id: 's7e5', slug: 'adaptations', title: 'Survival Adaptations', tag: 'Structural, behavioural, physiological', strand: 'Organism diversity' },
+        { id: 's8e6', slug: 'evolution', title: 'Evolution', tag: 'Variation, natural selection, extinction', strand: 'Organism diversity' },
+        { id: 's7e6', slug: 'cells', title: 'Cells', tag: 'Plant and animal cells, organelles', strand: 'Life processes' },
+        { id: 's8e7', slug: 'reproduction', title: 'Reproduction and Development', tag: 'Plants, animals and fungi', strand: 'Life processes' },
+        { id: 's7e7', slug: 'ecosystems', title: 'Organisms in an Ecosystem', tag: 'Populations, communities, food webs', strand: 'Ecosystems' },
+        { id: 's8e8', slug: 'relationships', title: 'Relationships in an Ecosystem', tag: 'Producers, decomposers, mutualism', strand: 'Ecosystems' }
       ]
     }
   ];
@@ -120,19 +134,30 @@ const Manifest = (() => {
     if (u.subject === 'maths') {
       u.page = `units/unit-${u.key}.html`;
       u.dir  = `exercises/unit-${u.key}`;
+      u.topicFiles = [u.topicFile];
+      for (const ex of u.exercises) {
+        ex.href  = `${u.dir}/exercise-${ex.n}.html`;
+        ex.label = `${u.key}.${ex.n}`;
+      }
     } else {
-      const slug = 'year-' + u.label;
-      u.page = `science/${slug}.html`;
-      u.dir  = `science/${slug}`;
+      u.page = `science/${u.key}.html`;
+      u.dir  = `science/${u.key}`;
+      // A subject draws on both years, so its pages load both topic files.
+      u.topicFiles = ['science-y7', 'science-y8'];
+      for (const ex of u.exercises) {
+        const [, year, n] = /^s(\d)e(\d+)$/.exec(ex.id);
+        ex.year  = Number(year);
+        ex.label = `${year}.${n}`;
+        ex.href  = `${u.dir}/${ex.slug}.html`;
+        // Where it used to live, when science was grouped by year. The build
+        // leaves a page there that forwards to the new address.
+        ex.old   = `science/year-${year}/exercise-${n}.html`;
+      }
     }
-    for (const ex of u.exercises) {
-      ex.href  = `${u.dir}/exercise-${ex.n}.html`;
-      ex.label = `${u.label}.${ex.n}`;
-      ex.unit  = u;
-    }
+    for (const ex of u.exercises) ex.unit = u;
   }
 
-  /** A unit by its key (1–5 for maths, 'y7' or 'y8' for science). */
+  /** A unit by its key (1–5 for maths, 'chemistry', 'physics', 'earth-space' or 'biology'). */
   const unit = key => UNITS.find(u => String(u.key) === String(key)) || UNITS[0];
 
   /** The units of one subject, or all of them. */
