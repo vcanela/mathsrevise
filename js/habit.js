@@ -77,7 +77,7 @@ const Habit = (() => {
         h('h2', { text: done ? 'Practice done for today' : "Today's practice" }),
         h('p', { class: 'habit-sub', text: done
           ? 'Tomorrow is what counts. Go again now if you want more, but the day is already in.'
-          : 'Five questions, about two minutes, mixed across the topics you have seen least recently. Either subject counts.' })),
+          : 'Five questions, about two minutes, mixed across the topics you have seen least recently. Any subject counts.' })),
       // One mix per subject; finishing either counts as today's practice.
       h('div', { class: 'habit-go' },
         Manifest.SUBJECTS.filter(s => Manifest.count(s.id) > 0).map((s, i) =>

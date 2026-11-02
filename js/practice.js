@@ -172,17 +172,18 @@ const Practice = (() => {
     let rng;
     if (set !== null)      rng = Seed.rng('practice-' + subject.id);
     else if (r !== null)   rng = new RNG((Number(r) || 1) * 2654435761 >>> 0);
-    else                   rng = new RNG(todaySeed() ^ (subject.id === 'maths' ? 0 : 0x5bd1e995));
+    else                   rng = new RNG(todaySeed() ^ ({ maths: 0, science: 0x5bd1e995, english: 0x27d4eb2f }[subject.id] || 0));
 
     const level = MRG.getCurrentLevel();
     const difficulty = level.level >= 4 ? 'expert' : level.level >= 3 ? 'hard' : 'core';
 
-    // Prefer science items this student has not met, except in a shared set.
+    // Prefer banked items (science, English) this student has not met, except in a shared set.
     if (typeof Sci !== 'undefined') Sci.memory = set === null;
 
     const s = session(rng, difficulty, { subject: subject.id });
     const done = MRG.practisedToday();
-    const word = subject.name.toLowerCase();
+    // Lower case mid-sentence ("Today's maths"), except for a proper noun ("Today's English").
+    const word = subject.id === 'english' ? subject.name : subject.name.toLowerCase();
 
     Exercise.run({
       practice: true,

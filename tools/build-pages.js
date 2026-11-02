@@ -19,12 +19,12 @@ global.MRG = { getExercise: () => ({}) };
 vm.runInThisContext(fs.readFileSync(path.join(ROOT, 'js/manifest.js'), 'utf8'));
 
 const CORE = ['rng', 'format', 'algebra', 'geometry', 'diagrams', 'game', 'manifest', 'timer', 'engine'];
-// Science pages also need the helpers that build banked questions and the
-// science diagrams (particles, graphs and so on).
+// Science and English pages also need science.js: the helpers that build
+// banked questions (Sci), and the science diagrams.
 const SCIENCE = ['science'];
 
 /** The scripts an exercise in this unit needs, in load order. */
-const scriptsFor = u => [...CORE, ...(u.subject === 'science' ? SCIENCE : []), ...u.topicFiles.map(f => 'topics/' + f)];
+const scriptsFor = u => [...CORE, ...(u.subject !== 'maths' ? SCIENCE : []), ...u.topicFiles.map(f => 'topics/' + f)];
 
 // The daily mix can draw from any unit, so it loads every topic file.
 const ALL_TOPICS = [...new Set(Manifest.UNITS.flatMap(u => u.topicFiles.map(f => 'topics/' + f)))];
@@ -179,7 +179,7 @@ for (const y of [7, 8]) {
 
 // ── Remove exercise pages the manifest no longer lists ───────────────────────
 const expected = new Set([...Manifest.live().map(ex => ex.href), ...forwarded].map(p => path.normalize(p)));
-for (const top of ['exercises', 'science']) {
+for (const top of ['exercises', 'science', 'english']) {
   const topPath = path.join(ROOT, top);
   if (!fs.existsSync(topPath)) continue;
   for (const dir of fs.readdirSync(topPath)) {
@@ -196,5 +196,5 @@ for (const top of ['exercises', 'science']) {
 }
 
 console.log(written.join('\n'));
-console.log(`\n${Manifest.UNITS.length} units, ${Manifest.count('maths')} maths and ` +
-            `${Manifest.count('science')} science exercises live, asset version ${VERSION}.`);
+console.log(`\n${Manifest.UNITS.length} units, ${Manifest.count('maths')} maths, ${Manifest.count('science')} science and ` +
+            `${Manifest.count('english')} English exercises live, asset version ${VERSION}.`);

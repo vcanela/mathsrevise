@@ -160,7 +160,7 @@ const Sci = (() => {
   function spot(rng, o) {
     return {
       prompt: o.prompt, note: o.note, tag: o.tag,
-      input: { kind: 'spot', lines: o.lines, wrong: o.wrong,
+      input: { kind: 'spot', lines: o.lines, wrong: o.wrong, find: o.find,
                cue: o.cue || 'Click the first line that is wrong.' },
       explain: o.explain, learn: o.learn
     };

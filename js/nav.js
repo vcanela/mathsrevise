@@ -43,7 +43,8 @@ const Nav = (() => {
     const rec = MRG.getExercise(ex.id);
     return h('a', { class: 'card', href: prefix + ex.href },
       h('div', { class: 'card-mark', text: ex.label }),
-      ex.year ? h('span', { class: 'card-year', text: 'Year ' + ex.year }) : null,
+      ex.year ? h('span', { class: 'card-year', text: 'Year ' + ex.year })
+        : ex.years ? h('span', { class: 'card-year', text: 'Years ' + ex.years }) : null,
       h('h3', { text: ex.title }),
       h('p', { text: ex.tag }),
       h('div', { class: 'card-foot' },
@@ -87,7 +88,7 @@ const Nav = (() => {
 
     root.appendChild(h('header', { class: 'page-head' },
       h('h1', { text: 'Revision' }),
-      h('p', { text: 'Maths and science, with fresh questions every time.' })));
+      h('p', { text: 'Maths, science and English, with fresh questions every time.' })));
 
     const main = h('main');
     root.appendChild(main);

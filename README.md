@@ -66,6 +66,16 @@ an item), and "Stuck?" links straight to that card; in the daily mix the link op
 at that card. `node tools/check-topics.js` fails if any question has no card or names a missing one,
 and lists any card no question links to.
 
+### English
+
+English follows **Phase 3 (Years 7–8)** of *English Years 0–10* (2025, in effect from 2026), grouped
+by strand: Reading, Writing and Oral Language. It practises what can be checked (word knowledge,
+grammar, punctuation, language features, and close reading of short passages written for this
+site) and leaves reading whole texts, writing them, and speaking to the classroom. Questions tagged
+**Extension** reach towards Year 9. English uses the same banked-question helpers as science
+(`Sci` in `js/science.js`) and lives in `js/topics/english.js`; codes are R (reading), W (writing)
+and O (oral language). The curriculum PDF is in `reference/`.
+
 **Reviewing content.** Authored science items can't be verified by a script: a wrong fact would
 pass every test. `tools/review-science.html` lists every item with all its options, the marked
 answer and the explanation, each with an ID such as `7.1·Q4·3` for reporting problems.

@@ -198,7 +198,8 @@ const Exercise = (() => {
     };
   };
 
-  /** spot — a worked solution with one wrong line; click the mistake. */
+  /** spot — a worked solution with one wrong line; click the mistake. With `find`, click
+   *  the one line that has some feature instead ("uses hyperbole"). */
   Inputs.spot = spec => {
     let picked = null;
     const rows = [];
@@ -224,9 +225,12 @@ const Exercise = (() => {
       lock:   () => rows.forEach(r => r.classList.add('locked')),
       check() {
         const ok = picked === spec.wrong;
-        rows[spec.wrong].classList.add('bad-line');
+        // With `find`, the target is not a mistake (e.g. "the line that uses
+        // hyperbole"), so it is highlighted neutrally rather than in red.
+        rows[spec.wrong].classList.add(spec.find ? 'key-line' : 'bad-line');
         if (!ok && picked !== null) rows[picked].classList.add('miss-line');
-        return { ok, correctHTML: 'Line ' + (spec.wrong + 1) + ' is where it goes wrong.' };
+        return { ok, correctHTML: spec.find ? `Line ${spec.wrong + 1} ${spec.find}.`
+                                            : 'Line ' + (spec.wrong + 1) + ' is where it goes wrong.' };
       }
     };
   };

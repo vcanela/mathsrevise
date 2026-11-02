@@ -42,6 +42,7 @@
       { url: '../index.html', kind: 'home' },
       { url: '../practice.html', kind: 'exercise', id: 'practice' },
       { url: '../practice.html?subject=science', kind: 'exercise', id: 'practice-science' },
+      { url: '../practice.html?subject=english', kind: 'exercise', id: 'practice-english' },
       ...Manifest.UNITS.map(u => ({ url: '../' + u.page, kind: 'unit' })),
       ...Manifest.live().flatMap(ex => sets.map(s => ({
         url: `../${ex.href}?set=${s}`, kind: 'exercise', id: ex.id

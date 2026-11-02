@@ -840,6 +840,7 @@ main {
   border-color: var(--bad); background: var(--bad-soft); color: var(--bad);
 }
 .spot-line.miss-line { border-color: var(--warn); background: var(--warn-soft); }
+.spot-line.key-line { border-color: var(--good); background: var(--good-soft); color: var(--good); }
 
 /* ── Matching ─────────────────────────────────────────────────────────────── */
 .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
