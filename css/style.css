@@ -1233,6 +1233,24 @@ main {
   margin-top: 2.5rem;
 }
 
+.version-stamp { display: block; margin-top: 0.35rem; font-size: 0.72rem; font-family: var(--font-mono); }
+
+/* ── New-version notice ──────────────────────────────────────────────────── */
+.update-bar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.5rem 0.9rem;
+  padding: 0.55rem 1rem;
+  background: var(--accent-soft); color: var(--accent-ink);
+  border-bottom: 1px solid var(--accent);
+  font-family: var(--font-sans); font-size: 0.88rem; text-align: center;
+}
+.update-btn {
+  font: inherit; font-weight: 600;
+  padding: 0.25rem 0.9rem; border-radius: var(--radius-s);
+  background: var(--accent); color: #fff; border: none; cursor: pointer;
+}
+.update-btn:hover { filter: brightness(1.08); }
+
 .fatal {
   max-width: var(--maxw); margin: 2rem auto; padding: 1rem;
   color: var(--bad); background: var(--bad-soft);

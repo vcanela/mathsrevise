@@ -51,14 +51,29 @@ const VERSION = (() => {
   return hash.digest('hex').slice(0, 8);
 })();
 
+// version.json tells open pages whether a newer version has been pushed. Its
+// date changes only when the version does, so rebuilding unchanged code
+// leaves every file untouched.
+const BUILT = (() => {
+  const file = path.join(ROOT, 'version.json');
+  try {
+    const old = JSON.parse(fs.readFileSync(file, 'utf8'));
+    if (old.version === VERSION && old.built) return old.built;
+  } catch (_) {}
+  // Local date, not UTC: in New Zealand UTC is still yesterday until midday.
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+})();
+
 function shell({ title, up, scripts, boot }) {
-  const s = scripts.map(src => `  <script src="${up}js/${src}.js?v=${VERSION}"></script>`).join('\n');
+  const s = [...scripts, 'update'].map(src => `  <script src="${up}js/${src}.js?v=${VERSION}"></script>`).join('\n');
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${title}</title>
+  <meta name="site-version" content="${VERSION}" data-built="${BUILT}" data-root="${up}" />
   <link rel="stylesheet" href="${up}css/style.css?v=${VERSION}" />
   <script src="${up}js/mathjax.js?v=${VERSION}"></script>
 </head>
@@ -87,6 +102,8 @@ function write(rel, content) {
   fs.writeFileSync(full, content);
   written.push((before === null ? '  created    ' : '  updated    ') + rel);
 }
+
+write('version.json', JSON.stringify({ version: VERSION, built: BUILT }) + '\n');
 
 // ── Home ─────────────────────────────────────────────────────────────────────
 write('index.html', shell({

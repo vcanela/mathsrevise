@@ -73,6 +73,12 @@ as last approved. The review page marks anything not in it as *new*, with a "Sho
 filter. After a batch has been reviewed, take a fresh snapshot with `node tools/review-baseline.js`
 and commit it.
 
+**New-version notice.** The build writes `version.json` (the asset version and the date it changed)
+and stamps each page with its own version. A page checks the file when the student returns to the
+tab and every 15 minutes, and shows a "Refresh" bar if a newer version is live. It never reloads by
+itself, since points are saved only when a set is finished. The footer shows the version and date,
+so a student's screen can be compared with the live site.
+
 **Not seen recently.** In free practice and the daily mix, each science slot prefers items the
 student has not yet answered (remembered per topic in the browser), then the ones answered longest
 ago. Fixed sets (`?set=N`) ignore this, so they stay identical for a whole class.
