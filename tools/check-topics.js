@@ -162,6 +162,12 @@ function checkQuestion(where, q) {
       if (!inp.bins.every((_, b) => inp.items.some(it => it.bin === b))) fail(where, 'sort leaves a group with nothing in it');
       break;
     }
+    case 'word': {
+      const list = [].concat(inp.answer);
+      if (!list.length || list.some(a => typeof a !== 'string' || !a.trim())) return fail(where, 'word has no answer');
+      if (list.some(a => /\s{2,}|^\s|\s$/.test(a))) fail(where, 'word answer has stray spaces: ' + JSON.stringify(list));
+      break;
+    }
     case 'label': {
       if (!Array.isArray(inp.markers) || !inp.markers.length) return fail(where, 'label has no markers');
       inp.markers.forEach((name, i) => {
@@ -177,7 +183,7 @@ function checkQuestion(where, q) {
 
   // Authored science items lean entirely on their explanation: it is the
   // "Show me how" step and the feedback after a wrong answer.
-  if (where.startsWith('s') && !(q.explain && String(q.explain).trim())) fail(where, 'science question has no explanation');
+  if ((where.startsWith('s') || where.startsWith('e')) && !(q.explain && String(q.explain).trim())) fail(where, 'science or English question has no explanation');
 
   // Diagrams must draw without throwing and without emitting NaN coordinates.
   if (q.draw) {

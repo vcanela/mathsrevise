@@ -423,6 +423,17 @@ main {
 .examples-toggle.open::before { transform: rotate(90deg); }
 .examples-toggle:hover { color: var(--ink); }
 
+/* ── Reading passages (English) ──────────────────────────────────────────── */
+.passage {
+  margin: 0.4rem 0 0.9rem; padding: 0.9rem 1.1rem;
+  background: var(--surface-2); border-left: 3px solid var(--brand);
+  border-radius: var(--radius-s);
+  font-family: var(--font-serif); font-size: 0.98rem; line-height: 1.65; color: var(--ink);
+}
+.passage p + p { margin-top: 0.55rem; }
+.passage-title { font-family: var(--font-sans); font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 0.4rem; }
+.passage .poem { font-style: italic; }
+
 /* ── Learn it: idea cards, a heading, a line or two and a picture ─────────── */
 .learn-count {
   font-weight: 500; letter-spacing: 0.04em; text-transform: none;

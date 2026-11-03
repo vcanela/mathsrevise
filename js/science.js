@@ -166,6 +166,37 @@ const Sci = (() => {
     };
   }
 
+  /** A match question from rows of [left, right]. */
+  function match(rng, prompt, rows, explain, o) {
+    const ord = rng.shuffle(rows.map((_, i) => i));
+    return Object.assign({
+      prompt,
+      input: { kind: 'match', left: rows.map(r => r[0]), right: ord.map(i => rows[i][1]),
+               tags: ['A', 'B', 'C', 'D', 'E', 'F'].slice(0, rows.length), answer: rows.map((_, i) => ord.indexOf(i)) },
+      explain
+    }, o || {});
+  }
+
+  /** An order question: `seq` is the right sequence. */
+  function order(rng, prompt, seq, explain, o) {
+    const ord = rng.shuffle(seq.map((_, i) => i));
+    return Object.assign({
+      prompt,
+      input: { kind: 'order', items: ord.map(i => seq[i]), answer: seq.map((_, i) => ord.indexOf(i)),
+               cue: 'Click them in order. Click one again to take it back.' },
+      explain
+    }, o || {});
+  }
+
+  /** Type a word: `answer` is the spelling, or a list of acceptable spellings. */
+  function word(rng, o) {
+    return {
+      prompt: o.prompt, note: o.note, tag: o.tag,
+      input: { kind: 'word', answer: o.answer, prefix: o.prefix, suffix: o.suffix, placeholder: o.placeholder, width: o.width },
+      explain: o.explain, learn: o.learn
+    };
+  }
+
   /** A small data table, as HTML, for putting inside a prompt. */
   function table(head, rows) {
     const cell = (t, tag) => `<${tag}>${t}</${tag}>`;
@@ -179,7 +210,7 @@ const Sci = (() => {
                  'Hemi', 'Grace', 'Losa', 'Arjun', 'Kiri', 'Noah', 'Isla', 'Tane', 'Mei', 'Oliver'];
   const name = rng => rng.pick(NAMES);
 
-  return { topic, gen, choice, tf, sort, label, spot, table, name, NAMES, m, markSeen,
+  return { topic, gen, choice, tf, sort, label, spot, match, order, word, table, name, NAMES, m, markSeen,
            set memory(on) { memory = !!on; }, get memory() { return memory; } };
 })();
 

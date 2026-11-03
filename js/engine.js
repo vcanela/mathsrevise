@@ -22,7 +22,7 @@
 // `learn` names the "Learn it" card that answers the question; "Stuck?" then
 // links to it.
 //
-// Input kinds: number, fill, choice, expr, spot, match, order.
+// Input kinds: number, fill, choice, expr, word, spot, match, order, sort, label.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const Exercise = (() => {
@@ -194,6 +194,37 @@ const Exercise = (() => {
         box.classList.add(ok ? 'ok' : 'bad');
         const shown = spec.display || '\\(' + Algebra.parse(String(spec.answer)).tex() + '\\)';
         return { ok, correctHTML: 'Answer: ' + shown + (why && !ok ? ` <span class="why">(${esc(why)})</span>` : '') };
+      }
+    };
+  };
+
+  /**
+   * word — type a word or short phrase, for spelling and word building.
+   * `answer` is the spelling (or a list of acceptable ones). Capitals, outer
+   * spaces, a trailing full stop and curly apostrophes are forgiven; the
+   * letters themselves must be exact, because spelling is the point.
+   */
+  const normWord = s => String(s).toLowerCase().replace(/[\u2018\u2019]/g, "'").replace(/\s+/g, ' ').trim().replace(/\.$/, '');
+  Inputs.word = spec => {
+    const answers = [].concat(spec.answer);
+    const box = h('input', {
+      type: 'text', class: 'ans-box', autocapitalize: 'off', autocomplete: 'off', autocorrect: 'off',
+      spellcheck: 'false', placeholder: spec.placeholder || 'type the word', 'aria-label': 'answer',
+      style: `width:${spec.width || 190}px`
+    });
+    const row = h('div', { class: 'ans-row' },
+      spec.prefix ? h('span', { class: 'ans-text', html: spec.prefix }) : null, box,
+      spec.suffix ? h('span', { class: 'ans-text', html: spec.suffix }) : null);
+    return {
+      node: row,
+      inputs: [box],
+      filled: () => box.value.trim() !== '',
+      focus:  () => box.focus(),
+      lock:   () => { box.disabled = true; },
+      check() {
+        const ok = answers.some(a => normWord(a) === normWord(box.value));
+        box.classList.add(ok ? 'ok' : 'bad');
+        return { ok, correctHTML: 'Answer: <strong>' + esc(answers[0]) + '</strong>' };
       }
     };
   };
@@ -535,7 +566,7 @@ const Exercise = (() => {
     const answerArea = h('div', { class: 'qanswer' });
     const submit = h('button', { type: 'button', class: 'qsubmit', title: 'Check this answer', html: '&#10003;' });
 
-    if (q.input.kind === 'fill' || q.input.kind === 'number' || q.input.kind === 'expr') {
+    if (['fill', 'number', 'expr', 'word'].includes(q.input.kind)) {
       input.node.appendChild(submit);
       answerArea.appendChild(input.node);
     } else {

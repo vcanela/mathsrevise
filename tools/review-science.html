@@ -90,7 +90,7 @@
     // to review what was just written.
     for (const f of ['../js/rng.js', '../js/format.js', '../js/algebra.js', '../js/geometry.js', '../js/diagrams.js',
                      '../js/game.js', '../js/manifest.js', '../js/timer.js', '../js/engine.js', '../js/science.js',
-                     '../js/topics/science-y7.js', '../js/topics/science-y8.js', '../js/topics/english.js', 'review-key.js']) {
+                     '../js/topics/science-y7.js', '../js/topics/science-y8.js', '../js/topics/english-reading.js', '../js/topics/english-writing.js', '../js/topics/english-oral.js', 'review-key.js']) {
       document.write(`<script src="${f}?_=${Date.now()}"><\/script>`);
     }
   </script>
@@ -131,7 +131,10 @@
           break;
         case 'spot':
           box.appendChild(h('ol', {}, inp.lines.map((l, i) =>
-            h('li', { class: i === inp.wrong ? 'rv-bad-line' : '', html: l }))));
+            h('li', { class: i === inp.wrong ? (inp.find ? 'rv-right' : 'rv-bad-line') : '', html: l }))));
+          break;
+        case 'word':
+          box.appendChild(h('div', { class: 'rv-right', html: [].concat(inp.answer).join(' <span class="rv-gen">or</span> ') }));
           break;
         case 'sort': {
           const all = inp.bank || inp.items;

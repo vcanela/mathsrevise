@@ -138,32 +138,32 @@ const Manifest = (() => {
       key: 'reading', subject: 'english', short: 'Reading', name: 'Reading', icon: 'R',
       blurb: 'Word origins, language features, text forms, close reading and media texts.',
       exercises: [
-        { id: 'er1', code: 'R1', slug: 'word-roots', title: 'Word Roots and Origins', tag: 'Greek and Latin roots and affixes', years: '7–8', soon: true },
+        { id: 'er1', code: 'R1', slug: 'word-roots', title: 'Word Roots and Origins', tag: 'Greek and Latin roots and affixes', years: '7–8' },
         { id: 'er2', code: 'R2', slug: 'language-features', title: 'Language Features', tag: 'Hyperbole, allusion, puns and more', years: '7–8' },
-        { id: 'er3', code: 'R3', slug: 'text-forms', title: 'Text Forms, Purpose and Audience', tag: 'Why a text is shaped the way it is', years: '7–8', soon: true },
-        { id: 'er4', code: 'R4', slug: 'reading-closely', title: 'Reading Closely', tag: 'Inference, theme and evidence', years: '7–8', soon: true },
-        { id: 'er5', code: 'R5', slug: 'media-texts', title: 'Media and Digital Texts', tag: 'Trust, perspective and representation', years: '7–8', soon: true }
+        { id: 'er3', code: 'R3', slug: 'text-forms', title: 'Text Forms, Purpose and Audience', tag: 'Why a text is shaped the way it is', years: '7–8' },
+        { id: 'er4', code: 'R4', slug: 'reading-closely', title: 'Reading Closely', tag: 'Inference, theme and evidence', years: '7–8' },
+        { id: 'er5', code: 'R5', slug: 'media-texts', title: 'Media and Digital Texts', tag: 'Trust, perspective and representation', years: '7–8' }
       ]
     },
     {
       key: 'writing', subject: 'english', short: 'Writing', name: 'Writing', icon: 'W',
       blurb: 'Spelling, grammar, punctuation, word choice and structure.',
       exercises: [
-        { id: 'ew6', code: 'W6', slug: 'tricky-spellings', title: 'Tricky Spellings', tag: 'Vowels, consonants, silent letters', years: '7–8', soon: true },
-        { id: 'ew7', code: 'W7', slug: 'prefixes-suffixes', title: 'Prefixes, Suffixes and Homophones', tag: 'Building and spelling words', years: '7–8', soon: true },
-        { id: 'ew8', code: 'W8', slug: 'clauses', title: 'Clauses and Complex Sentences', tag: 'Relative clauses and adverbial phrases', years: '7–8', soon: true },
-        { id: 'ew9', code: 'W9', slug: 'words-at-work', title: 'Words at Work', tag: 'Abstract nouns, participles, gerunds', years: '7–8', soon: true },
-        { id: 'ew10', code: 'W10', slug: 'active-passive', title: 'Active and Passive Voice', tag: 'Who does the action', years: '7–8', soon: true },
+        { id: 'ew6', code: 'W6', slug: 'tricky-spellings', title: 'Tricky Spellings', tag: 'Vowels, consonants, silent letters', years: '7–8' },
+        { id: 'ew7', code: 'W7', slug: 'prefixes-suffixes', title: 'Prefixes, Suffixes and Homophones', tag: 'Building and spelling words', years: '7–8' },
+        { id: 'ew8', code: 'W8', slug: 'clauses', title: 'Clauses and Complex Sentences', tag: 'Relative clauses and adverbial phrases', years: '7–8' },
+        { id: 'ew9', code: 'W9', slug: 'words-at-work', title: 'Words at Work', tag: 'Abstract nouns, participles, gerunds', years: '7–8' },
+        { id: 'ew10', code: 'W10', slug: 'active-passive', title: 'Active and Passive Voice', tag: 'Who does the action', years: '7–8' },
         { id: 'ew11', code: 'W11', slug: 'colons-semicolons', title: 'Colons, Semicolons and Comma Splices', tag: 'Joining and introducing', years: '7–8' },
-        { id: 'ew12', code: 'W12', slug: 'choosing-words', title: 'Choosing Words', tag: 'Shades of meaning and tone', years: '7–8', soon: true },
-        { id: 'ew13', code: 'W13', slug: 'structuring-writing', title: 'Structuring Writing', tag: 'Persuade, inform, entertain', years: '7–8', soon: true }
+        { id: 'ew12', code: 'W12', slug: 'choosing-words', title: 'Choosing Words', tag: 'Shades of meaning and tone', years: '7–8' },
+        { id: 'ew13', code: 'W13', slug: 'structuring-writing', title: 'Structuring Writing', tag: 'Persuade, inform, entertain', years: '7–8' }
       ]
     },
     {
       key: 'oral', subject: 'english', short: 'Oral Language', name: 'Oral Language', icon: 'O',
       blurb: 'The language of discussion, argument and presenting.',
       exercises: [
-        { id: 'eo14', code: 'O14', slug: 'discussion', title: 'Language for Discussion and Argument', tag: 'Modal language, questions, respectful disagreement', years: '7–8', soon: true }
+        { id: 'eo14', code: 'O14', slug: 'discussion', title: 'Language for Discussion and Argument', tag: 'Modal language, questions, respectful disagreement', years: '7–8' }
       ]
     }
   ];
@@ -182,7 +182,7 @@ const Manifest = (() => {
     } else if (u.subject === 'english') {
       u.page = `english/${u.key}.html`;
       u.dir  = `english/${u.key}`;
-      u.topicFiles = ['english'];
+      u.topicFiles = ['english-' + u.key];
       for (const ex of u.exercises) {
         ex.label = ex.code;
         ex.href  = `${u.dir}/${ex.slug}.html`;

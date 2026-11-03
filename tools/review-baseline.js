@@ -58,4 +58,4 @@ for (const id of Object.keys(Topics).sort()) {
 }
 const file = path.join(__dirname, 'review-baseline.json');
 fs.writeFileSync(file, JSON.stringify({ taken: new Date().toISOString().slice(0, 10), keys: [...new Set(keys)].sort() }, null, 0) + '\n');
-console.log(`Snapshot of ${new Set(keys).size} science items and cards written to tools/review-baseline.json.`);
+console.log(`Snapshot of ${new Set(keys).size} science and English items and cards written to tools/review-baseline.json.`);
