@@ -70,13 +70,36 @@ const Sci = (() => {
     return rng.pick(order.slice(0, Math.ceil(n / 2)));
   }
 
-  /** Turn a declaration with slots into a topic the engine can run. */
+  /** Turn a declaration with slots into a topic the engine can run.
+   *
+   *  `together: { slots: [...], max }` links slots whose items line up, such
+   *  as one passage per item index. Each set then uses between 1 and `max`
+   *  of those items for all the linked slots, in groups, instead of a fresh
+   *  one for every slot: one or two reading passages per set, not six. */
   function topic(def) {
     const t = Object.assign({}, def);
     t.generate = (rng, diff) => {
       const seen = memory ? readSeen(def.id) : {};
+      const tg = def.together;
+      let shared = null;
+      if (tg) {
+        const n = def.slots[tg.slots[0]].items.length;
+        // Memory across all the linked slots, oldest first.
+        const order = [];
+        for (const si of tg.slots) for (const k of (seen[si] || [])) { const at = order.indexOf(k); if (at >= 0) order.splice(at, 1); order.push(k); }
+        const k = rng.int(1, tg.max || 2);
+        shared = [];
+        for (let j = 0; j < k; j++) {
+          const left = order.filter(x => !shared.includes(x));
+          const avail = Array.from({ length: n }, (_, x) => x).filter(x => !shared.includes(x));
+          const unseen = memory ? avail.filter(x => !left.includes(x)) : avail;
+          shared.push(rng.pick(unseen.length ? unseen : left.slice(0, Math.max(1, Math.ceil(left.length / 2)))));
+        }
+      }
       return def.slots.map((slot, i) => {
-        const idx = pickIndex(rng, slot.items.length, seen[i]);
+        const linked = tg ? tg.slots.indexOf(i) : -1;
+        const idx = linked >= 0 ? shared[Math.floor(linked * shared.length / tg.slots.length)]
+                                : pickIndex(rng, slot.items.length, seen[i]);
         const q = slot.items[idx](rng, diff);
         q.pick = { topic: def.id, slot: i, item: idx };
         q.slot = slot.name || 'Slot ' + (i + 1);

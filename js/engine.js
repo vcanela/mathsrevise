@@ -526,10 +526,24 @@ const Exercise = (() => {
     const wrap = h('div', { class: 'tbar', style: state.level.timerVisible ? '' : 'display:none' }, bar);
     card.appendChild(wrap);
 
+    // A reading passage already shown on this page folds away on later
+    // cards, behind a toggle, instead of being printed again in full.
+    const qtext = h('div', { class: 'qtext', html: q.prompt });
+    if (q.passage) {
+      state.passagesShown = state.passagesShown || new Set();
+      const box = qtext.querySelector('.passage');
+      if (box && state.passagesShown.has(q.passage)) {
+        const det = h('details', { class: 'passage-again' }, h('summary', { text: `Read “${q.passage}” again` }));
+        box.replaceWith(det);
+        det.appendChild(box);
+      }
+      state.passagesShown.add(q.passage);
+    }
+
     const head = h('div', { class: 'qhead' },
       h('span', { class: 'qnum' + (depth ? ' qnum-follow' : ''), text: n }),
       depth ? h('span', { class: 'follow-flag', text: 'One like it' }) : null,
-      h('div', { class: 'qtext', html: q.prompt }),
+      qtext,
       // In a mixed session, say which exercise the question came from and link
       // to it, so a student who keeps missing one kind can go and drill it.
       q.source

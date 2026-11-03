@@ -805,10 +805,18 @@
     }
   ];
   const show = p => `<div class="passage"><p class="passage-title"><strong>${p.title}</strong></p>${p.text}</div>`;
+  const byTitle = t => PASSAGES.find(p => p.title.startsWith(t));
+  /** Passages a question refers to, folded behind toggles so the question stays visible. */
+  const fold = (...titles) => titles.map(t => { const p = byTitle(t);
+    return `<details class="passage-again"><summary>Read “${p.title}”</summary>${show(p)}</details>`; }).join('');
+  /** A passage question, tagged so a passage already shown folds away. */
+  const onPassage = (p, q) => Object.assign(q, { passage: p.title });
 
   Sci.topic({
     id: 'er4', unit: 'reading',
     title: 'Reading Closely',
+    // The six passage questions share one or two passages per set, grouped.
+    together: { slots: [0, 1, 2, 3, 4, 5], max: 2 },
     blurb: 'Short passages to read carefully: the main idea, what is hinted at, and the evidence for it.',
     hint: 'Read the passage twice. The main idea is what the whole passage is about. An inference is what the writer suggests without saying it outright; ' +
           'back it with evidence from the text. A theme is the bigger idea behind the story. Use the words around a new word to work out its meaning.',
@@ -852,32 +860,32 @@
 
     slots: [
       { name: 'Main idea', learn: 'main',
-        items: PASSAGES.map(p => rng => C(rng, { prompt: show(p) + 'What is the main idea of this passage?', right: p.main[0], wrong: p.main[1],
-          explain: 'The main idea sums up the whole passage, not one detail.' })) },
+        items: PASSAGES.map(p => rng => onPassage(p, C(rng, { prompt: show(p) + 'What is the main idea of this passage?', right: p.main[0], wrong: p.main[1],
+          explain: 'The main idea sums up the whole passage, not one detail.' }))) },
       { name: 'Inference', learn: 'infer',
-        items: PASSAGES.map(p => rng => C(rng, { prompt: show(p) + p.infer[0], right: p.infer[1], wrong: p.infer[2],
-          explain: 'The writer does not say this outright, but the details point to it.' })) },
+        items: PASSAGES.map(p => rng => onPassage(p, C(rng, { prompt: show(p) + p.infer[0], right: p.infer[1], wrong: p.infer[2],
+          explain: 'The writer does not say this outright, but the details point to it.' }))) },
       { name: 'Evidence', learn: 'evidence',
-        items: PASSAGES.map(p => rng => C(rng, { prompt: show(p) + p.evidence[0], right: p.evidence[1], wrong: p.evidence[2],
-          explain: 'This detail supports the idea most directly.' })) },
+        items: PASSAGES.map(p => rng => onPassage(p, C(rng, { prompt: show(p) + p.evidence[0], right: p.evidence[1], wrong: p.evidence[2],
+          explain: 'This detail supports the idea most directly.' }))) },
       { name: 'Theme', learn: 'theme',
-        items: PASSAGES.map(p => rng => C(rng, { prompt: show(p) + 'Which is the best statement of a theme?', right: p.theme[0], wrong: p.theme[1],
-          explain: 'A theme is the bigger idea behind the passage, something readers could relate to their own lives.' })) },
+        items: PASSAGES.map(p => rng => onPassage(p, C(rng, { prompt: show(p) + 'Which is the best statement of a theme?', right: p.theme[0], wrong: p.theme[1],
+          explain: 'A theme is the bigger idea behind the passage, something readers could relate to their own lives.' }))) },
       { name: 'Words in context', learn: 'vocab',
-        items: PASSAGES.map(p => rng => C(rng, { prompt: show(p) + `As used in the passage, what does <strong>${p.vocab[0]}</strong> mean?`, right: p.vocab[1], wrong: p.vocab[2], wide: false,
-          explain: 'The words around it give the clue.' })) },
+        items: PASSAGES.map(p => rng => onPassage(p, C(rng, { prompt: show(p) + `As used in the passage, what does <strong>${p.vocab[0]}</strong> mean?`, right: p.vocab[1], wrong: p.vocab[2], wide: false,
+          explain: 'The words around it give the clue.' }))) },
       { name: 'Purpose and viewpoint', learn: 'purpose',
-        items: PASSAGES.map(p => rng => C(rng, { prompt: show(p) + p.purpose[0], right: p.purpose[1], wrong: p.purpose[2],
-          explain: 'Ask why the writer made this choice, and what they want the reader to think or feel.' })) },
+        items: PASSAGES.map(p => rng => onPassage(p, C(rng, { prompt: show(p) + p.purpose[0], right: p.purpose[1], wrong: p.purpose[2],
+          explain: 'Ask why the writer made this choice, and what they want the reader to think or feel.' }))) },
       { name: 'Stated or inferred?', learn: 'infer',
-        items: [rng => Sci.sort(rng, { prompt: 'In <em>Before the tide</em> (Aroha and Koro fishing), is each idea stated directly or inferred?', bins: ['Stated', 'Inferred'],
+        items: [rng => onPassage(byTitle('Before the tide'), Sci.sort(rng, { prompt: show(byTitle('Before the tide')) + 'Is each idea stated directly in the passage, or inferred?', bins: ['Stated', 'Inferred'],
           items: [
             { text: 'Koro was already fishing when Aroha arrived.', bin: 0 }, { text: 'They fished until the tide turned.', bin: 0 },
             { text: 'Aroha carried the bucket home.', bin: 0 }, { text: 'Koro fumbled the hook twice.', bin: 0 },
             { text: 'Koro is getting older.', bin: 1 }, { text: 'Aroha is starting to look after Koro.', bin: 1 },
             { text: 'Koro is not really annoyed that Aroha was late.', bin: 1 }, { text: 'They both notice the change but choose not to mention it.', bin: 1 }
           ], pick: 6,
-          explain: 'Stated ideas are written in the text. Inferred ideas are what the details suggest.' })] },
+          explain: 'Stated ideas are written in the text. Inferred ideas are what the details suggest.' }))] },
       { name: 'When reading gets hard', learn: 'strategies',
         items: [
           rng => C(rng, { prompt: 'You read a paragraph and realise you took nothing in. What is the best first step?', right: 'Reread it slowly, asking what each sentence adds.', wrong: ['Skip to the end.', 'Give up on the text.', 'Read it faster.'], explain: 'Rereading is the simplest way to repair understanding.' }),
@@ -898,12 +906,12 @@
         ] },
       { name: 'Extension: across two texts', learn: 'synth',
         items: [
-          rng => C(rng, { tag: EXT, prompt: '<em>Before the tide</em> and <em>Nan’s garden</em> both involve a grandparent. What idea do they share?', right: 'Respect for an older person’s lifetime of skill and knowledge', wrong: ['The dangers of the sea', 'How to grow vegetables', 'The importance of being on time'], explain: 'Both texts show a younger person noticing and valuing what an elder knows.' }),
-          rng => C(rng, { tag: EXT, prompt: '<em>The top platform</em> and <em>Mrs Patel’s torch</em> are both about a small act. How do they differ?', right: 'One is about personal courage; the other about kindness to others.', wrong: ['Both are about fishing.', 'One is a poem and the other a report.', 'There is no difference.'], explain: 'Comparing shows each text’s focus more clearly.' }),
-          rng => C(rng, { tag: EXT, prompt: 'The kākāpō report and the skate park opinion piece both use facts. How do they use them differently?', right: 'The report uses facts to inform; the opinion piece uses them to persuade.', wrong: ['Both use facts only to entertain.', 'Neither uses any facts.', 'The report persuades and the opinion piece informs.'], explain: 'The same kind of evidence can serve different purposes.' }),
-          rng => C(rng, { tag: EXT, prompt: 'Which pair of passages share a theme of belonging?', right: '<em>Our town needs a skate park</em> and <em>Mrs Patel’s torch</em>', wrong: ['<em>Bringing back the kākāpō</em> and <em>The top platform</em>', '<em>Nan’s garden</em> and <em>Bringing back the kākāpō</em>', '<em>The top platform</em> and <em>Before the tide</em>'], explain: 'One argues young people need somewhere to belong; the other shows neighbours becoming a community.' }),
+          rng => C(rng, { tag: EXT, prompt: fold('Before the tide', 'Nan’s garden') + '<em>Before the tide</em> and <em>Nan’s garden</em> both involve a grandparent. What idea do they share?', right: 'Respect for an older person’s lifetime of skill and knowledge', wrong: ['The dangers of the sea', 'How to grow vegetables', 'The importance of being on time'], explain: 'Both texts show a younger person noticing and valuing what an elder knows.' }),
+          rng => C(rng, { tag: EXT, prompt: fold('The top platform', 'Mrs Patel') + '<em>The top platform</em> and <em>Mrs Patel’s torch</em> are both about a small act. How do they differ?', right: 'One is about personal courage; the other about kindness to others.', wrong: ['Both are about fishing.', 'One is a poem and the other a report.', 'There is no difference.'], explain: 'Comparing shows each text’s focus more clearly.' }),
+          rng => C(rng, { tag: EXT, prompt: fold('Bringing back', 'Our town') + 'The kākāpō report and the skate park opinion piece both use facts. How do they use them differently?', right: 'The report uses facts to inform; the opinion piece uses them to persuade.', wrong: ['Both use facts only to entertain.', 'Neither uses any facts.', 'The report persuades and the opinion piece informs.'], explain: 'The same kind of evidence can serve different purposes.' }),
+          rng => C(rng, { tag: EXT, prompt: fold('Our town', 'Mrs Patel') + 'What theme do <em>Our town needs a skate park</em> and <em>Mrs Patel’s torch</em> share?', right: 'Belonging: people need a place and a community to be part of', wrong: ['The dangers of storms', 'The cost of building things', 'Learning to fish'], explain: 'One argues young people need somewhere to belong; the other shows neighbours becoming a community.' }),
           rng => C(rng, { tag: EXT, prompt: 'What does it mean to synthesise ideas from two texts?', right: 'To combine what both show into a new, bigger understanding', wrong: ['To copy one text into the other', 'To find the longest text', 'To count the words in both'], explain: 'Synthesis goes beyond comparing: it builds a new idea from both.' }),
-          rng => C(rng, { tag: EXT, prompt: 'Which statement synthesises <em>Before the tide</em> and <em>Nan’s garden</em>?', right: 'Both suggest that knowledge passes between generations through shared time, not just words.', wrong: ['Before the tide is about fishing; Nan’s garden is about gardening.', 'Both have a grandparent.', 'Nan’s garden is a poem.'], explain: 'A synthesis states a bigger idea that both texts support; the others only list features.' })
+          rng => C(rng, { tag: EXT, prompt: fold('Before the tide', 'Nan’s garden') + 'Which statement synthesises <em>Before the tide</em> and <em>Nan’s garden</em>?', right: 'Both suggest that knowledge passes between generations through shared time, not just words.', wrong: ['Before the tide is about fishing; Nan’s garden is about gardening.', 'Both have a grandparent.', 'Nan’s garden is a poem.'], explain: 'A synthesis states a bigger idea that both texts support; the others only list features.' })
         ] }
     ]
   });

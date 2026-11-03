@@ -433,6 +433,9 @@ main {
 .passage p + p { margin-top: 0.55rem; }
 .passage-title { font-family: var(--font-sans); font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 0.4rem; }
 .passage .poem { font-style: italic; }
+.passage-again { margin: 0.2rem 0 0.7rem; font-family: var(--font-sans); font-size: 0.86rem; }
+.passage-again > summary { cursor: pointer; color: var(--brand-ink); font-weight: 600; }
+.passage-again[open] > summary { margin-bottom: 0.3rem; }
 
 /* ── Learn it: idea cards, a heading, a line or two and a picture ─────────── */
 .learn-count {
