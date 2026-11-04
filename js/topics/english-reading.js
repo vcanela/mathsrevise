@@ -702,7 +702,58 @@
       { id: 'register', title: 'Extension: everyday or formal?',
         text: '<p>English often has an everyday Anglo-Saxon word and a formal Latin one for the same idea:</p>' +
               Sci.table(['Everyday (Anglo-Saxon)', 'Formal (Latin)'], [['begin', 'commence'], ['ask', 'enquire'], ['help', 'assist'], ['end', 'terminate']]) +
-              '<p>Formal writing often uses the Latin word; friendly writing the Anglo-Saxon one.</p>' }
+              '<p>Formal writing often uses the Latin word; friendly writing the Anglo-Saxon one.</p>' },
+      { id: 'roots9', title: 'Harder Greek and Latin roots', years: '9', wide: true,
+        text: '<p>Many harder words, especially in science and social studies, are built from these roots.</p>' +
+              Sci.table(['Root', 'Means', 'From', 'In'], [
+                ['<strong>bene</strong>', 'good, well', 'Latin', 'benefit, benevolent'],
+                ['<strong>mal</strong>', 'bad, badly', 'Latin', 'malfunction, malnutrition'],
+                ['<strong>omni</strong>', 'all', 'Latin', 'omnivore, omnipresent'],
+                ['<strong>vor</strong>', 'eat', 'Latin', 'carnivore, herbivore'],
+                ['<strong>cred</strong>', 'believe', 'Latin', 'credible, incredible'],
+                ['<strong>mort</strong>', 'death', 'Latin', 'mortal, immortal'],
+                ['<strong>demo</strong>', 'people', 'Greek', 'democracy, demographic'],
+                ['<strong>-cracy</strong>', 'rule, power', 'Greek', 'democracy, autocracy'],
+                ['<strong>-phobia</strong>', 'fear', 'Greek', 'arachnophobia, acrophobia'],
+                ['<strong>-logy</strong>', 'study of', 'Greek', 'zoology, psychology'],
+                ['<strong>path</strong>', 'feeling; disease', 'Greek', 'sympathy, pathology'],
+                ['<strong>phil</strong>', 'love', 'Greek', 'philosophy, philanthropist'],
+                ['<strong>anthrop</strong>', 'human', 'Greek', 'anthropology, philanthropist'],
+                ['<strong>hydro</strong>', 'water', 'Greek', 'hydrant, dehydrated'],
+                ['<strong>photo</strong>', 'light', 'Greek', 'photograph, photosynthesis']]) },
+      { id: 'subjectwords', title: 'Roots unlock subject words', years: '9', wide: true,
+        text: '<p>Science and social studies are full of long words built from roots. Break them up and they explain themselves.</p>' +
+              Sci.table(['Word', 'Parts', 'Meaning'], [
+                ['photosynthesis', 'photo (light) + synthesis (putting together)', 'plants using light to make food'],
+                ['herbivore', 'herb (plant) + vor (eat)', 'an animal that eats only plants'],
+                ['democracy', 'demo (people) + cracy (rule)', 'rule by the people, through voting'],
+                ['pathology', 'path (disease) + logy (study of)', 'the study of disease'],
+                ['hydroelectric', 'hydro (water) + electric', 'electricity generated from moving water']]) },
+      { id: 'wordclass', title: 'Suffixes change word class', years: '9', wide: true,
+        text: '<p>A suffix often changes a word’s <strong>class</strong>: the job it does in a sentence.</p>' +
+              Sci.table(['Suffixes', 'Usually make', 'Examples'], [
+                ['-tion, -ness, -ment, -ity, -er, -or', 'a <strong>noun</strong> (a thing, idea or person)', 'creation, kindness, movement, ability, builder'],
+                ['-ify, -ise, -en', 'a <strong>verb</strong> (an action)', 'simplify, organise, strengthen'],
+                ['-ous, -ful, -less, -able, -ive', 'an <strong>adjective</strong> (describes a noun)', 'dangerous, careful, fearless, readable, expensive'],
+                ['-ly', 'an <strong>adverb</strong> (describes a verb)', 'carefully, quickly']]) +
+              '<p>A <strong>word family</strong> shares a root: <em>create</em> (verb), <em>creation</em> (noun), <em>creative</em> (adjective), <em>creatively</em> (adverb). Pick the member that fits the job in your sentence.</p>' },
+      { id: 'antonyms', title: 'Antonyms and negative prefixes', years: '9', wide: true,
+        text: '<p><strong>Synonyms</strong> have similar meanings (<em>empty, vacant</em>). <strong>Antonyms</strong> are opposites (<em>generous, mean</em>).</p>' +
+              '<p>Many antonyms are made with a negative prefix: <strong>un-, in-, im-, il-, ir-, dis-, non-</strong>. <em>honest → dishonest, legal → illegal.</em></p>' +
+              '<p>Watch out: <em>invaluable</em> means so valuable it cannot be measured, and <em>inflammable</em> means the same as <em>flammable</em> (easily set on fire). Neither is an opposite.</p>' },
+      { id: 'idioms', title: 'Idiomatic expressions', years: '9', wide: true,
+        text: '<p>An <strong>idiom</strong> is a fixed phrase whose meaning cannot be worked out from its separate words. Read it as a whole, using the context.</p>' +
+              Sci.table(['Idiom', 'Means'], [
+                ['spill the beans', 'reveal a secret'], ['under the weather', 'unwell'],
+                ['bite the bullet', 'face something unpleasant you cannot avoid'], ['cut to the chase', 'get to the main point'],
+                ['she’ll be right (NZ and Australia)', 'it will be fine']]) },
+      { id: 'borrowed', title: 'Words borrowed into English', years: '9', wide: true,
+        text: '<p>English has borrowed words from many languages, often naming things that arrived with them.</p>' +
+              Sci.table(['From', 'Borrowed words'], [
+                ['French', 'ballet, café, restaurant'], ['Italian', 'piano, spaghetti'], ['Spanish', 'mosquito, canyon'],
+                ['German', 'kindergarten'], ['Arabic', 'algebra'], ['Hindi', 'shampoo'], ['Japanese', 'tsunami, karaoke'], ['Old Norse', 'sky, egg']]) +
+              '<p>New Zealand English has borrowed many words from <strong>te reo Māori</strong>: <em>kia ora, whānau, kai, haka, kūmara, mana</em>.</p>' +
+              '<p>Borrowing goes both ways: te reo Māori took <em>hipi</em> (sheep) and <em>miraka</em> (milk) from English.</p>' }
     ],
 
     examples: [
@@ -777,7 +828,7 @@
           rng => TF(rng, { statement: 'A glossary in a New Zealand text can help with the meaning of kupu Māori.', answer: true, learn: 'kupu', explain: 'So can an online dictionary.' }),
           rng => TF(rng, { statement: '“Geo” means earth, as in geography.', answer: true, learn: 'roots', explain: 'Geo = earth; graph = write: writing about the earth.' })
         ] },
-      { name: 'Extension: everyday or formal?', learn: 'register',
+      { name: 'Extension: everyday or formal?', learn: 'register', challenge: 'also',
         items: [
           rng => C(rng, { tag: EXT, prompt: 'Which word is the formal, Latin-based partner of <strong>begin</strong>?', right: 'commence', wrong: ['start', 'go', 'kick off'], explain: '“Commence” comes from Latin; “begin” from Old English.' }),
           rng => C(rng, { tag: EXT, prompt: 'Which word is the everyday, Anglo-Saxon partner of <strong>assist</strong>?', right: 'help', wrong: ['facilitate', 'support', 'aid'], explain: 'Short everyday words often come from Old English.' }),
@@ -785,6 +836,149 @@
           rng => C(rng, { tag: EXT, prompt: 'Why do science words often use Greek roots?', right: 'Scholars built new technical words from Greek parts.', wrong: ['Greek is easier to spell.', 'All English words are Greek.', 'Greek words are shorter.'], explain: 'Words like thermometer and microscope were made from Greek parts to name new things.' }),
           rng => C(rng, { tag: EXT, prompt: '“Chronic” shares a root with “chronological”. What might a chronic illness be?', right: 'One that lasts a long time', wrong: ['One that is very painful', 'One that is caught from animals', 'One that affects the skin'], explain: 'Chron = time: a chronic illness continues over a long time.' }),
           rng => C(rng, { tag: EXT, prompt: 'What does <strong>circumnavigate</strong> mean?', right: 'To sail all the way around', wrong: ['To sail under', 'To sail across once', 'To sail backwards'], explain: 'Circum = around; navigate = sail or steer.' })
+        ] },
+
+      // ── Year 9 challenge: these positions appear only in the challenge set.
+
+      // 11 · Harder roots.
+      { name: 'Year 9: harder roots', learn: 'roots9', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: '<strong>bene</strong> means good or well. A <strong>benevolent</strong> ruler is most likely …',
+            right: 'kind, and wanting to do good for others', wrong: ['cruel, and wanting to harm others', 'easily frightened', 'extremely wealthy'],
+            explain: 'Bene (well) + vol (wish): wishing others well. A ruler who wants to harm people would be <em>malevolent</em>, with mal (bad).' }),
+          rng => C(rng, { prompt: 'The report said many of the children were suffering from <strong>malnutrition</strong>. What does this mean?',
+            right: 'Poor nutrition: not getting enough of the right food', wrong: ['A fear of food', 'Eating a balanced, healthy diet', 'Too much exercise'],
+            explain: 'Mal (bad, badly) + nutrition (nourishment): badly nourished. A balanced diet is the opposite.' }),
+          rng => C(rng, { prompt: 'Using <strong>auto</strong> (self) and <strong>-cracy</strong> (rule, power), what is an <strong>autocracy</strong>?',
+            right: 'A country ruled by one person with total power', wrong: ['A country ruled by the people through voting', 'A country with no government at all', 'A country run by machines'],
+            explain: 'Auto (self) + cracy (rule): one person rules by themselves. Rule by the people is a democracy.' }),
+          rng => C(rng, { prompt: '<strong>acro</strong> means height or top. What is <strong>acrophobia</strong>?',
+            right: 'An extreme fear of heights', wrong: ['The study of mountains', 'A love of climbing', 'A disease caught at high altitude'],
+            explain: 'Acro (height) + phobia (fear). The study of something would end in -logy; a love of something would use phil.' }),
+          rng => C(rng, { prompt: '<strong>Empathy</strong> contains the root <strong>path</strong> (feeling). What is empathy?',
+            right: 'The ability to share and understand another person’s feelings', wrong: ['The study of diseases', 'A dislike of other people', 'A feeling of tiredness'],
+            explain: 'Em (in) + path (feeling): feeling what someone else feels. The study of disease is <em>pathology</em>, which uses the other meaning of path.' }),
+          rng => C(rng, { prompt: 'A local <strong>philanthropist</strong> paid for the new marae kitchen. What is a philanthropist?',
+            right: 'Someone who gives money or time to help other people', wrong: ['Someone who studies ancient humans', 'Someone who is afraid of crowds', 'Someone who builds kitchens for a living'],
+            explain: 'Phil (love) + anthrop (human): someone who loves humankind, and shows it by giving. Someone who studies humans is an <em>anthropologist</em>.' }),
+          rng => C(rng, { prompt: 'In the legend, the hero’s sword made him <strong>immortal</strong>. What does this mean?',
+            right: 'He could not die', wrong: ['He could not be seen', 'He could not be believed', 'He could not be beaten in a fight'],
+            explain: 'Im (not) + mort (death): not subject to death. “Could not be believed” would be <em>incredible</em>, from cred.' })
+        ] },
+
+      // 12 · Roots in science and social studies.
+      { name: 'Year 9: subject words', learn: 'subjectwords', challenge: 'only',
+        items: [
+          rng => Sci.match(rng, 'Science words: match each word to its meaning.', [
+            ['herbivore', 'An animal that eats only plants'], ['omnivore', 'An animal that eats plants and animals'],
+            ['photosynthesis', 'Plants using light to make food'], ['dehydrated', 'Having lost too much water']],
+            'Herb (plant) + vor (eat); omni (all) + vor (eat); photo (light) + synthesis (putting together); de (remove) + hydro (water).'),
+          rng => Sci.match(rng, 'Social studies words: match each word to its meaning.', [
+            ['democracy', 'Rule by the people, through voting'], ['autocracy', 'Rule by one person with total power'],
+            ['demographics', 'Data about the people in a population'], ['anthropology', 'The study of humans and their cultures']],
+            'Demo (people) + cracy (rule); auto (self) + cracy (rule); demo (people) + graph (write); anthrop (human) + logy (study of).'),
+          rng => Sci.match(rng, 'Match each word to its meaning.', [
+            ['pathologist', 'A scientist who studies disease'], ['hydroelectric', 'Making electricity from moving water'],
+            ['geothermal', 'Using heat from inside the Earth'], ['zoology', 'The study of animals']],
+            'Path (disease) + logy (study of) + ist (person); hydro (water) + electric; geo (earth) + therm (heat); zoo (animal) + logy (study of).'),
+          rng => Sci.match(rng, 'Match each word to its meaning.', [
+            ['credible', 'Able to be believed'], ['mortality rate', 'How often people die in a population'],
+            ['malfunction', 'Failure to work properly'], ['benefactor', 'Someone who gives help or money']],
+            'Cred (believe) + ible (able to be); mort (death); mal (badly) + function (work); bene (good) + fact (do) + or (person).')
+        ] },
+
+      // 13 · Suffixes and word class.
+      { name: 'Year 9: suffixes and word class', learn: 'wordclass', challenge: 'only',
+        items: [
+          ['creation', 'happiness', 'movement', 'simplify', 'strengthen', 'modernise', 'dangerous', 'careful', 'comfortable'],
+          ['pollution', 'kindness', 'agreement', 'purify', 'widen', 'organise', 'poisonous', 'fearless', 'expensive'],
+          ['curiosity', 'darkness', 'enjoyment', 'classify', 'shorten', 'criticise', 'famous', 'powerful', 'readable'],
+          ['ability', 'weakness', 'payment', 'justify', 'sharpen', 'apologise', 'nervous', 'thoughtful', 'attractive']
+        ].map(words => rng => Sci.sort(rng, {
+          prompt: 'Use the suffix to sort each word by its word class.', bins: ['Noun', 'Verb', 'Adjective'],
+          items: words.map((text, i) => ({ text, bin: Math.floor(i / 3) })), pick: 6,
+          explain: 'Nouns: -tion, -ness, -ment, -ity. Verbs: -ify, -ise, -en. Adjectives: -ous, -ful, -less, -able, -ive.'
+        })) },
+
+      // 14 · Word families in context.
+      { name: 'Year 9: word families', learn: 'wordclass', challenge: 'only',
+        items: [
+          ['The ▢ of the new bridge took two years.', 'construction', ['construct', 'constructive', 'constructively'],
+            'After “The” and before “of”, the sentence needs a noun: <strong>construction</strong> (-tion).'],
+          ['Kiri gave a very ▢ answer in the debate.', 'persuasive', ['persuade', 'persuasion', 'persuasively'],
+            'The gap describes the noun “answer”, so it needs an adjective: <strong>persuasive</strong> (-ive).'],
+          ['The rangers hope to ▢ the wetland by planting harakeke.', 'restore', ['restoration', 'restorative', 'restorer'],
+            'After “to”, the sentence needs a verb: <strong>restore</strong>.'],
+          ['Tama worked ▢ all afternoon on his speech.', 'carefully', ['careful', 'carefulness', 'cared'],
+            'The gap describes how he worked (a verb), so it needs an adverb: <strong>carefully</strong> (-ly).'],
+          ['The council will ▢ the rules so they are easier to follow.', 'simplify', ['simple', 'simplicity', 'simply'],
+            'After “will”, the sentence needs a verb: <strong>simplify</strong> (-ify).'],
+          ['There was a buzz of ▢ in the crowd before the final.', 'excitement', ['excite', 'exciting', 'excitedly'],
+            'After “of”, the sentence needs a noun: <strong>excitement</strong> (-ment).'],
+          ['Her ▢ to keep going after the injury impressed everyone.', 'determination', ['determine', 'determined', 'determinedly'],
+            'After “Her”, the sentence needs a noun: <strong>determination</strong> (-tion).']
+        ].map(([s, right, wrong, why]) => rng => C(rng, {
+          prompt: `Which word completes the sentence? <em>${s}</em>`, right, wrong, wide: false, explain: why })) },
+
+      // 15 · Antonyms.
+      { name: 'Year 9: antonyms', learn: 'antonyms', challenge: 'only',
+        items: [
+          [['generous / mean', 'ancient / modern', 'famous / well-known', 'expand / contract'], 2,
+            '<em>Famous</em> and <em>well-known</em> are synonyms: they mean nearly the same thing.'],
+          [['visible / invisible', 'valuable / invaluable', 'legal / illegal', 'honest / dishonest'], 1,
+            '<em>Invaluable</em> means so valuable it cannot be measured, so it is not the opposite of <em>valuable</em>. The opposite is <em>worthless</em>.'],
+          [['flammable / inflammable', 'possible / impossible', 'agree / disagree', 'mature / immature'], 0,
+            '<em>Inflammable</em> means the same as <em>flammable</em>: easily set on fire. The opposite is <em>non-flammable</em>.'],
+          [['benefit / harm', 'optimist / pessimist', 'scarce / plentiful', 'reluctant / unwilling'], 3,
+            '<em>Reluctant</em> and <em>unwilling</em> are synonyms. The prefix un- does not make them opposites.'],
+          [['accept / reject', 'vacant / empty', 'arrive / depart', 'include / exclude'], 1,
+            '<em>Vacant</em> and <em>empty</em> are synonyms.']
+        ].map(([lines, at, why]) => rng => Sci.spot(rng, {
+          prompt: 'Three of these pairs are antonyms (opposites).', lines, wrong: at,
+          cue: 'Click the pair that are not antonyms.', find: 'are not antonyms', explain: why })) },
+
+      // 16 · Idiomatic expressions.
+      { name: 'Year 9: idioms', learn: 'idioms', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'Which best describes an <strong>idiom</strong>?',
+            right: 'A fixed phrase whose meaning is different from the meanings of its separate words',
+            wrong: ['A word borrowed from another language', 'A comparison using “like” or “as”', 'A deliberate exaggeration'],
+            explain: 'You cannot work out “spill the beans” from spill and beans. The others describe a loanword, a simile and hyperbole.' }),
+          rng => C(rng, { prompt: '<em>After weeks of keeping quiet, Tama finally spilled the beans about the surprise party.</em> What did Tama do?',
+            right: 'He told people the secret', wrong: ['He dropped food at the party', 'He cancelled the party', 'He cooked for the party'],
+            explain: '“Spill the beans” means reveal a secret. Read literally, it makes no sense in this sentence.' }),
+          rng => C(rng, { prompt: '<em>Mere has been under the weather all week, so she missed netball training.</em> What does this mean?',
+            right: 'She has been feeling unwell', wrong: ['She was caught in the rain', 'She has been very busy', 'She dislikes training outside'],
+            explain: '“Under the weather” means slightly ill.' }),
+          rng => C(rng, { prompt: '<em>Liam decided to bite the bullet and tell his coach he was leaving the team.</em> What does this mean?',
+            right: 'He made himself do something unpleasant that he could not avoid', wrong: ['He lost his temper with the coach', 'He changed his mind about leaving', 'He hurt himself at practice'],
+            explain: '“Bite the bullet” means face a difficult or unpleasant task bravely.' }),
+          rng => C(rng, { prompt: '<em>After his final warning, Sione promised to turn over a new leaf.</em> What did he promise?',
+            right: 'To change his behaviour for the better', wrong: ['To start gardening', 'To read a new book', 'To leave the school'],
+            explain: '“Turn over a new leaf” means make a fresh start and behave better. The “leaf” is an old word for a page.' }),
+          rng => C(rng, { prompt: '<em>“We only have ten minutes,” said Priya. “Let’s cut to the chase.”</em> What does Priya want?',
+            right: 'To get straight to the main point', wrong: ['To run faster', 'To end the meeting at once', 'To skip the main point'],
+            explain: '“Cut to the chase” means skip the less important details and get to what matters.' }),
+          rng => C(rng, { prompt: '<em>“Don’t stress about the leaky tent,” said Dad. “She’ll be right.”</em> What does Dad mean?',
+            right: 'It will be fine', wrong: ['The tent belongs to a woman', 'Someone else will fix the tent', 'They should go home'],
+            explain: '“She’ll be right” is a New Zealand and Australian idiom for “it will be fine”. It is sometimes used of people who are too relaxed about a real problem.' })
+        ] },
+
+      // 17 · Borrowed words.
+      { name: 'Year 9: borrowed words', learn: 'borrowed', challenge: 'only',
+        items: [
+          rng => Sci.match(rng, 'Match each word to the language English borrowed it from.', [
+            ['ballet', 'French'], ['piano', 'Italian'], ['tsunami', 'Japanese'], ['kūmara', 'Te reo Māori']],
+            'Words often arrive with the thing they name: an art form from France, an instrument from Italy, a natural event named in Japan, and a food crop grown in Aotearoa.'),
+          rng => Sci.match(rng, 'Match each word to the language English borrowed it from.', [
+            ['shampoo', 'Hindi'], ['mosquito', 'Spanish'], ['kindergarten', 'German'], ['haka', 'Te reo Māori']],
+            'Shampoo came from Hindi, mosquito from Spanish (“little fly”), kindergarten from German (“children’s garden”), and haka from te reo Māori.'),
+          rng => Sci.match(rng, 'Match each word to the language English borrowed it from.', [
+            ['algebra', 'Arabic'], ['karaoke', 'Japanese'], ['café', 'French'], ['whānau', 'Te reo Māori']],
+            'Algebra came from Arabic, karaoke from Japanese, café from French, and whānau into New Zealand English from te reo Māori.'),
+          rng => Sci.match(rng, 'Match each word to the language English borrowed it from.', [
+            ['sky', 'Old Norse'], ['spaghetti', 'Italian'], ['canyon', 'Spanish'], ['mana', 'Te reo Māori']],
+            'Sky came from the Old Norse of Viking settlers in England, spaghetti from Italian, canyon from Spanish, and mana into New Zealand English from te reo Māori.')
         ] }
     ]
   });
@@ -827,7 +1021,45 @@
         text: '<p>Texts can combine forms or purposes: a <strong>poem that persuades</strong>, a <strong>historical novel</strong> (a story built on real events), a <strong>biography</strong> told like a story.</p>' },
       { id: 'tropes', title: 'Extension: tropes',
         text: '<p>A <strong>trope</strong> is a recurring feature of stories that readers recognise: the wise mentor, the chosen one, the journey home, good versus evil.</p>' +
-              '<p>Writers use tropes to set expectations, then sometimes break them to surprise us.</p>' }
+              '<p>Writers use tropes to set expectations, then sometimes break them to surprise us.</p>' },
+      { id: 'perspective', title: 'Narrative perspective', years: '9', wide: true,
+        text: '<p>Ask: whose eyes are we seeing through, and how much do they know?</p>' +
+              Sci.table(['Perspective', 'Clue', 'Effect'], [
+                ['<strong>First person</strong>', '“I”, “we”: a character tells the story', 'Close to the narrator’s thoughts, but we only know what they know, and they may be <strong>unreliable</strong>.'],
+                ['<strong>Second person</strong>', '“you”', 'Puts the reader inside the story. Unusual and very immediate.'],
+                ['<strong>Third person limited</strong>', '“he”, “she”, “they”; inside one character’s head', 'Close to one character, with a little distance. We learn things as they do.'],
+                ['<strong>Third person omniscient</strong>', '“he”, “she”, “they”; inside many heads', 'An all-knowing narrator who can move between characters and reveal what each thinks.']]) },
+      { id: 'drama', title: 'Drama: reading a script', years: '9', wide: true,
+        text: '<p>A play is written to be <strong>performed</strong>.</p>' +
+              '<ul><li><strong>Dialogue:</strong> the characters’ words, the main way we learn what they are like.</li>' +
+              '<li><strong>Stage directions:</strong> in italics or brackets, and not spoken. They set the scene and show movement, tone and silence: <em>(She turns away.)</em></li>' +
+              '<li><strong>Conflict:</strong> <em>external</em> (between characters, or a character and the world) or <em>internal</em> (inside one character’s mind).</li>' +
+              '<li><strong>Tension</strong> builds while a conflict stays unresolved.</li></ul>' },
+      { id: 'film', title: 'Film: camera shots', years: '9', wide: true,
+        text: Sci.table(['Shot', 'What we see', 'Often suggests'], [
+                ['<strong>Establishing shot</strong>', 'a wide view at the start of a scene', 'where and when the scene takes place'],
+                ['<strong>Long (wide) shot</strong>', 'a whole figure in its surroundings', 'the setting, or how small or alone someone is'],
+                ['<strong>Close-up</strong>', 'a face, or one object, filling the frame', 'emotion, or importance'],
+                ['<strong>Extreme close-up</strong>', 'one small detail: an eye, a key', 'intense focus or tension'],
+                ['<strong>Point-of-view shot</strong>', 'what a character sees, through their eyes', 'puts us in the character’s place'],
+                ['<strong>Low angle</strong>', 'the camera looks up', 'power or threat'],
+                ['<strong>High angle</strong>', 'the camera looks down', 'weakness or vulnerability'],
+                ['<strong>Tracking shot</strong>', 'the camera moves along with the subject', 'movement and energy; we travel with them']]) },
+      { id: 'shortstory', title: 'The short story', years: '9', wide: true,
+        text: '<p>A short story has little space, so its structure is <strong>compressed</strong>:</p>' +
+              '<ul><li>it often starts in the middle of the action;</li><li>few characters, one main setting, one main conflict, a short span of time;</li>' +
+              '<li>every detail has to count;</li><li><strong>pacing</strong>: it slows down the moment that matters and summarises the rest;</li>' +
+              '<li>it often ends with an <strong>epiphany</strong> (a sudden realisation) or an <strong>open ending</strong> that leaves the reader thinking.</li></ul>' },
+      { id: 'discursive', title: 'Discursive or persuasive; adapting forms', years: '9', wide: true,
+        text: Sci.table(['', 'Persuasive', 'Discursive'], [
+                ['Aim', 'argues for one position', 'explores an issue from several sides'],
+                ['Clues', '“we must”, commands, rhetorical questions, one side only', '“some argue … while others …”, “on the other hand”, balanced language'],
+                ['Ending', 'a call to act or agree', 'a balanced view, or leaves the reader to decide']]) +
+              '<p>Writers <strong>select</strong> a form for their purpose and audience, and often <strong>adapt</strong> it: a story told as text messages, a speech written as a poem, a pūrākau retold as a short story.</p>' },
+      { id: 'tradition', title: 'Context and literary tradition', years: '9', wide: true,
+        text: '<p><strong>Context</strong>: the historical, cultural and social setting a text comes from. Texts often reflect the values of their time, and a reader’s own background shapes how they interpret a text.</p>' +
+              '<p>A <strong>literary tradition</strong> is a body of works, styles and conventions that grows up within a culture or period. New Zealand has its own, reflecting our people and places and connecting with traditions around the world. Katherine Mansfield and Patricia Grace are well-known New Zealand short story writers.</p>' +
+              '<p><strong>Pūrākau</strong> are traditional Māori narratives, passed down through generations, often orally, that carry knowledge, values and whakapapa. Different iwi may hold different versions. Writers who draw on pūrākau research them carefully and acknowledge where they come from.</p>' }
     ],
 
     examples: [
@@ -917,7 +1149,7 @@
           rng => TF(rng, { statement: 'A text can have more than one purpose.', answer: true, learn: 'blend', explain: 'An advert might entertain in order to persuade.' }),
           rng => TF(rng, { statement: 'The time and place a text was written in has no effect on it.', answer: false, explain: 'Social, historical and cultural context influence what a text says and how.' })
         ] },
-      { name: 'Extension: tropes', learn: 'tropes',
+      { name: 'Extension: tropes', learn: 'tropes', challenge: 'also',
         items: [
           rng => C(rng, { tag: EXT, prompt: 'An old, wise character guides a young hero and then disappears. Which trope is this?', right: 'The wise mentor', wrong: ['The unreliable narrator', 'The happy ending', 'The red herring'], explain: 'The mentor appears in countless stories, from myths to films.' }),
           rng => C(rng, { tag: EXT, prompt: 'An ordinary teenager discovers they alone can save the world. Which trope is this?', right: 'The chosen one', wrong: ['The wise mentor', 'The comic sidekick', 'The locked room'], explain: 'A familiar pattern in fantasy and adventure stories.' }),
@@ -925,6 +1157,174 @@
           rng => C(rng, { tag: EXT, prompt: 'A story sets up the wise mentor, who then turns out to be the villain. What is the writer doing?', right: 'Subverting a trope to surprise the reader', wrong: ['Making a spelling mistake', 'Writing instructions', 'Using a cliché'], explain: 'Breaking a familiar pattern creates surprise.' }),
           rng => C(rng, { tag: EXT, prompt: 'A hero leaves home, faces trials, and returns changed. Which trope is this?', right: 'The journey (quest)', wrong: ['The love triangle', 'The ticking clock', 'The twin swap'], explain: 'The journey is one of the oldest story patterns.' }),
           rng => C(rng, { tag: EXT, prompt: 'Many cultures have stories of a trickster who outwits more powerful beings, such as Māui. What is this?', right: 'A trope found across cultures', wrong: ['A modern invention', 'A type of poem', 'A news genre'], explain: 'Tropes recur across times and cultures.' })
+        ] },
+
+      // ── Year 9 challenge: these positions appear only in the challenge set.
+
+      // 11 · Narrative perspective.
+      { name: 'Year 9: narrative perspective', learn: 'perspective', challenge: 'only',
+        items: [
+          ...[
+            ['I knew the moment I saw the envelope that something was wrong. My hands would not stop shaking.', 'First person',
+              'The narrator is a character telling their own story: “I knew”, “my hands”.'],
+            ['You step out onto the ice. It creaks beneath your boots. You hold your breath and take another step.', 'Second person',
+              'The story is told to “you”, putting the reader in the main character’s place.'],
+            ['Ana watched the bus pull away. She wondered whether Tama had seen her wave, and decided she did not care.', 'Third person limited',
+              'The narrator uses “she”, and we see inside only Ana’s head. We do not learn what Tama thinks.'],
+            ['Hemi was sure he would win. Behind him, Losa was quietly planning to pass him on the final bend, and their coach was already worrying that neither of them had warmed up.', 'Third person omniscient',
+              'The narrator moves inside three heads (Hemi, Losa and the coach), so it is all-knowing.']
+          ].map(([s, right, why]) => rng => C(rng, {
+            prompt: `<em>“${s}”</em> Which narrative perspective is used?`, right, wide: false,
+            wrong: ['First person', 'Second person', 'Third person limited', 'Third person omniscient'].filter(x => x !== right),
+            explain: why })),
+          rng => C(rng, { prompt: 'A mystery is told in the first person by a narrator who may be hiding something. What does this perspective allow the writer to do?',
+            right: 'Mislead the reader, because we only know what the narrator chooses to tell us', wrong: ['Show every character’s secret thoughts', 'Prove the narrator is telling the truth', 'Tell the story without a main character'],
+            explain: 'A first-person narrator can be unreliable. Showing every character’s thoughts needs an omniscient narrator.' }),
+          rng => C(rng, { prompt: 'A writer is telling the story of a whole town during a flood, following many families. Why might they choose a third person omniscient narrator?',
+            right: 'It can move between many characters and reveal what each is thinking', wrong: ['It keeps the reader inside one character’s head', 'It makes the reader the main character', 'It hides what every character is thinking'],
+            explain: 'An all-knowing narrator suits a story with many viewpoints. Staying inside one head would be third person limited.' }),
+          rng => C(rng, { prompt: 'Why might a writer use second person (“you”) in a choose-your-own-adventure story?',
+            right: 'It puts the reader in the main character’s place, so they feel directly involved', wrong: ['It lets the writer reveal every character’s thoughts', 'It makes the story sound more formal', 'It shows that the narrator is lying'],
+            explain: '“You” makes the reader the one making the choices, which is the point of the form.' })
+        ] },
+
+      // 12 · Drama.
+      { name: 'Year 9: drama', learn: 'drama', challenge: 'only',
+        items: [
+          rng => Sci.spot(rng, {
+            prompt: '<p><strong>MERE:</strong> Where were you last night?<br><em>(TAMA looks away and fiddles with his phone.)</em><br><strong>TAMA:</strong> Nowhere. Just out.</p>A student analyses this extract.',
+            lines: ['The words in brackets are a stage direction.', 'The audience hears Tama say the stage direction aloud.', 'Tama looking away suggests he is hiding something.', 'This builds conflict between Mere and Tama.'],
+            wrong: 1, explain: 'Stage directions are not spoken. The audience sees them acted out: here, Tama’s guilty body language.' }),
+          rng => Sci.spot(rng, {
+            prompt: '<p><em>(A kitchen, late at night. A single lamp is on. DAD sits at the table, staring at a pile of bills.)</em><br><strong>SIONE:</strong> <em>(entering)</em> Dad? You’re still up?<br><strong>DAD:</strong> <em>(quickly turning the bills over)</em> Just finishing the crossword.</p>A student analyses this extract.',
+            lines: ['The opening stage direction sets the scene: the time, the place and the lighting.', 'Dad turning the bills over shows he is hiding his money worries from Sione.', 'So Dad’s line about the crossword is the plain truth.', 'The audience knows more than Sione here, which builds tension.'],
+            wrong: 2, explain: 'The stage direction shows Dad hiding the bills, so his line is a cover story, not the truth.' }),
+          rng => Sci.spot(rng, {
+            prompt: '<p><strong>KIRI:</strong> <em>(alone, holding the team list)</em> If I tell Coach that Aroha cheated, we lose the final. If I don’t …<br><em>(She screws up the list, then smooths it out again.)</em></p>A student analyses this extract.',
+            lines: ['Kiri is alone on stage, sharing her thoughts with the audience.', 'Her struggle is inside her own mind: an internal conflict.', 'Screwing up the list and smoothing it out shows her changing her mind back and forth.', 'Because nobody else is on stage, this scene has no conflict.'],
+            wrong: 3, explain: 'Conflict does not need two people. Kiri’s struggle with her own choice is an internal conflict.' }),
+          rng => Sci.spot(rng, {
+            prompt: '<p><strong>GRAN:</strong> Sit. Eat. You’re too thin.<br><strong>LIAM:</strong> Gran, I’ve just had lunch.<br><strong>GRAN:</strong> <em>(already filling a second plate)</em> That wasn’t lunch. That was a snack.</p>A student analyses this extract.',
+            lines: ['Gran speaks in long, formal sentences, which shows she is shy.', 'The stage direction shows she ignores what Liam says.', 'Her bossy care for Liam is warm, and adds humour.', 'In a play, dialogue and stage directions do the work that description does in a novel.'],
+            wrong: 0, explain: 'Gran’s lines are short commands (“Sit. Eat.”), which show she is used to being in charge, not shy.' }),
+          rng => Sci.spot(rng, {
+            prompt: '<p><strong>ANA:</strong> You promised you’d be there.<br><strong>JACK:</strong> I know.<br><em>(A long silence. Neither of them moves.)</em><br><strong>ANA:</strong> Say something.</p>A student analyses this extract.',
+            lines: ['Ana is angry that Jack broke a promise.', 'Jack’s short reply avoids explaining himself.', 'The silence in the stage direction means nothing is happening, so it does not matter.', 'Ana’s “Say something” shows the silence has become unbearable for her.'],
+            wrong: 2, explain: 'A silence on stage is full of meaning. It holds the tension, which Ana’s line then breaks.' })
+        ] },
+
+      // 13 · Camera shots.
+      { name: 'Year 9: camera shots', learn: 'film', challenge: 'only',
+        items: [
+          rng => Sci.match(rng, 'Match each moment in a film to the shot being used.', [
+            ['The film opens high above a small coastal town at dawn, showing the harbour, streets and hills.', 'Establishing shot'],
+            ['The screen is filled by a single eye, its pupil widening.', 'Extreme close-up'],
+            ['The camera looks up at the bully from below, so he towers over the screen.', 'Low-angle shot'],
+            ['We see the dark hallway exactly as the frightened girl sees it.', 'Point-of-view shot']],
+            'The establishing shot shows where we are; the extreme close-up isolates one detail; the low angle makes the bully powerful; the point-of-view shot puts us in the girl’s place.'),
+          rng => Sci.match(rng, 'Match each moment in a film to the shot being used.', [
+            ['The camera looks down on a small boy alone in a huge, empty hall.', 'High-angle shot'],
+            ['The camera holds on Mere’s face as tears start to form.', 'Close-up'],
+            ['A tiny figure crosses a vast snowy plain, with the whole landscape around him.', 'Long (wide) shot'],
+            ['The camera moves alongside the runner, keeping pace with her.', 'Tracking shot']],
+            'Looking down makes the boy seem vulnerable; the close-up shows emotion; the long shot shows how small he is in the landscape; the tracking shot travels with the runner.'),
+          rng => Sci.match(rng, 'Match each moment in a film to the shot being used.', [
+            ['The first shot shows the whole city skyline at night, before we cut inside one apartment.', 'Establishing shot'],
+            ['The camera looks down on the beaten team slumped on the bench.', 'High-angle shot'],
+            ['We see the exam paper shaking, as if looking down through the student’s own eyes.', 'Point-of-view shot'],
+            ['The camera holds on the coach’s face, catching a small, proud smile.', 'Close-up']],
+            'The skyline sets the scene; looking down shows defeat; seeing through the student’s eyes is point of view; holding on a face shows emotion.'),
+          rng => Sci.match(rng, 'Match each moment in a film to the shot being used.', [
+            ['The camera looks up at the statue, making it seem huge and powerful.', 'Low-angle shot'],
+            ['The screen fills with a fingertip hovering over a red button.', 'Extreme close-up'],
+            ['The camera glides along the coast road, moving with the car.', 'Tracking shot'],
+            ['The whole climber is visible, small against a huge cliff face.', 'Long (wide) shot']],
+            'Looking up gives power; one tiny detail filling the screen builds tension; moving with the car is tracking; a whole figure in a large space is a long shot.')
+        ] },
+
+      // 14 · The short story.
+      { name: 'Year 9: the short story', learn: 'shortstory', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'A short story opens: <em>“The second time the waka tipped over, Tavita stopped laughing.”</em> Why might a short story begin in the middle of the action like this?',
+            right: 'With few words to spend, it hooks the reader at once and skips a long introduction', wrong: ['Short stories are not allowed to have introductions', 'To make the story as long as possible', 'To show that the events happened in the future'],
+            explain: 'Compression: a short story cannot afford a slow build-up, so it often starts late in the action.' }),
+          rng => C(rng, { prompt: 'Which is most typical of a short story, compared with a novel?',
+            right: 'A few characters, one main conflict and a short span of time', wrong: ['Many subplots across several generations', 'A large cast of main characters', 'Dozens of chapters, each with a new setting'],
+            explain: 'A short story focuses tightly. The other options describe the room a novel has.' }),
+          rng => C(rng, { prompt: 'At the end of a short story, Hana suddenly realises that her brother’s teasing was his way of looking after her. What is a sudden realisation like this called?',
+            right: 'An epiphany', wrong: ['A stage direction', 'An establishing shot', 'A subplot'],
+            explain: 'An epiphany is a moment of sudden understanding. Many short stories build towards one.' }),
+          rng => C(rng, { prompt: 'A short story ends before we find out whether Sione accepts a job overseas. Why might the writer choose this open ending?',
+            right: 'It leaves readers to weigh up the choice themselves, so the story’s question stays with them', wrong: ['It tells the reader exactly what happened next', 'It turns the short story into a novel', 'It shows the writer had no ideas left'],
+            explain: 'An open ending hands the final decision to the reader, which keeps them thinking.' }),
+          rng => C(rng, { prompt: 'A short story spends a whole page on the ten seconds when a dog runs onto the road, then covers the next three years in one sentence. What is the writer doing?',
+            right: 'Controlling the pace: slowing down the moment that matters and summarising the rest', wrong: ['Giving every event equal space', 'Making a mistake with the timeline', 'Using second-person narration'],
+            explain: 'Pacing tells the reader what matters. Slowing down a key moment makes it feel huge.' }),
+          rng => C(rng, { prompt: 'Why does every detail matter so much in a short story?',
+            right: 'The form is so short that each detail must build character, setting or the main idea', wrong: ['Short stories must describe everything in full', 'Readers of short stories skip most details', 'Details are only there to make the story longer'],
+            explain: 'There is no room for padding, so writers choose details that do several jobs at once.' })
+        ] },
+
+      // 15 · Discursive or persuasive.
+      { name: 'Year 9: discursive or persuasive?', learn: 'discursive', challenge: 'only',
+        items: [
+          [['Some families say uniforms save money; others find them expensive to buy new.', 'Opinions on uniforms differ, and both sides raise fair points.', 'Supporters argue uniforms build belonging, while critics say they limit self-expression.'],
+           ['Uniforms must go, and they must go now.', 'Every student deserves to dress as themselves, so scrap the uniform.', 'Who could possibly defend forcing teenagers into itchy blazers?']],
+          [['A four-day school week could give students more rest, but it might also make each day longer.', 'Teachers are divided on the idea, for a range of reasons.', 'Before deciding, it is worth weighing the benefits against the costs.'],
+           ['A four-day week is the obvious answer, and anyone who disagrees has not thought it through.', 'Imagine a free Friday to rest and explore. We need this change.', 'The evidence is clear: the five-day week is broken.']],
+          [['Phones can distract students, yet they can also be useful learning tools.', 'There are strong arguments on both sides of the phone debate.', 'Some schools ban phones, while others teach students to manage them.'],
+           ['Ban phones in class. Our learning depends on it.', 'Every minute on a phone is a minute stolen from learning.', 'Surely no one believes phones belong in a classroom?']],
+          [['Dog owners want space to exercise their pets, while others worry about nesting birds.', 'Councils around New Zealand have taken different approaches to dogs on beaches.', 'Each option has costs: for dog owners, for families and for wildlife.'],
+           ['Keep dogs off our beaches, or watch our dotterels disappear.', 'Dogs belong on beaches, and these rules are a disgrace.', 'Any council that cares about wildlife must ban dogs this summer.']]
+        ].map(([disc, pers]) => rng => Sci.sort(rng, {
+          prompt: 'Is each sentence from a discursive text or a persuasive text?', bins: ['Discursive', 'Persuasive'],
+          items: disc.map(text => ({ text, bin: 0 })).concat(pers.map(text => ({ text, bin: 1 }))), pick: 6,
+          explain: 'Discursive sentences weigh up more than one side (“some say … others …”). Persuasive sentences push one side, with commands, certainty and rhetorical questions.'
+        })) },
+
+      // 16 · Context, tradition and pūrākau.
+      { name: 'Year 9: context and tradition', learn: 'tradition', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'Which best describes <strong>pūrākau</strong>?',
+            right: 'Traditional Māori narratives, passed down through generations, that carry knowledge and values', wrong: ['Modern fantasy novels written for children', 'News reports about Māori events', 'Poems that must rhyme'],
+            explain: 'Pūrākau have been passed down, often orally, for generations. They carry knowledge, values and whakapapa.' }),
+          rng => C(rng, { prompt: 'A writer wants to retell a pūrākau in a short story. Which approach is most respectful?',
+            right: 'Research it carefully, acknowledge where it comes from, and seek guidance where possible', wrong: ['Change key details to make it funnier, without checking', 'Present the story as their own invention', 'Combine several versions and call it the one true version'],
+            explain: 'Pūrākau are taonga, and different iwi may hold different versions. Careful research and acknowledgement respect that.' }),
+          rng => C(rng, { prompt: 'A New Zealand short story draws on a pūrākau about Māui, but sets it in a modern city with a teenage main character. What is the writer doing?',
+            right: 'Connecting a Māori storytelling tradition with the short story form to explore life today', wrong: ['Copying the pūrākau word for word', 'Writing a news report about Māui', 'Removing any New Zealand context'],
+            explain: 'Writers often draw on more than one literary tradition to enrich meaning.' }),
+          rng => C(rng, { prompt: 'A children’s book from the 1950s shows only boys playing sport and only girls helping in the kitchen. What is the best explanation?',
+            right: 'It reflects the social expectations of the time it was written', wrong: ['It was a printing error', 'Girls did not play sport at all in the 1950s', 'The writer was describing a single real family'],
+            explain: 'Texts often reflect the values of their time. Reading with context in mind helps us notice who and what is included or left out.' }),
+          rng => C(rng, { prompt: 'Why can knowing when and where a text was written help a reader?',
+            right: 'The context can explain the text’s ideas, attitudes and purpose', wrong: ['It tells the reader the one correct meaning', 'It shows whether the spelling is correct', 'It means the reader no longer needs to read the text'],
+            explain: 'Context gives deeper insight, but readers still need evidence from the text itself.' }),
+          rng => C(rng, { prompt: 'Two students read the same poem about leaving home. One has just moved from another country; the other has never moved. They interpret it differently. What best explains this?',
+            right: 'A reader’s own background and experiences shape how they interpret a text', wrong: ['One of them must have misread every line', 'The poem has no meaning at all', 'Poems can only ever have one meaning'],
+            explain: 'Different readers bring different experiences. Strong interpretations are still backed by evidence from the text.' }),
+          rng => C(rng, { prompt: 'Which best describes a <strong>literary tradition</strong>, such as New Zealand’s?',
+            right: 'A body of works, styles and conventions that has grown up within a culture over time', wrong: ['A rule about what writers in a country are allowed to write', 'A list of books every student must read', 'Any book printed in that country'],
+            explain: 'A tradition grows from many writers’ works and shapes how new texts are written and read.' })
+        ] },
+
+      // 17 · True or false.
+      { name: 'Year 9: true or false', learn: 'discursive', challenge: 'only',
+        items: [
+          rng => TF(rng, { statement: 'A third person omniscient narrator can reveal the thoughts of more than one character.', answer: true, learn: 'perspective',
+            explain: 'Omniscient means all-knowing: the narrator can move between characters’ minds.' }),
+          rng => TF(rng, { statement: 'A first-person narrator always tells the reader the whole truth.', answer: false, learn: 'perspective',
+            explain: 'A first-person narrator can be unreliable: mistaken, or hiding something.' }),
+          rng => TF(rng, { statement: 'In a play, stage directions are usually spoken aloud by the actors.', answer: false, learn: 'drama',
+            explain: 'Stage directions are acted out or used to set the scene, not spoken.' }),
+          rng => TF(rng, { statement: 'A discursive text explores several viewpoints rather than pushing one position.', answer: true,
+            explain: 'That is the difference from a persuasive text, which argues for one side.' }),
+          rng => TF(rng, { statement: 'An establishing shot usually comes at the start of a scene to show where it takes place.', answer: true, learn: 'film',
+            explain: 'It orients the audience before the action begins.' }),
+          rng => TF(rng, { statement: 'Writers sometimes adapt a familiar form, such as telling a story through text messages, to suit their purpose.', answer: true,
+            explain: 'Forms are selected and adapted: the text-message form can make a story feel immediate and private.' }),
+          rng => TF(rng, { statement: 'A short story usually has room for many subplots and a large cast of main characters.', answer: false, learn: 'shortstory',
+            explain: 'A short story is compressed: few characters and one main conflict.' })
         ] }
     ]
   });
@@ -1029,6 +1429,32 @@
   /** A passage question, tagged so a passage already shown folds away. */
   const onPassage = (p, q) => Object.assign(q, { passage: p.title });
 
+  // Year 9 challenge passages: one story and one imagined historical editorial.
+  // They sit outside PASSAGES so the six linked slots above never draw them.
+  // Every challenge question tags its passage with onPassage, so the engine
+  // prints it in full the first time and folds it on later cards.
+  const DAIRY = {
+    title: 'The last day at Lal’s Dairy', kind: 'story',
+    text: '<p>On the last morning, Dad let me turn the sign to OPEN myself. Neither of us mentioned that it would be the last time.</p>' +
+          '<p>The new supermarket had opened on the main road in March. It had forty checkouts, free parking and a bakery you could smell from the car park. Our dairy had one counter, a bell above the door, and Dad.</p>' +
+          '<p>People still came in that day. Mrs Hōhaia bought her paper, as she had every morning for nineteen years, and stayed to talk about her grandson’s rugby. Two boys from the intermediate counted out coins for a bag of mixed lollies, and Dad, as always, pretended not to notice they were twenty cents short. Old Mr Brennan asked if we would get his magazine in next month. Dad said, “We’ll see,” and smiled at the floor.</p>' +
+          '<p>At six, Dad swept the floor, though nobody would walk on it again. He wiped the counter. He straightened the rack of birthday cards so that they faced the door.</p>' +
+          '<p>Then he handed me the sign. I turned it over. CLOSED looked smaller than OPEN, somehow, though the letters were the same size.</p>' +
+          '<p>The bell rang once as we left, the way it always had. Dad stood in the doorway a moment, listening, as if it might ring again.</p>'
+  };
+  const COLLEGE = {
+    title: 'A school fit for the future', kind: 'editorial',
+    text: '<p><em>An imagined editorial from a small-town New Zealand newspaper in 1958, written for this site.</em></p>' +
+          '<p>Tomorrow the doors of Riverbend College open, and our town takes a great step into the modern age.</p>' +
+          '<p>The new buildings are a credit to the Department of Education. The boys’ wing has a fully equipped engineering workshop and a woodwork room, where our lads will learn the skills of the trades and professions they will one day enter. The girls’ wing boasts a modern kitchen and a sewing room, so that our young ladies will be well prepared for the homes they will one day run.</p>' +
+          '<p>The headmaster, Mr G. Fairweather, has assured parents that standards will be high. Uniforms will be worn correctly at all times, and pupils will be expected to speak good English in the classroom and the playground alike.</p>' +
+          '<p>Several Māori families in the district have asked whether the college will teach the Māori language. Mr Fairweather has replied that the timetable is already full, and that English is the language of opportunity.</p>' +
+          '<p>This newspaper has no doubt that Riverbend College will produce fine young citizens, and every parent in the district can be proud.</p>' +
+          '<p>The college has been built for one purpose: to prepare the young people of this town for the world as it will be.</p>'
+  };
+  /** A challenge question on one of the two passages above: printed once, folded after. */
+  const onY9 = (p, q) => onPassage(p, Object.assign(q, { prompt: show(p) + q.prompt }));
+
   Sci.topic({
     id: 'er4', unit: 'reading',
     title: 'Reading Closely',
@@ -1059,7 +1485,35 @@
         text: '<ul><li><strong>Reread</strong> the confusing part slowly</li><li><strong>Read ahead</strong>: the next sentence may explain</li><li><strong>Ask questions</strong>: who, what, why?</li>' +
               '<li><strong>Visualise</strong>: picture the scene</li><li><strong>Annotate</strong>: underline key words, note questions</li><li><strong>Look it up</strong> in a glossary or dictionary</li></ul>' },
       { id: 'synth', title: 'Extension: across texts',
-        text: '<p>Reading two texts together lets you <strong>compare</strong> (how are they alike or different?) and <strong>synthesise</strong> (what do they show together?).</p>' }
+        text: '<p>Reading two texts together lets you <strong>compare</strong> (how are they alike or different?) and <strong>synthesise</strong> (what do they show together?).</p>' },
+      { id: 'craft', title: 'Purpose from the writer’s choices', years: '9', wide: true,
+        text: '<p>A writer’s <strong>purpose</strong> shows in the choices they make. Look at four things and ask <em>why this?</em></p>' +
+              Sci.table(['Look at', 'Ask', 'Example'], [
+                ['<strong>Content</strong>', 'What has the writer chosen to include?', 'A neighbour arriving with soup in a storm shows kindness without the writer having to name it.'],
+                ['<strong>Structure</strong>', 'How does it begin and end? What sits next to what?', 'A story that begins and ends on the same beach invites readers to notice how the character has changed.'],
+                ['<strong>Language</strong>', 'Which words were chosen over plainer ones?', '“The park <em>boasts</em> a new playground” praises; “has a new playground” just informs.'],
+                ['<strong>Style</strong>', 'Is it formal, chatty, spare, grand?', 'A confident, formal editorial sounds like the voice of authority.']]) +
+              '<p>Then draw a conclusion: “The writer wants readers to feel / think … because …”</p>' },
+      { id: 'portray', title: 'Perspectives and portrayals', years: '9', wide: true,
+        text: '<p>A <strong>perspective</strong> is the point of view a text comes from.</p>' +
+              '<p>It can be <strong>explicit</strong> (stated outright: <em>“We believe the council has made a mistake.”</em>) or <strong>implicit</strong> (shown through choices: who tells the story, which words describe people, whose side we see first).</p>' +
+              '<p>A <strong>portrayal</strong> is how a group of people is shown: as heroes or troublemakers, as individuals with names, or as a faceless crowd. Ask: would that group recognise themselves?</p>' },
+      { id: 'omit', title: 'Who is in, who is left out', years: '9',
+        text: '<p>Notice whose voices a text <strong>quotes</strong>, whose it only <strong>describes</strong>, and who is <strong>missing</strong>.</p>' +
+              '<p>Leaving people out has an effect: one view can seem like the only view, and a group with no voice is easy to ignore.</p>' +
+              '<p><em>A story about a new road quotes the mayor and the builder, but nobody who lives on the street.</em> → readers hear only the people in favour, and the residents’ concerns stay invisible.</p>' },
+      { id: 'values', title: 'A text and its time', years: '9',
+        text: '<p>Every text is written in a time and place with its own common <strong>values</strong> (beliefs about what is normal or right).</p>' +
+              '<p>A text can <strong>reflect</strong> those values (simply show them), <strong>reinforce</strong> them (present them as natural, or praise them), or <strong>challenge</strong> them (question them).</p>' +
+              '<p>Meanings shift over time: a line that sounded hopeful when it was written can read as ironic decades later, because today’s readers know what happened next.</p>' },
+      { id: 'interpret', title: 'Judging interpretations', years: '9',
+        text: '<p>Readers can interpret the same text differently, because of their own background, experience and time.</p>' +
+              '<p>But not every reading is equally good. The best-supported interpretation:</p>' +
+              '<ul><li>can point to specific words in the text</li><li>fits the whole text, not just one line</li><li>is not contradicted by anything in the text</li></ul>' },
+      { id: 'strongest', title: 'Choosing the strongest evidence', years: '9',
+        text: '<p>Strong evidence supports the claim <strong>directly</strong> and <strong>specifically</strong>. A quote that is only about the same topic is weak.</p>' +
+              '<p>Claim: <em>Liam is terrified at the top of the ropes course.</em></p>' +
+              '<p>Weak: <em>“The high ropes course looked easy from the ground.”</em> (about the course, not his fear)<br>Strong: <em>“His legs had stopped belonging to him.”</em></p>' }
     ],
 
     examples: [
@@ -1121,7 +1575,7 @@
           rng => TF(rng, { statement: 'Rereading a confusing part is a useful comprehension strategy.', answer: true, learn: 'strategies', explain: 'It is often the first thing to try.' }),
           rng => TF(rng, { statement: 'Writers always state their message plainly.', answer: false, learn: 'purpose', explain: 'Many leave the reader to infer it from details.' })
         ] },
-      { name: 'Extension: across two texts', learn: 'synth',
+      { name: 'Extension: across two texts', learn: 'synth', challenge: 'also',
         items: [
           rng => C(rng, { tag: EXT, prompt: fold('Before the tide', 'Nan’s garden') + '<em>Before the tide</em> and <em>Nan’s garden</em> both involve a grandparent. What idea do they share?', right: 'Respect for an older person’s lifetime of skill and knowledge', wrong: ['The dangers of the sea', 'How to grow vegetables', 'The importance of being on time'], explain: 'Both texts show a younger person noticing and valuing what an elder knows.' }),
           rng => C(rng, { tag: EXT, prompt: fold('The top platform', 'Mrs Patel') + '<em>The top platform</em> and <em>Mrs Patel’s torch</em> are both about a small act. How do they differ?', right: 'One is about personal courage; the other about kindness to others.', wrong: ['Both are about fishing.', 'One is a poem and the other a report.', 'There is no difference.'], explain: 'Comparing shows each text’s focus more clearly.' }),
@@ -1129,7 +1583,240 @@
           rng => C(rng, { tag: EXT, prompt: fold('Our town', 'Mrs Patel') + 'What theme do <em>Our town needs a skate park</em> and <em>Mrs Patel’s torch</em> share?', right: 'Belonging: people need a place and a community to be part of', wrong: ['The dangers of storms', 'The cost of building things', 'Learning to fish'], explain: 'One argues young people need somewhere to belong; the other shows neighbours becoming a community.' }),
           rng => C(rng, { tag: EXT, prompt: 'What does it mean to synthesise ideas from two texts?', right: 'To combine what both show into a new, bigger understanding', wrong: ['To copy one text into the other', 'To find the longest text', 'To count the words in both'], explain: 'Synthesis goes beyond comparing: it builds a new idea from both.' }),
           rng => C(rng, { tag: EXT, prompt: fold('Before the tide', 'Nan’s garden') + 'Which statement synthesises <em>Before the tide</em> and <em>Nan’s garden</em>?', right: 'Both suggest that knowledge passes between generations through shared time, not just words.', wrong: ['Before the tide is about fishing; Nan’s garden is about gardening.', 'Both have a grandparent.', 'Nan’s garden is a poem.'], explain: 'A synthesis states a bigger idea that both texts support; the others only list features.' })
-        ] }
+        ] },
+
+      // ── Year 9 challenge: these positions appear only in the challenge set.
+      // Each item is on one of two Year 9 passages (DAIRY, COLLEGE); the first
+      // card to use a passage prints it, later ones fold it away.
+
+      // 11 · The writer’s purpose, from content, structure, language and style.
+      {
+        name: 'Year 9: the writer’s purpose', learn: 'craft', challenge: 'only',
+        items: [
+          rng => onY9(DAIRY, C(rng, { prompt: 'The story opens with the narrator turning the sign to OPEN and ends with them turning it to CLOSED. Why might the writer have structured it this way?',
+            right: 'The matching opening and ending frame the last day, so the final turn of the sign marks a loss the reader feels.',
+            wrong: ['To show that the dairy kept its normal opening hours that day.', 'To explain how the sign worked.', 'To show that the narrator was now in charge of the shop.'],
+            explain: 'Structure carries meaning: the sign that starts the day also ends the dairy’s life. The other options describe what happens without asking why the writer placed it at the start and the end.' })),
+          rng => onY9(DAIRY, C(rng, { prompt: 'The writer lists the supermarket’s “forty checkouts, free parking and a bakery”, then the dairy’s “one counter, a bell above the door, and Dad”. What is the main purpose of this contrast?',
+            right: 'To suggest the dairy cannot compete on size, but offers something personal the supermarket lacks.',
+            wrong: ['To persuade readers that supermarkets are better in every way.', 'To show that Dad also worked at the supermarket.', 'To give readers directions to both shops.'],
+            explain: 'Listing Dad alongside the counter and the bell makes him part of the shop. The supermarket wins on size; the dairy’s value is the person behind the counter.' })),
+          rng => onY9(DAIRY, C(rng, { prompt: 'Why does the writer include the detail that Dad “pretended not to notice” the boys were twenty cents short?',
+            right: 'To show his quiet kindness: personal care that a big supermarket checkout would not offer.',
+            wrong: ['To show that Dad was bad at counting money.', 'To suggest the boys were stealing from the dairy.', 'To explain that the dairy closed because it lost money on lollies.'],
+            explain: '“Pretended” tells us he did notice, and chose to let it go. “As always” shows this kindness was a habit.' })),
+          rng => onY9(COLLEGE, C(rng, { prompt: 'What is the writer’s main purpose in this editorial?',
+            right: 'To celebrate the new college and encourage the town’s parents to feel proud of it',
+            wrong: ['To report neutrally on both sides of a debate about the college', 'To criticise the headmaster’s decisions', 'To give pupils instructions for their first day'],
+            explain: 'Praise runs all the way through (“a great step”, “a credit to”, “fine young citizens”), and it ends by telling parents they “can be proud”. It is not neutral: the families’ side is never put.' })),
+          rng => onY9(COLLEGE, C(rng, { prompt: 'The editorial uses phrases such as “a great step into the modern age”, “a credit to” and “boasts”. What does this language show about the writer’s purpose?',
+            right: 'The writer wants readers to see the college in an entirely positive light.',
+            wrong: ['The writer is warning readers about the college’s problems.', 'The writer is trying to sound neutral and balanced.', 'The writer is describing the buildings in technical detail.'],
+            explain: 'These are words of praise. A neutral writer would say the wing “has” a kitchen, not that it “boasts” one.' })),
+          rng => onY9(COLLEGE, C(rng, { prompt: 'The editorial ends with a one-sentence paragraph: “The college has been built for one purpose …”. Why end this way?',
+            right: 'A short, confident final paragraph leaves readers with a strong sense that the college is right for the future.',
+            wrong: ['To introduce a new topic for the next editorial.', 'To admit the writer is unsure what the college is for.', 'To list the subjects the college will teach.'],
+            explain: 'A short final paragraph stands out. Its certain tone (“one purpose”) sends readers away convinced.' }))
+        ]
+      },
+
+      // 12 · Perspectives and portrayals of groups.
+      {
+        name: 'Year 9: perspectives and portrayals', learn: 'portray', challenge: 'only',
+        items: [
+          rng => onY9(DAIRY, C(rng, { prompt: 'From whose perspective is the story told, and how does that shape the reader’s sympathy?',
+            right: 'From the dairy owner’s child, so readers feel the closure as a personal loss for the family.',
+            wrong: ['From the supermarket manager, so readers celebrate the new store.', 'From Mrs Hōhaia, so readers mainly learn about her grandson.', 'From a neutral outsider who gives every side equally.'],
+            explain: 'The narrator says “Dad” and “our dairy”, so we see everything from inside the family. That is why the story feels like a loss.' })),
+          rng => onY9(DAIRY, C(rng, { prompt: 'How does the story portray the dairy’s customers?',
+            right: 'As regulars with names and lives, who treat the dairy as part of their community',
+            wrong: ['As strangers who rarely visit', 'As rude people who argue with Dad', 'As shoppers who care only about low prices'],
+            explain: 'Mrs Hōhaia, the two boys and Mr Brennan each get a small, human detail: rugby, lollies, a magazine. They are people, not just customers.' })),
+          rng => onY9(DAIRY, C(rng, { prompt: 'How is the supermarket portrayed?',
+            right: 'Only through its size and features, with no named people, so it feels big and impersonal.',
+            wrong: ['As a friendly place full of named characters', 'As the hero of the story', 'It is not mentioned at all.'],
+            explain: 'We learn about checkouts, parking and a bakery, but meet no one. Compare the dairy, where everyone has a name.' })),
+          rng => onY9(COLLEGE, C(rng, { prompt: 'How does the editorial portray girls?',
+            right: 'As future homemakers, preparing to run homes rather than to enter trades or professions',
+            wrong: ['As future engineers and professionals', 'As the pupils the college cares about most', 'It does not mention girls at all.'],
+            explain: 'Boys will enter “trades and professions”; girls will run “the homes they will one day run”. The editorial treats this as natural.' })),
+          rng => onY9(COLLEGE, C(rng, { prompt: 'Which sentence states the newspaper’s perspective <strong>explicitly</strong>, rather than implying it?',
+            right: '“This newspaper has no doubt that Riverbend College will produce fine young citizens.”',
+            wrong: ['“The boys’ wing has a fully equipped engineering workshop and a woodwork room.”', '“Uniforms will be worn correctly at all times.”', '“The headmaster, Mr G. Fairweather, has assured parents that standards will be high.”'],
+            explain: 'The newspaper names itself and states its view outright. The others report facts or someone else’s words; any perspective in them is implied.' })),
+          rng => onY9(COLLEGE, C(rng, { prompt: 'The editorial calls the boys “<strong>our</strong> lads” and the girls “<strong>our</strong> young ladies”. What does “our” suggest about the writer’s perspective?',
+            right: 'The writer speaks as part of the town, inviting readers to see the pupils as belonging to the whole community.',
+            wrong: ['The writer is an outsider who disapproves of the town.', 'The pupils work for the newspaper.', 'The writer is speaking directly to the pupils.'],
+            explain: '“Our” puts the writer and reader on the same side, as proud members of one community.' }))
+        ]
+      },
+
+      // 13 · Who is included and who is left out.
+      {
+        name: 'Year 9: who is left out', learn: 'omit', challenge: 'only',
+        items: [
+          rng => onY9(COLLEGE, C(rng, { prompt: 'Several Māori families asked whether the college would teach the Māori language. Whose voice does the editorial include on this question?',
+            right: 'Only the headmaster’s: the families’ request is mentioned, but none of them is quoted.',
+            wrong: ['Only the families’: the headmaster does not reply.', 'Both equally, with the reasons of each side.', 'Neither: the request is not mentioned.'],
+            explain: 'We learn what the headmaster replied and why. We never hear the families’ reasons.' })),
+          rng => onY9(COLLEGE, C(rng, { prompt: 'What is the effect of reporting the headmaster’s reply, but not the families’ reasons for asking?',
+            right: 'The matter seems settled and minor, so readers are not invited to think about why the families asked.',
+            wrong: ['Readers learn the families’ reasons in full.', 'It makes the editorial balanced.', 'It shows the newspaper supports the families’ request.'],
+            explain: 'Leaving a group’s voice out makes the official view look like the only sensible one.' })),
+          rng => onY9(COLLEGE, C(rng, { prompt: 'Which of these does the editorial leave out?',
+            right: 'Any suggestion that girls might train for trades or professions',
+            wrong: ['What the boys’ wing contains', 'What the headmaster expects of uniforms', 'When the college opens'],
+            explain: 'Trades and professions are mentioned only for boys. The other three are all in the editorial.' })),
+          rng => onY9(DAIRY, C(rng, { prompt: 'The story never shows anyone from the supermarket: no staff and no shoppers. What is the effect of leaving them out?',
+            right: 'The supermarket stays faceless, so the reader’s sympathy rests entirely with the dairy and its regulars.',
+            wrong: ['It proves the supermarket has no staff.', 'It makes the story balanced between the two shops.', 'It shows that the supermarket is closing too.'],
+            explain: 'People we never meet are hard to care about. Everyone with a name in the story belongs to the dairy’s world.' })),
+          rng => onY9(DAIRY, C(rng, { prompt: 'The narrator never says outright why the dairy is closing. What is the effect of leaving this unsaid?',
+            right: 'Readers work it out from the details about the new supermarket, so the cause is clear without the narrator complaining.',
+            wrong: ['Readers have no way of knowing why it closes.', 'It shows the dairy is closing only for repairs.', 'It suggests that Dad is retiring because he is ill.'],
+            explain: 'The supermarket opening “in March” sits right before the last day, so readers infer the link. The quiet telling makes the story sadder, not angrier.' }))
+        ]
+      },
+
+      // 14 · How a text reflects, reinforces or challenges the values of its time.
+      {
+        name: 'Year 9: a text and its time', learn: 'values', challenge: 'only',
+        items: [
+          rng => onY9(COLLEGE, C(rng, { prompt: 'Many people in 1958 believed boys and girls should prepare for different roles in life. What does the editorial do with this belief?',
+            right: 'It reinforces it, presenting separate futures as natural and worth celebrating.',
+            wrong: ['It challenges it, arguing that girls should learn engineering.', 'It avoids the subject of boys and girls entirely.', 'It mocks the belief as old-fashioned.'],
+            explain: 'The editorial does more than show the belief: it praises the separate wings, which strengthens the belief.' })),
+          rng => onY9(COLLEGE, C(rng, { prompt: 'The headmaster says that “English is the language of opportunity.” Which belief of its time does this reflect?',
+            right: 'That getting on in life meant speaking English, with little room for te reo Māori at school',
+            wrong: ['That every pupil should learn several languages', 'That te reo Māori should be taught in every school', 'That schools should not teach any languages'],
+            explain: 'The reply treats English as the only language that matters for success, which is why the request is turned down. Pupils are even expected to speak English in the playground.' })),
+          rng => onY9(COLLEGE, C(rng, { learn: 'interpret', prompt: 'Why might a reader today read the final line, “for the world as it will be”, differently from a reader in 1958?',
+            right: 'Today’s reader knows the world changed (women now work in every field, and te reo Māori is taught in many schools), so the line now reads as ironic.',
+            wrong: ['The line means exactly the same to every reader in every time.', 'Readers today cannot understand old newspapers.', 'In 1958 nobody read editorials.'],
+            explain: 'Meanings shift over time. The writer’s confident prediction turned out to be wrong, and readers today can see that.' })),
+          rng => onY9(COLLEGE, C(rng, { prompt: 'Which detail would a 1958 reader most likely have seen as ordinary, but a reader today is likely to question?',
+            right: 'Girls learning cooking and sewing so they can run homes, while boys train for trades and professions',
+            wrong: ['The college opening on a set day', 'A newspaper writing about a local event', 'The town having a new school building'],
+            explain: 'Assumptions about gender roles have changed a great deal since 1958. The other details would seem ordinary in either time.' })),
+          rng => onY9(DAIRY, C(rng, { prompt: 'Which common value does the story challenge?',
+            right: 'That bigger, cheaper and more convenient is always better',
+            wrong: ['That neighbours should look after one another', 'That small acts of kindness matter', 'That it is worth knowing the people in your community'],
+            explain: 'The supermarket has every practical advantage, yet the story makes us feel what is lost. The other three are values the story supports.' }))
+        ]
+      },
+
+      // 15 · Which interpretations are supported by the text.
+      {
+        name: 'Year 9: which readings hold up?', learn: 'interpret', challenge: 'only',
+        items: [
+          rng => onY9(DAIRY, Sci.sort(rng, { prompt: 'Which interpretations of Dad are supported by the story?', bins: ['Supported', 'Not supported'],
+            items: [
+              { text: 'Dad finds it hard to let the dairy go.', bin: 0 }, { text: 'Dad takes pride in the shop, even on its last day.', bin: 0 },
+              { text: 'Dad is kind to his customers.', bin: 0 }, { text: 'Dad keeps his sadness to himself.', bin: 0 },
+              { text: 'Dad is relieved that the long hours are over.', bin: 1 }, { text: 'Dad is angry with his customers for leaving.', bin: 1 },
+              { text: 'Dad plans to open a bigger shop.', bin: 1 }, { text: 'Dad no longer cares about the dairy.', bin: 1 }
+            ], pick: 6,
+            explain: 'Supported readings point to words: sweeping a floor “nobody would walk on”, “smiled at the floor”, “pretended not to notice”, listening at the door. Nothing in the story suggests relief, anger or new plans.' })),
+          rng => onY9(DAIRY, Sci.sort(rng, { prompt: 'Which readings of these details are supported by the story?', bins: ['Supported', 'Not supported'],
+            items: [
+              { text: '“CLOSED looked smaller than OPEN” shows the narrator’s feelings changing what they see.', bin: 0 },
+              { text: 'The bell ringing “the way it always had” links the last moment to years of routine.', bin: 0 },
+              { text: 'Mrs Hōhaia’s “nineteen years” show how long the dairy has been part of people’s lives.', bin: 0 },
+              { text: 'Straightening the cards to face the door shows Dad still caring for the shop as if customers will come.', bin: 0 },
+              { text: '“CLOSED looked smaller than OPEN” means the sign was badly printed.', bin: 1 },
+              { text: 'The bell rings at the end because a customer walks in.', bin: 1 },
+              { text: 'The supermarket’s bakery shows the narrator wants to work there.', bin: 1 },
+              { text: 'Mr Brennan’s magazine shows he is moving away next month.', bin: 1 }
+            ], pick: 6,
+            explain: 'The text says the letters “were the same size”, so the smaller look is a feeling. The bell rings as they leave, not for a customer. Nothing links the narrator to a job at the supermarket or Mr Brennan to moving.' })),
+          rng => onY9(COLLEGE, Sci.sort(rng, { prompt: 'Which readings of the editorial are supported by the text?', bins: ['Supported', 'Not supported'],
+            items: [
+              { text: 'The writer assumes boys and girls will have different futures.', bin: 0 },
+              { text: 'The writer trusts the headmaster’s judgement.', bin: 0 },
+              { text: 'The writer treats the families’ request as already answered.', bin: 0 },
+              { text: 'The writer wants parents to feel proud of the college.', bin: 0 },
+              { text: 'The writer thinks girls should study engineering.', bin: 1 },
+              { text: 'The writer quotes the Māori families to explain their reasons.', bin: 1 },
+              { text: 'The writer is worried that standards will be low.', bin: 1 },
+              { text: 'The writer criticises the Department of Education.', bin: 1 }
+            ], pick: 6,
+            explain: 'The supported readings match the text: separate wings, the headmaster’s reply reported without question, “every parent … can be proud”. The others contradict it: the Department gets praise (“a credit to”), and standards “will be high”.' })),
+          rng => onY9(COLLEGE, Sci.sort(rng, { prompt: 'A modern reader makes these claims about the editorial. Which are supported by its words?', bins: ['Supported', 'Not supported'],
+            items: [
+              { text: 'Te reo Māori had no place on this college’s timetable.', bin: 0 },
+              { text: 'The editorial presents different futures for boys and girls as normal.', bin: 0 },
+              { text: 'The editorial gives the headmaster’s view but not the families’.', bin: 0 },
+              { text: 'Pupils were expected to speak English even in the playground.', bin: 0 },
+              { text: 'The editorial says Māori pupils could not enrol.', bin: 1 },
+              { text: 'The editorial shows that every family in the town agreed with the headmaster.', bin: 1 },
+              { text: 'The editorial says the college had no kitchen.', bin: 1 },
+              { text: 'The editorial was written to criticise the college.', bin: 1 }
+            ], pick: 6,
+            explain: 'A reader’s own time can sharpen what they notice, but a claim still needs words in the text. Nothing says Māori pupils were refused; some families clearly did not get what they asked for; the girls’ wing has a kitchen; and the tone is all praise.' }))
+        ]
+      },
+
+      // 16 · Choosing the strongest evidence.
+      {
+        name: 'Year 9: the strongest evidence', learn: 'strongest', challenge: 'only',
+        items: [
+          rng => onY9(DAIRY, C(rng, { prompt: 'Claim: <em>the dairy was part of its customers’ daily lives.</em> Which quotation is the strongest evidence?',
+            right: '“Mrs Hōhaia bought her paper, as she had every morning for nineteen years, and stayed to talk about her grandson’s rugby.”',
+            wrong: ['“The new supermarket had opened on the main road in March.”', '“He wiped the counter.”', '“Then he handed me the sign.”'],
+            explain: '“Every morning for nineteen years” is daily routine, stated directly, and staying to talk shows it mattered. The others are not about customers at all.' })),
+          rng => onY9(DAIRY, C(rng, { prompt: 'Claim: <em>Dad finds it hard to accept that the dairy is closing.</em> Which quotation is the strongest evidence?',
+            right: '“Dad stood in the doorway a moment, listening, as if it might ring again.”',
+            wrong: ['“Our dairy had one counter, a bell above the door, and Dad.”', '“Two boys from the intermediate counted out coins for a bag of mixed lollies.”', '“It had forty checkouts, free parking and a bakery you could smell from the car park.”'],
+            explain: 'Lingering and listening for the bell shows he is not ready to leave. The others describe the shops or customers, not Dad’s feelings about closing.' })),
+          rng => onY9(DAIRY, C(rng, { prompt: 'Claim: <em>both the narrator and Dad know it is the last day, but neither says so.</em> Which quotation is the strongest evidence?',
+            right: '“Neither of us mentioned that it would be the last time.”',
+            wrong: ['“People still came in that day.”', '“He straightened the rack of birthday cards so that they faced the door.”', '“The bell rang once as we left, the way it always had.”'],
+            explain: 'This sentence states the claim almost exactly: they both know, and neither says it.' })),
+          rng => onY9(COLLEGE, C(rng, { prompt: 'Claim: <em>the editorial expects girls’ futures to be in the home.</em> Which quotation is the strongest evidence?',
+            right: '“… so that our young ladies will be well prepared for the homes they will one day run.”',
+            wrong: ['“The headmaster, Mr G. Fairweather, has assured parents that standards will be high.”', '“Uniforms will be worn correctly at all times.”', '“Tomorrow the doors of Riverbend College open …”'],
+            explain: 'It names girls and homes directly. The others say nothing about girls’ futures.' })),
+          rng => onY9(COLLEGE, C(rng, { prompt: 'Claim: <em>the college was not willing to teach te reo Māori.</em> Which quotation is the strongest evidence?',
+            right: '“Mr Fairweather has replied that the timetable is already full, and that English is the language of opportunity.”',
+            wrong: ['“The new buildings are a credit to the Department of Education.”', '“This newspaper has no doubt that Riverbend College will produce fine young citizens.”', '“Uniforms will be worn correctly at all times.”'],
+            explain: 'This is the college’s direct answer to the request, and it turns it down. The others are about buildings, the newspaper’s opinion and uniforms.' })),
+          rng => onY9(COLLEGE, C(rng, { prompt: 'Two students argue that the editorial is one-sided. Which reason is the stronger support for their claim?',
+            right: 'It reports the headmaster’s reply, but gives no reasons from the families who made the request.',
+            wrong: ['It is quite short for a newspaper article.', 'It was written a long time ago.', 'It mentions the Department of Education.'],
+            explain: 'One-sided means only one view is given. The strongest support points to the missing side. Length, age and mentioning a department do not make a text one-sided.' }))
+        ]
+      },
+
+      // 17 · Details and what they suggest.
+      {
+        name: 'Year 9: details and what they suggest', learn: 'craft', challenge: 'only',
+        items: [
+          rng => onY9(DAIRY, match(rng, 'Match each detail to what it suggests.', [
+            ['“one counter, a bell above the door, and Dad”', 'Dad is as much a part of the dairy as its fittings.'],
+            ['“every morning for nineteen years”', 'The dairy is part of a customer’s routine.'],
+            ['“Dad said, ‘We’ll see,’ and smiled at the floor”', 'Dad hides his sadness behind politeness.'],
+            ['“CLOSED looked smaller than OPEN”', 'The narrator’s grief shapes how things look.']
+          ], 'Each detail is small, but each one carries feeling. Close reading asks what a detail suggests, not just what it says.')),
+          rng => onY9(DAIRY, match(rng, 'Match each detail to what it suggests.', [
+            ['“pretended not to notice”', 'Dad’s quiet generosity'],
+            ['“though nobody would walk on it again”', 'Care for the shop beyond any practical need'],
+            ['“forty checkouts, free parking”', 'The supermarket’s size and convenience'],
+            ['“as if it might ring again”', 'A hope that the dairy’s life is not quite over']
+          ], 'The writer lets details do the work instead of telling us how the characters feel.')),
+          rng => onY9(COLLEGE, match(rng, 'Match each phrase to what it suggests.', [
+            ['“a great step into the modern age”', 'The college means progress for the town.'],
+            ['“our lads”', 'The pupils belong to the whole community.'],
+            ['“the homes they will one day run”', 'Girls are expected to become homemakers.'],
+            ['“the language of opportunity”', 'English is seen as the key to success.']
+          ], 'Word choices reveal the values behind a text, even when they are not stated as opinions.')),
+          rng => onY9(COLLEGE, match(rng, 'Match each phrase to what it suggests.', [
+            ['“a credit to the Department of Education”', 'Praise for the officials who built it'],
+            ['“the timetable is already full”', 'A practical-sounding reason for saying no'],
+            ['“in the classroom and the playground alike”', 'English is expected everywhere at school, not just in lessons.'],
+            ['“every parent in the district can be proud”', 'Readers are invited to share the newspaper’s view.']
+          ], 'Each phrase steers the reader towards approving of the college.'))
+        ]
+      }
     ]
   });
 
@@ -1169,7 +1856,46 @@
               '<p><strong>Creative Commons</strong> content can be used if you name the creator and follow its rules. Otherwise, ask permission.</p>' },
       { id: 'mdm', title: 'Extension: three kinds of false information',
         text: Sci.table(['Term', 'Meaning'], [['Misinformation', 'false information shared by mistake'], ['Disinformation', 'false information shared deliberately to mislead'],
-          ['Malinformation', 'true information shared to cause harm']]) }
+          ['Malinformation', 'true information shared to cause harm']]) },
+      { id: 'mdmcases', title: 'Mis, dis or mal? Harder cases', years: '9', wide: true,
+        text: '<p>Ask two questions: <strong>Is it true?</strong> and <strong>What did the person sharing it intend?</strong></p>' +
+              Sci.table(['The information is …', 'Shared …', 'So it is'], [
+                ['false', 'believing it is true', '<strong>misinformation</strong>'],
+                ['false', 'knowing it is false, to mislead', '<strong>disinformation</strong>'],
+                ['true', 'to cause harm (often private details)', '<strong>malinformation</strong>']]) +
+              '<p>The same false story can be <em>disinformation</em> when someone invents it, and <em>misinformation</em> when people who believe it pass it on.</p>' +
+              '<p>Clearly labelled satire is a joke, not disinformation. It becomes misinformation when someone shares it believing it is real.</p>' },
+      { id: 'context', title: 'Missing or twisted context', years: '9', wide: true,
+        text: '<p>Real material can mislead when its <strong>context</strong> is removed or changed:</p>' +
+              Sci.table(['Trick', 'Example'], [
+                ['Old photo, new story', 'A photo of a 2019 snowstorm shared as “today”'],
+                ['Cropping', 'Cutting the rubbish bins out of a photo of a “spotless” beach'],
+                ['Quote out of context', 'Quoting “the pool should close” from “Some say the pool should close. I disagree.”'],
+                ['False caption', 'A real video labelled as a different event']]) +
+              '<p>Check: a <strong>reverse image search</strong> shows where and when a picture first appeared; find the <strong>full quote</strong> or the original video.</p>' },
+      { id: 'lateral', title: 'Reading laterally', years: '9', wide: true,
+        text: '<p>Fact-checkers do not just read <em>down</em> a page. They read <strong>laterally</strong>: they open new tabs to find out what others say about the source.</p>' +
+              '<ul><li><strong>Author</strong>: who are they, and do they know this field?</li><li><strong>Date</strong>: is it current?</li>' +
+              '<li><strong>Evidence</strong>: can you follow its sources?</li><li><strong>Purpose</strong>: who runs it, and who gains if you believe it?</li></ul>' +
+              '<p>A site’s own “About us” page tells you how it <em>wants</em> to be seen. A professional look is not evidence.</p>' },
+      { id: 'framing', title: 'Headlines, framing and positioning', years: '9', wide: true,
+        text: '<p><strong>Clickbait</strong> holds back the key fact to make you click: <em>“You won’t believe what she found …”</em></p>' +
+              '<p><strong>Framing</strong> is choosing words, order and numbers to steer the reader:</p>' +
+              '<ul><li>Active or passive: <em>“Driver hits cyclist”</em> names who did it; <em>“Cyclist hit”</em> hides it.</li>' +
+              '<li>Same fact, different frame: <em>“80% of trains on time”</em> or <em>“1 in 5 trains late”</em>.</li>' +
+              '<li>Loaded labels: <em>“youth”</em> or <em>“yobbos”</em>.</li></ul>' +
+              '<p>Together these <strong>position the audience</strong>: they invite readers to see an issue from one side, often without noticing.</p>' },
+      { id: 'hooks', title: 'Emotional hooks', years: '9',
+        text: '<p>False and misleading posts often aim at feelings, so you share before you think:</p>' +
+              '<ul><li><strong>Urgency</strong>: “Share before it’s deleted!”</li><li><strong>Fear</strong>: “The hidden danger in your kitchen”</li>' +
+              '<li><strong>Outrage</strong>: “This should make you furious”</li><li><strong>Bandwagon</strong>: “Everyone is sharing this”</li>' +
+              '<li><strong>Us and them</strong>: “They don’t want people like us to know”</li></ul>' +
+              '<p>A strong feeling is a signal to pause and check.</p>' },
+      { id: 'ethics', title: 'Using media ethically', years: '9',
+        text: '<ul><li><strong>Intellectual property</strong>: songs, photos, videos and writing belong to their creators. Crediting is not the same as permission: use licensed material (such as Creative Commons) or ask.</li>' +
+              '<li><strong>Quote accurately</strong>: keep a quote’s meaning and its context.</li>' +
+              '<li><strong>Represent people fairly</strong>: give the strongest version of a view you disagree with, and include the voices of those affected.</li>' +
+              '<li><strong>Think before posting</strong> about real people.</li></ul>' }
     ],
 
     examples: [
@@ -1264,7 +1990,7 @@
           rng => TF(rng, { statement: 'Creative Commons means you can use content without crediting anyone.', answer: false, learn: 'cite', explain: 'You must credit the creator and follow the licence.' }),
           rng => TF(rng, { statement: 'A hyperlink connects one page to another.', answer: true, learn: 'digital', explain: 'It lets readers follow sources or related content.' })
         ] },
-      { name: 'Extension: false information', learn: 'mdm',
+      { name: 'Extension: false information', learn: 'mdm', challenge: 'also',
         items: [
           rng => C(rng, { tag: EXT, prompt: 'Your aunt shares a false health tip, believing it is true. What is this?', right: 'Misinformation', wrong: ['Disinformation', 'Malinformation', 'A citation'], explain: 'False information shared by mistake.' }),
           rng => C(rng, { tag: EXT, prompt: 'A fake account spreads a made-up story to make people distrust an election. What is this?', right: 'Disinformation', wrong: ['Misinformation', 'Malinformation', 'Satire'], explain: 'False information shared deliberately to mislead.' }),
@@ -1272,7 +1998,199 @@
           rng => C(rng, { tag: EXT, prompt: 'What is the key difference between misinformation and disinformation?', right: 'Intent: disinformation is deliberately misleading; misinformation is a mistake.', wrong: ['Length', 'Whether it has pictures', 'Whether it is online'], explain: 'Both are false; the difference is the purpose behind sharing.' }),
           rng => C(rng, { tag: EXT, prompt: 'A headline says “You won’t BELIEVE what this kid found!” What is it most likely?', right: 'Clickbait designed to get clicks', wrong: ['A peer-reviewed study', 'A government report', 'A dictionary entry'], explain: 'Exaggerated, vague headlines aim to make you click rather than inform.' }),
           rng => C(rng, { tag: EXT, prompt: 'Why might false information spread faster than true information online?', right: 'It is often more surprising or emotional, so people share it quickly.', wrong: ['True information is not allowed online.', 'False information is always shorter.', 'Computers prefer false information.'], explain: 'Strong emotions make people share before checking.' })
-        ] }
+        ] },
+
+      // ── Year 9 challenge: these positions appear only in the challenge set.
+
+      // 11 · Mis, dis or mal: harder cases.
+      {
+        name: 'Year 9: mis, dis or mal?', learn: 'mdmcases', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'A comedy website, clearly labelled as satire, posts a made-up story that Parliament will be painted pink. Your cousin shares it as real news. What is your cousin spreading?',
+            right: 'Misinformation', wrong: ['Disinformation', 'Malinformation', 'Accurate news'],
+            explain: 'The story is false, but your cousin believes it. Labelled satire is a joke, not an attempt to mislead; it becomes misinformation when someone shares it as true.' }),
+          rng => C(rng, { prompt: 'A company writes fake five-star reviews of its own product and posts them under made-up names. What is this?',
+            right: 'Disinformation', wrong: ['Misinformation', 'Malinformation', 'Satire'],
+            explain: 'The reviews are false and were created on purpose to mislead buyers.' }),
+          rng => C(rng, { prompt: 'Someone posts screenshots of a classmate’s real, private messages to embarrass them. What is this?',
+            right: 'Malinformation', wrong: ['Misinformation', 'Disinformation', 'Satire'],
+            explain: 'The messages are genuine, so this is not false information. Sharing true, private information to cause harm is malinformation.' }),
+          rng => C(rng, { prompt: 'Someone makes a fake “School closed tomorrow” notice as a prank, knowing it is false. Hundreds of parents share it because they believe it. Which describes <strong>the parents’</strong> sharing?',
+            right: 'Misinformation', wrong: ['Disinformation', 'Malinformation', 'Satire'],
+            explain: 'The prankster created disinformation. The parents believed it, so when they passed it on it was misinformation. The same false story can be both, depending on who shares it.' }),
+          rng => C(rng, { prompt: 'A news site reports a wrong figure by mistake, then publishes a correction the next day. Which is the best description?',
+            right: 'The error was misinformation; publishing a correction is a sign of an accountable source.',
+            wrong: ['The error was disinformation, because any false figure must be deliberate.', 'It was malinformation, because the figure caused confusion.', 'The correction proves the site cannot be trusted at all.'],
+            explain: 'A mistake is not a lie. Reliable outlets make errors too; what marks them out is that they admit and fix them.' }),
+          rng => C(rng, { prompt: 'A post contains a false claim. Which fact would most help you decide whether it is misinformation or disinformation?',
+            right: 'Whether the person who posted it knew it was false',
+            wrong: ['How many likes the post has', 'Whether the post includes a photo', 'How long the post is'],
+            explain: 'Both are false. The difference is intent: disinformation is deliberate, misinformation is a mistake.' })
+        ]
+      },
+
+      // 12 · Missing or manipulated context.
+      {
+        name: 'Year 9: missing context', learn: 'context', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'A photo of a flooded street goes viral captioned “Auckland this morning”. A reverse image search finds the same photo in a 2017 news story from another country. What is the problem?',
+            right: 'A real photo is being reused out of context: it shows a different time and place.',
+            wrong: ['The photo has been digitally created from nothing.', 'The photo proves the Auckland flood is worse than reported.', 'There is no problem, because the photo is real.'],
+            explain: 'The photo is genuine, but the caption is false. Real images can mislead when they are attached to the wrong story.' }),
+          rng => C(rng, { prompt: 'A post shows a speaker in front of a few empty chairs, captioned “Nobody came.” The uncropped photo shows the rest of the hall full. What technique has been used?',
+            right: 'Cropping the image to remove context and change its meaning',
+            wrong: ['Using an old photo for a new event', 'Quoting the speaker out of context', 'Satire that is clearly labelled'],
+            explain: 'Nothing in the picture is fake; what was cut out changes the story it tells.' }),
+          rng => C(rng, { prompt: 'A councillor said: <em>“Some people say we should close the library. I think that would be a terrible mistake.”</em> A post quotes her as saying: <em>“we should close the library.”</em> What has happened?',
+            right: 'The quote has been taken out of context, reversing her meaning.',
+            wrong: ['The post has quoted her fairly, because she did say those words.', 'The councillor has changed her mind.', 'The post has paraphrased her accurately.'],
+            explain: 'The words were said, but she was describing a view she disagrees with. Cutting the context turns her argument upside down.' }),
+          rng => C(rng, { prompt: 'A real video of a cheering crowd is shared with the caption “Fans celebrate the coach being sacked”. It is actually from a concert two years ago. What is the problem?',
+            right: 'A genuine video has been given a false caption.',
+            wrong: ['The video has been digitally faked.', 'The video is malinformation, because it is true.', 'There is no problem, because the crowd really did cheer.'],
+            explain: 'The footage is real, but the caption invents what it shows. The caption is where the false information is.' }),
+          rng => C(rng, { prompt: 'You see a dramatic photo with a caption saying it was taken today. What is the best first step to check its context?',
+            right: 'Do a reverse image search to find where and when it first appeared.',
+            wrong: ['Zoom in to see whether it is sharp.', 'Count how many times it has been shared.', 'Check whether a friend has shared it too.'],
+            explain: 'A reverse image search can show an older or different original. Sharpness and shares say nothing about when or where it was taken.' })
+        ]
+      },
+
+      // 13 · Judging a source’s credibility.
+      {
+        name: 'Year 9: judging credibility', learn: 'lateral', challenge: 'only',
+        items: [
+          rng => Sci.sort(rng, { prompt: 'You are judging a website about the health effects of energy drinks. Does each finding raise or lower its credibility?', bins: ['Raises credibility', 'Lowers credibility'],
+            items: [
+              { text: 'Other reliable sources describe it as an independent health charity.', bin: 0 }, { text: 'Articles name their authors and the authors’ qualifications.', bin: 0 },
+              { text: 'Each claim links to research you can follow.', bin: 0 }, { text: 'Pages show when they were last updated.', bin: 0 },
+              { text: 'The site is owned by an energy drink company.', bin: 1 }, { text: 'No author or date appears anywhere.', bin: 1 },
+              { text: 'The only evidence is customer testimonials.', bin: 1 }, { text: 'Its “About us” page praises it, but no other site mentions it.', bin: 1 }
+            ], pick: 6,
+            explain: 'Check author, date, evidence and purpose, and what others say about the source. A company judging its own product has a reason to be biased.' }),
+          rng => Sci.sort(rng, { prompt: 'An account posts a startling claim about a new school rule. Does each finding raise or lower its credibility?', bins: ['Raises credibility', 'Lowers credibility'],
+            items: [
+              { text: 'The post links to the official announcement.', bin: 0 }, { text: 'Several established news outlets report the same thing.', bin: 0 },
+              { text: 'The account belongs to a named education reporter.', bin: 0 }, { text: 'The post gives a date and details you can check.', bin: 0 },
+              { text: 'The account was created last week and has no other posts.', bin: 1 }, { text: 'The post says “Share before they delete this!”', bin: 1 },
+              { text: 'It is a screenshot with no source or date.', bin: 1 }, { text: 'The account name copies a news outlet’s with one letter changed.', bin: 1 }
+            ], pick: 6,
+            explain: 'Credible posts can be traced to a source. New, anonymous or copycat accounts and pressure to share are warning signs.' }),
+          rng => Sci.sort(rng, { prompt: 'You are judging a video about why the moa died out. Does each finding raise or lower its credibility?', bins: ['Raises credibility', 'Lowers credibility'],
+            items: [
+              { text: 'The presenter is an archaeologist who cites published studies.', bin: 0 }, { text: 'The description lists sources you can check.', bin: 0 },
+              { text: 'Museum and university websites say the same thing.', bin: 0 }, { text: 'The presenter makes clear which parts are evidence and which are opinion.', bin: 0 },
+              { text: 'It claims scientists are hiding “the real truth”.', bin: 1 }, { text: 'It gives no sources at all.', bin: 1 },
+              { text: 'It relies on one unnamed “expert”.', bin: 1 }, { text: 'The thumbnail is a shocking image that has nothing to do with moa.', bin: 1 }
+            ], pick: 6,
+            explain: 'Expertise, checkable sources and agreement with other reliable sources raise credibility. Conspiracy claims, missing sources and misleading thumbnails lower it.' }),
+          rng => Sci.sort(rng, { prompt: 'You read laterally about a news website: you leave it and search for what others say. Does each finding raise or lower its credibility?', bins: ['Raises credibility', 'Lowers credibility'],
+            items: [
+              { text: 'Fact-checking organisations rate its reporting as generally accurate.', bin: 0 }, { text: 'It publishes corrections when it gets things wrong.', bin: 0 },
+              { text: 'Its reporters are named and other outlets cite their work.', bin: 0 }, { text: 'It has a long, well-documented history of reporting.', bin: 0 },
+              { text: 'It turns out to be run by a company selling the products it reviews.', bin: 1 }, { text: 'Fact-checkers have found many of its stories false.', bin: 1 },
+              { text: 'Its editor and address cannot be found anywhere.', bin: 1 }, { text: 'Other sites describe it as a source of made-up stories.', bin: 1 }
+            ], pick: 6,
+            explain: 'Lateral reading tests a source against what independent sources say about it, rather than how it describes itself.' })
+        ]
+      },
+
+      // 14 · Headlines, framing and positioning the audience.
+      {
+        name: 'Year 9: framing and positioning', learn: 'framing', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'Which headline is clickbait?',
+            right: '“She opened the box, and what happened next will shock you”',
+            wrong: ['“Rescue dog reunited with owner after three weeks”', '“Rates to rise 6% next year”', '“Kererū numbers up in Wellington survey”'],
+            explain: 'Clickbait holds back the key fact to make you click. The others tell you what the story is about.' }),
+          rng => C(rng, { prompt: 'Two headlines report the same event: <em>“Police officer injures protester”</em> and <em>“Protester injured as police clear street”</em>. How does the second frame the event?',
+            right: 'Its passive wording does not say who caused the injury, so the police seem less responsible.',
+            wrong: ['It blames the protester for the injury.', 'It gives more detail about who caused the injury.', 'It has exactly the same effect as the first.'],
+            explain: '“Officer injures protester” names who did it. “Protester injured” leaves the cause out, which softens it.' }),
+          rng => C(rng, { prompt: 'Two headlines report the same test results: <em>“Nine in ten students pass maths test”</em> and <em>“One in ten students fail maths test”</em>. What does this show?',
+            right: 'The same fact can be framed positively or negatively to shape the reader’s reaction.',
+            wrong: ['One of the headlines must be false.', 'The two headlines report different results.', 'Only the first headline is accurate.'],
+            explain: 'Both are true. Choosing which part to put first steers how readers feel about the results.' }),
+          rng => C(rng, { prompt: 'Two people are charged over the same burglary. One headline calls the 16-year-old a “teen thug”; another calls the 40-year-old a “local man”. What does the difference in wording do?',
+            right: 'It positions readers to judge the teenager more harshly, although the charge is the same.',
+            wrong: ['It shows the teenager’s crime was worse.', 'It keeps both headlines neutral.', 'It uses legal terms that a court has decided.'],
+            explain: '“Thug” is a loaded label; “local man” is neutral. This kind of wording can feed a negative portrayal of young people.' }),
+          rng => C(rng, { prompt: 'A news story about a factory closing opens with a worker in tears, and gives the company’s reasons only in the last paragraph. How does this structure position readers?',
+            right: 'It invites readers to sympathise with the workers before they meet the company’s view.',
+            wrong: ['It makes readers favour the company.', 'It is neutral, because both sides appear somewhere.', 'It gives readers the company’s reasons first.'],
+            explain: 'What comes first shapes how we read the rest. Many readers never reach the last paragraph.' }),
+          rng => C(rng, { prompt: 'What does it mean to say a media text <strong>positions</strong> its audience?',
+            right: 'It invites readers to see an issue from a particular point of view, often without their noticing.',
+            wrong: ['It tells readers where to sit.', 'It lists the facts in order of importance.', 'It gives every side exactly equal space.'],
+            explain: 'Word choice, order, images and who is quoted all nudge readers towards a view.' })
+        ]
+      },
+
+      // 15 · Emotional hooks that push sharing.
+      {
+        name: 'Year 9: emotional hooks', learn: 'hooks', challenge: 'only',
+        items: [Sci.gen(rng => {
+          const rows = rng.sample([
+            ['Urgency', ['“Share NOW before this gets taken down!”', '“Only hours left to warn your friends. Pass it on!”']],
+            ['Fear', ['“The hidden danger in your child’s lunchbox”', '“This common household item could be poisoning your family”']],
+            ['Outrage', ['“This disgusting decision should make every parent furious.”', '“Shameful! An insult to every hard-working family.”']],
+            ['Bandwagon', ['“Everyone is sharing this. Don’t be the last to know.”', '“Two million people can’t be wrong. Join them.”']],
+            ['Us and them', ['“They don’t want people like us to find out.”', '“The elites are hiding this from ordinary Kiwis.”']],
+            ['Curiosity gap', ['“She opened the letter, and what she read will surprise you.”', '“Doctors were stunned by what this man did next.”']]
+          ], 4).map(([hook, ex]) => [rng.pick(ex), hook]);
+          return Sci.match(rng, 'Match each line from a post to the emotional hook it uses.', rows,
+            'Each hook aims to make you feel before you think. A strong feeling is a signal to pause and check before sharing.');
+        })]
+      },
+
+      // 16 · Using media ethically.
+      {
+        name: 'Year 9: ethical use', learn: 'ethics', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'Dr Kemp said: <em>“Most of the evidence points to warming, though some details are still debated.”</em> You want to use her words in a speech. Which is ethical?',
+            right: 'Quote the whole sentence and name Dr Kemp.',
+            wrong: ['Quote only “some details are still debated” to suggest she doubts warming.', 'Use the sentence as your own words.', 'Change it to “The evidence proves everything about warming,” said Dr Kemp.'],
+            explain: 'Quoting accurately means keeping the meaning and naming the source. The others twist her meaning, take her words without credit, or invent a quote.' }),
+          rng => C(rng, { prompt: 'You make a video about a local stream and post it publicly online, using a famous band’s song as background music without permission. What is the main problem?',
+            right: 'The song is the band’s intellectual property, so you need permission or a licence to use it.',
+            wrong: ['There is no problem as long as you name the band in the description.', 'Videos about nature are not allowed to have music.', 'There is no problem because the video is about a stream.'],
+            explain: 'Crediting is not the same as permission. Use music licensed for reuse, or ask.' }),
+          rng => C(rng, { prompt: 'A report on a proposed marine reserve quotes a fishing company, a scientist and the council. Who else does a fair report most need to include?',
+            right: 'People directly affected, such as local hapū and people who fish there',
+            wrong: ['More people who agree with the fishing company', 'Celebrities with large followings', 'Nobody: three voices are always enough'],
+            explain: 'Representing an issue fairly means including the voices of those it affects most, not just officials or the loudest group.' }),
+          rng => C(rng, { prompt: 'You disagree with an opinion piece and write a reply. What is the fair way to represent the writer’s view?',
+            right: 'Summarise their strongest argument accurately, then explain why you disagree.',
+            wrong: ['Quote only their weakest sentence.', 'Describe the writer as ignorant.', 'Leave out their reasons entirely.'],
+            explain: 'Answering a weaker, twisted version of someone’s view is unfair and also unconvincing. Engage with what they actually argued.' }),
+          rng => C(rng, { prompt: 'A meme puts a made-up, mocking caption on a real photo of an ordinary person. Why is sharing it unethical, even “as a joke”?',
+            right: 'It misrepresents a real person and can harm them, without their consent.',
+            wrong: ['All memes are against the law.', 'Photos of people can never be shared.', 'It is only unethical if it gets a lot of shares.'],
+            explain: 'A real person can be hurt by words they never said. One share already spreads it.' })
+        ]
+      },
+
+      // 17 · Spot the flaw in the checking.
+      {
+        name: 'Year 9: spot the flaw', learn: 'lateral', challenge: 'only',
+        items: [
+          rng => Sci.spot(rng, { learn: 'context', prompt: 'A student checks a viral photo.',
+            lines: ['A post shows a shark in a flooded street, captioned “Christchurch today”.', 'I did a reverse image search.', 'The same photo appears on a site from five years ago, about a different storm.', 'The photo looks real, so the caption must be true as well.'],
+            wrong: 3, explain: 'A real-looking photo can still be attached to a false caption. The search showed it is from a different storm, so the caption is false.' }),
+          rng => Sci.spot(rng, { learn: 'lateral', prompt: 'A student checks a health website.',
+            lines: ['An article claims a new diet cures asthma.', 'The website looks professional, with a doctor’s photo on every page.', 'So the website must be trustworthy.', 'I could still check what other sources say about it.'],
+            wrong: 2, explain: 'A professional look is not evidence. Reading laterally means checking what independent sources say before trusting it.' }),
+          rng => Sci.spot(rng, { learn: 'mdmcases', prompt: 'A student classifies a post.',
+            lines: ['My uncle shared a post saying a bridge had collapsed.', 'The post turned out to be false.', 'My uncle believed it was true when he shared it.', 'So my uncle was spreading disinformation.'],
+            wrong: 3, explain: 'He believed it, so he was spreading misinformation. Disinformation is shared knowing it is false.' }),
+          rng => Sci.spot(rng, { learn: 'framing', prompt: 'A student compares two headlines.',
+            lines: ['Headline A: “Council wastes $2 million on cycleway”.', 'Headline B: “Council spends $2 million on cycleway”.', 'Both headlines report the same amount.', 'So both headlines are equally neutral.'],
+            wrong: 3, explain: '“Wastes” is a loaded word that tells readers what to think. The facts match, but the framing does not.' }),
+          rng => Sci.spot(rng, { learn: 'hooks', prompt: 'A student decides whether to share a post.',
+            lines: ['A post says: “Share this before it’s deleted! They don’t want you to know!”', 'It gives no source for its claim.', 'The urgent wording makes me want to share it straight away.', 'Because it feels so urgent, it is probably important and true.'],
+            wrong: 3, explain: 'Urgency is an emotional hook, not evidence. Noticing the urge to share is the moment to stop and check.' })
+        ]
+      }
     ]
   });
 

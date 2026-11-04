@@ -121,7 +121,45 @@
         text: '<p>Unusual spellings often come from <strong>older forms of English</strong> or <strong>other languages</strong>. ' +
               'The spelling stayed while the pronunciation changed.</p>' +
               '<ul><li>Greek: <strong>ps</strong>ychology, <strong>pn</strong>eumonia, <strong>rh</strong>ythm, <strong>ch</strong>orus</li>' +
-              '<li>French: <strong>ch</strong>ef, ma<strong>ch</strong>ine</li><li>Old English: lau<strong>gh</strong>, ni<strong>gh</strong>t, <strong>kn</strong>ee</li></ul>' }
+              '<li>French: <strong>ch</strong>ef, ma<strong>ch</strong>ine</li><li>Old English: lau<strong>gh</strong>, ni<strong>gh</strong>t, <strong>kn</strong>ee</li></ul>' },
+      { id: 'demons', title: 'Commonly misspelt words', years: '9', wide: true,
+        text: '<p>Some words trip up even confident writers. Learn the tricky part of each one, and a hook to remember it by.</p>' +
+              Sci.table(['Word', 'Tricky part', 'Hook'], [
+                ['accommodate', 'double c, double m', 'it is big enough to accommodate two c’s and two m’s'],
+                ['necessary', 'one c, double s', 'one collar, two sleeves'],
+                ['separate', 'a, not e, after the p', 'there is <strong>a rat</strong> in sep<strong>arat</strong>e'],
+                ['definitely', '-ite, not -ate', 'it comes from fin<strong>ite</strong>'],
+                ['embarrass', 'double r, double s', 'you go <strong>r</strong>eally <strong>r</strong>ed and <strong>s</strong>mile <strong>s</strong>hyly'],
+                ['rhythm', 'no vowel letter except y', '<strong>R</strong>hythm <strong>H</strong>elps <strong>Y</strong>our <strong>T</strong>wo <strong>H</strong>ips <strong>M</strong>ove'],
+                ['conscience', 'con + science', 'your conscience knows the science of right and wrong']]) },
+      { id: 'borrowed', title: 'Spellings borrowed from French and Greek', years: '9', wide: true,
+        text: '<p>Words borrowed from other languages often keep that language’s spelling. If you know where a word came from, you can predict its letters.</p>' +
+              Sci.table(['From', 'Pattern', 'Examples'], [
+                ['French', '&lt;que&gt; says /k/ at the end', 'unique, antique, technique, boutique'],
+                ['French', '&lt;eau&gt; says long o', 'plateau, bureau, chateau'],
+                ['French', '&lt;ette&gt; at the end', 'silhouette, cassette, baguette'],
+                ['Greek', '&lt;ph&gt; says /f/', 'photograph, dolphin, sphere, phase'],
+                ['Greek', '&lt;rh&gt; says /r/', 'rhinoceros, rhombus, rhetoric'],
+                ['Greek', '&lt;y&gt; says short i', 'symbol, myth, gym, system']]) +
+              '<p>Tip: science and maths words often come from Greek, so an /f/ sound in them is usually spelt ph: <em>phenomenon, hypothesis, photosynthesis</em>.</p>' },
+      { id: 'doubling', title: 'Doubling and stress', years: '9', wide: true,
+        text: '<p>When a word ends in <strong>one vowel + one consonant</strong> and you add a suffix that starts with a vowel (-ing, -ed, -er, -ence, -able), double the consonant <strong>only if the last syllable is stressed</strong>.</p>' +
+              Sci.table(['Where the stress is', 'Double?', 'Examples'], [
+                ['on the last syllable: be<strong>GIN</strong>, oc<strong>CUR</strong>, pre<strong>FER</strong>', 'yes', 'beginning, occurred, preferred, forgetting, regrettable'],
+                ['earlier in the word: <strong>TAR</strong>get, <strong>VIS</strong>it, <strong>BEN</strong>efit', 'no', 'targeted, visiting, limited, benefited']]) +
+              '<p>Listen for the stress moving: pre<strong>FER</strong> → pre<strong>ferr</strong>ed, but <strong>PREF</strong>erence has one r. Re<strong>FER</strong> → referring, but <strong>REF</strong>erence.</p>' +
+              '<p>In New Zealand English a final <strong>l</strong> usually doubles whatever the stress: travelled, cancelled, labelled.</p>' },
+      { id: 'ance', title: '-ance or -ence? -able after -ation', years: '9',
+        text: '<p>These endings sound the same, so look for clues in related words.</p>' +
+              '<ul><li><strong>Match the adjective.</strong> -ant goes with -ance: important → importance, relevant → relevance. -ent goes with -ence: confident → confidence, independent → independence.</li>' +
+              '<li><strong>Listen to the c or g.</strong> After a soft c or g (saying /s/ or /j/), it is usually -ence: innocence, intelligence. After a hard c or g (/k/ or /g/), it is usually -ance: significance, elegance.</li>' +
+              '<li><strong>Look for -ation.</strong> If a related word ends in -ation, the adjective usually ends in -able: toleration → tolerable, application → applicable.</li></ul>' },
+      { id: 'spellcheck', title: 'Using a spellchecker wisely', years: '9',
+        text: '<p>A spellchecker compares each word with its word list. It is useful, but <strong>you</strong> make the final choice.</p>' +
+              '<ul><li>It misses <strong>real-word errors</strong>: a correctly spelt word in the wrong place (<em>form</em> for <em>from</em>, <em>there</em> for <em>their</em>, <em>effect</em> for <em>affect</em>).</li>' +
+              '<li>It may flag correct words it does not know: names, places and te reo Māori words such as <em>Whakatāne</em> or <em>kaitiakitanga</em>. Keep them, or add them to its dictionary.</li>' +
+              '<li>Set it to <strong>English (New Zealand)</strong>, or it may “correct” colour to color and organise to organize.</li>' +
+              '<li>For a badly misspelt word, its first suggestion may be a different word: <em>definately</em> → <em>defiantly</em>. Read the whole list.</li></ul>' }
     ],
 
     examples: [
@@ -285,7 +323,7 @@
 
       // 10 · Extension: origins.
       {
-        name: 'Extension: where spellings come from', learn: 'origins',
+        name: 'Extension: where spellings come from', learn: 'origins', challenge: 'also',
         items: [
           rng => C(rng, { tag: EXT, prompt: 'Why do many English words have letters we no longer say?',
             right: 'The spelling stayed the same while the pronunciation changed over time, or came from another language.', wrong: ['Printers added extra letters to fill space.', 'The letters are there to make words longer.', 'They are spelling mistakes that became common.'],
@@ -305,6 +343,153 @@
             right: 'Scholars added it to match the Latin word it came from.', wrong: ['It used to be pronounced “ree-sipt” everywhere.', 'It came from Greek.', 'It is a mistake.'],
             explain: 'The p was added to show the link with Latin <em>recepta</em>, even though it was never said in English.' })
         ]
+      },
+
+      // ── Year 9 challenge: these positions appear only in the challenge set.
+
+      // 11 · Commonly misspelt words.
+      {
+        name: 'Year 9: commonly misspelt', learn: 'demons', challenge: 'only',
+        items: [Sci.gen(rng => {
+          const x = rng.pick([
+            ['accommodate', 'to provide a place to stay', ['accomodate', 'acommodate', 'acomodate'], 'Two c’s and two m’s.', 'demons'],
+            ['necessary', 'needed; essential', ['neccessary', 'necessery', 'neccesary'], 'One collar (c), two sleeves (ss).', 'demons'],
+            ['separate', 'apart; not joined', ['seperate', 'seperete', 'separete'], 'There is “a rat” in separate.', 'demons'],
+            ['definitely', 'certainly; without doubt', ['definately', 'definitly', 'defenitely'], 'It comes from <em>finite</em>, so it ends -itely.', 'demons'],
+            ['embarrass', 'to make someone feel awkward', ['embarass', 'embarras', 'embaras'], 'Double r and double s: really red, smile shyly.', 'demons'],
+            ['conscience', 'your inner sense of right and wrong', ['concience', 'consience', 'conscence'], 'It is con + science.', 'demons'],
+            ['occasion', 'a special event or time', ['ocassion', 'occassion', 'ocasion'], 'Double c, single s.', 'demons'],
+            ['committee', 'a group chosen to make decisions', ['commitee', 'comittee', 'committe'], 'Double m, double t, double e.', 'demons'],
+            ['privilege', 'a special right or advantage', ['priviledge', 'privelege', 'privilage'], 'No d, and the vowels go i, i, e: priv-i-lege.', 'demons'],
+            ['millennium', 'a period of a thousand years', ['millenium', 'milennium', 'milenium'], 'Double l and double n: from Latin <em>mille</em> (thousand) and <em>annus</em> (year).', 'demons'],
+            ['unique', 'the only one of its kind', ['uneek', 'unik', 'uniqe'], 'It is from French, so the /k/ at the end is spelt -que.', 'borrowed'],
+            ['technique', 'a skilful way of doing something', ['tecnique', 'techneek', 'techneque'], 'From French: ch saying /k/ and -que at the end.', 'borrowed'],
+            ['plateau', 'a high, flat area of land', ['plato', 'plateu', 'platteau'], 'From French: the long o at the end is spelt -eau.', 'borrowed'],
+            ['silhouette', 'a dark shape seen against a light background', ['silouette', 'silhouet', 'sillhouette'], 'From French: a silent h, and -ette at the end.', 'borrowed']
+          ]);
+          return C(rng, {
+            prompt: `Which is the correct spelling of the word meaning <em>${x[1]}</em>?`,
+            right: x[0], wrong: x[2], wide: false, learn: x[4],
+            explain: `<strong>${x[0]}</strong>. ${x[3]}`
+          });
+        })]
+      },
+
+      // 12 · Doubling the final consonant: type the word.
+      {
+        name: 'Year 9: double or not?', learn: 'doubling', challenge: 'only',
+        items: [Sci.gen(rng => {
+          const [base, suf, out, stress] = rng.pick([
+            ['begin', 'ing', 'beginning', 'be<strong>GIN</strong>'], ['occur', 'ed', 'occurred', 'oc<strong>CUR</strong>'],
+            ['forget', 'ing', 'forgetting', 'for<strong>GET</strong>'], ['commit', 'ed', 'committed', 'com<strong>MIT</strong>'],
+            ['equip', 'ed', 'equipped', 'e<strong>QUIP</strong>'], ['deter', 'ent', 'deterrent', 'de<strong>TER</strong>'],
+            ['occur', 'ence', 'occurrence', 'oc<strong>CUR</strong>'], ['target', 'ed', 'targeted', '<strong>TAR</strong>get'],
+            ['visit', 'or', 'visitor', '<strong>VIS</strong>it'], ['limit', 'ing', 'limiting', '<strong>LIM</strong>it'],
+            ['garden', 'er', 'gardener', '<strong>GAR</strong>den'], ['offer', 'ed', 'offered', '<strong>OF</strong>fer']
+          ]);
+          const dbl = out.length - base.length - suf.length === 1;
+          return Sci.word(rng, {
+            prompt: `Add <strong>-${suf}</strong> to <strong>${base}</strong>.`,
+            note: 'Say the word aloud and listen for the stressed syllable.',
+            answer: out, placeholder: 'type the new word',
+            explain: `<strong>${out}</strong>. The stress is ${stress}, ${dbl ? 'on the last syllable, so the final consonant doubles' : 'not on the last syllable, so the consonant stays single'}.`
+          });
+        })]
+      },
+
+      // 13 · Doubling: sort by the rule.
+      {
+        name: 'Year 9: doubling and stress', learn: 'doubling', challenge: 'only',
+        items: [rng => Sci.sort(rng, {
+          prompt: 'When you join each pair, does the final consonant double?',
+          bins: ['Double it', 'Keep it single'],
+          items: [
+            ...['prefer + -ed', 'refer + -ing', 'regret + -able', 'admit + -ance', 'omit + -ed', 'upset + -ing'].map(text => ({ text, bin: 0 })),
+            ...['prefer + -ence', 'refer + -ence', 'budget + -ing', 'profit + -able', 'develop + -ed', 'happen + -ing'].map(text => ({ text, bin: 1 }))
+          ],
+          pick: 6,
+          explain: 'Double the consonant only when the stressed syllable is the last one: pre<strong>FERR</strong>ed, re<strong>GRETT</strong>able, ad<strong>MITT</strong>ance. ' +
+                   'When the stress is earlier, keep it single: <strong>BUD</strong>geting, <strong>PROF</strong>itable, de<strong>VEL</strong>oped. Watch prefer and refer: the stress moves in <strong>PREF</strong>erence and <strong>REF</strong>erence, so they have one r.'
+        })]
+      },
+
+      // 14 · -ance or -ence, and -able after -ation.
+      {
+        name: 'Year 9: -ance, -ence, -able', learn: 'ance', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'The adjective is <strong>independent</strong>. Which noun is spelt correctly?', right: 'independence', wrong: ['independance', 'independense', 'independanse'], wide: false,
+            explain: 'Independ<strong>ent</strong> goes with independ<strong>ence</strong>. Matching the adjective tells you the vowel.' }),
+          rng => C(rng, { prompt: 'The adjective is <strong>relevant</strong>. Which noun is spelt correctly?', right: 'relevance', wrong: ['relevence', 'relevanse', 'relevense'], wide: false,
+            explain: 'Relev<strong>ant</strong> goes with relev<strong>ance</strong>.' }),
+          rng => C(rng, { prompt: 'In this word, the c is soft (it says /s/). Which spelling is correct?', right: 'innocence', wrong: ['innocance', 'innocense', 'innocanse'], wide: false,
+            explain: 'After a soft c, the ending is usually -ence: innocence, adolescence, magnificence.' }),
+          rng => C(rng, { prompt: 'In this word, the c is hard (it says /k/). Which spelling is correct?', right: 'significance', wrong: ['significence', 'significanse', 'significense'], wide: false,
+            explain: 'After a hard c, the ending is usually -ance. With -ence, the c would be read as a soft /s/.' }),
+          rng => C(rng, { prompt: 'In this word, the g is soft (it says /j/). Which spelling is correct?', right: 'intelligence', wrong: ['intelligance', 'intelligense', 'intelliganse'], wide: false,
+            explain: 'After a soft g, the ending is usually -ence: intelligence, emergence, negligence.' }),
+          rng => C(rng, { prompt: 'In this word, the g is hard (as in <em>go</em>). Which spelling is correct?', right: 'elegance', wrong: ['elegence', 'eleganse', 'elegense'], wide: false,
+            explain: 'After a hard g, the ending is usually -ance: elegance, arrogance, extravagance.' }),
+          rng => C(rng, { prompt: 'A related word is <strong>toleration</strong>. Which spelling is correct?', right: 'tolerable', wrong: ['tolerible', 'tollerable', 'tolerabel'], wide: false,
+            explain: 'A related word ending in -ation is a clue for -able: toleration → tolerable.' }),
+          rng => C(rng, { prompt: 'A related word is <strong>application</strong>. Which spelling is correct?', right: 'applicable', wrong: ['applicible', 'aplicable', 'applicabel'], wide: false,
+            explain: 'Application ends in -ation, so the adjective is applic<strong>able</strong>.' })
+        ]
+      },
+
+      // 15 · Borrowed spellings.
+      {
+        name: 'Year 9: borrowed spellings', learn: 'borrowed', challenge: 'only',
+        items: [Sci.gen(rng => Sci.match(rng, 'Match each borrowed spelling pattern to a word that shows it.',
+          rng.sample([
+            ['&lt;que&gt; saying /k/ (French)', rng.pick(['antique', 'boutique', 'unique'])],
+            ['&lt;eau&gt; saying long o (French)', rng.pick(['plateau', 'bureau'])],
+            ['&lt;ette&gt; at the end (French)', rng.pick(['cassette', 'silhouette', 'baguette'])],
+            ['&lt;ph&gt; saying /f/ (Greek)', rng.pick(['dolphin', 'sphere', 'phase'])],
+            ['&lt;rh&gt; saying /r/ (Greek)', rng.pick(['rhinoceros', 'rhombus', 'rhetoric'])],
+            ['&lt;y&gt; saying short i (Greek)', rng.pick(['symbol', 'myth', 'gym'])]
+          ], 4),
+          'French gives English -que (antique), -eau (plateau) and -ette (cassette). Greek gives ph saying /f/ (dolphin), rh (rhinoceros) and y saying short i (symbol).'))]
+      },
+
+      // 16 · Spellcheckers: making informed choices.
+      {
+        name: 'Year 9: using a spellchecker', learn: 'spellcheck', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'A spellchecker found no mistakes in <em>I walked home form school.</em> Why not?',
+            right: '“Form” is a real word, so the spellchecker accepts it, even though “from” was meant.', wrong: ['The sentence has no mistakes.', 'Spellcheckers only check the first word of a sentence.', '“Form” is the New Zealand spelling of “from”.'],
+            explain: 'Spellcheckers check that each word exists, not that it is the right word. Real-word errors need a human proofreader.' }),
+          rng => C(rng, { prompt: 'Your spellchecker underlines <em>colour</em> and suggests <em>color</em>. What is the best choice?',
+            right: 'Keep “colour”, and set the spellchecker’s language to English (New Zealand).', wrong: ['Accept “color”, because the spellchecker is always right.', 'Change it to “colur” so it is not underlined.', 'Delete the word and choose a different one.'],
+            explain: '“Colour” is the New Zealand spelling. The spellchecker is set to American English, which uses “color”.' }),
+          rng => C(rng, { prompt: 'In <em>We drove to Whakatāne for the weekend</em>, the spellchecker underlines <em>Whakatāne</em>. What should you do?',
+            right: 'Keep it, because it is spelt correctly; you could add it to the spellchecker’s dictionary.', wrong: ['Accept the first suggestion the spellchecker offers.', 'Remove the macron so the word is not underlined.', 'Replace it with a town the spellchecker knows.'],
+            explain: 'Spellcheckers often do not know place names or te reo Māori words. The underline means “not in my list”, not “wrong”.' }),
+          rng => C(rng, { prompt: 'You typed <em>definately</em>. The spellchecker’s first suggestion is <em>defiantly</em>. What should you do?',
+            right: 'Look further down the list and choose “definitely”, because “defiantly” means something different.', wrong: ['Accept “defiantly”, because it is the first suggestion.', 'Ignore the underline and keep “definately”.', 'Choose any word that removes the underline.'],
+            explain: 'Defiantly means “in a rebellious way”. A spellchecker guesses from the letters; you choose from the meaning.' }),
+          rng => C(rng, { prompt: 'Which mistake is a spellchecker <strong>least</strong> likely to catch?',
+            right: 'Their going to the beach.', wrong: ['They’re going to the baech.', 'They’re goin to the beach.', 'They’re going to the beatch.'],
+            explain: '“Their” is a real word, so it passes the spellchecker. It should be “They’re” (they are). The other mistakes are not real words, so they get underlined.' }),
+          rng => C(rng, { prompt: 'Which statement about spellcheckers is accurate?',
+            right: 'They check that each word is a real word, not that it is the right word.', wrong: ['They catch every spelling mistake.', 'They understand what you meant to say.', 'They always use New Zealand spelling.'],
+            explain: 'That is why you still need to proofread for real-word errors such as there/their and form/from.' })
+        ]
+      },
+
+      // 17 · Real-word errors.
+      {
+        name: 'Year 9: what the spellchecker missed', learn: 'spellcheck', challenge: 'only',
+        items: [
+          [['Our class visited the Auckland Museum.', 'We saw a waka taua carved from tōtara.', 'The guide explained it’s history.', 'Everyone asked thoughtful questions.'], 2, '“It’s” means “it is”. The history belonging to the waka is “its history”.'],
+          [['The storm hit Gisborne overnight.', 'Strong winds brought down power lines.', 'Many homes were without power for too days.', 'Crews worked hard to restore it.'], 2, 'It should be “two days” (the number). “Too” means “also” or “more than enough”.'],
+          [['Hana trained every morning before school.', 'She wanted to break the regional record.', 'On the day, the whether was perfect.', 'She won by a clear second.'], 2, 'It should be “weather” (rain, sun, wind). “Whether” introduces a choice: whether or not.'],
+          [['The new rules will effect every student.', 'Phones must be switched off in class.', 'Bags go on the hooks outside.', 'The principal explained the changes at assembly.'], 0, 'It should be “affect”, the verb meaning “influence”. “Effect” is usually a noun: the rules will have an effect.'],
+          [['I am writing to complain about the bus service.', 'The bus was late four times last weak.', 'On Friday it did not come at all.', 'I hope you can look into this.'], 1, 'It should be “week” (seven days). “Weak” means “not strong”.'],
+          [['We set up camp beside the lake.', 'Dad lit the fire while we collected wood.', 'Later we sat under the stars and told stories.', 'In the morning, we packed up are tents.'], 3, 'It should be “our tents” (belonging to us). “Are” is a verb: we are.']
+        ].map(([lines, wrong, why]) => rng => Sci.spot(rng, {
+          prompt: 'A spellchecker found no errors in this paragraph, but one line has a real word used wrongly.',
+          lines, wrong, cue: 'Click the line with the wrong word.', explain: why
+        }))
       }
     ]
   });
@@ -395,7 +580,46 @@
                 ['stationary / stationery', 'not moving / pens and paper']]) },
       { id: 'why', title: 'Extension: why prefixes change',
         text: '<p>“Inlegal” and “inpossible” are awkward to say, so over time the n changed to match the next sound: <strong>il</strong>legal, <strong>im</strong>possible. Linguists call this assimilation.</p>' +
-              '<p>Not every f-word changes: roof → roofs, chief → chiefs, belief → beliefs.</p>' }
+              '<p>Not every f-word changes: roof → roofs, chief → chiefs, belief → beliefs.</p>' },
+      { id: 'wordclass', title: 'Suffixes that change word class', years: '9', wide: true,
+        text: '<p>A suffix can turn a word into a different <strong>word class</strong>. The ending is often a clue to the job the word does.</p>' +
+              Sci.table(['Makes a', 'Common suffixes', 'Examples'], [
+                ['noun', '-ion, -ment, -ance, -ence, -ity, -ness, -ure', 'decision, assessment, maintenance, generosity, failure'],
+                ['verb', '-ise, -ify, -en', 'modernise, simplify, strengthen'],
+                ['adjective', '-ous, -ive, -able, -ful', 'mysterious, effective, believable, careful'],
+                ['adverb', '-ly', 'carefully, rapidly']]) +
+              '<p>New Zealand spelling usually uses -ise, not -ize: organise, realise, apologise.</p>' },
+      { id: 'nominal', title: 'Nominalisation', years: '9',
+        text: '<p><strong>Nominalisation</strong> turns a verb or an adjective into a noun: decide → <strong>decision</strong>, fail → <strong>failure</strong>, deny → <strong>denial</strong>, analyse → <strong>analysis</strong>, able → <strong>ability</strong>.</p>' +
+              '<p>Formal and scientific writing uses it a lot. It sounds more objective, packs ideas together, and can leave out who did the action.</p>' +
+              '<p><em>We analysed the water and decided to close the beach.</em><br>→ <em>Analysis of the water led to the decision to close the beach.</em></p>' },
+      { id: 'assimilated', title: 'Assimilated prefixes and double letters', years: '9', wide: true,
+        text: '<p>Many prefixes change their last letter to match the first letter of the root. This is called <strong>assimilation</strong>, and it is why so many words have a double letter near the start.</p>' +
+              Sci.table(['Prefix', 'Changes to', 'Examples'], [
+                ['in- (not)', 'il-, im-, ir-', 'illegible, immeasurable, irresistible'],
+                ['ad- (to, towards)', 'ac-, af-, ap-, at-', 'accommodate, affix, appoint, attract'],
+                ['sub- (under)', 'suf-, sup-', 'suffix, suppress, support'],
+                ['ob- (against, towards)', 'oc-, op-', 'occur, oppose']]) +
+              '<p>Other prefixes just join on, so a double letter appears only when the root starts with the prefix’s last letter: un + necessary = <strong>unnecessary</strong>, mis + spell = <strong>misspell</strong>, in + numerable = <strong>innumerable</strong>. But dis + appear = <strong>disappear</strong>, with one s.</p>' },
+      { id: 'suffixrules', title: 'Suffix rules on harder words', years: '9', wide: true,
+        text: '<ul><li><strong>Silent e:</strong> drop it before a suffix starting with a vowel (believe → believable, adventure → adventurous); keep it before a consonant (excite → excitement, sincere → sincerely).</li>' +
+              '<li><strong>Soft c and g:</strong> keep the e before -able or -ous so the letter stays soft: noticeable, manageable, changeable, advantageous.</li>' +
+              '<li><strong>y after a consonant</strong> usually changes to i: necessary → necessarily, beauty → beautiful. After a vowel, y stays: enjoy → enjoyment, employ → employer.</li>' +
+              '<li><strong>Learn the exceptions:</strong> argue → argument, true → truly, nine → ninth, whole → wholly.</li></ul>' },
+      { id: 'confusables', title: 'Confusable words', years: '9', wide: true,
+        text: Sci.table(['Words', 'Meaning', 'Example'], [
+                ['<strong>affect</strong> / <strong>effect</strong>', 'affect is usually a verb (to influence); effect is usually a noun (a result)', 'The rain affected the game. The rain had an effect on the game.'],
+                ['<strong>discreet</strong> / <strong>discrete</strong>', 'careful not to draw attention / separate and distinct', 'a discreet reminder; three discrete stages'],
+                ['<strong>elicit</strong> / <strong>illicit</strong>', 'to draw out a response / illegal or not allowed', 'to elicit an answer; illicit goods'],
+                ['<strong>practice</strong> / <strong>practise</strong>', 'noun / verb (in NZ English)', 'Netball practice is on Tuesday. I practise my shooting.'],
+                ['<strong>licence</strong> / <strong>license</strong>', 'noun / verb (in NZ English)', 'a driver’s licence; licensed to sell food'],
+                ['<strong>advice</strong> / <strong>advise</strong>', 'noun / verb', 'some good advice; I advise you to wait.']]) +
+              '<p>Tip for the c/s pairs: <strong>ice</strong> is a noun, so practi<strong>ce</strong>, licen<strong>ce</strong> and advi<strong>ce</strong> are the nouns.</p>' },
+      { id: 'precise', title: 'Precise synonyms and antonyms', years: '9', wide: true,
+        text: '<p>Many words have more than one meaning, so the right <strong>synonym</strong> (similar word) or <strong>antonym</strong> (opposite) depends on the sentence.</p>' +
+              Sci.table(['In this phrase', 'Synonym', 'Antonym'], [['a <em>light</em> pack', 'lightweight', 'heavy'], ['a <em>light</em> green', 'pale', 'dark'],
+                ['a <em>fair</em> decision', 'just', 'unfair'], ['a <em>sound</em> argument', 'valid', 'flawed']]) +
+              '<p>Synonyms also differ in <strong>formality</strong>: get / obtain, find out / discover, enough / sufficient. Choose the one that suits your audience.</p>' }
     ],
 
     examples: [
@@ -552,7 +776,7 @@
 
       // 10 · Extension.
       {
-        name: 'Extension: exceptions and reasons', learn: 'why',
+        name: 'Extension: exceptions and reasons', learn: 'why', challenge: 'also',
         items: [
           rng => C(rng, { tag: EXT, prompt: 'Which plural is spelt correctly?', right: 'roofs', wrong: ['rooves', 'roovs', 'roofes'],
             explain: 'Not every word ending in f changes to v: roof → roofs, chief → chiefs, belief → beliefs.' }),
@@ -568,6 +792,184 @@
           rng => C(rng, { tag: EXT, prompt: '<em>Ambi-</em> means “both”. What does <strong>ambidextrous</strong> mean?',
             right: 'Able to use both hands equally well', wrong: ['Unable to use either hand', 'Very clumsy', 'Right-handed'],
             explain: 'Ambi (both) + dexter (right hand, skilful).' })
+        ]
+      },
+
+      // ── Year 9 challenge: these positions appear only in the challenge set.
+
+      // 11 · Suffixes that change word class.
+      {
+        name: 'Year 9: word class from the suffix', learn: 'wordclass', challenge: 'only',
+        items: [rng => Sci.sort(rng, {
+          prompt: 'Use the suffix to decide the word class of each word.',
+          bins: ['Noun', 'Verb', 'Adjective'],
+          items: [
+            ...['decision', 'denial', 'assessment', 'failure', 'generosity', 'maintenance'].map(text => ({ text, bin: 0 })),
+            ...['simplify', 'strengthen', 'modernise', 'widen', 'clarify', 'apologise'].map(text => ({ text, bin: 1 })),
+            ...['mysterious', 'effective', 'believable', 'careful', 'dangerous', 'poisonous'].map(text => ({ text, bin: 2 }))
+          ],
+          pick: 6,
+          explain: 'Noun suffixes: -ion, -ment, -ure, -ity, -ance, and -al in denial (though -al can also make adjectives, as in natural). Verb suffixes: -ify, -en, -ise. Adjective suffixes: -ous, -ive, -able, -ful.'
+        })]
+      },
+
+      // 12 · Nominalisation: form the noun.
+      {
+        name: 'Year 9: make the noun', learn: 'nominal', challenge: 'only',
+        items: [Sci.gen(rng => {
+          const [base, s, out, note] = rng.pick([
+            ['decide', 'The council will announce its ▢ tomorrow.', 'decision', 'The d changes to s before -ion.'],
+            ['deny', 'The minister issued a firm ▢ of the rumour.', 'denial', 'The y changes to i before -al.'],
+            ['analyse', 'Careful ▢ of the data showed a clear pattern.', 'analysis', 'Analyse (verb) becomes analysis (noun).'],
+            ['persuade', 'Good speeches rely on ▢.', 'persuasion', 'The d changes to s before -ion, as in decide → decision.'],
+            ['arrive', 'The ▢ of the ferry was delayed by fog.', 'arrival', 'Drop the silent e before -al.'],
+            ['fail', 'The power ▢ lasted three hours.', 'failure', 'Fail + -ure.'],
+            ['maintain', 'The track is closed for ▢.', 'maintenance', 'The ai changes to e: maint<strong>e</strong>nance, not “maintainance”.'],
+            ['permit', 'You need ▢ to leave early.', 'permission', 'The t changes to ss before -ion.'],
+            ['describe', 'Write a short ▢ of the setting.', 'description', 'The b changes to p before -tion.'],
+            ['compare', 'The report makes a ▢ between two beaches.', 'comparison', 'The e is dropped and -ison added.'],
+            ['able', 'She showed great ▢ in the final.', 'ability', 'An adjective can be nominalised too: able → ability.'],
+            ['accurate', 'Check the ▢ of your measurements.', 'accuracy', 'The -ate ending changes to -acy.'],
+            ['refuse', 'His ▢ to apologise made things worse.', 'refusal', 'Drop the silent e before -al.']
+          ]);
+          return Sci.word(rng, {
+            prompt: `Write the noun formed from <strong>${base}</strong>: <em>${s}</em>`,
+            answer: out, placeholder: 'type the noun',
+            explain: `<strong>${out}</strong>. ${note}`
+          });
+        })]
+      },
+
+      // 13 · Nominalisation in formal writing.
+      {
+        name: 'Year 9: nominalisation in writing', learn: 'nominal', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'Which sentence uses nominalisation to sound more formal?',
+            right: 'The introduction of the new timetable caused confusion.', wrong: ['When they introduced the new timetable, everyone got confused.', 'They brought in a new timetable and we were confused.', 'Everyone got confused about the timetable they brought in.'],
+            explain: '“Introduction” is a noun made from the verb “introduce”. It makes the action the subject of the sentence, which sounds formal and objective.' }),
+          rng => C(rng, { prompt: '<em>We investigated the pollution and traced it to a drain.</em> Which version uses nominalisation?',
+            right: 'Our investigation traced the pollution to a drain.', wrong: ['We investigated, and the pollution came from a drain.', 'The pollution came from a drain, we found.', 'We looked into where the pollution came from.'],
+            explain: 'The verb “investigated” becomes the noun “investigation”, which now does the job of the subject.' }),
+          rng => C(rng, { prompt: '<em>The decision was made to close the pool.</em> What does this sentence leave out?',
+            right: 'Who made the decision', wrong: ['What was decided', 'What will happen to the pool', 'That a choice was made'],
+            explain: 'Nominalisation (“the decision”) lets a writer leave out who acted. Readers should notice when that information is missing.' }),
+          rng => C(rng, { prompt: 'In <em>The arrival of the kererū surprised everyone</em>, which word is a nominalisation?',
+            right: 'arrival', wrong: ['kererū', 'surprised', 'everyone'],
+            explain: '“Arrival” is a noun made from the verb “arrive”. “Kererū” is a noun but not made from a verb; “surprised” is the verb.' }),
+          rng => C(rng, { prompt: 'Why do science reports often use nominalisation?',
+            right: 'It keeps the focus on processes and results rather than on the people doing them.', wrong: ['It makes every sentence shorter and simpler for young readers.', 'It removes the need for any verbs.', 'It makes the writing sound more casual.'],
+            explain: '“Evaporation of the water left salt crystals” focuses on the process, which suits a formal, objective report.' }),
+          rng => C(rng, { prompt: 'Which noun is spelt correctly?', right: 'maintenance', wrong: ['maintainance', 'maintenence', 'maintainence'], wide: false,
+            explain: 'Maintain → maint<strong>e</strong>nance. The ai of the verb changes to e in the noun.' })
+        ]
+      },
+
+      // 14 · Assimilated prefixes and double letters.
+      {
+        name: 'Year 9: prefixes and double letters', learn: 'assimilated', challenge: 'only',
+        items: [Sci.gen(rng => {
+          const [right, wrong, why] = rng.pick([
+            ['accommodate', ['acommodate', 'accomodate', 'acomodate'], 'ad- became ac- before c, giving cc; the root also has a double m.'],
+            ['illegible', ['ilegible', 'illegable', 'ilegable'], 'in- (not) became il- before l: il + legible.'],
+            ['irresistible', ['iresistible', 'irresistable', 'iresistable'], 'in- (not) became ir- before r: ir + resistible.'],
+            ['immeasurable', ['imeasurable', 'immeasureable', 'imesurable'], 'in- (not) became im- before m: im + measurable.'],
+            ['innumerable', ['inumerable', 'innumerible', 'inumerible'], 'in + numerable: the root starts with n, so there are two.'],
+            ['suppress', ['supress', 'suppres', 'supres'], 'sub- (under) became sup- before p: sup + press.'],
+            ['occur', ['ocur', 'occurr', 'ocurr'], 'ob- became oc- before c: oc + cur.'],
+            ['unnecessary', ['unecessary', 'unneccessary', 'unnecesary'], 'un + necessary: the root starts with n, so there are two.'],
+            ['misspell', ['mispell', 'missspell', 'mispel'], 'mis + spell: the root starts with s, so there are two.'],
+            ['dissatisfied', ['disatisfied', 'dissattisfied', 'disattisfied'], 'dis + satisfied: the root starts with s, so there are two.'],
+            ['disappear', ['dissappear', 'disapear', 'dissapear'], 'dis + appear: appear starts with a, so there is only one s (and appear has its own double p).']
+          ]);
+          return C(rng, {
+            prompt: 'Which spelling is correct?', note: 'Think about the prefix and the root it joins.',
+            right, wrong, wide: false,
+            explain: `<strong>${right}</strong>. ${why}`
+          });
+        })]
+      },
+
+      // 15 · Suffix rules on harder words.
+      {
+        name: 'Year 9: adding suffixes', learn: 'suffixrules', challenge: 'only',
+        items: [Sci.gen(rng => {
+          const [base, suf, out, why] = rng.pick([
+            ['notice', 'able', 'noticeable', 'Keep the e so the c stays soft (/s/).'],
+            ['manage', 'able', 'manageable', 'Keep the e so the g stays soft (/j/).'],
+            ['change', 'able', 'changeable', 'Keep the e so the g stays soft (/j/).'],
+            ['advantage', 'ous', 'advantageous', 'Keep the e so the g stays soft (/j/).'],
+            ['believe', 'able', 'believable', 'Drop the silent e before a suffix starting with a vowel.'],
+            ['adventure', 'ous', 'adventurous', 'Drop the silent e before a suffix starting with a vowel.'],
+            ['sincere', 'ly', 'sincerely', 'Keep the e before a suffix starting with a consonant.'],
+            ['excite', 'ment', 'excitement', 'Keep the e before a suffix starting with a consonant.'],
+            ['argue', 'ment', 'argument', 'This is an exception: the e is dropped even though -ment starts with a consonant.'],
+            ['true', 'ly', 'truly', 'This is an exception: the e is dropped even though -ly starts with a consonant.'],
+            ['necessary', 'ly', 'necessarily', 'The y comes after a consonant, so it changes to i.'],
+            ['beauty', 'ful', 'beautiful', 'The y comes after a consonant, so it changes to i.'],
+            ['employ', 'er', 'employer', 'The y comes after a vowel, so it stays.'],
+            ['enjoy', 'ment', 'enjoyment', 'The y comes after a vowel, so it stays.']
+          ]);
+          return Sci.word(rng, {
+            prompt: `Add <strong>-${suf}</strong> to <strong>${base}</strong>.`,
+            answer: out, placeholder: 'type the new word',
+            explain: `<strong>${out}</strong>. ${why}`
+          });
+        })]
+      },
+
+      // 16 · Confusable words.
+      {
+        name: 'Year 9: confusable words', learn: 'confusables', challenge: 'only',
+        items: [Sci.gen(rng => {
+          const [s, right, other, why] = rng.pick([
+            ['The cold snap could ▢ the kiwifruit harvest.', 'affect', 'effect', '<em>Affect</em> is the verb: to influence something.'],
+            ['The new law had an immediate ▢ on road safety.', 'effect', 'affect', '<em>Effect</em> is the noun: a result. Notice “an” before it.'],
+            ['How did the storm ▢ your whānau?', 'affect', 'effect', '<em>Affect</em> is the verb: how did it influence them?'],
+            ['One ▢ of the drought was higher food prices.', 'effect', 'affect', '<em>Effect</em> is the noun: one result of the drought.'],
+            ['Aroha was ▢ about the surprise party and told no one.', 'discreet', 'discrete', '<em>Discreet</em> means careful not to draw attention.'],
+            ['The experiment was divided into three ▢ stages.', 'discrete', 'discreet', '<em>Discrete</em> means separate and distinct.'],
+            ['The interviewer’s questions were designed to ▢ honest answers.', 'elicit', 'illicit', 'To <em>elicit</em> is to draw out a response.'],
+            ['Customs officers seized ▢ goods at the port.', 'illicit', 'elicit', '<em>Illicit</em> means illegal or not allowed.'],
+            ['Rugby ▢ starts at four o’clock.', 'practice', 'practise', 'Here it is a noun (a training session), so in NZ English it is <em>practice</em>.'],
+            ['I need to ▢ my speech before Friday.', 'practise', 'practice', 'Here it is a verb (to do something), so in NZ English it is <em>practise</em>.'],
+            ['Mum renewed her driver’s ▢.', 'licence', 'license', 'Here it is a noun, so in NZ English it is <em>licence</em>.'],
+            ['The council will ▢ the café to sell food.', 'license', 'licence', 'Here it is a verb, so in NZ English it is <em>license</em>.'],
+            ['My koro gave me some wise ▢.', 'advice', 'advise', '<em>Advice</em> is the noun.'],
+            ['I would ▢ you to bring a raincoat.', 'advise', 'advice', '<em>Advise</em> is the verb.']
+          ]);
+          return C(rng, {
+            prompt: `Which word fits? <em>${s}</em>`,
+            right, wrong: [other], wide: false,
+            explain: why
+          });
+        })]
+      },
+
+      // 17 · Precise synonyms and antonyms.
+      {
+        name: 'Year 9: the precise word', learn: 'precise', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'Which word is the best synonym for <strong>bright</strong> in <em>Aroha is a bright student who learns quickly</em>?',
+            right: 'clever', wrong: ['shiny', 'vivid', 'sunny'], wide: false,
+            explain: 'Here “bright” is about the mind. Shiny, vivid and sunny are synonyms for other meanings of bright: light and colour.' }),
+          rng => C(rng, { prompt: 'Which word is the antonym of <strong>light</strong> in <em>She painted her bedroom a light green</em>?',
+            right: 'dark', wrong: ['heavy', 'serious', 'loud'], wide: false,
+            explain: 'For a colour, the opposite of light is dark. “Heavy” is the opposite of light only when we mean weight.' }),
+          rng => C(rng, { prompt: 'Which word is the antonym of <strong>light</strong> in <em>After we ate the food, the tramping pack felt light</em>?',
+            right: 'heavy', wrong: ['dark', 'dim', 'gloomy'], wide: false,
+            explain: 'Here “light” is about weight, so the opposite is heavy. Dark, dim and gloomy are opposites of light as in brightness.' }),
+          rng => C(rng, { prompt: 'Which word is the best synonym for <strong>fair</strong> in <em>The referee made a fair decision</em>?',
+            right: 'just', wrong: ['pale', 'blond', 'sunny'], wide: false,
+            explain: 'A fair decision treats everyone equally: it is just. Pale and blond fit fair skin or hair; sunny fits fair weather.' }),
+          rng => C(rng, { prompt: 'Which word is the best synonym for <strong>sound</strong> in <em>Her argument was sound</em>?',
+            right: 'valid', wrong: ['noisy', 'asleep', 'audible'], wide: false,
+            explain: 'A sound argument is reasonable and well supported. Noisy and audible relate to sound as noise; asleep fits “sound asleep”.' }),
+          rng => C(rng, { prompt: 'This is for a formal school notice. Which word fits best? <em>Students must ▢ permission before leaving the grounds.</em>',
+            right: 'obtain', wrong: ['grab', 'score', 'snag'], wide: false,
+            explain: '“Obtain” is a formal synonym for “get”. The others are casual and would sound out of place in a formal notice.' }),
+          rng => C(rng, { prompt: 'This is from a formal report. Which word fits best? <em>There was not ▢ evidence to prove the claim.</em>',
+            right: 'sufficient', wrong: ['heaps of', 'loads of', 'plenty'], wide: false,
+            explain: '“Sufficient” is the formal word for “enough”. “Heaps of” and “loads of” are casual, and “not plenty evidence” is not grammatical.' })
         ]
       }
     ]
@@ -641,7 +1043,35 @@
                 ['how', '<em>with great confidence</em>, <em>in a hurry</em>'], ['to what extent', '<em>almost completely</em>, <em>far too</em>']]) },
       { id: 'commas', title: 'Extension: commas or not?',
         text: '<p>Commas go round a relative clause that adds <strong>extra</strong> information, which could be removed: <em>My aunt, who lives in Nelson, is a nurse.</em></p>' +
-              '<p>No commas when the clause tells us <strong>which one</strong>: <em>The student who won will get a prize.</em> Without it, we would not know which student.</p>' }
+              '<p>No commas when the clause tells us <strong>which one</strong>: <em>The student who won will get a prize.</em> Without it, we would not know which student.</p>' },
+      { id: 'typesplus', title: 'Sentence types: tricky cases', years: '9', wide: true,
+        text: '<p>To name a sentence type, find each <strong>subject with its own verb</strong>: each pair is a clause. Then decide which clauses are main (they could stand alone) and which are dependent.</p>' +
+              '<ul><li>Two subjects or two verbs sharing one clause is still <strong>simple</strong>: <em>Mere and Ana ran to the bus and jumped on.</em></li>' +
+              '<li>A long sentence full of phrases can still be <strong>simple</strong>: <em>On the first day of the holidays, after a long drive, we arrived at the bach.</em></li>' +
+              '<li>A relative clause tucked in the middle still counts as a dependent clause: <em>The bus, which is always late, broke down, so we walked.</em> (compound-complex)</li>' +
+              '<li>A semicolon can join two main clauses without a conjunction: <em>The tide was coming in; we moved our towels.</em> (compound)</li></ul>' },
+      { id: 'defining', title: 'Defining and non-defining clauses', years: '9', wide: true,
+        text: '<p>A <strong>defining</strong> (restrictive) relative clause tells us <strong>which one</strong>, so it has no commas. A <strong>non-defining</strong> clause adds extra information about something already identified, so it sits between commas.</p>' +
+              Sci.table(['Sentence', 'What it suggests'], [
+                ['My brother <strong>who lives in Wellington</strong> is a nurse.', 'I have more than one brother; I mean the one in Wellington.'],
+                ['My brother, <strong>who lives in Wellington</strong>, is a nurse.', 'I have one brother; by the way, he lives in Wellington.']]) +
+              '<p><strong>That</strong> is used for defining clauses, so it does not follow a comma. Non-defining clauses use <strong>which</strong> for things and <strong>who</strong> for people.</p>' +
+              '<p>A clause about a name is usually non-defining, because the name already tells us which one: <em>Rotorua, which is famous for its geysers, is busy in summer.</em></p>' },
+      { id: 'moving', title: 'Moving a dependent clause', years: '9',
+        text: '<p>A dependent (subordinate) clause can often go before or after the main clause. When it comes first, a comma usually follows it.</p>' +
+              '<p><em>Although the forecast was grim, we set off.</em><br><em>We set off although the forecast was grim.</em></p>' +
+              '<p>English tends to save the most important information for the <strong>end</strong> of a sentence (end focus). Put the part you want to stress last. Opening with the dependent clause also sets the scene or builds suspense before the main event.</p>' },
+      { id: 'variety', title: 'Varying sentences for effect', years: '9',
+        text: '<ul><li>A <strong>short sentence</strong> after long ones creates impact: <em>We had checked the tent, packed the food and studied the map for weeks. Nothing prepared us for the storm.</em></li>' +
+              '<li>A <strong>fragment</strong> is punctuated as a sentence but has no main clause. Fiction writers use fragments deliberately for drama, pace, or a character’s thoughts: <em>Silence. Then footsteps on the stairs.</em></li>' +
+              '<li>In formal writing (essays, reports, letters), a fragment is usually treated as a mistake: <em>Because the results were unclear.</em> Join it to a main clause.</li></ul>' },
+      { id: 'participial', title: 'Participial phrases', years: '9', wide: true,
+        text: '<p>A <strong>participial phrase</strong> starts with a participle and describes a noun. It packs an extra action into the sentence without adding a clause.</p>' +
+              Sci.table(['Kind', 'Example'], [
+                ['present (-ing)', '<em><strong>Clutching her ticket</strong>, Hana ran for the ferry.</em>'],
+                ['past (-ed, -en)', '<em>The bridge, <strong>damaged by the flood</strong>, was closed.</em>'],
+                ['perfect (having + past participle)', '<em><strong>Having finished the test</strong>, Tama read quietly.</em>']]) +
+              '<p>An opening participial phrase is followed by a comma, and it must describe the subject that comes straight after it.</p>' }
     ],
 
     examples: [
@@ -777,7 +1207,7 @@
         }))
       },
       {
-        name: 'Extension: commas and clauses', learn: 'commas',
+        name: 'Extension: commas and clauses', learn: 'commas', challenge: 'also',
         items: [
           rng => C(rng, { tag: EXT, prompt: 'Which sentence is punctuated correctly?', right: 'My aunt, who lives in Nelson, is a nurse.',
             wrong: ['My aunt who lives in Nelson, is a nurse.', 'My aunt, who lives in Nelson is a nurse.', 'My aunt who, lives in Nelson, is a nurse.'],
@@ -797,6 +1227,158 @@
           rng => C(rng, { tag: EXT, prompt: 'A writer wants to show that one event caused another. Which sentence does this most clearly?',
             right: 'Because the river flooded, the road was closed.', wrong: ['The river flooded. The road was closed.', 'The river flooded, and the road was closed.', 'The river, the road, and the flood.'],
             explain: '“Because” makes the cause-and-effect link explicit; the others leave the reader to infer it.' })
+        ]
+      },
+
+      // ── Year 9 challenge: these positions appear only in the challenge set.
+
+      // 11 · Sort sentences into the four types.
+      {
+        name: 'Year 9: four sentence types', learn: 'typesplus', challenge: 'only',
+        items: [rng => Sci.sort(rng, {
+          prompt: 'What type is each sentence? Find each subject with its own verb first.',
+          bins: ['Simple', 'Compound', 'Complex', 'Compound-complex'],
+          items: [
+            ...['Mere and Ana ran to the bus and jumped on.', 'On the first day of the holidays, after a long drive, we arrived at the bach.',
+                'Clutching her ticket, Hana raced along the wharf.', 'The old dog and the new puppy slept by the fire all afternoon.'].map(text => ({ text, bin: 0 })),
+            ...['The ferry was cancelled, so we stayed another night in Picton.', 'Tama wanted pizza, but his sisters wanted fish and chips.',
+                'The tide was coming in; we moved our towels higher up the beach.'].map(text => ({ text, bin: 1 })),
+            ...['The waka that won the race was crewed by students.', 'If the river rises any higher, the road will close.',
+                'Hana, who had trained all winter, won easily.'].map(text => ({ text, bin: 2 })),
+            ...['Although the forecast was grim, we set off, and the weather held.', 'The bridge that crosses the river was closed, so we took the long way.',
+                'We stayed inside because it was raining, but the power soon went out.', 'Tama laughed when the dog stole the sausage, but Dad was not amused.'].map(text => ({ text, bin: 3 }))
+          ],
+          pick: 6,
+          explain: 'Shared subjects or verbs (Mere and Ana ran … and jumped) and long phrases do not add clauses, so those sentences are simple. ' +
+                   'Two main clauses make a compound sentence; a main clause with a dependent clause (if, who, that, because) makes a complex one; both together make a compound-complex sentence.'
+        })]
+      },
+
+      // 12 · Which type is this?
+      {
+        name: 'Year 9: name the type', learn: 'typesplus', challenge: 'only',
+        items: [
+          ['After the long, hot, exhausting walk up the hill, the whole class collapsed under the trees.', 0, 'There is only one subject–verb pair (the whole class collapsed). Everything else is phrases.'],
+          ['Mere finished her essay and handed it in early.', 0, 'One subject (Mere) with two verbs (finished, handed) is still one clause.'],
+          ['Waiting for the results, Ana and her brother paced up and down.', 0, '“Waiting for the results” is a participial phrase, not a clause, and “Ana and her brother paced” is one clause.'],
+          ['The bus was late; nobody was surprised.', 1, 'Two main clauses (the bus was late; nobody was surprised) joined by a semicolon.'],
+          ['Whatever happens tomorrow, I will be proud of you.', 2, '“Whatever happens tomorrow” is a dependent clause; “I will be proud of you” is the main clause.'],
+          ['The kids who live next door built a hut, and they let us use it.', 3, 'Two main clauses (the kids built a hut; they let us use it) plus a dependent clause (who live next door).'],
+          ['The teacher, who had seen everything, said nothing, and the class went quiet.', 3, 'Two main clauses joined by “and”, plus the relative clause “who had seen everything”.']
+        ].map(([s, t, why]) => () => {
+          const types = ['Simple', 'Compound', 'Complex', 'Compound-complex'];
+          return {
+            prompt: `What type of sentence is this? <em>${s}</em>`,
+            input: { kind: 'choice', options: types.map((o, k) => ({ html: o, right: k === t })), correct: t },
+            explain: `${types[t]}. ${why}`
+          };
+        })
+      },
+
+      // 13 · Defining and non-defining clauses.
+      {
+        name: 'Year 9: commas change the meaning', learn: 'defining', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: '<em>My cousin who lives in Ōtautahi is coming to visit.</em> What does the lack of commas suggest?',
+            right: 'The writer has more than one cousin, and means the one in Ōtautahi.', wrong: ['The writer has only one cousin.', 'The cousin used to live in Ōtautahi.', 'Nothing: the commas would make no difference.'],
+            explain: 'With no commas, the clause is defining: it tells us which cousin. That only makes sense if there are others.' }),
+          rng => C(rng, { prompt: '<em>The apples that were bruised went into the chutney.</em> What happened?',
+            right: 'Only the bruised apples went into the chutney.', wrong: ['All the apples were bruised, and they all went into the chutney.', 'None of the apples went into the chutney.', 'The bruised apples were thrown away.'],
+            explain: '“That were bruised” is a defining clause: it picks out which apples. The others were left out.' }),
+          rng => C(rng, { prompt: '<em>The houses, which were built on the cliff, were evacuated.</em> Compare it with the same sentence without commas. Which statement is true?',
+            right: 'With commas, all the houses were evacuated; without commas, only the ones on the cliff were.', wrong: ['Without commas, all the houses were evacuated.', 'The commas make no difference to the meaning.', 'With commas, only the houses on the cliff were evacuated.'],
+            explain: 'With commas the clause is extra information about all the houses. Without commas it defines which houses: only those on the cliff.' }),
+          rng => C(rng, { prompt: 'The writer has two sisters and wants to say which one is a doctor. Which sentence does that?',
+            right: 'My sister who lives in Hamilton is a doctor.', wrong: ['My sister, who lives in Hamilton, is a doctor.', 'My sister, that lives in Hamilton, is a doctor.', 'My sister who lives in Hamilton, is a doctor.'],
+            explain: 'A defining clause, with no commas, picks out which sister. With a pair of commas it would suggest she is the only sister; “that” never follows a comma; and a single comma between the subject and verb is a mistake.' }),
+          rng => C(rng, { prompt: 'Which sentence is punctuated correctly?',
+            right: 'Rotorua, which is famous for its geysers, is busy in summer.', wrong: ['Rotorua, that is famous for its geysers, is busy in summer.', 'Rotorua which is famous for its geysers is busy in summer.', 'Rotorua, which is famous for its geysers is busy in summer.'],
+            explain: 'There is only one Rotorua, so the clause adds extra information and needs a pair of commas. Non-defining clauses use “which”, not “that”.' }),
+          rng => C(rng, { prompt: 'Which sentence uses “that” correctly?',
+            right: 'The track that leads to the waterfall is closed.', wrong: ['The Tongariro Crossing, that is very popular, was closed.', 'My mother, that is a teacher, drove us home.', 'The track, that leads to the waterfall, is closed.'],
+            explain: '“That” introduces defining clauses, with no commas. Non-defining clauses use “which” for things and “who” for people.' })
+        ]
+      },
+
+      // 14 · True or false.
+      {
+        name: 'Year 9: true or false', learn: 'typesplus', challenge: 'only',
+        items: [
+          rng => TF(rng, { statement: 'A non-defining relative clause is set off with commas.', answer: true, learn: 'defining', explain: 'It adds extra information, so commas mark it off: <em>Rotorua, which is famous for its geysers, is busy in summer.</em>' }),
+          rng => TF(rng, { statement: '“That” is the usual word to start a relative clause after a comma.', answer: false, learn: 'defining', explain: '“That” starts defining clauses, which have no commas. After a comma, use “which” or “who”.' }),
+          rng => TF(rng, { statement: 'A sentence with two verbs must be a compound sentence.', answer: false, learn: 'typesplus', explain: '<em>Mere finished her essay and handed it in.</em> One subject shares both verbs, so it is a simple sentence.' }),
+          rng => TF(rng, { statement: 'A dependent clause can come before or after the main clause.', answer: true, learn: 'moving', explain: '<em>Although it rained, we played.</em> / <em>We played although it rained.</em>' }),
+          rng => TF(rng, { statement: 'Sentence fragments are mistakes in every kind of writing.', answer: false, learn: 'variety', explain: 'Fiction writers use fragments deliberately for effect: <em>Silence. Then footsteps.</em> In formal writing they are usually treated as mistakes.' }),
+          rng => TF(rng, { statement: 'An opening participial phrase should describe the subject that comes straight after it.', answer: true, learn: 'participial', explain: '<em>Clutching her ticket, Hana ran for the ferry.</em> Hana is the one clutching.' }),
+          rng => TF(rng, { statement: 'A compound-complex sentence has at least two main clauses and at least one dependent clause.', answer: true, learn: 'typesplus', explain: '<em>Although it was raining, the game went ahead, and we won.</em>' }),
+          rng => TF(rng, { statement: '<em>Having finished the test, Tama read quietly</em> is a complex sentence.', answer: false, learn: 'participial', explain: '“Having finished the test” is a participial phrase, not a clause: it has no subject of its own. The sentence is simple.' })
+        ]
+      },
+
+      // 15 · Structure for effect.
+      {
+        name: 'Year 9: structure for effect', learn: 'variety', challenge: 'only',
+        items: [
+          rng => C(rng, { learn: 'moving', prompt: 'Which version builds suspense by holding back the main event until the end?',
+            right: 'As the lights went down and the crowd fell silent, the curtain slowly rose.', wrong: ['The curtain slowly rose as the lights went down and the crowd fell silent.'],
+            explain: 'Opening with the dependent clause sets the scene first, so the main event (the curtain rising) arrives last, where it has most weight.' }),
+          rng => C(rng, { learn: 'moving', prompt: 'Which sentence is punctuated correctly?',
+            right: 'When the siren sounded, everyone left the pool.', wrong: ['When the siren sounded everyone, left the pool.', 'When, the siren sounded everyone left the pool.', 'When the siren, sounded, everyone left the pool.'],
+            explain: 'When the dependent clause comes first, the comma goes at the end of it, before the main clause.' }),
+          rng => C(rng, { prompt: '<em>The door creaked open. Darkness. Then a voice.</em> Why does the writer use fragments here?',
+            right: 'To build tension in short, sharp bursts, like the narrator’s racing thoughts.', wrong: ['Because the writer forgot the verbs.', 'To make the passage sound more formal.', 'Because every story must use fragments.'],
+            explain: 'Fragments in fiction slow the reader down and focus attention on single details, which builds tension.' }),
+          rng => C(rng, { prompt: '<em>For three days we tramped through bush, crossed swollen rivers and slept in damp huts, always hoping the weather would clear. It didn’t.</em> What is the effect of the last sentence?',
+            right: 'Its shortness after a long sentence makes the disappointment hit hard.', wrong: ['It slows the pace and adds description.', 'It adds more detail about the huts.', 'It is a fragment, so it is a mistake.'],
+            explain: 'A short sentence after a long one stands out. “It didn’t” is a complete sentence (subject and verb), not a fragment.' }),
+          rng => C(rng, { prompt: 'Every sentence in a student’s paragraph is long and complex. What is the best advice?',
+            right: 'Vary the lengths: add some short sentences for impact and pace.', wrong: ['Make the sentences even longer.', 'Turn every sentence into a fragment.', 'Remove all the dependent clauses.'],
+            explain: 'Variety keeps readers engaged. Short sentences give emphasis; longer ones carry linked ideas.' })
+        ]
+      },
+
+      // 16 · Fragments in formal writing.
+      {
+        name: 'Year 9: find the fragment', learn: 'variety', challenge: 'only',
+        items: [
+          [['Water samples were taken from three streams.', 'The samples were tested for nitrates.', 'Because the levels at one site were very high.', 'Further testing is recommended.'], 2,
+            '“Because the levels at one site were very high” is a dependent clause with no main clause. Join it: <em>Further testing is recommended because the levels at one site were very high.</em>'],
+          [['Our class surveyed 120 students about lunch.', 'Most wanted more healthy options.', 'Especially fresh fruit and salads.', 'We will share the results with the canteen.'], 2,
+            '“Especially fresh fruit and salads” has no subject or verb. Join it: <em>Most wanted more healthy options, especially fresh fruit and salads.</em>'],
+          [['The school garden was started in 2019.', 'Students who volunteer at lunchtime.', 'The garden now supplies the food technology room.', 'We hope to expand it next year.'], 1,
+            '“Students who volunteer at lunchtime” is a noun with a relative clause, but no main verb. Add one: <em>Students who volunteer at lunchtime look after it.</em>'],
+          [['Kākāpō are flightless, nocturnal parrots.', 'Found only in New Zealand.', 'Their numbers fell sharply after people arrived.', 'Today, every bird is carefully monitored.'], 1,
+            '“Found only in New Zealand” is a participial phrase with no subject or main verb. Join it: <em>Kākāpō are flightless, nocturnal parrots found only in New Zealand.</em>'],
+          [['The trip to Te Papa was a success.', 'Students learned about Te Tiriti o Waitangi.', 'Many asked thoughtful questions.', 'Although the bus left late.'], 3,
+            '“Although the bus left late” is a dependent clause on its own. Join it: <em>Although the bus left late, the trip was a success.</em>']
+        ].map(([lines, wrong, why]) => rng => Sci.spot(rng, {
+          prompt: 'This is from a formal report. One line is a sentence fragment that should be fixed.',
+          lines, wrong, cue: 'Click the fragment.', explain: why
+        }))
+      },
+
+      // 17 · Participial phrases.
+      {
+        name: 'Year 9: participial phrases', learn: 'participial', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'Which words form the participial phrase? <em>Hana, gripping the rail tightly, edged across the swing bridge.</em>',
+            right: 'gripping the rail tightly', wrong: ['edged across the swing bridge', 'Hana, gripping', 'the rail tightly, edged'],
+            explain: 'The phrase starts with the participle “gripping” and describes Hana. “Edged” is the main verb.' }),
+          rng => C(rng, { prompt: '<em>Tama finished his homework. He went outside to play.</em> Which sentence joins these with a participial phrase?',
+            right: 'Having finished his homework, Tama went outside to play.', wrong: ['Tama finished his homework, he went outside to play.', 'Having finished his homework, the ball was kicked around outside.', 'Tama finished his homework, and he went outside to play.'],
+            explain: '“Having finished his homework” is a participial phrase describing Tama. Of the others, one joins two sentences with only a comma, one says the ball finished the homework, and one is correct but compound, with no participial phrase.' }),
+          rng => C(rng, { prompt: 'Which sentence contains a <strong>past</strong> participial phrase?',
+            right: 'The bridge, damaged by the flood, was closed for a month.', wrong: ['Running late, we missed the bus.', 'Having crossed the bridge, we stopped for lunch.', 'The bridge was closed because of the flood.'],
+            explain: '“Damaged by the flood” starts with a past participle and describes the bridge. “Running late” is a present participial phrase, “Having crossed” is perfect, and the last has none.' }),
+          rng => C(rng, { prompt: 'Which sentence is punctuated correctly?',
+            right: 'Exhausted by the climb, the trampers rested at the hut.', wrong: ['Exhausted, by the climb the trampers rested at the hut.', 'Exhausted by the climb the trampers, rested at the hut.', 'Exhausted by, the climb the trampers rested at the hut.'],
+            explain: 'The comma goes after the whole opening participial phrase, just before the subject it describes.' }),
+          rng => C(rng, { prompt: '<em>The crowd poured onto the field, cheering and waving flags.</em> What does the participial phrase add?',
+            right: 'Extra actions happening at the same time, without a new clause', wrong: ['The reason the crowd poured onto the field', 'The place where it happened', 'A second main clause'],
+            explain: '“Cheering and waving flags” describes what the crowd was doing as it poured on. It has no subject of its own, so it is a phrase, not a clause.' }),
+          rng => C(rng, { prompt: 'Which is a <strong>perfect</strong> participial phrase?',
+            right: 'Having eaten lunch', wrong: ['Eating lunch', 'Eaten by the dog', 'After lunch'], wide: false,
+            explain: 'The perfect form uses “having” + a past participle, and shows one action finished before the next. “Eating lunch” is present, “Eaten by the dog” is past, and “After lunch” is a prepositional phrase.' })
         ]
       }
     ]
@@ -855,7 +1437,40 @@
               '<p>A <strong>gerund</strong> is an -ing verb acting as a noun: <em><strong>Swimming</strong> is fun. I love <strong>reading</strong>.</em></p>' },
       { id: 'dangling', title: 'Extension: dangling participles',
         text: '<p>A participle phrase at the start must describe the subject that follows.</p>' +
-              '<p>✗ <em>Running for the bus, my bag fell open.</em> (the bag was not running)</p><p>✓ <em>Running for the bus, I felt my bag fall open.</em></p>' }
+              '<p>✗ <em>Running for the bus, my bag fell open.</em> (the bag was not running)</p><p>✓ <em>Running for the bus, I felt my bag fall open.</em></p>' },
+      { id: 'perfect', title: 'Choosing past tenses', years: '9', wide: true,
+        text: Sci.table(['Tense', 'Form', 'Use it for', 'Example'], [
+                ['simple past', 'walked, wrote', 'a finished action at a past time', 'We <strong>visited</strong> Rotorua last year.'],
+                ['present perfect', 'has / have + past participle', 'a past action linked to now, with no finished time given', 'I <strong>have visited</strong> Rotorua twice.'],
+                ['past perfect', 'had + past participle', 'an action <strong>before</strong> another past moment', 'The bus <strong>had left</strong> when we arrived.']]) +
+              '<p>Do not use the present perfect with a finished time: ✗ <em>I have seen it yesterday.</em> ✓ <em>I saw it yesterday.</em></p>' +
+              '<p>In a story told in the past, the past perfect signals a step further back (a flashback). Then the story returns to the simple past.</p>' },
+      { id: 'agreement', title: 'Subject–verb agreement', years: '9',
+        text: '<p>A verb must <strong>agree</strong> with its subject: <em>the dog bark<strong>s</strong></em>, <em>the dogs bark</em>.</p>' +
+              '<p>A phrase between the subject and the verb does not change the subject. Find the main noun and ignore the rest:</p>' +
+              '<p><em>The <strong>box</strong> of old photos <strong>is</strong> on the shelf.</em> (the box is)<br><em><strong>One</strong> of my cousins <strong>lives</strong> in Whanganui.</em> (one lives)</p>' },
+      { id: 'agree-tricky', title: 'Tricky subjects', years: '9', wide: true,
+        text: Sci.table(['Subject', 'Verb', 'Example'], [
+                ['<em>each, every, everyone, nobody</em>', 'singular', '<em>Each of the players <strong>has</strong> a number.</em>'],
+                ['two subjects joined by <em>and</em>', 'plural', '<em>Ana and Tom <strong>are</strong> here.</em>'],
+                ['<em>neither … nor</em>, <em>either … or</em>', 'agrees with the <strong>nearer</strong> subject', '<em>Neither the coach nor the players <strong>were</strong> ready.</em>'],
+                ['<em>many, several, both, a number of</em>', 'plural', '<em>Many of the shops <strong>are</strong> closed.</em>'],
+                ['a <strong>collective noun</strong> (team, class, whānau) acting as one group', 'usually singular', '<em>The class <strong>is</strong> on the bus.</em>']]) },
+      { id: 'modal', title: 'Modal verbs', years: '9', wide: true,
+        text: '<p><strong>Modal verbs</strong> (can, could, may, might, should, will, would, must) sit before a main verb and show how <strong>certain</strong> or how <strong>necessary</strong> something is.</p>' +
+              Sci.table(['', 'Weaker', 'Middle', 'Stronger'], [
+                ['Certainty', 'It <strong>might</strong> rain.', 'It <strong>should</strong> rain.', 'It <strong>will</strong> rain.'],
+                ['Obligation', 'You <strong>could</strong> bring a hat.', 'You <strong>should</strong> bring a hat.', 'You <strong>must</strong> bring a hat.']]) +
+              '<p><em>May</em> can give permission: <em>You <strong>may</strong> leave.</em> <em>Must</em> can also show a confident conclusion from evidence: <em>Her car is here, so she <strong>must</strong> be home.</em></p>' +
+              '<p>Careful writers match the modal to the evidence: one small test only shows the result <em>may</em> be true.</p>' },
+      { id: 'word-class', title: 'Words that change class', years: '9',
+        text: '<p>Many English words belong to more than one <strong>word class</strong>. The job the word does in the sentence decides its class.</p>' +
+              '<ul><li><em>I went for a <strong>run</strong>.</em> noun (“a” comes before it)</li><li><em>I <strong>run</strong> every morning.</em> verb (the action)</li>' +
+              '<li><em>a <strong>light</strong> bag</em> adjective; <em>turn on the <strong>light</strong></em> noun; <em><strong>light</strong> the candle</em> verb</li></ul>' },
+      { id: 'abstract-verb', title: 'Abstract nouns from verbs', years: '9',
+        text: '<p>Abstract nouns also come from <strong>verbs</strong>, often with the endings -tion, -sion, -ment, -ance, -ence or -al:</p>' +
+              '<p>decide → deci<strong>sion</strong>, argue → argu<strong>ment</strong>, refuse → refus<strong>al</strong>, perform → perform<strong>ance</strong>, explain → explan<strong>ation</strong>.</p>' +
+              '<p>Watch the spelling: the final e often drops (argue → argument), and some words change more (explain → explanation).</p>' }
     ],
 
     examples: [
@@ -976,7 +1591,7 @@
         ]
       },
       {
-        name: 'Extension: trickier verbs', learn: 'dangling',
+        name: 'Extension: trickier verbs', learn: 'dangling', challenge: 'also',
         items: [
           rng => C(rng, { tag: EXT, prompt: 'Which sentence has a dangling participle?', right: 'Running for the bus, my bag fell open.',
             wrong: ['Running for the bus, I felt my bag fall open.', 'My bag fell open as I ran for the bus.', 'While I was running for the bus, my bag fell open.'],
@@ -994,6 +1609,168 @@
           rng => C(rng, { tag: EXT, prompt: 'Which abstract noun names the quality of being <strong>generous</strong>?', right: 'generosity', wrong: ['generousness', 'generation', 'generousity'],
             explain: '“Generosity” drops the u of generous before -ity, like curious → curiosity.' })
         ]
+      },
+
+      // ── Year 9 challenge: these positions appear only in the challenge set.
+
+      // 11 · Past, present perfect or past perfect.
+      {
+        name: 'Year 9: choosing past tenses', learn: 'perfect', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'Which verb fits? <em>By the time the ambulance arrived, the lifeguard ▢ the swimmer to shore.</em>',
+            right: 'had pulled', wrong: ['has pulled', 'pulls', 'will pull'], wide: false,
+            explain: 'The pulling happened before the ambulance arrived, another past moment, so it takes the past perfect: had + past participle.' }),
+          rng => C(rng, { prompt: 'Which verb fits? <em>I ▢ my phone yesterday, and I still can’t find it.</em>',
+            right: 'lost', wrong: ['have lost', 'had been losing', 'will lose'], wide: false,
+            explain: '“Yesterday” is a finished time, so it takes the simple past. The present perfect (have lost) does not go with a finished time.' }),
+          rng => C(rng, { prompt: 'Which verb fits? <em>Mere ▢ to Australia three times, so she knows the airport well.</em>',
+            right: 'has been', wrong: ['had been', 'was being', 'will be'], wide: false,
+            explain: 'Her trips are linked to now (she knows the airport now) and no finished time is given, so the present perfect fits.' }),
+          rng => C(rng, { prompt: 'Which verb fits? <em>Our whānau ▢ in Ōtautahi since 2019.</em>',
+            right: 'has lived', wrong: ['lived', 'lives', 'had lived'], wide: false,
+            explain: '“Since 2019” runs from the past up to now, so it takes the present perfect. “Had lived” would mean they no longer live there at some past moment.' }),
+          rng => C(rng, { prompt: 'Which verb fits? <em>When Tama got home, he realised he ▢ his key at school.</em>',
+            right: 'had left', wrong: ['has left', 'leaves', 'will leave'], wide: false,
+            explain: 'Leaving the key came before getting home and realising, so the earlier action takes the past perfect.' }),
+          rng => C(rng, { prompt: 'Which sentence is correct?',
+            right: 'I saw that film last weekend.', wrong: ['I have seen that film last weekend.', 'I have saw that film last weekend.', 'I seen that film last weekend.'],
+            explain: '“Last weekend” is a finished time, so use the simple past “saw”. “Have seen” cannot take a finished time, and “have saw” and “I seen” use the wrong verb form.' }),
+          rng => C(rng, { prompt: 'Which verb fits? <em>Kiri stared at the empty paddock. Only a week earlier, it ▢ full of sheep.</em>',
+            right: 'had been', wrong: ['has been', 'is', 'will be'], wide: false,
+            explain: 'The story is in the past, and “a week earlier” steps further back, so the past perfect marks the flashback.' })
+        ]
+      },
+
+      // 12 · Tense errors in a passage.
+      {
+        name: 'Year 9: tense errors in a passage', learn: 'perfect', challenge: 'only',
+        items: [
+          [['Last summer we drove to Tauranga.', 'Dad had booked the campsite months earlier.', 'On the first night, it has rained heavily.', 'Luckily, the tent stayed dry.'], 2,
+            '“The first night” is a finished past time, so it needs the simple past: “it rained heavily”.'],
+          [['Aroha opened the old letter.', 'Her grandmother has written it in 1975.', 'The ink had faded to a pale brown.', 'Aroha read it twice before she spoke.'], 1,
+            'The writing happened before Aroha opened it, at a finished time (1975): “Her grandmother had written it in 1975.” The present perfect cannot take a finished time.'],
+          [['The match started at two o’clock.', 'Within ten minutes, the other team scored twice.', 'By half-time, we have given up hope.', 'In the second half, though, we fought back.'], 2,
+            'Giving up hope happened before another past moment (half-time), so it needs the past perfect: “we had given up hope”.'],
+          [['I have lived in Nelson all my life.', 'I have seen the harbour in every season.', 'Last winter I have watched a storm smash the wharf.', 'Even so, I have never wanted to leave.'], 2,
+            '“Last winter” is a finished time, so it needs the simple past: “Last winter I watched a storm smash the wharf.”'],
+          [['The detective looked around the room.', 'The window was open, and the safe was empty.', 'Clearly, the thief escapes through the window.', 'She picked up the phone and called for backup.'], 2,
+            'The escape happened before the detective arrived, so it needs the past perfect: “the thief had escaped through the window”.'],
+          [['When we reached the hut, it was getting dark.', 'Someone had left a pile of dry wood by the fire.', 'We are very grateful.', 'Within minutes, the hut was warm.'], 2,
+            'The story is in the past, so “We are” slips into the present. It should be “We were very grateful.”']
+        ].map(([lines, wrong, why]) => rng => Sci.spot(rng, {
+          prompt: 'One sentence in this paragraph uses the wrong tense.', lines, wrong,
+          cue: 'Click the sentence with the tense error.', explain: why
+        }))
+      },
+
+      // 13 · Agreement across a phrase.
+      {
+        name: 'Year 9: subject–verb agreement', learn: 'agreement', challenge: 'only',
+        items: [
+          ['The box of old photos ▢ on the top shelf.', 'is', 'are', 'box', 'of old photos'],
+          ['One of my cousins ▢ in Whanganui.', 'lives', 'live', 'One', 'of my cousins'],
+          ['The list of winners ▢ on the noticeboard.', 'is', 'are', 'list', 'of winners'],
+          ['The students in Room 12 ▢ going on camp.', 'are', 'is', 'students', 'in Room 12'],
+          ['The quality of these photos ▢ excellent.', 'is', 'are', 'quality', 'of these photos'],
+          ['The leaves on the old pōhutukawa ▢ turning brown.', 'are', 'is', 'leaves', 'on the old pōhutukawa'],
+          ['The sound of the waves ▢ me fall asleep.', 'helps', 'help', 'sound', 'of the waves']
+        ].map(([s, right, wrong, subj, phrase]) => rng => C(rng, {
+          prompt: `Which verb agrees with the subject? <em>${s}</em>`, right, wrong: [wrong], wide: false,
+          explain: `The subject is “${subj}”. The phrase “${phrase}” sits between the subject and the verb but does not change it, so the verb is “${right}”.`
+        }))
+      },
+
+      // 14 · Tricky subjects.
+      {
+        name: 'Year 9: tricky subjects', learn: 'agree-tricky', challenge: 'only',
+        items: [
+          rng => Sci.sort(rng, {
+            prompt: 'Which verb does each sentence need?', bins: ['is', 'are'],
+            items: [
+              ...['Each of the players ▢ ready.', 'Everyone in the hall ▢ waiting.', 'Neither the players nor the coach ▢ happy.', 'Either the twins or their mum ▢ coming.',
+                  'Nobody in our class ▢ absent.', 'Every one of the eggs ▢ broken.'].map(text => ({ text, bin: 0 })),
+              ...['Neither the coach nor the players ▢ happy.', 'Either Mum or the twins ▢ coming.', 'Ana and her brother ▢ in the kapa haka group.', 'Both of the buses ▢ late.',
+                  'Many of the students ▢ tired.', 'The coach and the captain ▢ pleased.'].map(text => ({ text, bin: 1 }))
+            ],
+            pick: 6,
+            explain: 'Each, every, everyone and nobody take a singular verb. Two subjects joined by “and”, and words like many and both, take a plural verb. With neither … nor and either … or, the verb agrees with the nearer subject.'
+          }),
+          rng => Sci.sort(rng, {
+            prompt: 'Which verb does each sentence need?', bins: ['has', 'have'],
+            items: [
+              ...['Each of the girls ▢ a locker.', 'Everybody ▢ finished the test.', 'Neither the twins nor their cousin ▢ a ticket.', 'Every student ▢ a laptop.',
+                  'Not one of the shops ▢ any milk left.'].map(text => ({ text, bin: 0 })),
+              ...['Neither their cousin nor the twins ▢ tickets.', 'Tama and Hemi ▢ finished the test.', 'All of the girls ▢ lockers.', 'Several of the shops ▢ closed early.',
+                  'A number of students ▢ asked for extra time.'].map(text => ({ text, bin: 1 }))
+            ],
+            pick: 6,
+            explain: 'Each, every, everybody and “not one” take a singular verb. Two subjects joined by “and”, and words like all, several and “a number of”, take a plural verb. With neither … nor, the verb agrees with the nearer subject.'
+          })
+        ]
+      },
+
+      // 15 · Modal verbs.
+      {
+        name: 'Year 9: modal verbs', learn: 'modal', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'The forecast says rain is possible, but not likely. Which sentence matches?',
+            right: 'It might rain tomorrow.', wrong: ['It will rain tomorrow.', 'It must rain tomorrow.', 'It is going to rain tomorrow.'],
+            explain: '“Might” shows a weak possibility. “Will” and “is going to” sound certain, and “must” sounds like a requirement or a confident conclusion.' }),
+          rng => C(rng, { prompt: 'The school rule is that everyone wears a hat at lunchtime in Terms 1 and 4. Which sentence states the rule?',
+            right: 'Students must wear a hat at lunchtime.', wrong: ['Students might wear a hat at lunchtime.', 'Students could wear a hat at lunchtime if they like.', 'Students would wear a hat at lunchtime.'],
+            explain: '“Must” shows a requirement. “Might” and “could” make it sound optional.' }),
+          rng => C(rng, { prompt: 'Which sentence gives <strong>advice</strong>, not a rule?',
+            right: 'You should drink water before the race.', wrong: ['You must show your ticket at the gate.', 'Runners must stay inside the cones.', 'All entries must be in by Friday.'],
+            explain: '“Should” recommends; “must” requires.' }),
+          rng => C(rng, { prompt: 'A student has results from one small test. Which conclusion is worded best?',
+            right: 'This result suggests the fertiliser may help plants grow.', wrong: ['This result proves the fertiliser will always help plants grow.', 'This result means the fertiliser must help plants grow.', 'The fertiliser definitely helps plants grow.'],
+            explain: 'One small test is limited evidence, so a careful writer uses a cautious modal: “may”. The others claim more certainty than the evidence gives.' }),
+          rng => C(rng, { prompt: 'Which modal fits? <em>The lights are on and her car is in the driveway. She ▢ be home.</em> The writer is confident, based on the evidence.',
+            right: 'must', wrong: ['might', 'could', 'may'], wide: false,
+            explain: 'Here “must” shows a confident conclusion drawn from evidence. “Might”, “could” and “may” show only a possibility.' }),
+          rng => C(rng, { prompt: 'Which sentence shows the strongest obligation?',
+            right: 'Visitors must sign in at the office.', wrong: ['Visitors should sign in at the office.', 'Visitors may sign in at the office.', 'Visitors could sign in at the office.'],
+            explain: '“Must” is a requirement. “Should” is advice, and “may” and “could” make it optional.' }),
+          rng => C(rng, { prompt: 'What does “may” show in <em>You may leave when you have finished the test.</em>?',
+            right: 'Permission', wrong: ['A requirement', 'Certainty', 'Past time'], wide: false,
+            explain: 'The teacher is allowing the students to leave: “may” gives permission here.' })
+        ]
+      },
+
+      // 16 · Words that change class.
+      {
+        name: 'Year 9: words that change class', learn: 'word-class', challenge: 'only',
+        items: [
+          ['Koro went for a long <u>walk</u> on the beach.', 'noun', '“A long” comes before it: it names the activity.'],
+          ['We <u>walk</u> to school every day.', 'verb', 'It is the action that “we” do.'],
+          ['Please <u>light</u> the candles on the cake.', 'verb', 'It is the action: what should you do to the candles?'],
+          ['This backpack is surprisingly <u>light</u>.', 'adjective', 'It describes the backpack, after the linking verb “is”.'],
+          ['She ran <u>fast</u> to catch the bus.', 'adverb', 'It tells how she ran, so it describes the verb.'],
+          ['Many Muslim families <u>fast</u> during Ramadan.', 'verb', 'It is the action: to go without food.'],
+          ['The children cheered as the <u>fast</u> cars raced past.', 'adjective', 'It describes the cars.']
+        ].map(([s, right, why]) => rng => C(rng, {
+          prompt: `What word class is the underlined word? <em>${s}</em>`, right,
+          wrong: ['noun', 'verb', 'adjective', 'adverb'].filter(w => w !== right), wide: false,
+          explain: `${why} The same word can belong to different classes; its job in the sentence decides.`
+        }))
+      },
+
+      // 17 · Abstract nouns from verbs.
+      {
+        name: 'Year 9: abstract nouns from verbs', learn: 'abstract-verb', challenge: 'only',
+        items: [Sci.gen(rng => {
+          const [verb, noun] = rng.pick([
+            ['decide', 'decision'], ['argue', 'argument'], ['refuse', 'refusal'], ['perform', 'performance'], ['explain', 'explanation'],
+            ['arrive', 'arrival'], ['disappoint', 'disappointment'], ['describe', 'description'], ['protect', 'protection'], ['achieve', 'achievement'],
+            ['persist', 'persistence'], ['admire', 'admiration'], ['confuse', 'confusion'], ['appear', 'appearance'], ['exist', 'existence'], ['deny', 'denial']
+          ]);
+          return Sci.word(rng, {
+            prompt: `Write the abstract noun that comes from the verb <strong>${verb}</strong>.`,
+            note: 'Common endings: -tion, -sion, -ment, -ance, -ence, -al.',
+            answer: noun, placeholder: 'type the noun',
+            explain: `${verb} → <strong>${noun}</strong>. It names an idea, not a thing you can touch.`
+          });
+        })]
       }
     ]
   });
@@ -1056,7 +1833,34 @@
               '<p>The object of the active sentence becomes the subject of the passive one.</p>' },
       { id: 'hide', title: 'Extension: passive that hides',
         text: '<p>Passive voice can leave out <strong>who is responsible</strong>: <em>Mistakes were made.</em> (By whom?)</p>' +
-              '<p>Critical readers ask who did the action when a text does not say.</p>' }
+              '<p>Critical readers ask who did the action when a text does not say.</p>' },
+      { id: 'passive-tenses', title: 'The passive in every tense', years: '9', wide: true,
+        text: '<p>The passive is a form of <strong>be</strong> in the tense you need, plus the <strong>past participle</strong>.</p>' +
+              Sci.table(['Tense', 'Active', 'Passive'], [
+                ['present', 'Volunteers check the traps.', 'The traps <strong>are checked</strong>.'],
+                ['present continuous', 'Builders are building the hall.', 'The hall <strong>is being built</strong>.'],
+                ['past', 'The council closed the road.', 'The road <strong>was closed</strong>.'],
+                ['present perfect', 'Someone has stolen my bike.', 'My bike <strong>has been stolen</strong>.'],
+                ['past perfect', 'The judges had chosen the winner.', 'The winner <strong>had been chosen</strong>.'],
+                ['future', 'They will open the bridge.', 'The bridge <strong>will be opened</strong>.']]) },
+      { id: 'formal-passive', title: 'The passive in formal writing', years: '9',
+        text: '<p>Science reports and formal writing often use the passive because the <strong>process</strong> matters more than the person. Anyone could repeat <em>The solution was stirred for two minutes</em>.</p>' +
+              '<p>Impersonal openings report a view or finding without naming who holds it: <em>It <strong>was found</strong> that …</em>, <em>It <strong>is believed</strong> that …</em></p>' +
+              '<p>Formal notices use it to sound polite and impersonal: <em>Parents <strong>are reminded</strong> that …</em></p>' },
+      { id: 'cohesion', title: 'Voice and flow', years: '9',
+        text: '<p>A paragraph flows when each sentence starts with something the reader already knows and ends with something new. Choosing the voice lets you keep the topic as the <strong>subject</strong>.</p>' +
+              '<p><em>The kākāpō is a flightless parrot. <strong>It</strong> was almost wiped out by stoats and rats.</em></p>' +
+              '<p>The passive keeps “it” (the kākāpō) at the front, so the paragraph stays about the bird.</p>' },
+      { id: 'nominal', title: 'Nominalisation', years: '9',
+        text: '<p><strong>Nominalisation</strong> turns a verb or adjective into a noun: <em>decide → decision</em>, <em>close → closure</em>, <em>grow → growth</em>, <em>short → shortage</em>.</p>' +
+              '<p><em>The council decided to close the pool.</em> → <em>The <strong>decision</strong> to close the pool …</em></p>' +
+              '<p>It makes writing sound formal and packs a lot into a few words. Like the passive, it can leave out <strong>who did the action</strong>.</p>' },
+      { id: 'edit-voice', title: 'Editing for voice', years: '9',
+        text: '<p>When you edit, ask of each sentence:</p>' +
+              '<ul><li>Is the <strong>doer</strong> the point? Use active: <em>Hana scored three tries.</em></li>' +
+              '<li>Is the <strong>process</strong> the point, as in a method? Use passive: <em>The water was heated.</em></li>' +
+              '<li>Does the voice keep the paragraph’s <strong>topic</strong> as the subject?</li>' +
+              '<li>Is someone avoiding <strong>responsibility</strong>? Name them: <em>We sent your parcel to the wrong address.</em></li></ul>' }
     ],
 
     examples: [
@@ -1128,7 +1932,7 @@
           rng => C(rng, { prompt: 'A sports report wants to praise the player. Which is better?', right: 'Ana scored three tries.', wrong: ['Three tries were scored.', 'Three tries were scored by a player.', 'Tries were scored.'], explain: 'The active voice puts Ana at the centre.' }),
           rng => C(rng, { prompt: 'Which sentence is passive?', right: 'The results were recorded in a table.', wrong: ['We recorded the results in a table.', 'The table shows the results.', 'Ana recorded the results.'], explain: '“Were recorded”: a form of be plus a past participle, with the results receiving the action.' })
         ] },
-      { name: 'Extension: reading the passive critically', learn: 'hide',
+      { name: 'Extension: reading the passive critically', learn: 'hide', challenge: 'also',
         items: [
           rng => C(rng, { tag: EXT, prompt: 'A company says: <em>Mistakes were made.</em> What might a critical reader ask?', right: 'Who made the mistakes?', wrong: ['How many words is it?', 'Is it a simple sentence?', 'Is it in the future tense?'], explain: 'The passive leaves out who is responsible.' }),
           rng => C(rng, { tag: EXT, prompt: 'Which sentence takes responsibility most clearly?', right: 'I broke the window.', wrong: ['The window was broken.', 'The window got broken.', 'Somehow, the window broke.'], explain: 'The active voice names the doer: I.' }),
@@ -1136,7 +1940,156 @@
           rng => C(rng, { tag: EXT, prompt: 'Which sentence is passive and happening now?', right: 'The new hall is being built.', wrong: ['They are building the new hall.', 'The new hall was built.', 'The new hall will build.'], explain: '“Is being built”: present continuous passive.' }),
           rng => C(rng, { tag: EXT, prompt: 'A headline reads <em>Protesters were arrested</em>. Another reads <em>Police arrested protesters</em>. What changes?', right: 'The first focuses on the protesters; the second on the police’s action.', wrong: ['They report different events.', 'The second is passive.', 'Nothing at all.'], explain: 'Voice shapes where the reader’s attention goes.' }),
           rng => C(rng, { tag: EXT, prompt: 'Which sentence uses “get” to make a passive?', right: 'Hemi got picked for the team.', wrong: ['Hemi picked the team.', 'Hemi got a new bike.', 'Hemi gets up early.'], explain: '“Got picked” works like “was picked”: an informal passive.' })
-        ] }
+        ] },
+
+      // ── Year 9 challenge: these positions appear only in the challenge set.
+
+      // 11 · Passive, keeping the tense.
+      {
+        name: 'Year 9: passive in any tense', learn: 'passive-tenses', challenge: 'only',
+        items: [
+          ['Builders are building the new hall.', 'The new hall is being built.', ['The new hall was built.', 'The new hall has been built.', 'The new hall will be built.'],
+            'The active is present continuous (are building), so the passive is “is being built”.'],
+          ['The judges had chosen the winner before lunch.', 'The winner had been chosen before lunch.', ['The winner was being chosen before lunch.', 'The winner has been chosen before lunch.', 'The winner had chosen before lunch.'],
+            'The active is past perfect (had chosen), so the passive is “had been chosen”. “The winner had chosen” is active: it says the winner did the choosing.'],
+          ['Someone has eaten the last biscuit.', 'The last biscuit has been eaten.', ['The last biscuit was eaten.', 'The last biscuit had been eaten.', 'The last biscuit is being eaten.'],
+            'The active is present perfect (has eaten), so the passive is “has been eaten”.'],
+          ['The council will close the beach tomorrow.', 'The beach will be closed tomorrow.', ['The beach will close tomorrow.', 'The beach has been closed tomorrow.', 'The beach had been closed tomorrow.'],
+            'The active is future (will close), so the passive is “will be closed”. “The beach will close” has no form of “be” plus a past participle, so it is not passive.'],
+          ['Volunteers check the traps every week.', 'The traps are checked every week.', ['The traps were checked every week.', 'The traps are checking every week.', 'The traps have been checked every week.'],
+            'The active is present (check), so the passive is “are checked”. “Are checking” would mean the traps do the checking.'],
+          ['Rescuers were helping the trampers when the storm hit.', 'The trampers were being helped when the storm hit.', ['The trampers were helped when the storm hit.', 'The trampers had been helped when the storm hit.', 'The trampers are being helped when the storm hit.'],
+            'The active is past continuous (were helping), so the passive is “were being helped”.']
+        ].map(([a, right, wrong, why]) => rng => C(rng, {
+          prompt: `<em>${a}</em> Which is the passive version, in the <strong>same tense</strong>, leaving out the doer?`, right, wrong,
+          explain: why + ' The passive is a form of “be” in the same tense, plus the past participle.'
+        }))
+      },
+
+      // 12 · Name the tense of a passive.
+      {
+        name: 'Year 9: name the passive tense', learn: 'passive-tenses', challenge: 'only',
+        items: [Sci.gen(rng => {
+          const bank = [
+            ['present', ['The traps are checked every week.', 'Lunch is served at noon.', 'The gates are locked at night.']],
+            ['present continuous', ['The hall is being built.', 'The roads are being repaired.', 'The tickets are being printed.']],
+            ['past', ['The road was closed on Monday.', 'The trees were planted in 1990.', 'The letter was posted yesterday.']],
+            ['present perfect', ['My bike has been stolen.', 'The results have been announced.', 'The pool has been cleaned.']],
+            ['past perfect', ['The winner had been chosen.', 'The food had been eaten before we arrived.', 'The bridge had been washed away.']],
+            ['future', ['The bridge will be opened next year.', 'The prizes will be given out on Friday.', 'The track will be resurfaced.']]
+          ];
+          const rows = rng.sample(bank, 4).map(([tense, list]) => [rng.pick(list), tense]);
+          return Sci.match(rng, 'Match each passive sentence to its tense.', rows,
+            'Look at the form of “be”: is/are (present), is/are being (present continuous), was/were (past), has/have been (present perfect), had been (past perfect), will be (future).');
+        })]
+      },
+
+      // 13 · The passive in formal and scientific writing.
+      {
+        name: 'Year 9: formal and scientific writing', learn: 'formal-passive', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'Which sentence best suits the method section of a science report?',
+            right: 'The solution was stirred for two minutes.', wrong: ['I stirred the solution for two minutes because Ms Patel told me to.', 'We stirred it for a bit.', 'Me and Ana stirred it for ages.'],
+            explain: 'The passive keeps the focus on what was done, and the time is precise. The others focus on the people and are vague or informal.' }),
+          rng => C(rng, { prompt: 'Why do science reports often use the passive?',
+            right: 'It keeps the focus on what was done, so the method can be repeated by anyone.', wrong: ['It makes the report longer, which earns more marks.', 'Scientists are not allowed to know who did the experiment.', 'Passive sentences are always shorter than active ones.'],
+            explain: 'In a method the process matters, not the person. Passive sentences are often longer, not shorter.' }),
+          rng => C(rng, { prompt: 'Which is the most formal, impersonal way to report a finding?',
+            right: 'It was found that the seedlings grew faster in sunlight.', wrong: ['We found out the seedlings grew heaps faster in the sun.', 'I reckon the seedlings liked the sun.', 'Guess what? The seedlings grew faster in sunlight!'],
+            explain: '“It was found that …” reports the result without personal words, slang or exclamations.' }),
+          rng => C(rng, { prompt: '<em>It is believed that the first waka arrived around 1300.</em> What does “It is believed that” do?',
+            right: 'It reports a view without naming who holds it.', wrong: ['It names the historian who holds the view.', 'It shows the writer is completely certain.', 'It puts the sentence in the future tense.'],
+            explain: 'This impersonal passive is common in formal writing. It leaves out who believes it, and it signals a view rather than a certainty.' }),
+          rng => C(rng, { prompt: 'A school notice says: <em>Parents are reminded that the gate is locked at 9 am.</em> Why the passive?',
+            right: 'It sounds formal and polite, and the focus is on the reminder, not on who is giving it.', wrong: ['It hides a mistake the school made.', 'It shows exactly who is reminding parents.', 'It is in the past tense.'],
+            explain: 'Formal notices often use the passive to sound impersonal. It is present tense, and nobody is being blamed.' })
+        ]
+      },
+
+      // 14 · Voice and flow.
+      {
+        name: 'Year 9: voice and flow', learn: 'cohesion', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: '<em>The kākāpō is a large, flightless parrot. ▢</em> Which next sentence keeps the kākāpō as the subject, so the paragraph flows?',
+            right: 'It was almost wiped out by stoats and rats.', wrong: ['Stoats and rats almost wiped it out.', 'Stoats and rats are introduced predators.', 'Rangers on Whenua Hou count the eggs.'],
+            explain: 'The passive puts “it” (the kākāpō) first, so the paragraph stays about the bird. The others start with stoats, rats or rangers.' }),
+          rng => C(rng, { prompt: '<em>Pounamu is a precious stone to Māori. ▢</em> Which next sentence keeps pounamu as the subject?',
+            right: 'It is found mainly on the West Coast of Te Waipounamu.', wrong: ['People find it mainly on the West Coast of Te Waipounamu.', 'The West Coast of Te Waipounamu is where people find most of it.', 'Many tourists visit the West Coast every year.'],
+            explain: 'The passive “It is found” keeps the stone at the front. The others make people, the coast or tourists the subject.' }),
+          rng => C(rng, { prompt: '<em>Our school hall opened in 1965. ▢</em> Which next sentence keeps the hall as the subject?',
+            right: 'It was damaged in the 2011 earthquake and rebuilt two years later.', wrong: ['The 2011 earthquake damaged it, and builders rebuilt it two years later.', 'Builders rebuilt it two years after the 2011 earthquake damaged it.', 'Earthquakes are common in Canterbury.'],
+            explain: 'The passive lets the hall stay as the subject, so the paragraph keeps its focus.' }),
+          rng => C(rng, { prompt: 'Why might a writer switch one sentence into the passive in the middle of a paragraph?',
+            right: 'To keep the paragraph’s topic as the subject, so the ideas link smoothly', wrong: ['To make every sentence the same length', 'Because the passive is always more correct', 'To show who did each action'],
+            explain: 'Choosing the voice controls what comes first in the sentence. Keeping the same subject helps the paragraph hang together.' }),
+          rng => C(rng, { prompt: 'Which order of information usually helps a paragraph flow?',
+            right: 'Start each sentence with what the reader already knows, and end with what is new.', wrong: ['Start each sentence with something new, and end with what the reader already knows.', 'Put a different subject at the start of every sentence.', 'Use the passive in every sentence.'],
+            explain: 'Known information links back to the previous sentence; new information carries the paragraph forward.' })
+        ]
+      },
+
+      // 15 · Nominalisation.
+      {
+        name: 'Year 9: nominalisation', learn: 'nominal', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'What is nominalisation?',
+            right: 'Turning a verb or adjective into a noun, such as “decide” into “decision”', wrong: ['Turning an active sentence into a passive one', 'Giving a name to a character', 'Using a person’s name instead of a pronoun'],
+            explain: '“Nominal” means to do with nouns. Nominalisation makes an action or quality into a noun.' }),
+          rng => C(rng, { prompt: '<em>The council decided to close the pool.</em> Which version uses nominalisation?',
+            right: 'The decision to close the pool was announced on Monday.', wrong: ['The pool was closed by the council.', 'The council has decided to close the pool.', 'The council will decide whether to close the pool.'],
+            explain: 'The verb “decided” becomes the noun “decision”. The first wrong option is passive, not nominalised; the others only change the tense.' }),
+          rng => C(rng, { prompt: '<em>The rapid growth of the town led to a shortage of houses.</em> Which words are nominalisations?',
+            right: '“growth” and “shortage”', wrong: ['“rapid” and “town”', '“led” and “houses”', '“town” and “houses”'],
+            explain: '“Growth” comes from the verb “grow”, and “shortage” from the adjective “short”. Town and houses are ordinary concrete nouns.' }),
+          rng => C(rng, { prompt: '<em>Following the closure of the factory, unemployment rose.</em> What does “closure” leave out?',
+            right: 'Who closed the factory', wrong: ['When unemployment rose', 'What rose', 'Which factory it was'],
+            explain: 'Turning “close” into “closure” removes the doer, just as a passive can. A critical reader asks: who closed it?' }),
+          rng => C(rng, { prompt: 'Why does formal writing often use nominalisation?',
+            right: 'It packs actions into nouns, which sounds impersonal and can leave out who did them.', wrong: ['It makes writing more personal and chatty.', 'It makes sentences easier for young children to read.', 'It shows exactly who did each action.'],
+            explain: 'Nominalisation makes writing dense and formal. That suits reports, but it can be harder to read.' }),
+          rng => C(rng, { prompt: '<em>We tested the water and found it was very polluted.</em> Which rewrite is the most formal?',
+            right: 'Testing revealed high levels of pollution in the water.', wrong: ['We tested the water and, wow, it was polluted!', 'The water got tested and it was super polluted.', 'We were shocked when we tested the water.'],
+            explain: '“Testing” and “pollution” turn the actions into nouns, giving a formal, impersonal sentence. The others are personal or informal.' })
+        ]
+      },
+
+      // 16 · Editing for voice.
+      {
+        name: 'Year 9: editing for voice', learn: 'edit-voice', challenge: 'only',
+        items: [
+          ['This is from a science method. One sentence does not match the formal, passive style.',
+            ['The beaker was filled with 100 mL of water.', 'The water was heated to 60 °C.', 'Then I dropped in the salt and stirred it.', 'The temperature was recorded every minute.'], 2,
+            'It switches to “I” and the active voice. In the style of the rest: “The salt was added and the solution was stirred.”'],
+          ['This is from a science method. One sentence does not match the formal, passive style.',
+            ['Three seedlings were placed on the windowsill.', 'Each seedling was given 20 mL of water a day.', 'The height of each seedling was measured daily.', 'Me and Ana wrote the results in our books.'], 3,
+            'It is informal and personal. In the style of the rest: “The results were recorded in a table.”'],
+          ['This sports report celebrates Hana. One sentence uses a passive that pushes her into the background.',
+            ['Hana Walker had the game of her life on Saturday.', 'She sprinted the length of the field in the first half.', 'Three tries were scored by her in twenty minutes.', 'She left the field to a standing ovation.'], 2,
+            'The report is about Hana, so the active is stronger: “She scored three tries in twenty minutes.”'],
+          ['This paragraph is about the tuatara. One sentence breaks the flow by switching the subject away from it.',
+            ['The tuatara is a reptile found only in Aotearoa.', 'It has lived here for millions of years.', 'Rats and stoats once hunted it almost to extinction.', 'Today it is protected on predator-free islands.'], 2,
+            'Every other sentence has the tuatara as its subject. The passive keeps the flow: “It was once hunted almost to extinction by rats and stoats.”'],
+          ['This is an apology from a delivery company. One sentence avoids taking responsibility.',
+            ['We are sorry that your order arrived late.', 'Your parcel was sent to the wrong address.', 'We will refund your delivery fee.', 'We have changed our process so it will not happen again.'], 1,
+            'The passive hides who made the mistake. An honest apology names the doer: “We sent your parcel to the wrong address.”']
+        ].map(([prompt, lines, wrong, why]) => rng => Sci.spot(rng, {
+          prompt, lines, wrong, cue: 'Click the sentence that needs editing.', explain: why
+        }))
+      },
+
+      // 17 · True or false.
+      {
+        name: 'Year 9: true or false', learn: 'passive-tenses', challenge: 'only',
+        items: [
+          rng => TF(rng, { statement: '“The hall is being built” is in the passive voice.', answer: true, learn: 'passive-tenses', explain: '“Is being” plus the past participle “built”: present continuous passive.' }),
+          rng => TF(rng, { statement: '“The winner had been chosen” is in the past perfect passive.', answer: true, learn: 'passive-tenses', explain: '“Had been” plus the past participle “chosen”.' }),
+          rng => TF(rng, { statement: '“The bridge will close tomorrow” is a passive sentence.', answer: false, learn: 'passive-tenses', explain: 'There is no form of “be” plus a past participle. The passive would be “The bridge will be closed tomorrow.”' }),
+          rng => TF(rng, { statement: 'Nominalisation turns a verb or adjective into a noun.', answer: true, learn: 'nominal', explain: 'decide → decision, grow → growth.' }),
+          rng => TF(rng, { statement: 'Choosing the passive can help keep the same subject across a paragraph.', answer: true, learn: 'cohesion', explain: '“The kākāpō is a parrot. It was almost wiped out by stoats.”' }),
+          rng => TF(rng, { statement: '“It was found that …” is a common impersonal way to report a result.', answer: true, learn: 'formal-passive', explain: 'It reports the finding without naming who found it.' }),
+          rng => TF(rng, { statement: 'Every sentence in a science report must be in the passive voice.', answer: false, learn: 'formal-passive', explain: 'Methods often use the passive, but sentences such as “The results show a clear pattern” are active and perfectly formal.' })
+        ]
+      }
     ]
   });
 
@@ -1200,7 +2153,32 @@
       { id: 'connote-ext', title: 'Extension: denotation and connotation',
         text: '<p><strong>Denotation</strong>: what a word literally means. <strong>Connotation</strong>: the feelings it carries.</p>' +
               '<p>A <strong>euphemism</strong> is a gentler way to say something hard: “passed away” for “died”.</p>' +
-              '<p><strong>Emotive language</strong> chooses words for their emotional effect, often to persuade.</p>' }
+              '<p><strong>Emotive language</strong> chooses words for their emotional effect, often to persuade.</p>' },
+      { id: 'synonym-9', title: 'Synonyms, antonyms and repetition', years: '9', wide: true,
+        text: '<p>Synonyms differ in more than strength: each suggests a slightly different picture. <em>Look</em> can be <strong>glance</strong> (quick), <strong>stare</strong> (long and fixed), <strong>gaze</strong> (long and dreamy) or <strong>peer</strong> (straining to see).</p>' +
+              '<p>To avoid repeating a word, choose a <strong>precise synonym</strong> that fits, not just any one. An <strong>antonym</strong> (opposite) can sharpen a contrast:</p>' +
+              '<p>✗ <em>The rain was loud and the wind was loud.</em><br>✓ <em>The rain drummed and the wind howled.</em><br>✓ <em>The first half was dull; the second was thrilling.</em></p>' },
+      { id: 'loaded', title: 'Connotation and loaded language', years: '9', wide: true,
+        text: '<p>Writers can describe the same fact with words that carry opposite feelings: a small room is <em>intimate</em> or <em>cramped</em>.</p>' +
+              '<p><strong>Loaded</strong> (biased) language chooses words for their connotation to push the reader towards a view.</p>' +
+              '<p>Neutral: <em>The council <strong>reduced</strong> library funding.</em><br>Loaded: <em>The council <strong>slashed</strong> library funding.</em></p>' +
+              '<p>A neutral report avoids loaded words; persuasive writing uses them on purpose.</p>' },
+      { id: 'register-9', title: 'Register: levels of formality', years: '9', wide: true,
+        text: '<p><strong>Register</strong> is how formal your language is. Choose it for your audience and purpose.</p>' +
+              Sci.table(['Informal', 'Neutral', 'Formal'], [['heaps of', 'a lot of', 'a large number of'], ['grab', 'get', 'obtain'], ['kick off', 'start', 'commence'],
+                ['help out', 'help', 'assist'], ['sort out', 'fix', 'resolve']]) +
+              '<p>Formal writing avoids slang and contractions and often uses longer, more exact words. Too formal can sound stiff in a friendly message.</p>' },
+      { id: 'idiom', title: 'Idiomatic expressions', years: '9',
+        text: '<p>An <strong>idiom</strong> is a phrase whose meaning cannot be worked out from its words: <em>break the ice</em> (ease the tension), <em>under the weather</em> (unwell), <em>spill the beans</em> (tell a secret).</p>' +
+              '<p>Idioms make conversation, stories and chatty writing lively. Avoid them in formal writing, and with readers still learning English, who may read them literally.</p>' },
+      { id: 'euphemism-9', title: 'Euphemism: kind or hiding?', years: '9',
+        text: '<p>A <strong>euphemism</strong> replaces a harsh or uncomfortable word with a softer one.</p>' +
+              '<ul><li>To be <strong>kind</strong>: <em>passed away</em>, <em>put to sleep</em> (a pet).</li>' +
+              '<li>To <strong>soften or hide</strong> facts: <em>letting staff go</em> (firing them), <em>a price adjustment</em> (a price rise), <em>pre-loved</em> (second-hand).</li></ul>' +
+              '<p>Critical readers translate euphemisms back into plain words.</p>' },
+      { id: 'jargon', title: 'Technical words and jargon', years: '9',
+        text: '<p><strong>Domain-specific</strong> (technical) words are the exact terms of a subject: <em>photosynthesis</em>, <em>offside</em>, <em>magma</em>. Use them with an audience that knows them, or explain them.</p>' +
+              '<p><strong>Jargon</strong> is technical or insider language used where the audience will not understand it, or to sound impressive: <em>We are leveraging synergies.</em></p>' }
     ],
 
     examples: [
@@ -1281,7 +2259,7 @@
           [['Dear Hiring Manager,', 'I am applying for the job at your bookshop.', 'I’m kinda into books and stuff.', 'I am available on weekends.'], 2, 'Slang does not suit a job application.']
         ].map(([lines, at, why]) => rng => Sci.spot(rng, { prompt: 'One line uses words that work against the writer’s purpose.', lines, wrong: at,
           cue: 'Click the line with the poor word choice.', explain: why })) },
-      { name: 'Extension: what words carry', learn: 'connote-ext',
+      { name: 'Extension: what words carry', learn: 'connote-ext', challenge: 'also',
         items: [
           rng => C(rng, { tag: EXT, prompt: '<em>Home</em> and <em>house</em> have the same denotation. What is different?', right: 'Their connotation: “home” suggests warmth and belonging.', wrong: ['Their spelling only.', 'Their denotation.', 'Nothing at all.'], explain: 'Denotation is the literal meaning; connotation is the feeling.' }),
           rng => C(rng, { tag: EXT, prompt: 'Which is a euphemism?', right: 'passed away', wrong: ['died', 'was killed', 'perished'], explain: 'A euphemism softens something hard to say.' }),
@@ -1289,7 +2267,163 @@
           rng => C(rng, { tag: EXT, prompt: 'A real estate advert calls a small flat “cosy”. Why?', right: 'It gives a small space a positive connotation.', wrong: ['To describe its exact size.', 'Because cosy means large.', 'To warn buyers.'], explain: 'Word choice can make the same fact sound appealing.' }),
           rng => C(rng, { tag: EXT, prompt: 'A news report calls a group “protesters”; another calls them “troublemakers”. What does the choice show?', right: 'The writers’ different attitudes to the group', wrong: ['That they were different groups', 'That one report is longer', 'Nothing: the words mean the same'], explain: 'Connotation can reveal a writer’s viewpoint.' }),
           rng => C(rng, { tag: EXT, prompt: 'Which word gives a neutral description?', right: 'thin', wrong: ['scrawny', 'skeletal', 'svelte'], explain: '“Thin” is close to neutral; the others carry strong positive or negative feeling.' })
-        ] }
+        ] },
+
+      // ── Year 9 challenge: these positions appear only in the challenge set.
+
+      // 11 · Shades of meaning.
+      {
+        name: 'Year 9: shades of meaning', learn: 'synonym-9', challenge: 'only',
+        items: [
+          ['The security guard ▢ at us until we left the shop; it made us very uncomfortable.', 'stared', ['glanced', 'peeked', 'blinked'],
+            '“Stared” is a long, fixed look, which explains the discomfort. A glance or a peek is quick.'],
+          ['She ▢ at her watch and kept running.', 'glanced', ['stared', 'gazed', 'studied'],
+            '“Glanced” is a quick look, which fits someone who keeps running. The others take time.'],
+          ['Grandad ▢ out to sea, lost in his memories.', 'gazed', ['glanced', 'glared', 'peeked'],
+            '“Gazed” is a long, dreamy look, which matches being lost in memories. “Glared” is angry; the others are quick.'],
+          ['The starving trampers ▢ their dinner in two minutes.', 'devoured', ['nibbled', 'tasted', 'sampled'],
+            '“Devoured” means ate quickly and hungrily. The others suggest small, careful bites.'],
+          ['Mere ▢ her speech for weeks, so she knew it by heart.', 'rehearsed', ['improvised', 'skimmed', 'glanced at'],
+            '“Rehearsed” means practised, which is how she learnt it by heart. “Improvised” means made up on the spot.'],
+          ['The old house was ▢: paint peeling, windows broken, garden overgrown.', 'dilapidated', ['historic', 'cosy', 'spotless'],
+            '“Dilapidated” means falling apart from neglect, which matches the details. “Historic” only means old and important.']
+        ].map(([s, right, wrong, why]) => rng => C(rng, { prompt: `Which word fits best? <em>${s}</em>`, right, wrong, wide: false, explain: why }))
+      },
+
+      // 12 · Connotation and loaded language.
+      {
+        name: 'Year 9: connotation and loaded language', learn: 'loaded', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'Two reviews describe the same small café. Which pair of words shows the same fact with opposite connotations?',
+            right: '“intimate” and “cramped”', wrong: ['“intimate” and “cosy”', '“cramped” and “crowded”', '“small” and “little”'],
+            explain: 'Both mean small, but “intimate” sounds appealing and “cramped” sounds uncomfortable. The other pairs carry the same feeling.' }),
+          rng => C(rng, { prompt: 'A politician changed her mind after seeing new evidence. A writer wants readers to <strong>admire</strong> her for it. Which word suits?',
+            right: 'open-minded', wrong: ['spineless', 'fickle', 'indecisive'],
+            explain: '“Open-minded” praises her willingness to change. The others turn the same fact into a weakness.' }),
+          rng => C(rng, { prompt: 'Which word makes the tourists sound like a problem? <em>Every summer, tourists ▢ the small town.</em>',
+            right: 'swamp', wrong: ['visit', 'enjoy', 'explore'], wide: false,
+            explain: '“Swamp” suggests the town is overwhelmed, as if by a flood. The others are neutral or positive.' }),
+          rng => C(rng, { prompt: 'Which headline is the most neutral?',
+            right: 'Council reduces library funding', wrong: ['Council slashes library funding', 'Council guts library funding', 'Heartless council axes library funding'],
+            explain: '“Reduces” states the fact. “Slashes”, “guts” and “axes” are loaded words that make the cut sound brutal.' }),
+          rng => C(rng, { prompt: 'Which sentence uses connotation to make a new building sound <strong>appealing</strong>?',
+            right: 'The sleek new library is filled with light.', wrong: ['The stark new library is filled with glare.', 'The new library is made of glass.', 'The new library opened in March.'],
+            explain: '“Sleek” and “filled with light” carry positive feelings. “Stark” and “glare” are negative, and the last two are neutral facts.' }),
+          rng => C(rng, { prompt: '<em>Fragrance</em>, <em>scent</em> and <em>stench</em> all name a smell. Which is clearly negative?',
+            right: 'stench', wrong: ['fragrance', 'scent', 'aroma'], wide: false,
+            explain: '“Stench” is a strong, unpleasant smell. “Fragrance” and “aroma” are pleasant, and “scent” is neutral or pleasant.' })
+        ]
+      },
+
+      // 13 · Register.
+      {
+        name: 'Year 9: everyday and formal words', learn: 'register-9', challenge: 'only',
+        items: [Sci.gen(rng => Sci.match(rng, 'Match each everyday word to its more formal equivalent.',
+          rng.sample([
+            ['get', 'obtain'], ['ask for', 'request'], ['start', 'commence'], ['help', 'assist'], ['buy', 'purchase'], ['need', 'require'],
+            ['enough', 'sufficient'], ['tell', 'inform'], ['end', 'conclude'], ['about (a number)', 'approximately'], ['try', 'attempt']
+          ], 4),
+          'Formal words suit reports, official letters and speeches to unfamiliar audiences. In a message to a friend, the everyday word is better.'))]
+      },
+
+      // 14 · Idiomatic expressions.
+      {
+        name: 'Year 9: idioms', learn: 'idiom', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: '<em>Ana was nervous before her speech, so she told a joke to break the ice.</em> What does “break the ice” mean?',
+            right: 'Ease the tension and help people relax', wrong: ['Start an argument', 'Cool the room down', 'Stop talking suddenly'],
+            explain: 'An idiom’s meaning is not the meaning of its words. Nothing is broken; the joke makes people relax.' }),
+          rng => C(rng, { prompt: '<em>Hemi has been under the weather all week.</em> What does this mean?',
+            right: 'He has been feeling unwell.', wrong: ['He has been outside in the rain.', 'He has been worried about the forecast.', 'He has been working as a weather reporter.'],
+            explain: '“Under the weather” is an idiom for feeling ill. It has nothing to do with the weather.' }),
+          rng => C(rng, { prompt: '<em>Mum let the cat out of the bag about my surprise party.</em> What happened?',
+            right: 'Mum accidentally revealed the secret.', wrong: ['Mum let the cat outside.', 'Mum planned the party.', 'Mum cancelled the party.'],
+            explain: '“Let the cat out of the bag” means to reveal a secret, usually by accident.' }),
+          rng => C(rng, { prompt: 'In which piece of writing would the idiom <em>“it costs an arm and a leg”</em> suit best?',
+            right: 'A chatty blog post about saving for a new bike', wrong: ['A formal letter to the bank', 'A science report on bike materials', 'An official council notice'],
+            explain: 'Idioms suit relaxed, conversational writing. Formal and technical writing needs plain, exact words: “it is very expensive”.' }),
+          rng => C(rng, { prompt: 'A report to the school board says: <em>“The new canteen is a piece of cake to run.”</em> What is the best edit?',
+            right: '“The new canteen is simple to run.”', wrong: ['“The new canteen is a walk in the park to run.”', '“The new canteen is easy peasy to run.”', '“The new canteen is a doddle to run.”'],
+            explain: 'A formal report needs plain words. The other edits swap one informal idiom or phrase for another.' }),
+          rng => C(rng, { prompt: 'Why might idioms confuse a reader who is still learning English?',
+            right: 'The meaning of an idiom cannot be worked out from the meanings of its words.', wrong: ['Idioms are usually spelt incorrectly.', 'Idioms are only used in poetry.', 'Idioms are much longer than ordinary sentences.'],
+            explain: 'A new learner may read “spill the beans” literally and picture spilt food.' })
+        ]
+      },
+
+      // 15 · Euphemism.
+      {
+        name: 'Year 9: euphemism', learn: 'euphemism-9', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'A company says it is <em>“letting 50 staff go”</em>. What does this mean in plain words?',
+            right: 'It is getting rid of 50 staff.', wrong: ['It is giving 50 staff a holiday.', '50 staff have asked to leave.', 'It is hiring 50 new staff.'],
+            explain: '“Letting go” is a euphemism that softens the fact that people are losing their jobs.' }),
+          rng => C(rng, { prompt: 'Which euphemism is used mainly to be <strong>kind</strong>, rather than to hide something?',
+            right: 'Telling a child their old dog was “put to sleep”', wrong: ['A company calling job cuts “restructuring”', 'A shop calling a price rise an “adjustment”', 'A report calling civilian deaths “collateral damage”'],
+            explain: 'The gentle phrase softens sad news for the child. The others soften facts the writer would rather readers did not notice.' }),
+          rng => C(rng, { prompt: 'A shop sign says <em>“pre-loved clothing”</em>. What does the euphemism do?',
+            right: 'It makes second-hand clothes sound more appealing.', wrong: ['It shows the clothes are brand new.', 'It warns that the clothes are damaged.', 'It gives the exact age of the clothes.'],
+            explain: '“Pre-loved” replaces “second-hand” with a warmer word to help sell the clothes.' }),
+          rng => C(rng, { prompt: 'A power company announces a <em>“price adjustment”</em>. Which plain sentence states the fact directly?',
+            right: 'Prices are going up.', wrong: ['Prices are being adjusted.', 'Prices are changing a little.', 'Prices are being updated.'],
+            explain: 'The euphemism hides the direction of the change. The plain version says what customers need to know.' }),
+          rng => C(rng, { prompt: 'Why might a critical reader be wary of euphemisms in a company’s statement?',
+            right: 'They can soften or hide unpleasant facts.', wrong: ['They are usually spelling mistakes.', 'They make statements more precise.', 'They prove the writer is being completely honest.'],
+            explain: 'Euphemisms can be kind, but in official statements they can also make bad news sound harmless.' }),
+          rng => C(rng, { prompt: 'In which piece of writing is a euphemism most appropriate?',
+            right: 'A sympathy card to a grieving friend', wrong: ['A news report on how many jobs a company cut', 'A safety warning about a dangerous cliff', 'A notice telling parents a school trip is cancelled'],
+            explain: 'Gentle words show care in a sympathy card. News, warnings and notices need plain, clear facts.' })
+        ]
+      },
+
+      // 16 · Technical words and jargon.
+      {
+        name: 'Year 9: technical words and jargon', learn: 'jargon', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'A doctor tells a worried eight-year-old: <em>“You have a minor laceration on your patella.”</em> What is the problem?',
+            right: 'The medical terms are jargon for this audience; “a small cut on your kneecap” is clearer.', wrong: ['The sentence is too informal.', 'Doctors should never use medical words.', 'The sentence uses a euphemism.'],
+            explain: 'The terms are exact, but this listener will not understand them. Doctors use them with other doctors.' }),
+          rng => C(rng, { prompt: 'Which sentence uses subject-specific vocabulary well in a Year 9 science report?',
+            right: 'Plants make glucose through photosynthesis.', wrong: ['Plants do a food-making thing with sunlight.', 'Plants cook their food using sun stuff.', 'Plants get hungry and eat light.'],
+            explain: 'A science report should use the exact terms of the subject. The others are vague or inaccurate.' }),
+          rng => C(rng, { prompt: 'When is a technical term the best choice?',
+            right: 'When the audience knows it and it is more precise than an everyday word', wrong: ['Whenever you want to sound clever', 'Only in speeches', 'When the audience is unlikely to know it'],
+            explain: 'Technical words are precise, but only useful if the reader understands them, or if you explain them.' }),
+          rng => C(rng, { prompt: 'A commentator says: <em>“The ruck was cleared and the halfback fed the backline.”</em> For which audience is this vocabulary right?',
+            right: 'Rugby fans watching the game', wrong: ['Young children who have never seen rugby', 'Tourists who do not know the rules', 'Readers of a cooking magazine'],
+            explain: 'Rugby fans know these terms, so the commentary is quick and exact. Others would need explanations.' }),
+          rng => C(rng, { prompt: 'A company’s letter to customers says: <em>“We are leveraging synergies to optimise your user journey.”</em> What is wrong with it?',
+            right: 'It is vague jargon that hides what is actually happening.', wrong: ['It is too informal for customers.', 'It uses precise technical terms that everyone understands.', 'It is written in the passive voice.'],
+            explain: 'The words sound impressive but say almost nothing. Plain language would tell customers what is changing.' }),
+          rng => C(rng, { prompt: 'You are writing about volcanoes for eight-year-olds and need the word “magma”. What should you do?',
+            right: 'Use it, and explain it: hot, melted rock under the ground.', wrong: ['Use it with no explanation.', 'Avoid writing about magma at all.', 'Replace it with “volcano juice”.'],
+            explain: 'Explaining a technical term teaches it and keeps the writing exact. Leaving it out or inventing a word loses accuracy.' })
+        ]
+      },
+
+      // 17 · Editing word choice.
+      {
+        name: 'Year 9: editing word choice', learn: 'loaded', challenge: 'only',
+        items: [
+          ['This is a formal letter to the council. One sentence does not suit the register.',
+            ['Dear Councillors,', 'I am writing about the lack of lighting in Kōwhai Park.', 'At night, the path is pitch black and totally dodgy.', 'I request that the council install lights before winter.'], 2, 'register-9',
+            '“Totally dodgy” is slang, far too informal for a letter to the council. Better: “At night, the path is very dark and unsafe.”'],
+          ['One sentence repeats a word so often that it weakens the writing.',
+            ['The storm arrived just after midnight.', 'Thunder shook the windows of our house.', 'The rain was loud and the wind was loud and the waves were loud.', 'By morning, the beach was covered in driftwood.'], 2, 'synonym-9',
+            'Precise verbs avoid the repetition and say more: “The rain drummed, the wind howled and the waves roared.”'],
+          ['This is meant to be a neutral news report. One sentence uses loaded language.',
+            ['The council met on Tuesday to discuss the budget.', 'Councillors voted 7–4 to reduce library funding.', 'The greedy councillors gutted the library to save cash.', 'The change takes effect in July.'], 2, 'loaded',
+            '“Greedy” and “gutted” push the reader to a view. A neutral report states the facts.'],
+          ['This explains recycling to five-year-olds. One sentence uses jargon they will not understand.',
+            ['We put old bottles and cans in the yellow bin.', 'A big truck takes them away.', 'At the facility, materials undergo sorting and reprocessing into feedstock.', 'Then they become new things, like drink bottles!'], 2, 'jargon',
+            'The technical words do not suit young children. Better: “At a special factory, they are sorted and melted down.”'],
+          ['This notice should tell parents clearly what is happening. One sentence hides the facts behind a euphemism.',
+            ['Dear parents,', 'From next term, the school pool will be closed for repairs.', 'Some swimming lessons will be subject to rationalisation.', 'We apologise for the inconvenience.'], 2, 'euphemism-9',
+            '“Subject to rationalisation” hides the plain fact: some swimming lessons will be cancelled.']
+        ].map(([prompt, lines, wrong, card, why]) => rng => Sci.spot(rng, {
+          prompt, lines, wrong, learn: card, cue: 'Click the sentence that needs editing.', explain: why
+        }))
+      }
     ]
   });
 
@@ -1337,7 +2471,44 @@
               '<li>Informative: highlight the most important points.</li><li>Narrative: give a sense of closure.</li></ul>' },
       { id: 'organise', title: 'Extension: organising structures',
         text: Sci.table(['Structure', 'Suits'], [['chronological', 'a history, a recount, instructions'], ['cause and effect', 'explaining why something happens'],
-                ['compare and contrast', 'two things side by side'], ['problem and solution', 'proposals and persuasive pieces']]) }
+                ['compare and contrast', 'two things side by side'], ['problem and solution', 'proposals and persuasive pieces']]) },
+      { id: 'discursive', title: 'Discursive or persuasive?', years: '9', wide: true,
+        text: Sci.table(['', 'Discursive', 'Persuasive'], [
+                ['<strong>Aim</strong>', 'explores an issue from several viewpoints', 'argues for one position'],
+                ['<strong>Opening</strong>', 'an opening statement that frames the question', 'a thesis that states the writer’s position'],
+                ['<strong>Body</strong>', 'paragraphs that build on or contrast viewpoints', 'reasons with evidence; the other side is answered'],
+                ['<strong>Tone</strong>', 'balanced, measured', 'assertive, often emotive'],
+                ['<strong>Ending</strong>', 'a reflective or synthesising conclusion', 'the position restated, often with a call to action']]) +
+              '<p>A discursive text can aim to <strong>analyse</strong> (examine evidence from several angles), <strong>reflect</strong> (explore your own thoughts and experiences), ' +
+              '<strong>explore</strong> (consider an open question, without needing a final answer) or <strong>speculate</strong> (imagine possible outcomes: “what if …?”).</p>' },
+      { id: 'thesis', title: 'Thesis and opening statements', years: '9', wide: true,
+        text: '<p>A <strong>thesis</strong> states your position and previews your reasons, in one or two sentences:</p>' +
+              '<p><em>School should start at 9.30 am, because teenagers need more sleep and learn better later in the morning.</em></p>' +
+              '<p>A discursive <strong>opening statement</strong> frames the issue without taking a side:</p>' +
+              '<p><em>Whether school should start later depends on whom you ask: students, parents and bus companies all see it differently.</em></p>' +
+              '<p>Weak openings announce (<em>In this essay I will talk about …</em>) or state a bare fact that nobody could discuss.</p>' },
+      { id: 'cohesion', title: 'Cohesion: holding a text together', years: '9', wide: true,
+        text: '<p><strong>Cohesive devices</strong> link each sentence and paragraph to the last, so the reader never loses the thread.</p>' +
+              '<ul><li><strong>Transitions between viewpoints:</strong> <em>Supporters argue … Critics, however, … From a different angle …</em></li>' +
+              '<li><strong>Words that point back:</strong> <em>this problem, these concerns, such costs</em></li>' +
+              '<li><strong>Linking topic sentences:</strong> the first sentence connects to the paragraph before and states the new idea: <em>Cost is not the only concern; safety matters too.</em></li></ul>' },
+      { id: 'rebut', title: 'Anticipating a counterargument', years: '9',
+        text: '<p>A strong argument predicts the objection and answers it in four moves:</p>' +
+              '<ol class="learn-steps"><li><strong>Name</strong> the opposing view fairly</li><li><strong>Concede</strong> what is true in it: <em>It is true that …</em></li>' +
+              '<li><strong>Counter</strong> with a reason or evidence: <em>However, …</em></li><li><strong>Link</strong> back to your thesis</li></ol>' +
+              '<p>Answer the strongest form of the objection. Knocking down a weak, twisted version of it convinces nobody.</p>' },
+      { id: 'synthesise', title: 'Synthesising conclusions', years: '9',
+        text: '<p>To <strong>synthesise</strong> is to draw the threads together into one overall understanding, rather than repeating each point.</p>' +
+              '<p>Repeats: <em>Some say cost, some say safety, and some say fun.</em></p>' +
+              '<p>Synthesises: <em>Every side, in the end, wants the same thing: a park that is safe enough to use and cheap enough to keep.</em></p>' +
+              '<p>A discursive conclusion weighs the views and may leave a question open; a persuasive one restates the thesis in fresh words.</p>' },
+      { id: 'plan', title: 'Choosing a planning technique', years: '9', wide: true,
+        text: Sci.table(['Technique', 'Best for'], [
+                ['<strong>Brainstorm</strong> or mind map', 'generating ideas when you are not yet sure what to say'],
+                ['<strong>Outline</strong>', 'ordering the points and paragraphs of an essay or argument'],
+                ['<strong>Flow chart</strong>', 'a process, a sequence of causes and effects, or steps with decisions'],
+                ['<strong>Storyboard</strong>', 'a narrative or visual text told in scenes, such as a short film or comic']]) +
+              '<p>Choose the plan that suits the form and purpose of the writing.</p>' }
     ],
 
     examples: [
@@ -1446,7 +2617,7 @@
           ['Some say plastic bags are convenient.', 'Yet reusable bags are just as easy to carry, and do not end up in the sea.', ['Bags carry things.', 'Plastic is shiny.', 'I have a bag.']]
         ].map(([claim, right, wrong]) => rng => C(rng, { tag: 'Year 8', prompt: `<em>${claim}</em> Which sentence best answers this opposing view?`, right, wrong,
           explain: 'A rebuttal accepts that the view exists, then gives a reason or evidence showing why the writer’s position is stronger.' })) },
-      { name: 'Extension: organising structures', learn: 'organise',
+      { name: 'Extension: organising structures', learn: 'organise', challenge: 'also',
         items: [
           rng => C(rng, { tag: EXT, prompt: 'Which structure best suits an explanation of why the moa became extinct?', right: 'Cause and effect', wrong: ['Compare and contrast', 'Instructions', 'Orientation and resolution'], explain: 'It explains what led to what.' }),
           rng => C(rng, { tag: EXT, prompt: 'Which structure best suits a piece on cats versus dogs as pets?', right: 'Compare and contrast', wrong: ['Cause and effect', 'Chronological', 'Instructions'], explain: 'It sets two things side by side.' }),
@@ -1454,7 +2625,169 @@
           rng => C(rng, { tag: EXT, prompt: 'Which structure best suits a proposal to fix litter at school?', right: 'Problem and solution', wrong: ['Chronological', 'Compare and contrast', 'Orientation and resolution'], explain: 'It describes the problem, then proposes a fix.' }),
           rng => C(rng, { tag: EXT, prompt: 'A writer explores both sides of an issue without arguing for one. What kind of text is this?', right: 'A discussion (discursive text)', wrong: ['A persuasive text', 'A narrative', 'A set of instructions'], explain: 'Discursive texts explore several viewpoints.' }),
           rng => C(rng, { tag: EXT, prompt: 'Which transition best signals a consequence in a formal essay?', right: 'Consequently', wrong: ['Anyway', 'Also', 'Like'], explain: '“Consequently” shows that one thing results from another, in a formal register.' })
-        ] }
+        ] },
+
+      // ── Year 9 challenge: these positions appear only in the challenge set.
+
+      // 11 · Discursive or persuasive?
+      {
+        name: 'Year 9: discursive or persuasive?', learn: 'discursive', challenge: 'only',
+        items: [rng => Sci.sort(rng, { prompt: 'Does each extract come from a discursive text or a persuasive text?', bins: ['Discursive', 'Persuasive'],
+          items: [
+            { text: 'Some see a four-day school week as a chance to rest; others worry it would squeeze learning into longer, more tiring days.', bin: 0 },
+            { text: 'There is no simple answer to whether social media brings people closer together.', bin: 0 },
+            { text: 'What might Aotearoa look like if every car on the road were electric? The possibilities are worth considering.', bin: 0 },
+            { text: 'Looking back, I am still not sure whether moving schools was the right choice, but it taught me a lot.', bin: 0 },
+            { text: 'Farmers, scientists and city councils each see water quality from a different angle.', bin: 0 },
+            { text: 'Both views have merit, and the evidence points in more than one direction.', bin: 0 },
+            { text: 'The council must ban single-use plastic bags at the market this year.', bin: 1 },
+            { text: 'Every student deserves a later start, and the evidence proves it.', bin: 1 },
+            { text: 'Sign the petition today and protect our local beaches.', bin: 1 },
+            { text: 'There is only one sensible choice: the skate park must be built.', bin: 1 },
+            { text: 'Anyone who cares about kiwi should support trapping in the reserve.', bin: 1 },
+            { text: 'Some claim uniforms build pride, but that is a weak excuse for costing families hundreds of dollars.', bin: 1 }
+          ], pick: 6,
+          explain: 'Discursive extracts weigh several viewpoints, reflect or wonder “what if”, in a balanced tone. Persuasive extracts push one position, dismiss the other side or call the reader to act.' })]
+      },
+
+      // 12 · Thesis and opening statements.
+      {
+        name: 'Year 9: thesis and opening statements', learn: 'thesis', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'Which is the strongest thesis for a <strong>persuasive</strong> essay on school start times?',
+            right: 'School should start at 9.30 am, because teenagers need more sleep and concentrate better later in the morning.',
+            wrong: ['In this essay I will talk about school start times.', 'Most schools start at about 8.45 am.', 'School start times are an interesting topic that many people have opinions about.'],
+            explain: 'A thesis states a position and previews the reasons. The others announce the topic, state a bare fact, or say nothing arguable.' }),
+          rng => C(rng, { prompt: 'Which is the best opening statement for a <strong>discursive</strong> essay on whether teenagers should have part-time jobs?',
+            right: 'Part-time jobs can teach teenagers responsibility, but they can also eat into study and sleep; the question is where the balance lies.',
+            wrong: ['Teenagers must not be allowed part-time jobs, and here is why.', 'In this essay I am going to write about jobs.', 'Many teenagers work at supermarkets.'],
+            explain: 'A discursive opening frames the issue and signals more than one viewpoint. The first takes a side, which suits a persuasive essay; the others announce or state a fact.' }),
+          rng => C(rng, { prompt: 'Which is the strongest thesis for a <strong>persuasive</strong> essay about predator-free reserves?',
+            right: 'New Zealand should fund more predator-free reserves, because they protect native birds and bring visitors to local communities.',
+            wrong: ['Predators such as stoats and rats live in New Zealand.', 'This essay is about predators and birds.', 'Some people like birds and some people do not.'],
+            explain: 'It takes a clear position and previews two reasons the essay will develop. The others are a fact, an announcement and a vague observation.' }),
+          rng => C(rng, { prompt: 'A thesis statement does two jobs. What are they?',
+            right: 'It states the writer’s position and previews the main reasons.',
+            wrong: ['It tells a joke and lists every piece of evidence.', 'It summarises the opposing view and agrees with it.', 'It gives the essay’s title and the writer’s name.'],
+            explain: 'The thesis tells the reader what you will argue and how. Evidence comes later, in the body paragraphs.' }),
+          rng => C(rng, { prompt: 'Why is this a weak thesis? <em>“Fast fashion is a thing that exists.”</em>',
+            right: 'It states a fact nobody would argue with, so it gives the essay no position to develop.',
+            wrong: ['It is far too long.', 'It takes too strong a position.', 'It should be written as a question.'],
+            explain: 'A thesis must be arguable. Compare: “Fast fashion should be taxed, because its true cost is paid by workers and the environment.”' }),
+          rng => C(rng, { prompt: 'Which opening suits a <strong>discursive</strong> essay rather than a persuasive one?',
+            right: 'Should Wellington build more cycleways? Cyclists, shop owners and drivers give very different answers.',
+            wrong: ['Wellington needs more cycleways, and it needs them now.', 'Cycleways are the only sensible way to cut traffic in Wellington.', 'Every reader should email the council today demanding more cycleways.'],
+            explain: 'It raises the question and points to several viewpoints without choosing one. The others take a side, as a persuasive text would.' })
+        ]
+      },
+
+      // 13 · Purposes of discursive texts.
+      {
+        name: 'Year 9: purposes of discursive texts', learn: 'discursive', challenge: 'only',
+        items: [Sci.gen(rng => {
+          const pool = [
+            ['To analyse', ['This essay examines the evidence for and against a four-day school week, weighing cost, learning and wellbeing.',
+                            'Using data from three regions, this essay examines why some rivers have recovered and others have not.']],
+            ['To reflect', ['Looking back on my first year at high school, I have come to see friendship differently.',
+                            'Learning te reo Māori with my nan has changed how I think about where I belong.']],
+            ['To explore', ['Is it ever right to break a rule? This essay turns the question over without promising a final answer.',
+                            'What does it mean to be a good citizen? This essay considers several possible answers without settling on one.']],
+            ['To speculate', ['What if every car in Aotearoa were electric by 2040? This essay imagines how our towns might change.',
+                              'Suppose robots did most jobs by 2070. How might people spend their days?']]
+          ];
+          return Sci.match(rng, 'Match each discursive opening to its purpose.', pool.map(([purpose, lines]) => [rng.pick(lines), purpose]),
+            'Analyse: examine evidence from several angles. Reflect: explore your own thoughts and experiences. Explore: consider an open question. Speculate: imagine possible outcomes.');
+        })]
+      },
+
+      // 14 · Cohesion and transitions between viewpoints.
+      {
+        name: 'Year 9: cohesion between viewpoints', learn: 'cohesion', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'A discursive essay has just given the supporters’ view of a new motorway. Which sentence best opens the next paragraph, on the opposing view?',
+            right: 'Critics, however, see the motorway very differently.',
+            wrong: ['Also, the motorway will be very long.', 'In conclusion, the motorway is good.', 'For example, motorways have several lanes.'],
+            explain: '“Critics, however” signals a shift to a new viewpoint. The others add, conclude or give an example instead.' }),
+          rng => C(rng, { prompt: '<em>Many residents fear the new dam would flood farmland. <strong>These concerns</strong> are shared by several local farmers.</em> What does “These concerns” do?',
+            right: 'It points back to the fears in the previous sentence, linking the two sentences.',
+            wrong: ['It introduces a brand-new topic.', 'It signals that the essay is ending.', 'It gives an example.'],
+            explain: 'Words such as “this”, “these” and “such” refer back to an earlier idea, so the reader follows the thread.' }),
+          rng => C(rng, { prompt: 'Which topic sentence best links a paragraph about <strong>cost</strong> to a new paragraph about <strong>safety</strong>?',
+            right: 'Cost is not the only concern, however; safety matters just as much.',
+            wrong: ['Safety.', 'Here is another paragraph about something else.', 'Cost is a big problem for the project.'],
+            explain: 'It looks back to cost and forward to safety in one sentence. The last option stays on cost, and the others give no link at all.' }),
+          rng => C(rng, { prompt: 'Which transition best fills the gap? <em>Supporters say the reserve protects kiwi. ▢, some hunters argue it limits their access to the bush.</em>',
+            right: 'On the other hand', wrong: ['Therefore', 'For instance', 'Similarly'],
+            explain: 'The second sentence gives a contrasting viewpoint. “Therefore” shows a result, “for instance” an example and “similarly” a likeness.' }),
+          rng => C(rng, { prompt: 'Which pair of sentences is the most cohesive?',
+            right: 'Plastic bags clog waterways. This damage costs councils millions of dollars each year.',
+            wrong: ['Plastic bags clog waterways. Councils have budgets.', 'Plastic bags clog waterways. Some bags are blue.', 'Plastic bags clog waterways. Rivers are found in many countries.'],
+            explain: '“This damage” points back to the clogged waterways and builds on the idea. The other second sentences drift to unconnected facts.' }),
+          rng => C(rng, { prompt: 'A discursive essay has given the views of students and of parents. Which sentence best introduces a third viewpoint?',
+            right: 'Seen from a teacher’s perspective, the issue looks different again.',
+            wrong: ['As a result, students are right.', 'In conclusion, everyone agrees.', 'For example, parents.'],
+            explain: 'It names the new viewpoint and signals that it differs. The others jump to a result or a conclusion, or are not a sentence.' })
+        ]
+      },
+
+      // 15 · Anticipating and rebutting a counterargument.
+      {
+        name: 'Year 9: rebutting a counterargument', learn: 'rebut', challenge: 'only',
+        items: [
+          ['Some people argue that a later school start would clash with after-school sport.', 'It is true that some trainings would finish later.',
+           'However, research on teenage sleep suggests that rested players perform better and are injured less.', 'A later start, then, would help our teams rather than harm them.'],
+          ['Critics say a skate park would attract litter.', 'Admittedly, any busy public space can collect rubbish.',
+           'Yet a park with bins and a volunteer clean-up roster would stay tidier than the empty lot does now.', 'That is one more reason the skate park deserves the council’s support.'],
+          ['Opponents claim that a predator-free reserve is too expensive.', 'Trapping does cost money, and results take years.',
+           'But the visitors that thriving native birds attract bring money back into the community.', 'The reserve is therefore an investment, not just a cost.'],
+          ['Some parents worry that a phone-free school day would leave students unreachable.', 'Their concern for safety is understandable.',
+           'However, the school office can pass on any urgent message within minutes.', 'Safety, then, is not a reason to keep phones in pockets.'],
+          ['Some argue that people will simply forget their reusable cups.', 'It is true that habits take time to change.',
+           'Still, a small discount at the counter has helped many cafés make reusable cups the norm.', 'With the right incentives, a ban on disposable cups is realistic.']
+        ].map(seq => rng => Sci.order(rng, 'Put the sentences of this rebuttal paragraph in order.', seq,
+          'Name the opposing view, concede what is true in it, counter it with a reason or evidence, then link back to your position.'))
+      },
+
+      // 16 · Synthesising conclusions.
+      {
+        name: 'Year 9: synthesising conclusions', learn: 'synthesise', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'A <strong>discursive</strong> essay has weighed the views of students, parents and teachers on homework. Which conclusion synthesises best?',
+            right: 'Students, parents and teachers disagree about how much homework helps, but they agree on one thing: what matters is whether it is useful, not how long it takes.',
+            wrong: ['Students think one thing, parents think another, and teachers think something else.', 'Homework must be banned immediately. Sign our petition.', 'Another view comes from sports coaches, who say homework clashes with training.'],
+            explain: 'It draws the views together into one new insight. The others only repeat, switch to a one-sided call to action, or add a new point.' }),
+          rng => C(rng, { prompt: 'Which sentence best concludes a <strong>persuasive</strong> essay arguing for more cycleways?',
+            right: 'Safer streets, cleaner air and healthier people: cycleways deliver all three, and the council should start building them now.',
+            wrong: ['There are many views on cycleways, and each has merit.', 'In this essay I talked about cycleways.', 'A further reason is that bikes cost less than cars.'],
+            explain: 'It gathers the reasons into one strong statement and ends with a call to action. The first is balanced, which suits a discursive essay; the last adds a new reason.' }),
+          rng => C(rng, { prompt: 'What is the difference between summarising and synthesising in a conclusion?',
+            right: 'Summarising repeats the main points; synthesising draws them together into one overall insight.',
+            wrong: ['Summarising is for stories; synthesising is for poems.', 'They mean exactly the same thing.', 'Synthesising adds new evidence that was not in the essay.'],
+            explain: 'A synthesis shows how the points fit together. It does not bring in new evidence.' }),
+          rng => C(rng, { prompt: 'A discursive essay explored whether social media brings people together. Which ending is the most reflective and synthesising?',
+            right: 'Social media can connect us or isolate us; perhaps the real question is not whether we use it, but how.',
+            wrong: ['Social media is harmful, and everyone should delete it today.', 'Many people use social media every day.', 'In conclusion, there were good points and bad points.'],
+            explain: 'It holds both sides together and reframes the question. The others take a side, state a new fact, or just say that views differ.' }),
+          rng => C(rng, { prompt: 'Why might a discursive essay end by leaving a question open?',
+            right: 'The issue is complex, and the writer’s aim was to explore it rather than settle it.',
+            wrong: ['The writer ran out of time.', 'Every conclusion must end with a question.', 'Discursive texts do not have conclusions.'],
+            explain: 'Exploring an open question is one purpose of a discursive text, so an open, reflective ending can fit.' })
+        ]
+      },
+
+      // 17 · Choosing a planning technique.
+      {
+        name: 'Year 9: choosing a plan', learn: 'plan', challenge: 'only',
+        items: [
+          ['Mere has worked out the story for a two-minute short film. She now wants to plan it shot by shot.', 'A storyboard', 'A storyboard shows each scene or shot as a picture with notes.'],
+          ['Tama has his ideas for a discursive essay and now needs to put his paragraphs into a logical order.', 'An outline', 'An outline orders the points and paragraphs of an essay.'],
+          ['Aroha is writing a guide that helps people decide which bin each piece of rubbish belongs in, with a yes or no question at each step.', 'A flow chart', 'A flow chart shows steps and the decisions that branch between them.'],
+          ['Sione has been given an essay topic and has no idea yet what to say about it.', 'A brainstorm or mind map', 'A brainstorm generates ideas; ordering them comes later.'],
+          ['Hemi has the events of a comic strip about a cheeky kea worked out, and now needs to plan each panel.', 'A storyboard', 'A storyboard plans a visual narrative panel by panel.']
+        ].map(([task, right, why]) => rng => C(rng, { prompt: `${task} Which planning technique suits this best?`, right,
+          wrong: ['A storyboard', 'An outline', 'A flow chart', 'A brainstorm or mind map'].filter(t => t !== right),
+          explain: why + ' Choose the plan that suits the form and purpose of the writing.' }))
+      }
     ]
   });
 
