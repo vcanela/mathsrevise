@@ -16,7 +16,7 @@ const Manifest = (() => {
   const SUBJECTS = [
     { id: 'maths',   name: 'Maths',   blurb: 'Number, algebra, geometry, and where they meet.' },
     { id: 'science', name: 'Science', blurb: 'Years 7 and 8, following the 2027 NZ Curriculum, grouped by subject.' },
-    { id: 'english', name: 'English', blurb: 'Years 7 and 8, following the 2026 NZ Curriculum: the words, grammar and reading skills behind your class work.' }
+    { id: 'english', name: 'English', blurb: 'Years 7 and 8, following the 2026 NZ Curriculum: the words, grammar and reading skills behind your class work, with Year 9 challenges when you want more.' }
   ];
 
   // `key` identifies a unit everywhere (topic files, URLs, progress). Maths
@@ -156,7 +156,8 @@ const Manifest = (() => {
         { id: 'ew10', code: 'W10', slug: 'active-passive', title: 'Active and Passive Voice', tag: 'Who does the action', years: '7–8', challenge: true },
         { id: 'ew11', code: 'W11', slug: 'colons-semicolons', title: 'Colons, Semicolons and Comma Splices', tag: 'Joining and introducing', years: '7–8', challenge: true },
         { id: 'ew12', code: 'W12', slug: 'choosing-words', title: 'Choosing Words', tag: 'Shades of meaning and tone', years: '7–8', challenge: true },
-        { id: 'ew13', code: 'W13', slug: 'structuring-writing', title: 'Structuring Writing', tag: 'Persuade, inform, entertain', years: '7–8', challenge: true }
+        { id: 'ew13', code: 'W13', slug: 'structuring-writing', title: 'Structuring Writing', tag: 'Persuade, inform, entertain', years: '7–8', challenge: true },
+        { id: 'ew15', code: 'W15', slug: 'literary-essay', title: 'The Literary Essay', tag: 'Thesis, evidence and analysis', year: 9 }
       ]
     },
     {

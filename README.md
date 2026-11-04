@@ -82,7 +82,8 @@ only in that set and one marked `challenge: 'also'` (the Extension slot) appears
 questions are tagged *Year 9*. The new ideas get Learn it cards with `years: '9'`. Mark the exercise
 `challenge: true` in the manifest too, so its subject card shows the badge and the self-test loads
 the challenge page; the checker fails if the two disagree. The content follows the Year 9 column of
-Phase 4 in the curriculum.
+Phase 4 in the curriculum. W15, The Literary Essay, is Year 9 throughout (`year: 9` in the manifest), built on a
+short story and a poem written for the site.
 
 **Reviewing content.** Authored science items can't be verified by a script: a wrong fact would
 pass every test. `tools/review-science.html` lists every item with all its options, the marked

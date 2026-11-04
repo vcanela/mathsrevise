@@ -3258,4 +3258,354 @@
     ]
   });
 
+
+  // ═══ W15 The literary essay (Year 9) ══════════════════════════════════════
+  // Phase 4 › Language Studies › Crafting Texts › Literary essays (Year 9):
+  // an introduction with a clear, concise thesis; body paragraphs that each
+  // develop an idea with evidence from the text, analysed to show how it
+  // supports the thesis; a conclusion that summarises. Practices: developing a
+  // thesis, beginning each paragraph with a topic sentence, using relevant
+  // quotations, explaining how evidence supports the argument, exploring the
+  // author's purpose and techniques, and the language of literary essays.
+  //
+  // Two short texts, written for this site, give the essay something to be
+  // about. A question on a text prints it in full the first time it appears
+  // on the page and folds it away after that.
+
+  const BIKE = {
+    title: 'The Bike', kind: 'story',
+    text: '<p>Every afternoon for a month, Losa stopped outside Henderson’s Cycles to look at the red bike in the window. It had silver mudguards and a bell that, she imagined, would sound like a small church.</p>' +
+          '<p>At home she counted her savings on the bedroom floor: forty-three dollars and twenty cents. The bike cost two hundred and ten.</p>' +
+          '<p>On Saturday her brother Sione came home from his first week at the packhouse, smelling of apples and cold air. He did not say much. He never did. He put an envelope on the kitchen table, beside the bills that Mum kept under the sugar tin.</p>' +
+          '<p>That night Losa heard Mum crying quietly in the kitchen. It was not the bad kind of crying.</p>' +
+          '<p>On Monday, Losa walked past Henderson’s without stopping. The red bike was still there, shining. She looked at it for one second, then kept walking, her hands in her pockets, counting nothing at all.</p>'
+  };
+  const TIDE = {
+    title: 'Low Tide (a poem)', kind: 'poem',
+    text: '<p class="poem">My grandfather walks the low-tide line,<br>his bucket swinging, slow as breath.<br>He knows which rocks the pipi hide beneath,<br>which stars mean wind, which clouds mean rain.</p>' +
+          '<p class="poem">I follow, stepping in his prints,<br>my feet too small to fill them yet.<br>The sea comes back. It always does.<br>It takes his footprints. Leaves me mine.</p>'
+  };
+  const showText = p => `<div class="passage"><p class="passage-title"><strong>${p.title}</strong></p>${p.text}</div>`;
+  /** A question on one of the texts: the text goes above the prompt, tagged so it folds when shown again. */
+  const onText = (p, q) => Object.assign(q, { prompt: showText(p) + q.prompt, passage: p.title });
+
+  Sci.topic({
+    id: 'ew15', unit: 'writing',
+    title: 'The Literary Essay',
+    blurb: 'Building an argument about a text: a thesis, topic sentences, the right evidence, and analysis that explains it.',
+    hint: 'A thesis is an arguable claim about what the text shows and how. Each body paragraph opens with a topic sentence that supports the thesis, ' +
+          'gives a short quotation, explains how the words create meaning, and links back to the thesis. Write in the present tense, formally, without retelling the plot.',
+
+    learn: [
+      { id: 'shape', title: 'The shape of a literary essay', wide: true,
+        text: Sci.table(['Part', 'What it does'], [
+                ['<strong>Introduction</strong>', 'names the text and writer, gives a little context, and ends with the <strong>thesis</strong>'],
+                ['<strong>Body paragraphs</strong>', 'each develops <strong>one idea</strong> that supports the thesis, with evidence and analysis'],
+                ['<strong>Conclusion</strong>', 'restates the thesis in fresh words, sums up the main points, and leaves a final insight']]) +
+              '<p>A literary essay is an <strong>argument</strong> about a text, not a retelling of it.</p>' },
+      { id: 'thesis', title: 'A thesis statement',
+        text: '<p>The <strong>thesis</strong> is your main argument, in one or two sentences. It says <strong>what</strong> the text shows and <strong>how</strong> the writer shows it.</p>' +
+              '<p>✓ <em>In “The Bike”, the writer uses the red bike as a symbol to show that growing up can mean giving up what you want for the people you love.</em></p>' +
+              '<p>✗ a plot summary, a fact, a vague opinion (“a really good story”), or an announcement (“In this essay I will …”).</p>' },
+      { id: 'topic', title: 'Topic sentences',
+        text: '<p>Each body paragraph opens with a <strong>topic sentence</strong>: the paragraph’s point, linked to the thesis.</p>' +
+              '<p>Connectives show how the paragraphs build: <em>Furthermore</em>, <em>In contrast</em>, <em>Most importantly</em>.</p>' +
+              '<p><em>“The writer also uses Sione’s silence to show that love can be shown through actions rather than words.”</em></p>' },
+      { id: 'quote', title: 'Choosing a quotation',
+        text: '<p>Choose evidence that is:</p><ul><li><strong>relevant</strong>: it proves this paragraph’s point;</li>' +
+              '<li><strong>short</strong>: a phrase is often better than a whole sentence;</li><li><strong>rich</strong>: it has words or techniques you can say something about.</li></ul>' },
+      { id: 'embed', title: 'Embedding a quotation',
+        text: '<p>Put the writer’s exact words in quotation marks and build them into your own sentence, so it still reads smoothly.</p>' +
+              '<p>✓ <em>Sione comes home “smelling of apples and cold air”, a detail that shows how hard he has worked.</em></p>' +
+              '<p>✗ A quotation dropped on its own, with no sentence around it.</p>' },
+      { id: 'analyse', title: 'Explaining the evidence', wide: true,
+        text: '<ol class="learn-steps"><li><strong>Point:</strong> the topic sentence.</li>' +
+              '<li><strong>Evidence:</strong> a short quotation.</li>' +
+              '<li><strong>Explain:</strong> zoom in on key words or techniques and say what they suggest and how they affect the reader.</li>' +
+              '<li><strong>Link:</strong> show how this supports the thesis and the writer’s purpose.</li></ol>' +
+              '<p>The explanation is where the marks are. Saying a quotation “shows” the point is not enough: explain <strong>how</strong> the words show it.</p>' },
+      { id: 'style', title: 'The language of a literary essay',
+        text: '<ul><li><strong>Present tense</strong> for what happens in the text: “Losa <em>walks</em> past”.</li>' +
+              '<li><strong>Formal</strong> and in the <strong>third person</strong>: no slang, no “I think”.</li>' +
+              '<li>Refer to the author by <strong>surname</strong> (Mansfield, not Katherine), or as “the writer”.</li>' +
+              '<li><strong>Analyse</strong>, don’t retell: assume the reader knows the story.</li></ul>' },
+      { id: 'conclusion', title: 'The conclusion',
+        text: '<p>A conclusion <strong>restates the thesis</strong> in fresh words, <strong>sums up</strong> the main points, and ends with a final insight about the text or what it says about life.</p>' +
+              '<p>It does not bring in new evidence, and it does not simply copy the introduction.</p>' },
+      { id: 'purpose', title: 'The writer’s purpose and choices', wide: true,
+        text: '<p>Every detail in a good text is a <strong>choice</strong>. Ask why the writer chose it: what does it make us think or feel, and how does it serve the text’s message?</p>' +
+              '<p><em>Why does “The Bike” end with Losa “counting nothing at all”? Because it echoes her counting her savings, showing she has let the wish go.</em></p>' }
+    ],
+
+    examples: [
+      {
+        title: 'Example 1: from topic to thesis',
+        steps: [
+          'Topic: <em>“The Bike” is about Losa and a bike she wants.</em> That is a summary, not an argument.',
+          'Ask what the text <strong>shows</strong>: growing up can mean putting your family first.',
+          'Ask <strong>how</strong> the writer shows it: the red bike works as a symbol of what Losa wants for herself.',
+          'Thesis: <em>In “The Bike”, the writer uses the red bike as a symbol to show that growing up can mean giving up what you want for the people you love.</em>'
+        ],
+        result: 'What the text shows + how the writer shows it'
+      },
+      {
+        title: 'Example 2: a body paragraph',
+        steps: [
+          '<strong>Point:</strong> The writer shows Losa’s new maturity through the story’s final image.',
+          '<strong>Evidence:</strong> Losa walks on “counting nothing at all”.',
+          '<strong>Explain:</strong> the phrase echoes her counting her savings earlier. Counting “nothing” shows she has stopped measuring what she wants and lets the wish go.',
+          '<strong>Link:</strong> this quiet ending supports the idea that growing up can mean putting others first.'
+        ]
+      }
+    ],
+
+    slots: [
+      // 1 · The strongest thesis.
+      {
+        name: 'The strongest thesis', learn: 'thesis',
+        items: [
+          rng => onText(BIKE, C(rng, { prompt: 'Which is the strongest thesis for an essay on “The Bike”?',
+            right: 'In “The Bike”, the writer uses the red bike as a symbol to show that growing up can mean giving up what you want for the people you love.',
+            wrong: ['“The Bike” is about a girl called Losa who wants a red bike.', '“The Bike” is a really good story with an interesting ending.', 'In “The Bike”, the bike costs two hundred and ten dollars.'],
+            explain: 'It argues what the story shows (growing up can mean putting others first) and how (the bike as a symbol). The others summarise, give an opinion with no argument, or state a fact.' })),
+          rng => onText(TIDE, C(rng, { prompt: 'Which is the strongest thesis for an essay on “Low Tide”?',
+            right: 'In “Low Tide”, the poet uses the image of footprints to show how knowledge and identity pass from one generation to the next.',
+            wrong: ['“Low Tide” is a poem about a grandfather and a child at the beach.', '“Low Tide” is about life.', '“Low Tide” uses a simile, repetition and a metaphor.'],
+            explain: 'The strongest thesis makes a specific, arguable claim and names how the poet makes it. Listing techniques is not an argument, and “about life” is too vague to prove.' })),
+          rng => C(rng, { prompt: 'What makes a thesis statement different from a plot summary?',
+            right: 'A thesis makes an arguable claim about what the text means and how; a summary only says what happens.',
+            wrong: ['A thesis is longer than a summary.', 'A thesis always begins with “In this essay”.', 'A thesis retells the ending; a summary retells the beginning.'],
+            explain: 'A reader could disagree with a thesis, which is why the essay needs evidence to support it.' }),
+          rng => C(rng, { prompt: 'A student writes: <em>“In this essay I will talk about the poem ‘Low Tide’.”</em> What is the main problem?',
+            right: 'It announces the topic but makes no argument about the poem.', wrong: ['It is too long.', 'It names the poem.', 'It is written in the present tense.'],
+            explain: 'A thesis states your argument. Announcing what you will write about does not.' }),
+          rng => C(rng, { prompt: 'Which thesis is too <strong>broad</strong> to be proved in a short essay?',
+            right: 'Stories show everything about being human.',
+            wrong: ['In “The Bike”, Sione’s silence shows that love can be expressed through actions rather than words.', 'In “Low Tide”, the returning sea suggests that time moves on but leaves something behind.', 'In “The Bike”, the final image shows Losa’s new maturity.'],
+            explain: 'A good thesis is specific to the text, so it can be supported with evidence from it.' }),
+          rng => onText(TIDE, C(rng, { prompt: 'Which thesis is the most <strong>arguable</strong>?',
+            right: 'In “Low Tide”, the poet suggests that growing up means learning to make your own way, not just following in someone else’s footsteps.',
+            wrong: ['“Low Tide” has two stanzas.', '“Low Tide” mentions pipi.', '“Low Tide” is set at the beach.'],
+            explain: 'The others are facts that nobody would dispute. A thesis must be a claim you have to prove.' }))
+        ]
+      },
+
+      // 2 · Thesis or not?
+      {
+        name: 'Thesis or not?', learn: 'thesis',
+        items: [rng => Sci.sort(rng, {
+          prompt: 'Is each sentence a thesis statement, or not?',
+          bins: ['Thesis statement', 'Not a thesis'],
+          items: [
+            { text: 'In “The Bike”, the writer uses contrast to show how Losa’s wishes change.', bin: 0 },
+            { text: 'In “Low Tide”, the poet presents the sea as a symbol of time passing.', bin: 0 },
+            { text: 'In “The Bike”, small details reveal a family that cares for one another without saying so.', bin: 0 },
+            { text: 'In “Low Tide”, the grandfather’s knowledge is shown to be a gift the speaker must grow into.', bin: 0 },
+            { text: 'In “The Bike”, the writer suggests that the best choices are sometimes the quietest.', bin: 0 },
+            { text: 'In “The Bike”, Losa saves forty-three dollars and twenty cents.', bin: 1 },
+            { text: 'In this essay I will write about “Low Tide”.', bin: 1 },
+            { text: '“The Bike” is a story about a brother and a sister.', bin: 1 },
+            { text: 'Is “Low Tide” a good poem?', bin: 1 },
+            { text: '“Low Tide” is my favourite poem.', bin: 1 }
+          ],
+          pick: 6,
+          explain: 'A thesis makes an arguable claim about meaning and how it is created. Facts, summaries, questions, announcements and personal preferences are not theses.'
+        })]
+      },
+
+      // 3 · Topic sentences.
+      {
+        name: 'Topic sentences', learn: 'topic',
+        items: [
+          rng => onText(BIKE, C(rng, { prompt: 'Thesis: <em>In “The Bike”, the writer shows that growing up can mean putting your family first.</em> Which is the best topic sentence for a body paragraph?',
+            right: 'The writer first shows Losa’s longing for the bike, so that her later choice to let it go carries real weight.',
+            wrong: ['Losa looks at a bike every afternoon.', 'Henderson’s Cycles is a bike shop.', 'I really liked the part about the bike.'],
+            explain: 'A topic sentence states the paragraph’s point and links it to the thesis. The others retell, state a fact, or give a personal reaction.' })),
+          rng => onText(BIKE, C(rng, { prompt: 'Thesis: <em>In “The Bike”, the writer shows that love can be shown through actions rather than words.</em> Which is the best topic sentence?',
+            right: 'Sione’s silence is central to this idea, because his care for the family is shown entirely by what he does.',
+            wrong: ['Sione works at a packhouse.', 'Sione comes home on a Saturday.', 'This story has a brother in it.'],
+            explain: 'It makes a point about Sione that supports the thesis, rather than retelling a detail.' })),
+          rng => onText(TIDE, C(rng, { prompt: 'Thesis: <em>In “Low Tide”, the poet shows how knowledge passes between generations.</em> Which is the best topic sentence?',
+            right: 'In the first stanza, the poet presents the grandfather as someone whose knowledge comes from a lifetime of close attention to the sea.',
+            wrong: ['The first stanza has four lines.', 'The grandfather carries a bucket.', 'There are pipi in the poem.'],
+            explain: 'It makes an arguable point that supports the thesis. The others are facts with no argument.' })),
+          rng => C(rng, { prompt: 'Which connective best opens a paragraph that gives a <strong>different side</strong> of the same idea?',
+            right: 'In contrast,', wrong: ['Furthermore,', 'In addition,', 'Similarly,'],
+            explain: '“In contrast” signals a difference. The others add a similar point.' }),
+          rng => C(rng, { prompt: 'Where does the topic sentence usually go?',
+            right: 'At the start of the body paragraph', wrong: ['At the end of the essay', 'In the middle of the quotation', 'Only in the introduction'],
+            explain: 'Opening with the point tells the reader what the paragraph will prove.' })
+        ]
+      },
+
+      // 4 · Choosing the best quotation.
+      {
+        name: 'The best quotation', learn: 'quote',
+        items: [
+          rng => onText(BIKE, C(rng, { prompt: 'Point: <em>Losa wants the bike very much.</em> Which quotation is the best evidence?',
+            right: '“Every afternoon for a month, Losa stopped outside Henderson’s Cycles”', wrong: ['“The bike cost two hundred and ten.”', '“He did not say much.”', '“That night Losa heard Mum crying quietly”'],
+            explain: 'Stopping every afternoon for a month shows how strongly she longs for it. The others are not about her wanting the bike.' })),
+          rng => onText(BIKE, C(rng, { prompt: 'Point: <em>Sione shows his love through actions, not words.</em> Which quotation is the best evidence?',
+            right: '“He did not say much. He never did. He put an envelope on the kitchen table”', wrong: ['“smelling of apples and cold air”', '“The red bike was still there, shining.”', '“forty-three dollars and twenty cents”'],
+            explain: 'It sets his silence against his action, which is exactly the point. The apple detail shows hard work, not how he expresses love.' })),
+          rng => onText(BIKE, C(rng, { prompt: 'Point: <em>Losa has let the wish go by the end.</em> Which quotation is the best evidence?',
+            right: '“counting nothing at all”', wrong: ['“a bell that, she imagined, would sound like a small church”', '“beside the bills that Mum kept under the sugar tin”', '“his first week at the packhouse”'],
+            explain: 'The final phrase echoes her counting her savings, now with nothing to count. A short, rich phrase is often the best evidence.' })),
+          rng => onText(BIKE, C(rng, { prompt: 'Point: <em>The family is short of money.</em> Which quotation is the best evidence?',
+            right: '“the bills that Mum kept under the sugar tin”', wrong: ['“a bell that, she imagined, would sound like a small church”', '“She looked at it for one second”', '“It was not the bad kind of crying.”'],
+            explain: 'Bills tucked away under the sugar tin hint at money worries the family keeps out of sight.' })),
+          rng => onText(TIDE, C(rng, { prompt: 'Point: <em>The grandfather has deep knowledge of the natural world.</em> Which quotation is the best evidence?',
+            right: '“which stars mean wind, which clouds mean rain”', wrong: ['“his bucket swinging”', '“I follow, stepping in his prints”', '“The sea comes back.”'],
+            explain: 'It shows him reading the sky to predict the weather, and the repeated “which” builds up how much he knows.' })),
+          rng => onText(TIDE, C(rng, { prompt: 'Point: <em>The speaker is not yet ready to take the grandfather’s place.</em> Which quotation is the best evidence?',
+            right: '“my feet too small to fill them yet”', wrong: ['“slow as breath”', '“He knows which rocks the pipi hide beneath”', '“My grandfather walks the low-tide line”'],
+            explain: '“Too small to fill them” echoes the saying about filling someone’s shoes, and “yet” hints that one day the speaker will.' }))
+        ]
+      },
+
+      // 5 · Embedding quotations.
+      {
+        name: 'Embedding a quotation', learn: 'embed',
+        items: [
+          rng => C(rng, { prompt: 'Which sentence embeds the quotation correctly?',
+            right: 'Sione comes home “smelling of apples and cold air”, a detail that shows how hard he has worked.',
+            wrong: ['Sione comes home smelling of apples and cold air, a detail that shows how hard he has worked.', '“Smelling of apples and cold air.” Sione has worked hard.', 'Sione comes home. “Smelling of apples and cold air”. A detail that shows hard work.'],
+            explain: 'The writer’s exact words are in quotation marks, and the sentence reads smoothly around them. Without marks, the words look like your own; the others drop the quotation in as a fragment.' }),
+          rng => C(rng, { prompt: 'Which sentence embeds the quotation correctly?',
+            right: 'The grandfather moves “slow as breath”, which suggests he is calm and completely at home on the shore.',
+            wrong: ['The grandfather moves. “Slow as breath.” He is calm.', 'The grandfather moves slow as breath which suggests he is calm.', '“slow as breath” the grandfather is calm.'],
+            explain: 'Quotation marks show the poet’s words, and the sentence around them is complete and smooth.' }),
+          rng => C(rng, { prompt: 'Which is the best way to quote from “The Bike”?',
+            right: 'Losa walks past “without stopping”, which shows her decision is firm.',
+            wrong: ['Losa walks past without stopping, which shows her decision is firm.', 'On Monday, Losa walked past Henderson’s without stopping. The red bike was still there, shining. This shows her decision.', 'Losa walks past “without stopping, which shows her decision is firm.”'],
+            explain: 'A short, exact quotation in quotation marks. The second copies whole sentences without marks, and the third puts the student’s own words inside the quotation marks.' }),
+          rng => C(rng, { prompt: 'Why is a short quotation often better than a long one?',
+            right: 'It keeps the focus on the key words you are going to analyse.', wrong: ['Long quotations are not allowed.', 'Short quotations do not need quotation marks.', 'It makes the essay shorter, which always earns more marks.'],
+            explain: 'If you quote a whole paragraph, the reader cannot tell which words matter. A precise phrase shows exactly what you are analysing.' }),
+          rng => C(rng, { prompt: 'What is wrong with this? <em>The poem uses a simile. “His bucket swinging, slow as breath.” This is effective.</em>',
+            right: 'The quotation is dropped in on its own, and the comment does not explain the effect.', wrong: ['Similes should never be quoted.', 'The quotation is too short.', 'It should be written in the past tense.'],
+            explain: 'Build the quotation into a sentence, then explain how it works: “The simile ‘slow as breath’ suggests the grandfather’s calm, unhurried rhythm.”' })
+        ]
+      },
+
+      // 6 · Explaining how evidence supports a point.
+      {
+        name: 'Explaining the evidence', learn: 'analyse',
+        items: [
+          rng => onText(BIKE, C(rng, { prompt: 'Evidence: <em>“It was not the bad kind of crying.”</em> Which explanation is the strongest?',
+            right: 'By telling us what the crying is not, the writer hints that Mum is moved by Sione’s gift rather than upset, leaving the reader to sense her relief and gratitude.',
+            wrong: ['This shows that Mum is crying.', 'This is a quotation from the story.', 'Mum is sad because the family has no money.'],
+            explain: 'The strongest explanation zooms in on how the words work and what they suggest. The last option misreads the line: it says the crying is not the bad kind.' })),
+          rng => onText(BIKE, C(rng, { prompt: 'Evidence: <em>“a bell that, she imagined, would sound like a small church”</em>. Which explanation is the strongest?',
+            right: 'The simile links the bike to something special and almost sacred, showing how precious the bike has become in Losa’s imagination.',
+            wrong: ['This is a simile because it uses “like”.', 'The bike has a bell.', 'Churches have bells, and so does the bike.'],
+            explain: 'Naming the simile is not enough. The strongest answer says what the comparison suggests about Losa’s feelings.' })),
+          rng => onText(BIKE, C(rng, { prompt: 'Evidence: <em>“counting nothing at all”</em>. Which explanation is the strongest?',
+            right: 'The phrase echoes Losa counting her savings earlier; now she counts “nothing”, which suggests she has stopped measuring what she wants and let the wish go.',
+            wrong: ['Losa is not counting anything.', 'This shows Losa cannot count.', 'This is a good ending because it is short.'],
+            explain: 'Strong analysis notices how a detail connects to another part of the text, and what that connection means.' })),
+          rng => onText(TIDE, C(rng, { prompt: 'Evidence: <em>“It takes his footprints. Leaves me mine.”</em> Which explanation is the strongest?',
+            right: 'The sea erases the grandfather’s footprints but leaves the speaker’s, suggesting that time moves on and the speaker must now make their own way.',
+            wrong: ['The sea washes away footprints on a beach.', 'These are two short sentences.', 'The speaker is sad that the sea is coming in.'],
+            explain: 'The literal event (footprints washed away) carries a bigger meaning about generations and growing up. Saying what happens is not analysis.' })),
+          rng => onText(TIDE, C(rng, { prompt: 'Evidence: <em>“The sea comes back. It always does.”</em> Which explanation is the strongest?',
+            right: 'The short, certain sentences present the tide as unstoppable, like time itself, which nobody can hold back.',
+            wrong: ['The tide comes in twice a day.', 'There is a full stop in the middle of the line.', 'The poet likes the sea.'],
+            explain: 'The strongest answer connects the form (short, certain sentences) to the meaning (time cannot be stopped).' })),
+          rng => C(rng, { prompt: 'A student writes: <em>“This quotation shows that Losa is mature.”</em> What would make the explanation stronger?',
+            right: 'Saying how particular words in the quotation show her maturity, and linking it to the thesis', wrong: ['Adding a second quotation straight after it', 'Retelling what happens next', 'Writing it in capital letters'],
+            explain: 'A quotation only “shows” something once you explain how. Zoom in on the words.' })
+        ]
+      },
+
+      // 7 · Put the paragraph in order.
+      {
+        name: 'Build the paragraph', learn: 'analyse',
+        items: [
+          rng => Sci.order(rng, 'Put this body paragraph in order.', [
+            'The writer uses Sione’s silence to show that love can be expressed through actions rather than words.',
+            'Sione “did not say much” but “put an envelope on the kitchen table”.',
+            'Placing his silence next to this generous act lets the action speak for him.',
+            'This supports the story’s message that the deepest care is often unspoken.'],
+            'Point (topic sentence), evidence (quotation), explanation (how the words work), link (back to the thesis).'),
+          rng => Sci.order(rng, 'Put this body paragraph in order.', [
+            'The final image of the story shows how much Losa has changed.',
+            'She walks past the shop “counting nothing at all”.',
+            'This echoes her counting her savings earlier, so “nothing” shows she has let the wish go.',
+            'Her quiet change shows that growing up can mean putting others first.'],
+            'Point, evidence, explanation, link.'),
+          rng => Sci.order(rng, 'Put this body paragraph in order.', [
+            'The poet presents the grandfather as someone deeply connected to the shore.',
+            'He knows “which stars mean wind, which clouds mean rain”.',
+            'The repeated “which” builds a list of hard-won knowledge, as if he can read the sky like a book.',
+            'This knowledge is what the speaker hopes to inherit, which is the heart of the poem.'],
+            'Point, evidence, explanation, link.'),
+          rng => Sci.order(rng, 'Put this essay outline in order.', [
+            'Introduction: the text, the writer, and the thesis',
+            'Body paragraph 1: the first idea that supports the thesis',
+            'Body paragraph 2: a further idea, opened with a connective',
+            'Conclusion: the thesis restated and a final insight'],
+            'Introduction with thesis, then body paragraphs, then a conclusion.')
+        ]
+      },
+
+      // 8 · Essay language.
+      {
+        name: 'Essay language', learn: 'style',
+        items: [
+          [['The writer presents Losa as a thoughtful girl.', 'She stops outside the shop “every afternoon for a month”.', 'I think this is really cool and I loved it.', 'Her patience makes her final choice more striking.'], 2, 'This is personal and informal. A literary essay stays formal and analyses rather than reacting.'],
+          [['In “Low Tide”, the poet explores growing up.', 'The speaker follows the grandfather, “stepping in his prints”.', 'This image showed that the speaker wanted to be like him.', 'The poet links this to the idea of inheritance.'], 2, 'Line 3 slips into the past tense. Write about what happens in a text in the present tense: “This image shows …”.'],
+          [['Mansfield’s stories often end without a clear resolution.', 'Katherine leaves her readers to decide what a moment means.', 'This open ending invites more than one reading.', 'It reflects her interest in small, ordinary moments.'], 1, 'Refer to an author by surname: “Mansfield leaves her readers …”, not by first name.'],
+          [['The writer uses the bike as a symbol.', 'First Losa looks at the bike, then she counts her money, then her brother comes home, then Mum cries.', 'The bike stands for what Losa wants for herself.', 'Letting it go shows her growing up.'], 1, 'Line 2 retells the plot. Assume the reader knows the story, and analyse instead.'],
+          [['The writer presents the family’s money worries indirectly.', 'Mum keeps the bills “under the sugar tin”.', 'This detail is heaps clever because it’s, like, hidden.', 'It suggests worries the family keeps out of sight.'], 2, 'Slang such as “heaps” and “like” does not suit an essay. Try: “This detail is effective because the worries are hidden.”'],
+          [['The poem ends with a striking image.', 'The sea “takes his footprints” but “leaves me mine”.', 'The grandfather’s prints vanish while the speaker’s remain.', 'You can tell that the speaker will carry his knowledge forward.'], 3, 'Line 4 uses “you”. Keep to the third person: “This suggests that the speaker will carry his knowledge forward.”']
+        ].map(([lines, wrong, why]) => rng => Sci.spot(rng, {
+          prompt: 'One sentence in this paragraph breaks the conventions of a literary essay.',
+          lines, wrong, cue: 'Click the sentence that does not suit a literary essay.', explain: why
+        }))
+      },
+
+      // 9 · Conclusions.
+      {
+        name: 'The conclusion', learn: 'conclusion',
+        items: [
+          rng => onText(BIKE, C(rng, { prompt: 'Which is the strongest conclusion for an essay arguing that “The Bike” shows growing up can mean putting your family first?',
+            right: 'Through the symbol of the red bike and Sione’s silent gift, the writer shows that growing up is less about getting what we want than about seeing what others need.',
+            wrong: ['In conclusion, that is my essay about “The Bike”.', 'In conclusion, Losa wants a bike, Sione gives Mum an envelope, and Losa walks past the shop.', 'Another important point is that the shop is called Henderson’s Cycles.'],
+            explain: 'It restates the thesis in fresh words, gathers the main points, and ends with an insight. The others announce, retell, or add a new point.' })),
+          rng => C(rng, { prompt: 'Which of these should a conclusion <strong>not</strong> do?',
+            right: 'Bring in a new quotation for a new point', wrong: ['Restate the thesis in fresh words', 'Sum up the main points', 'Leave the reader with a final insight'],
+            explain: 'New evidence belongs in a body paragraph. The conclusion pulls together what you have already shown.' }),
+          rng => C(rng, { prompt: 'Why should a conclusion restate the thesis in <strong>fresh words</strong> rather than copy it?',
+            right: 'Copying it word for word sounds repetitive; rephrasing shows how the essay has developed the idea.', wrong: ['Copying the thesis is not allowed in any essay.', 'The conclusion should argue the opposite.', 'Fresh words make the essay longer.'],
+            explain: 'By the end, you have proved the thesis, so you can state it with more depth.' }),
+          rng => onText(TIDE, C(rng, { prompt: 'Which is the strongest final sentence for an essay on “Low Tide”?',
+            right: 'In the end, the poem suggests that we honour those before us not by standing in their footprints, but by learning to make our own.',
+            wrong: ['That is why I liked the poem.', 'The poem has two stanzas and eight lines.', 'In conclusion, the poem is about a beach.'],
+            explain: 'A strong ending leaves an insight about the text and what it says about life.' })),
+          rng => C(rng, { prompt: 'A student’s conclusion begins: <em>“In conclusion, the poem is about a grandfather.”</em> What is the problem?',
+            right: 'It summarises the subject instead of restating the argument.', wrong: ['It uses the word “conclusion”.', 'It mentions the grandfather.', 'It is in the present tense.'],
+            explain: 'The conclusion should return to the thesis: what the poem shows, and how.' })
+        ]
+      },
+
+      // 10 · True or false.
+      {
+        name: 'True or false', learn: 'shape',
+        items: [
+          rng => TF(rng, { statement: 'The thesis statement usually comes at the end of the introduction.', answer: true, learn: 'thesis', explain: 'The introduction leads up to it, and the body paragraphs then prove it.' }),
+          rng => TF(rng, { statement: 'A good literary essay retells the plot in detail.', answer: false, learn: 'style', explain: 'Assume the reader knows the text. Analyse it instead.' }),
+          rng => TF(rng, { statement: 'Each body paragraph should develop one main idea that supports the thesis.', answer: true, learn: 'shape', explain: 'One idea per paragraph keeps the argument clear.' }),
+          rng => TF(rng, { statement: 'Literary essays are usually written in the present tense when describing what happens in a text.', answer: true, learn: 'style', explain: '“Losa walks past the shop”, not “walked”.' }),
+          rng => TF(rng, { statement: 'Naming a technique, such as “this is a simile”, is enough analysis.', answer: false, learn: 'analyse', explain: 'You must explain what the technique suggests and how it affects the reader.' }),
+          rng => TF(rng, { statement: 'A quotation should be in quotation marks and built into your own sentence.', answer: true, learn: 'embed', explain: 'That is called embedding the quotation.' }),
+          rng => TF(rng, { statement: 'A conclusion is a good place to introduce a brand-new piece of evidence.', answer: false, learn: 'conclusion', explain: 'New evidence belongs in a body paragraph.' }),
+          rng => TF(rng, { statement: 'A thesis should be something a reader could disagree with.', answer: true, learn: 'thesis', explain: 'If nobody could disagree, there is nothing to argue.' }),
+          rng => TF(rng, { statement: 'In a literary essay, you should refer to the author by their first name.', answer: false, learn: 'style', explain: 'Use their surname, or “the writer”.' }),
+          rng => TF(rng, { statement: 'Asking why a writer made a particular choice can help you analyse a text.', answer: true, learn: 'purpose', explain: 'Every detail in a well-crafted text is a choice with a purpose.' })
+        ]
+      }
+    ]
+  });
+
 })();
