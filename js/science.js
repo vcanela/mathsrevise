@@ -44,6 +44,9 @@ const Sci = (() => {
   // mix. It stays off for ?set=N, where everyone must get the same questions,
   // and for the checker and the review page.
   let memory = false;
+  // `challenge` is switched on by the engine for ?set=challenge: the topic
+  // then builds its Year 9 set instead of the usual one.
+  let challenge = false;
   const seenKey = id => 'mrg_seen_' + id;
 
   function readSeen(topicId) {
@@ -78,6 +81,11 @@ const Sci = (() => {
    *  one for every slot: one or two reading passages per set, not six. */
   function topic(def) {
     const t = Object.assign({}, def);
+    // A slot marked `challenge: 'only'` belongs to the Year 9 challenge set and
+    // never appears in a normal one; `challenge: 'also'` (the Extension slot)
+    // appears in both. `Sci.challenge` says which set to build.
+    const inSet = slot => challenge ? !!slot.challenge : slot.challenge !== 'only';
+    t.hasChallenge = def.slots.some(s => s.challenge === 'only');
     t.generate = (rng, diff) => {
       const seen = memory ? readSeen(def.id) : {};
       const tg = def.together;
@@ -96,7 +104,9 @@ const Sci = (() => {
           shared.push(rng.pick(unseen.length ? unseen : left.slice(0, Math.max(1, Math.ceil(left.length / 2)))));
         }
       }
-      return def.slots.map((slot, i) => {
+      const out = [];
+      def.slots.forEach((slot, i) => {
+        if (!inSet(slot)) return;
         const linked = tg ? tg.slots.indexOf(i) : -1;
         const idx = linked >= 0 ? shared[Math.floor(linked * shared.length / tg.slots.length)]
                                 : pickIndex(rng, slot.items.length, seen[i]);
@@ -106,8 +116,10 @@ const Sci = (() => {
         // Which "Learn it" card answers this question. An item can name its
         // own card; otherwise it takes the slot's.
         if (!q.learn && slot.learn) q.learn = slot.learn;
-        return q;
+        if (!q.tag && slot.challenge === 'only') q.tag = 'Year 9';
+        out.push(q);
       });
+      return out;
     };
     const Topics = window.Topics || (window.Topics = {});
     Topics[def.id] = t;
@@ -234,7 +246,8 @@ const Sci = (() => {
   const name = rng => rng.pick(NAMES);
 
   return { topic, gen, choice, tf, sort, label, spot, match, order, word, table, name, NAMES, m, markSeen,
-           set memory(on) { memory = !!on; }, get memory() { return memory; } };
+           set memory(on) { memory = !!on; }, get memory() { return memory; },
+           set challenge(on) { challenge = !!on; }, get challenge() { return challenge; } };
 })();
 
 

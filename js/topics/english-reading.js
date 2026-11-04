@@ -27,6 +27,9 @@
   // considering their effectiveness for the text's purpose (Year 8).
   // Extension: appeals to emotion, logic and credibility (Year 9 persuasive
   // texts), and conjunctive adverbs elsewhere.
+  // Year 9 challenge (Phase 4 Text Studies, features of text): sound devices,
+  // lineation, irony, symbol and motif, tone and mood, features working
+  // together, and evaluating their effect in a written analysis.
 
   const FEATURES = {
     hyperbole: {
@@ -163,7 +166,40 @@
       { id: 'appeals', title: 'Extension: three appeals',
         text: '<p>Persuasive writers appeal to the audience in three ways:</p>' +
               Sci.table(['Appeal', 'Uses', 'Example'], [['<strong>Logos</strong>', 'logic and evidence', '“Ninety percent of beach rubbish is plastic.”'],
-                ['<strong>Pathos</strong>', 'emotion', '“Imagine a turtle tangled in a bag.”'], ['<strong>Ethos</strong>', 'the speaker’s credibility', '“As a lifeguard for ten years, I …”']]) }
+                ['<strong>Pathos</strong>', 'emotion', '“Imagine a turtle tangled in a bag.”'], ['<strong>Ethos</strong>', 'the speaker’s credibility', '“As a lifeguard for ten years, I …”']]) },
+      { id: 'sound', title: 'Sound devices', years: '9', wide: true,
+        text: Sci.table(['Device', 'Repeats or imitates', 'Example'], [
+                ['<strong>Alliteration</strong>', 'the same first consonant sound', '“big, bold banners”'],
+                ['<strong>Assonance</strong>', 'the same vowel sound inside words', '“alone, the old boat floated home”'],
+                ['<strong>Sibilance</strong>', 's and sh sounds', '“the sea sighed and shushed”'],
+                ['<strong>Onomatopoeia</strong>', 'the sound it names', '“crackle”, “thud”, “hiss”']]) +
+              '<p>Sound shapes mood: soft s sounds can soothe, or sound sinister; hard b, k and t sounds feel harsh or energetic.</p>' },
+      { id: 'irony', title: 'Three kinds of irony', years: '9', wide: true,
+        text: Sci.table(['Kind', 'What happens', 'Example'], [
+                ['<strong>Dramatic</strong>', 'the audience knows something a character does not', 'Romeo thinks Juliet is dead; we know she is asleep.'],
+                ['<strong>Situational</strong>', 'the outcome is the opposite of what we expect', 'A fire station burns down.'],
+                ['<strong>Verbal</strong>', 'someone says the opposite of what they mean', '“Lovely weather,” in a downpour.']]) },
+      { id: 'lineation', title: 'Line breaks in poetry', years: '9',
+        text: '<p>An <strong>end-stopped</strong> line finishes with punctuation, so the reader pauses.</p>' +
+              '<p><strong>Enjambment</strong>: the sentence runs on over the line break, pulling the reader forward.</p>' +
+              '<p>A <strong>caesura</strong> is a pause in the middle of a line, made by punctuation: <em>“I knocked. No answer. Again.”</em></p>' +
+              '<p>Poets use all three to control pace and emphasis.</p>' },
+      { id: 'symbol', title: 'Symbol, motif and pathetic fallacy', years: '9', wide: true,
+        text: '<p>A <strong>symbol</strong> is an object, colour or image that stands for a bigger idea: a seedling after a fire can stand for hope.</p>' +
+              '<p>A <strong>motif</strong> is an image or idea that keeps returning through a text, gathering meaning each time.</p>' +
+              '<p><strong>Pathetic fallacy</strong>: weather or nature that mirrors the characters’ feelings, such as a storm breaking as an argument starts.</p>' },
+      { id: 'tone', title: 'Tone and mood', years: '9',
+        text: '<p><strong>Tone</strong> is the writer’s or speaker’s attitude: how the text sounds. <em>Sarcastic, nostalgic, formal, urgent.</em></p>' +
+              '<p><strong>Mood</strong> is the feeling the text creates in the reader. <em>Tense, eerie, joyful, calm.</em></p>' +
+              '<p>Choose precise words: “nostalgic” says much more than “happy”.</p>' },
+      { id: 'analyse', title: 'Analysing at Year 9', years: '9', wide: true,
+        text: '<ol class="learn-steps"><li><strong>Technique:</strong> name it precisely.</li>' +
+              '<li><strong>Evidence:</strong> quote briefly.</li>' +
+              '<li><strong>Effect:</strong> explain how it works on the reader: the sound, the pace, the picture it creates.</li>' +
+              '<li><strong>Purpose:</strong> say why the writer wanted that effect, and link it to the message or theme.</li></ol>' +
+              '<p>Features often <strong>work together</strong>: short sentences and a sudden sound word can build and then break tension. Say how they combine.</p>' +
+              '<p>To <strong>evaluate</strong>, judge how well a feature works for this audience and purpose, and say why.</p>' +
+              '<p><em>“The repetition of ‘Our’ in ‘Our park. Our future. Our choice.’ builds a chant-like rhythm that unites the audience, persuading them the park is theirs to defend.”</em></p>' }
     ],
 
     examples: [
@@ -386,7 +422,7 @@
 
       // 10 · Extension.
       {
-        name: 'Extension: persuasion and beyond', learn: 'appeals',
+        name: 'Extension: persuasion and beyond', learn: 'appeals', challenge: 'also',
         items: [
           rng => C(rng, { tag: EXT, prompt: 'A speech says: <em>“Ninety percent of the rubbish on our beaches is plastic.”</em> Which appeal is this mainly using?',
             right: 'Logos: an appeal to logic and evidence', wrong: ['Pathos: an appeal to emotion', 'Ethos: an appeal to the speaker’s credibility', 'A pun'],
@@ -406,6 +442,187 @@
           rng => C(rng, { tag: EXT, prompt: 'A persuasive writer wants a claim to sound as certain as possible. Which version does that?',
             right: 'This plan will cut litter.', wrong: ['This plan might cut litter.', 'This plan could cut litter.', 'This plan may possibly cut litter.'],
             explain: 'Words such as might, could and may soften a claim. “Will” sounds certain, which makes it more persuasive, but it must be backed by evidence.' })
+        ]
+      },
+
+      // ── Year 9 challenge: these positions appear only in the challenge set.
+
+      // 11 · Sound devices.
+      {
+        name: 'Year 9: sound devices', learn: 'sound', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: '<em>“The silent snake slid slowly through the grass, hissing softly.”</em> Which sound device creates the hissing effect?',
+            right: 'Sibilance', wrong: ['Assonance', 'Caesura', 'Enjambment'],
+            explain: 'The repeated s sounds (silent, snake, slid, slowly, hissing, softly) imitate a hiss. Sibilance is the name for repeated s and sh sounds.' }),
+          rng => C(rng, { prompt: '<em>“Alone, the old boat floated slowly home.”</em> Which sound device is used?',
+            right: 'Assonance', wrong: ['Sibilance', 'Onomatopoeia', 'Alliteration'],
+            explain: 'The long “o” vowel sound repeats inside the words: alone, old, boat, floated, slowly, home. It slows the line and makes it feel lonely.' }),
+          rng => C(rng, { prompt: '<em>“The fire crackled, the kettle whistled, and the door banged shut.”</em> Which sound device is used?',
+            right: 'Onomatopoeia', wrong: ['Assonance', 'Caesura', 'Enjambment'],
+            explain: '“Crackled”, “whistled” and “banged” sound like the noises they name.' }),
+          rng => C(rng, { prompt: '<em>“Big, bold, bright and brilliant: the best bike is back.”</em> Which sound device is used?',
+            right: 'Alliteration', wrong: ['Assonance', 'Sibilance', 'Onomatopoeia'],
+            explain: 'The same first consonant sound, b, starts word after word. It makes the slogan punchy and easy to remember.' }),
+          rng => C(rng, { prompt: '<em>“The sea sighed and shushed against the sand.”</em> What is the main effect of the sibilance?',
+            right: 'The soft s and sh sounds imitate gentle waves, creating a calm, soothing mood.',
+            wrong: ['The hard sounds make the sea feel violent and dangerous.', 'It repeats vowel sounds to slow the line down.', 'It shows the sea is speaking to the narrator.'],
+            explain: 'Sibilance is soft and breathy here, like waves on sand. (Repeating vowel sounds would be assonance.)' }),
+          rng => C(rng, { prompt: '<em>“Crack! The bat struck the ball, and it thudded into the fence.”</em> Why does the writer use onomatopoeia here?',
+            right: 'The reader can almost hear the action, so the moment feels vivid and immediate.',
+            wrong: ['It slows the moment down so it feels calm.', 'It tells the reader exactly how far the ball went.', 'It shows the narrator is being sarcastic.'],
+            explain: 'Sound words put the reader inside the moment.' })
+        ]
+      },
+
+      // 12 · Line breaks in poetry.
+      {
+        name: 'Year 9: line breaks', learn: 'lineation', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: '<p class="poem"><em>The tide came in across the stones<br>and took the castle we had built<br>before the sun went down.</em></p>Each sentence runs on over the line break, with no punctuation at the end of lines 1 and 2. What is this called?',
+            right: 'Enjambment', wrong: ['Caesura', 'End-stopped lines', 'Assonance'],
+            explain: 'When a sentence carries on past the end of a line, it is enjambment.' }),
+          rng => C(rng, { prompt: '<p class="poem"><em>I knocked. No answer. Again.<br>The hallway held its breath.</em></p>The full stops in line 1 make pauses in the middle of the line. What is a pause like this called?',
+            right: 'Caesura', wrong: ['Enjambment', 'Onomatopoeia', 'A motif'],
+            explain: 'A caesura is a pause within a line, usually made by punctuation.' }),
+          rng => C(rng, { prompt: '<p class="poem"><em>The bell rang loud and long.<br>The yard fell still.<br>We waited.</em></p>Every line finishes with a full stop. What are lines like these called?',
+            right: 'End-stopped lines', wrong: ['Enjambment', 'Caesura', 'Sibilance'],
+            explain: 'A line that ends with punctuation, so the reader pauses, is end-stopped.' }),
+          rng => C(rng, { prompt: '<p class="poem"><em>and still I ran, and ran, and ran<br>until the road ran out<br>beneath my feet</em></p>What is the main effect of the enjambment?',
+            right: 'The lines spill into each other, pushing the reader on without stopping, like the runner.',
+            wrong: ['Each line ends in a firm pause, slowing the reader down.', 'It shows that the poem rhymes.', 'It makes the runner sound calm and relaxed.'],
+            explain: 'With no stopping point at the line ends, the reader is carried along, matching the breathless running.' }),
+          rng => C(rng, { prompt: '<p class="poem"><em>He turned. Stopped. Listened.<br>Something moved in the dark.</em></p>What is the main effect of the caesuras in line 1?',
+            right: 'The pauses slow the pace and build tension, as if we are holding our breath with him.',
+            wrong: ['They speed the line up so it feels cheerful.', 'They show that the poem is about running.', 'They join the two lines into one sentence.'],
+            explain: 'Each full stop forces a pause, so the moment stretches out and the tension grows.' }),
+          rng => C(rng, { prompt: 'A poet wants the reader to rush breathlessly through a description of a flood. Which technique would help most?',
+            right: 'Enjambment, so each line spills into the next', wrong: ['End-stopped lines, each ending with a full stop', 'A caesura in every line', 'A long pause at the end of each line'],
+            explain: 'Enjambment removes the stopping points at line ends. The other choices all add pauses, which slow the reader down.' })
+        ]
+      },
+
+      // 13 · Irony.
+      {
+        name: 'Year 9: irony', learn: 'irony', challenge: 'only',
+        items: [
+          ['The town’s new fire station burned down a week after it opened.', 'Situational irony', 'A fire station is the last building we expect to burn: the outcome is the opposite of what we expect.'],
+          ['Stepping out into the pouring rain, Mere smiled and said, “Perfect beach weather.”', 'Verbal irony', 'Mere says the opposite of what she means.'],
+          ['In <em>Romeo and Juliet</em>, the audience knows Juliet has only taken a sleeping potion, but Romeo believes she is dead.', 'Dramatic irony', 'The audience knows something the character does not.'],
+          ['At a pantomime, the children shout “He’s behind you!” because they can see the villain and the hero cannot.', 'Dramatic irony', 'The audience can see what the character cannot.'],
+          ['The school’s “Keep Our Grounds Tidy” poster competition left the hall covered in paper scraps.', 'Situational irony', 'A tidiness competition made a mess: the opposite of what was intended.'],
+          ['After the team lost 40–0, the coach said, “Well, that went brilliantly.”', 'Verbal irony', 'The coach means the opposite of “brilliantly”.']
+        ].map(([s, right, why]) => rng => C(rng, {
+          prompt: `${s}<br>Which kind of irony is this?`,
+          right, wrong: ['Dramatic irony', 'Situational irony', 'Verbal irony', 'Hyperbole'].filter(x => x !== right).slice(0, 3),
+          explain: why
+        })).concat([
+          rng => C(rng, { prompt: 'Why do writers use dramatic irony?',
+            right: 'The audience knows more than the character, which builds tension as they wait for the truth to come out.',
+            wrong: ['It lets the character say the opposite of what they mean.', 'It surprises the audience with an ending nobody expected.', 'It describes the weather to match a character’s mood.'],
+            explain: 'The gap between what we know and what the character knows creates suspense. The other options describe verbal irony, situational irony and pathetic fallacy.' })
+        ])
+      },
+
+      // 14 · Symbol and motif.
+      {
+        name: 'Year 9: symbol and motif', learn: 'symbol', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'In a short story, Ana wears her late grandmother’s pounamu pendant and holds it whenever she is afraid. What does the pendant most likely symbolise?',
+            right: 'Her connection to her grandmother, and the strength she draws from it', wrong: ['How wealthy Ana’s family is', 'The fashion of the time', 'That Ana feels cold'],
+            explain: 'She reaches for it when afraid, so it stands for comfort and strength from her grandmother.' }),
+          rng => C(rng, { prompt: 'A story ends with a green seedling pushing up through the ash of a burnt forest. What does the seedling most likely symbolise?',
+            right: 'Hope and a new beginning', wrong: ['Danger that is still to come', 'The end of the forest forever', 'How lonely the narrator feels'],
+            explain: 'New life rising from destruction is a classic symbol of hope.' }),
+          rng => C(rng, { prompt: 'In a novel, a locked gate appears again and again: when Sam is sent away, when he is refused a job, and when his friends leave him out. What is this repeated image called?',
+            right: 'A motif', wrong: ['Situational irony', 'Onomatopoeia', 'A caesura'],
+            explain: 'An image that keeps returning, here building the idea of Sam being shut out, is a motif.' }),
+          rng => C(rng, { prompt: '<em>“As the two brothers argued, the sky darkened and thunder rolled over the hills.”</em> Which technique is this?',
+            right: 'Pathetic fallacy: the weather mirrors the characters’ feelings',
+            wrong: ['Dramatic irony: the reader knows more than the brothers', 'Onomatopoeia: the words sound like thunder', 'Hyperbole: the storm is exaggerated'],
+            explain: 'The storm matches the anger between the brothers.' }),
+          rng => C(rng, { prompt: 'What is the difference between a symbol and a motif?',
+            right: 'A symbol stands for a bigger idea; a motif is an image or idea that keeps returning through a text.',
+            wrong: ['A symbol is always a colour; a motif is always an animal.', 'A symbol appears many times; a motif appears only once.', 'They mean exactly the same thing.'],
+            explain: 'A motif can be a repeated symbol, but what makes it a motif is that it returns.' })
+        ]
+      },
+
+      // 15 · Tone and mood.
+      {
+        name: 'Year 9: tone and mood', learn: 'tone', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: '<em>“Oh good, another meeting about meetings. Just what my week needed.”</em> Which word best describes the tone?',
+            right: 'Sarcastic', wrong: ['Nostalgic', 'Celebratory', 'Ominous'],
+            explain: 'The speaker says the opposite of what they feel, mockingly.' }),
+          rng => C(rng, { prompt: '<em>“I still remember Sunday mornings in Nan’s kitchen: the radio murmuring, flour on everything, and the smell of rēwena bread.”</em> Which word best describes the tone?',
+            right: 'Nostalgic', wrong: ['Sarcastic', 'Urgent', 'Ominous'],
+            explain: 'The writer looks back fondly at a happy time that has passed.' }),
+          rng => C(rng, { prompt: '<em>“The house had been empty for years. Tonight, a light was on in the attic.”</em> What mood does this create?',
+            right: 'Eerie and unsettling', wrong: ['Joyful and relaxed', 'Warm and nostalgic', 'Mocking and sarcastic'],
+            explain: 'A light in a house that should be empty makes the reader uneasy.' }),
+          rng => C(rng, { prompt: '<em>“Act now. Every day we wait, another hectare of bush is lost.”</em> Which word best describes the tone?',
+            right: 'Urgent', wrong: ['Nostalgic', 'Light-hearted', 'Sarcastic'],
+            explain: 'The command “Act now” and the daily loss press the reader to act immediately.' }),
+          rng => C(rng, { prompt: '<em>“Students are reminded that the library closes at 3 pm on Fridays.”</em> Which best describes the tone?',
+            right: 'Formal and neutral', wrong: ['Angry and urgent', 'Sarcastic and mocking', 'Warm and nostalgic'],
+            explain: 'It states information plainly, with no emotion.' }),
+          rng => C(rng, { prompt: 'What is the difference between tone and mood?',
+            right: 'Tone is the writer’s attitude; mood is the feeling the text creates in the reader.',
+            wrong: ['Tone is the feeling in the reader; mood is the writer’s attitude.', 'Tone is only found in speeches; mood is only found in stories.', 'They mean exactly the same thing.'],
+            explain: 'A writer can take a calm tone while creating a tense mood in the reader.' })
+        ]
+      },
+
+      // 16 · Features working together, and judging effectiveness.
+      {
+        name: 'Year 9: features working together', learn: 'analyse', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: '<em>“The bush was silent. No birds. No wind. Then, somewhere behind us, a branch snapped.”</em> How do the features work together here?',
+            right: 'Short, clipped sentences build a tense silence, so the sudden “snapped” jolts the reader.',
+            wrong: ['Long, flowing sentences make the bush feel calm and peaceful.', 'A list of animals shows how busy the bush is.', 'Repeating “snapped” makes the sound fade away slowly.'],
+            explain: 'The pace and the sound word combine: the quiet build-up makes the sudden noise more startling.' }),
+          rng => C(rng, { prompt: '<em>“Every year we lose more. More forest. More birds. More of what makes this place home. If not now, when?”</em> How do the features work together here?',
+            right: 'Repeating “More” builds a sense of growing loss, and the rhetorical question turns it into a call to act now.',
+            wrong: ['A list of statistics proves the claim, and the question asks the audience for information.', 'Hyperbole makes the problem seem funny, and the question softens the message.', 'Contrast between forest and birds shows they are opposites.'],
+            explain: 'The repetition builds the problem up; the question demands a response.' }),
+          rng => C(rng, { prompt: '<em>“Outside, the city roared with traffic and sirens; inside the tiny flat, Mum hummed softly over the stove.”</em> How do the features work together here?',
+            right: 'Contrast and sound words set the harsh city noise against gentle humming, so the flat feels like a safe refuge.',
+            wrong: ['Onomatopoeia shows Mum is annoyed by the noise.', 'The semicolon shows the city and the flat are the same.', 'Hyperbole shows the flat is noisier than the city.'],
+            explain: '“Roared” and “hummed softly” are opposite sounds, and the contrast makes the flat feel safe.' }),
+          rng => C(rng, { prompt: 'A café’s slogan reads: <em>“Fresh. Fast. Fantastic. Why settle for less?”</em> How do the features work together?',
+            right: 'Alliteration makes the three words catchy, and the rhetorical question suggests other cafés are second best.',
+            wrong: ['Assonance slows the slogan down, and the question asks customers for feedback.', 'Onomatopoeia imitates the sound of coffee, and the question is a pun.', 'The slogan uses dramatic irony to surprise customers.'],
+            explain: 'Three punchy f words stick in the mind; the question implies the answer “I shouldn’t”.' }),
+          rng => C(rng, { prompt: 'A speech to Year 7 students about joining a beach clean-up opens with: <em>“According to a recent report, marine debris accumulation rates have increased substantially.”</em> Why is this opening likely to be <strong>less effective</strong> for this audience?',
+            right: 'The formal, technical language may lose a young audience; a vivid image or anecdote would engage them more.',
+            wrong: ['Evidence is never persuasive in a speech.', 'It uses too much hyperbole.', 'It is too emotional for a speech.'],
+            explain: 'Evaluating means judging a feature against the audience and purpose. Evidence is useful, but this wording does not suit eleven-year-olds.' })
+        ]
+      },
+
+      // 17 · The strongest analysis.
+      {
+        name: 'Year 9: the strongest analysis', learn: 'analyse', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'A speech ends: <em>“Our park. Our future. Our choice.”</em> Which is the strongest analysis?',
+            right: 'The repetition of “Our” builds a chant-like rhythm that unites the audience, persuading them the park belongs to them and is worth defending.',
+            wrong: ['The writer uses repetition.', 'The writer repeats “Our” three times, which is a good technique.', 'This makes the reader want to keep reading.'],
+            explain: 'The strongest answer names the technique, quotes it, explains its effect and links it to the writer’s purpose.' }),
+          rng => C(rng, { prompt: 'A story says: <em>“The classroom was a furnace.”</em> Which is the strongest analysis?',
+            right: 'The metaphor “the classroom was a furnace” makes the reader feel how stifling the room is, which explains why the students cannot concentrate.',
+            wrong: ['The writer uses a metaphor to make the writing more interesting.', 'The classroom was very hot because it was summer.', 'This is a metaphor because it compares two things.'],
+            explain: 'The others only name the feature, retell the story, or define the term. The strongest explains the effect and links it to the story.' }),
+          rng => C(rng, { prompt: 'A poem says: <em>“The sea sighed and shushed against the sand.”</em> Which is the strongest analysis?',
+            right: 'Sibilance in “sighed and shushed” imitates the soft sound of waves, creating a calm mood that reflects the speaker’s peace at the beach.',
+            wrong: ['There is sibilance, which is when a writer uses s sounds.', 'The sea is at the beach and it makes a sound.', 'This line is good because it uses lots of techniques.'],
+            explain: 'Technique, evidence, effect and purpose are all there in the strongest answer.' }),
+          rng => C(rng, { prompt: 'A student writes: <em>“The writer uses a rhetorical question, ‘If not us, then who?’”</em> What should come next to make this a strong analysis?',
+            right: 'An explanation of its effect on the reader and how it serves the writer’s purpose', wrong: ['Another example of a rhetorical question', 'A definition of a rhetorical question', 'A summary of the whole text'],
+            explain: 'The student has named and quoted. The marks are in explaining the effect and the purpose.' }),
+          rng => C(rng, { prompt: 'Which sentence <strong>evaluates</strong> a feature, rather than just identifying it?',
+            right: 'The anecdote about the turtle is the most effective feature, because it turns a distant statistic into a story the audience can picture.',
+            wrong: ['The writer uses an anecdote about a turtle.', 'There is an anecdote in paragraph two.', 'An anecdote is a short personal story.'],
+            explain: 'Evaluating means judging how well something works, and saying why.' })
         ]
       }
     ]

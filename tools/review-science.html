@@ -238,7 +238,8 @@
       });
 
       t.slots.forEach((slot, si) => {
-        sec.appendChild(h('div', { class: 'rv-slot', text: `Q${si + 1} · ${slot.name}` }));
+        const which = slot.challenge === 'only' ? ' (challenge set only)' : slot.challenge === 'also' ? ' (normal and challenge sets)' : '';
+        sec.appendChild(h('div', { class: 'rv-slot', text: `Q${si + 1} · ${slot.name}${which}` }));
         slot.items.forEach((item, ii) => {
           const id = `${ex.label}·Q${si + 1}·${ii + 1}`;
           const samples = item.generated ? 3 : 1;

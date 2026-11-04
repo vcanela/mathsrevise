@@ -73,6 +73,7 @@ class RNG {
 
 // ── Seed selection ───────────────────────────────────────────────────────────
 // ?set=N  → fixed, shareable question set (same for everyone, every time).
+// ?set=challenge → the Year 9 challenge set, fresh each time.
 // no param → fresh random questions on each load.
 const Seed = {
   /** The set number from the URL, or null for free practice. */
@@ -81,6 +82,11 @@ const Seed = {
     if (v === null) return null;
     const n = parseInt(v, 10);
     return Number.isFinite(n) ? n : null;
+  },
+
+  /** True for ?set=challenge: a fresh Year 9 challenge set each time. */
+  challenge() {
+    return new URLSearchParams(location.search).get('set') === 'challenge';
   },
 
   /** An RNG for this exercise: deterministic under ?set=N, random otherwise. */

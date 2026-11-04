@@ -433,6 +433,8 @@ main {
 .passage p + p { margin-top: 0.55rem; }
 .passage-title { font-family: var(--font-sans); font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 0.4rem; }
 .passage .poem { font-style: italic; }
+/* A few lines of verse inside a question. */
+.qtext .poem { margin: 0.5rem 0 0.6rem; padding-left: 0.9rem; border-left: 3px solid var(--rule); line-height: 1.6; }
 .passage-again { margin: 0.2rem 0 0.7rem; font-family: var(--font-sans); font-size: 0.86rem; }
 .passage-again > summary { cursor: pointer; color: var(--brand-ink); font-weight: 600; }
 .passage-again[open] > summary { margin-bottom: 0.3rem; }
@@ -460,6 +462,13 @@ main {
   scroll-margin: 5rem;
 }
 .learn-card.wide { grid-column: 1 / -1; }
+.learn-year {
+  align-self: flex-start;
+  font-family: var(--font-sans); font-size: 0.68rem; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--accent-ink); background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border-radius: 999px; padding: 0.1rem 0.5rem; margin-bottom: 0.4rem;
+}
 .learn-fig { margin: 0 auto 0.7rem; width: 100%; }
 .learn-fig .qdiagram { width: 100%; height: auto; display: block; }
 .learn-card h3 {
@@ -1207,6 +1216,10 @@ main {
   font-size: 0.95rem; font-weight: 600; font-style: italic;
 }
 /* Science cards carry the year the knowledge belongs to, top right. */
+.card-challenge {
+  font-family: var(--font-sans); font-size: 0.78rem; font-weight: 600;
+  color: var(--accent-ink); margin-top: -0.2rem;
+}
 .card-year {
   position: absolute; top: 1rem; right: 1rem;
   font-family: var(--font-sans); font-size: 0.7rem; font-weight: 600;

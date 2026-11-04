@@ -47,6 +47,7 @@ const Nav = (() => {
         : ex.years ? h('span', { class: 'card-year', text: 'Years ' + ex.years }) : null,
       h('h3', { text: ex.title }),
       h('p', { text: ex.tag }),
+      ex.challenge ? h('p', { class: 'card-challenge', text: '★ Year 9 challenge' }) : null,
       h('div', { class: 'card-foot' },
         h('span', { text: rec.attempts ? `Best ${rec.bestScore} pts` : 'Not started yet' }),
         stars(rec.stars || 0)));

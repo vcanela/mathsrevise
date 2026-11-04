@@ -73,8 +73,16 @@ by strand: Reading, Writing and Oral Language. It practises what can be checked 
 grammar, punctuation, language features, and close reading of short passages written for this
 site) and leaves reading whole texts, writing them, and speaking to the classroom. Questions tagged
 **Extension** reach towards Year 9. English uses the same banked-question helpers as science
-(`Sci` in `js/science.js`) and lives in `js/topics/english.js`; codes are R (reading), W (writing)
+(`Sci` in `js/science.js`) and lives in `js/topics/english-reading.js`, `english-writing.js` and `english-oral.js`; codes are R (reading), W (writing)
 and O (oral language). The curriculum PDF is in `reference/`.
+
+**Year 9 challenge.** An exercise can also offer a harder set at `?set=challenge`, chosen from the
+set picker or the "★ Year 9 challenge" button. In the topic, a slot marked `challenge: 'only'` appears
+only in that set and one marked `challenge: 'also'` (the Extension slot) appears in both; its
+questions are tagged *Year 9*. The new ideas get Learn it cards with `years: '9'`. Mark the exercise
+`challenge: true` in the manifest too, so its subject card shows the badge and the self-test loads
+the challenge page; the checker fails if the two disagree. The content follows the Year 9 column of
+Phase 4 in the curriculum.
 
 **Reviewing content.** Authored science items can't be verified by a script: a wrong fact would
 pass every test. `tools/review-science.html` lists every item with all its options, the marked

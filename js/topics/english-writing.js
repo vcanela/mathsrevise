@@ -1468,6 +1468,9 @@
   // separate two independent clauses.
   // Extension: semicolons with conjunctive adverbs (however, therefore), and
   // semicolons separating list items that already contain commas.
+  // Year 9 challenge (Phase 4 Grammar, punctuation, and vocabulary): hyphens,
+  // brackets, dashes, ellipses and the Oxford comma, and choosing punctuation
+  // for effect.
 
   // Pairs of closely related independent clauses. Each pair joins correctly
   // with a semicolon or as two sentences, and neither half explains the other,
@@ -1522,7 +1525,31 @@
               '<p>✓ <em>The bus was late; however, we arrived on time.</em></p><p>✗ <em>The bus was late, however, we arrived on time.</em></p>' },
       { id: 'semilist', title: 'Extension: semicolons in a list',
         text: '<p>When the items in a list already contain commas, semicolons separate the items so the list stays clear.</p>' +
-              '<p><em>The prizes went to Ana, Year 7; Tom, Year 8; and Mei, Year 9.</em></p>' }
+              '<p><em>The prizes went to Ana, Year 7; Tom, Year 8; and Mei, Year 9.</em></p>' },
+      { id: 'hyphen', title: 'Hyphens', years: '9',
+        text: '<p>A hyphen (-) <strong>joins</strong> words into one idea.</p>' +
+              '<ul><li>Describing words joined <strong>before</strong> a noun: <em>a well-known poet</em>, <em>a twelve-year-old cat</em>, <em>a last-minute change</em>.</li>' +
+              '<li>After the noun, usually no hyphens: <em>the poet is well known</em>; <em>my cat is twelve years old</em>.</li>' +
+              '<li>To avoid confusion: <em>re-cover</em> a sofa (cover again) is not <em>recover</em> from a cold.</li></ul>' },
+      { id: 'brackets', title: 'Brackets (parentheses)', years: '9',
+        text: '<p>Brackets hold extra information, like a <strong>quiet aside</strong> the reader could skip.</p>' +
+              '<p><em>The tūī (a native honeyeater) sang in the kōwhai.</em></p>' +
+              '<p>Test: take out the brackets and what is inside them, and the sentence must still work. A full stop goes outside the bracket when the bracket is part of a sentence: <em>We stayed in Rotorua (my favourite town).</em></p>' },
+      { id: 'dash', title: 'Dashes', years: '9',
+        text: '<p>A dash (–) is longer than a hyphen and <strong>separates</strong> rather than joins.</p>' +
+              '<ul><li>A <strong>pair</strong> of dashes marks an aside, with more emphasis than brackets: <em>The final – a nail-biter from start to finish – ended in a draw.</em></li>' +
+              '<li>A <strong>single</strong> dash makes a dramatic pause before what follows: <em>We opened the box and found – nothing.</em></li></ul>' },
+      { id: 'ellipsis', title: 'Ellipsis', years: '9', wide: true,
+        text: '<p>Three dots ( … ) have two jobs.</p>' +
+              '<ul><li>They show words <strong>left out</strong> of a quotation, without changing its meaning: <em>“The kākāpō … is a large, nocturnal parrot.”</em></li>' +
+              '<li>In dialogue, they show a voice <strong>trailing off</strong> or hesitating: <em>“I thought you said … never mind.”</em></li></ul>' },
+      { id: 'oxford', title: 'The Oxford comma', years: '9', wide: true,
+        text: '<p>The <strong>Oxford comma</strong> is a comma before the final “and” in a list. New Zealand writing usually leaves it out, but it is used when it prevents confusion.</p>' +
+              '<p><em>I thanked my parents, Ana and Tom.</em> (Are Ana and Tom the parents?)</p><p><em>I thanked my parents, Ana, and Tom.</em> (Four people.)</p>' },
+      { id: 'punct-effect', title: 'Choosing punctuation for effect', years: '9', wide: true,
+        text: Sci.table(['Mark', 'Effect'], [['<strong>Commas</strong> around an aside', 'neutral: the aside is part of the flow'],
+                ['<strong>Brackets</strong>', 'quiet: the aside is played down'], ['<strong>Dashes</strong>', 'loud: the aside or ending is emphasised'],
+                ['<strong>Colon</strong>', '“here it is”: a list or an explanation follows'], ['<strong>Ellipsis</strong>', 'a pause, a trailing off, or words left out']]) }
     ],
 
     examples: [
@@ -1726,7 +1753,7 @@
 
       // 10 · Extension.
       {
-        name: 'Extension: trickier joins', learn: 'adverbs',
+        name: 'Extension: trickier joins', learn: 'adverbs', challenge: 'also',
         items: [
           rng => C(rng, { tag: EXT, prompt: '<em>It rained all day, we stayed inside.</em> Which is <strong>not</strong> a correct fix?',
             right: 'It rained all day, therefore we stayed inside.', wrong: ['It rained all day. We stayed inside.', 'It rained all day; we stayed inside.', 'It rained all day, so we stayed inside.'],
@@ -1747,6 +1774,152 @@
           rng => C(rng, { tag: EXT, prompt: 'Which joining words need a semicolon before them when they join two complete sentences?',
             right: '“however” and “therefore”', wrong: ['“and” and “but”', '“so” and “or”', '“because” and “when”'],
             explain: '“And”, “but”, “so” and “or” can follow a comma. “However” and “therefore” cannot; “because” and “when” start dependent clauses.' })
+        ]
+      },
+
+      // ── Year 9 challenge: these positions appear only in the challenge set.
+
+      // 11 · Hyphens.
+      {
+        name: 'Year 9: hyphens', learn: 'hyphen', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'Which sentence uses hyphens correctly?',
+            right: 'Our twelve-year-old cat still chases birds.', wrong: ['Our twelve year old cat still chases birds.', 'Our twelve-years-old cat still chases birds.', 'Our twelve-year old cat still chases birds.'],
+            explain: '“Twelve-year-old” describes the cat as one idea before the noun, so all three words are joined, and “year” is singular.' }),
+          rng => C(rng, { prompt: 'Which sentence uses hyphens correctly?',
+            right: 'It was a last-minute change.', wrong: ['It was a last-minute-change.', 'The change came at the last-minute.', 'It was a last minute-change.'],
+            explain: '“Last-minute” describes “change”, so it is hyphenated before the noun. After “at the”, “last minute” is a noun phrase and needs no hyphen.' }),
+          rng => C(rng, { prompt: 'Which sentence is punctuated correctly?',
+            right: 'My cat is twelve years old.', wrong: ['My cat is twelve-years-old.', 'My cat is twelve-year-old.', 'My cat is twelve years-old.'],
+            explain: 'After the noun, the age needs no hyphens. Compare “my twelve-year-old cat”, where the words come before the noun.' }),
+          rng => C(rng, { prompt: 'The old sofa was torn, so we had to ▢ it with new fabric. Which word fits?',
+            right: 're-cover', wrong: ['recover'],
+            explain: '“Re-cover” means to cover again. “Recover” means to get better or get something back; the hyphen keeps the meanings apart.' }),
+          rng => C(rng, { prompt: 'The club was delighted when its star player agreed to ▢ for another season. Which word fits?',
+            right: 're-sign', wrong: ['resign'],
+            explain: '“Re-sign” means to sign again. “Resign” means to quit, which is the opposite of what the club wanted.' }),
+          rng => C(rng, { prompt: 'A sign at an aquarium reads: <em>“See our man eating shark!”</em> Why does it need a hyphen?',
+            right: 'Without “man-eating”, it can mean a man who is eating shark.', wrong: ['Hyphens are needed in every sign.', 'Without a hyphen, “shark” would need a capital letter.', 'It does not need a hyphen; the meaning is already clear.'],
+            explain: 'The hyphen joins “man-eating” into one describing word for the shark.' })
+        ]
+      },
+
+      // 12 · Dashes and brackets.
+      {
+        name: 'Year 9: dashes and brackets', learn: 'punct-effect', challenge: 'only',
+        items: [
+          rng => C(rng, { learn: 'brackets', prompt: 'The writer wants the extra information to feel like a <strong>quiet aside</strong> the reader could skip. Which version does that?',
+            right: 'My cousin (the one who lives in Gisborne) is coming to stay.', wrong: ['My cousin – the one who lives in Gisborne – is coming to stay.', 'My cousin: the one who lives in Gisborne is coming to stay.', 'My cousin the one who lives in Gisborne is coming to stay.'],
+            explain: 'Brackets play the aside down. Dashes would make it stand out; the colon and the missing punctuation are mistakes.' }),
+          rng => C(rng, { learn: 'dash', prompt: 'The writer wants the extra information to <strong>stand out</strong>. Which version does that?',
+            right: 'The final – a nail-biter from start to finish – ended in a draw.', wrong: ['The final (a nail-biter from start to finish) ended in a draw.', 'The final – a nail-biter from start to finish, ended in a draw.', 'The final a nail-biter from start to finish – ended in a draw.'],
+            explain: 'A pair of dashes emphasises the aside. Brackets would play it down, and the last two open the aside but never close it with a matching mark.' }),
+          rng => C(rng, { learn: 'dash', prompt: '<em>“We opened the box and found – nothing.”</em> What is the effect of the dash?',
+            right: 'It makes a dramatic pause, so the surprise ending lands harder.', wrong: ['It joins two words into one idea.', 'It shows words have been left out of a quotation.', 'It introduces a list.'],
+            explain: 'A single dash creates a pause before what follows. Joining words is a hyphen’s job, and missing words are shown with an ellipsis.' }),
+          rng => C(rng, { learn: 'brackets', prompt: 'Which sentence uses brackets correctly?',
+            right: 'The tūī (a native honeyeater) sang in the kōwhai.', wrong: ['The tūī (a native honeyeater sang) in the kōwhai.', 'The (tūī a native honeyeater) sang in the kōwhai.', 'The tūī (a native honeyeater) (sang) in the kōwhai.'],
+            explain: 'Take out the brackets and what is inside them: “The tūī sang in the kōwhai.” Only the correct version still works.' }),
+          rng => C(rng, { learn: 'brackets', prompt: 'Which sentence is punctuated correctly?',
+            right: 'We stayed in Rotorua (my favourite town).', wrong: ['We stayed in Rotorua (my favourite town.)', 'We stayed in Rotorua. (my favourite town)', 'We stayed in Rotorua (my favourite town'],
+            explain: 'The bracket is part of the sentence, so the full stop goes after the closing bracket. Brackets always come in pairs.' }),
+          rng => C(rng, { learn: 'dash', prompt: 'What is the difference between a hyphen and a dash?',
+            right: 'A hyphen joins words together; a dash separates parts of a sentence.', wrong: ['A hyphen separates parts of a sentence; a dash joins words together.', 'They are the same mark, used in the same ways.', 'A dash is only used in numbers.'],
+            explain: '“Well-known” uses a hyphen to join. “We found – nothing” uses a dash to separate.' }),
+          rng => C(rng, { prompt: 'Which version builds the most suspense before the reveal?',
+            right: 'When I opened the door, I saw – my old teacher.', wrong: ['When I opened the door, I saw my old teacher.', 'When I opened the door, I saw (my old teacher).', 'When I opened the door; I saw my old teacher.'],
+            explain: 'The dash creates a pause before the surprise. Brackets would play the reveal down, and the semicolon is incorrect because the first part is not a complete sentence.' }),
+          rng => C(rng, { prompt: 'Which version makes the extra detail feel <strong>least</strong> important?',
+            right: 'The bus (which was late, as usual) finally arrived.', wrong: ['The bus – which was late, as usual – finally arrived.', 'The bus, which was late, as usual, finally arrived.', 'The bus which was late as usual finally arrived.'],
+            explain: 'Brackets play an aside down. Dashes emphasise it, and commas leave it as part of the flow.' })
+        ]
+      },
+
+      // 13 · Ellipsis.
+      {
+        name: 'Year 9: ellipsis', learn: 'ellipsis', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'Original: <em>“The kākāpō, which cannot fly, is a large, nocturnal parrot found only in New Zealand.”</em> Which shortened quotation is correct and keeps the meaning?',
+            right: '“The kākāpō … is a large, nocturnal parrot found only in New Zealand.”',
+            wrong: ['“The kākāpō is a large, nocturnal parrot found only in New Zealand.”', '“The kākāpō, which cannot fly, is a large … parrot … in New Zealand.”', '“The kākāpō … cannot … be found … in New Zealand.”'],
+            explain: 'The ellipsis shows where words were cut. Leaving out words with no ellipsis hides the cut; the other two drop “only” or twist the meaning.' }),
+          rng => C(rng, { prompt: 'Original: <em>“Our school, after months of planning and two failed attempts, finally won the regional debating trophy.”</em> Which shortened quotation is correct and keeps the meaning?',
+            right: '“Our school … finally won the regional debating trophy.”',
+            wrong: ['“Our school finally won the regional debating trophy.”', '“Our school … two failed attempts … the regional debating trophy.”', '“Our school … failed … the regional debating trophy.”'],
+            explain: 'The ellipsis marks the cut, and the meaning stays the same. Cutting words without an ellipsis hides the change; the others make the school sound as if it failed.' }),
+          rng => C(rng, { prompt: '<em>“I thought you said … never mind.”</em> What does the ellipsis show here?',
+            right: 'The speaker trails off and changes their mind.', wrong: ['Words have been left out of a quotation.', 'The speaker is shouting.', 'A list is about to follow.'],
+            explain: 'In dialogue, an ellipsis shows a voice trailing off or hesitating.' }),
+          rng => C(rng, { prompt: 'Why must you be careful when shortening a quotation with an ellipsis?',
+            right: 'The shortened quotation must not change what the writer meant.', wrong: ['An ellipsis can only be used once in any essay.', 'An ellipsis must always come at the end of a sentence.', 'You must always remove at least half the words.'],
+            explain: 'Cutting “not” from “the plan will not work” would reverse the meaning. That misquotes the writer.' }),
+          rng => C(rng, { prompt: 'Which is an ellipsis written correctly?',
+            right: 'three dots: …', wrong: ['two dots: ..', 'four dashes: ––––', 'a colon and a full stop: :.'],
+            explain: 'An ellipsis is always three dots.' })
+        ]
+      },
+
+      // 14 · The Oxford comma.
+      {
+        name: 'Year 9: the Oxford comma', learn: 'oxford', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: '<em>“I’d like to thank my parents, Aunty Mere and the principal.”</em> Without an Oxford comma, how else could this be read?',
+            right: 'As if Aunty Mere and the principal are the speaker’s parents', wrong: ['As if the speaker has no parents', 'As if Aunty Mere is the principal’s parent', 'It can only be read one way.'],
+            explain: 'With no comma before “and”, “Aunty Mere and the principal” can look like a description of “my parents”. An Oxford comma, “Aunty Mere, and the principal”, makes it a list of three.' }),
+          rng => C(rng, { prompt: 'The writer thanked four people: two parents, Ana and Tom. Which version makes that clear?',
+            right: 'I thanked my parents, Ana, and Tom.', wrong: ['I thanked my parents, Ana and Tom.', 'I thanked my parents Ana, and Tom.', 'I thanked, my parents, Ana and Tom.'],
+            explain: 'The Oxford comma before “and Tom” makes “my parents”, “Ana” and “Tom” three separate items.' }),
+          rng => C(rng, { prompt: '<em>“My favourite sandwiches are cheese, ham, and peanut butter and jam.”</em> Why is the comma before the last “and” useful?',
+            right: 'The last item already contains “and”, so the comma shows where it starts.', wrong: ['Every list must have a comma before “and”.', 'It shows that cheese and ham are one sandwich.', 'It turns the list into two sentences.'],
+            explain: '“Peanut butter and jam” is one sandwich. The Oxford comma keeps it from blurring into “ham and peanut butter”.' }),
+          rng => C(rng, { prompt: 'What is the usual rule for the Oxford comma in New Zealand writing?',
+            right: 'It is usually left out, but used when it prevents confusion.', wrong: ['It must always be used.', 'It is never allowed.', 'It is used only in lists of numbers.'],
+            explain: 'Clarity decides: add it when a list could be misread.' })
+        ]
+      },
+
+      // 15 · Choosing punctuation for effect.
+      {
+        name: 'Year 9: punctuation for effect', learn: 'punct-effect', challenge: 'only',
+        items: [Sci.gen(rng => Sci.match(rng, 'Match each punctuation mark to the effect it usually has.',
+          rng.sample([
+            ['Brackets', 'Plays an aside down, like a quiet comment'],
+            ['A pair of dashes', 'Makes an aside stand out'],
+            ['A colon', 'Says “here it is”: a list or an explanation follows'],
+            ['A semicolon', 'Balances two closely related sentences'],
+            ['An ellipsis in dialogue', 'Shows a voice trailing off']
+          ], 4),
+          'Brackets quieten, dashes emphasise, a colon introduces, a semicolon balances, and an ellipsis trails off.'))
+        ]
+      },
+
+      // 16 · Spot the mistake.
+      {
+        name: 'Year 9: spot the mistake', learn: 'punct-effect', challenge: 'only',
+        items: [
+          [['Our trip to Wellington (the capital) began early.', 'We visited Te Papa, the Beehive, and the Botanic Garden.', 'The cable car was a well-known highlight.', 'By evening – exhausted but happy, we caught the ferry.'], 3, 'dash', 'The dash opens an aside but a comma closes it. Use a matching pair: “By evening – exhausted but happy – we caught the ferry.”'],
+          [['The kākāpō is a flightless parrot.', 'Its call (a deep, booming sound) carries for kilometres.', 'A well known conservationist spent years protecting it.', 'Today, every bird has a name.'], 2, 'hyphen', '“Well-known” describes the conservationist and comes before the noun, so it needs a hyphen.'],
+          [['The match was tense from the start.', 'Our captain – usually so calm – looked nervous.', 'With one second left, Hana shot and – scored.', 'Everyone cheered (even the other team.)'], 3, 'brackets', 'The bracket is part of the sentence, so the full stop belongs outside it: “(even the other team).”'],
+          [['Our class read a short story set in Dunedin.', 'The narrator – a nervous new student – tells it herself.', 'Near the end, she whispers, “I thought you said .. never mind.”', 'Her teacher (Mr Hale) is the only one who notices.'], 2, 'ellipsis', 'An ellipsis is three dots, not two: “I thought you said … never mind.”'],
+          [['My grandfather is eighty-two years old.', 'He was born in a small town (near Hokitika).', 'He still swims in the sea every morning.', 'His seventy-year-old-friends cannot keep up.'], 3, 'hyphen', '“Seventy-year-old” is hyphenated, but “friends” is the noun, so it must not be joined on.']
+        ].map(([lines, wrong, card, why]) => rng => Sci.spot(rng, {
+          prompt: 'One line in this paragraph has a punctuation mistake.',
+          lines, wrong, learn: card, cue: 'Click the line with the mistake.', explain: why
+        }))
+      },
+
+      // 17 · True or false.
+      {
+        name: 'Year 9: true or false', learn: 'punct-effect', challenge: 'only',
+        items: [
+          rng => TF(rng, { statement: 'A hyphen and a dash are the same mark.', answer: false, learn: 'dash', explain: 'A hyphen (-) joins words; a dash (–) is longer and separates parts of a sentence.' }),
+          rng => TF(rng, { statement: 'If you remove brackets and the words inside them, the sentence should still make sense.', answer: true, learn: 'brackets', explain: 'That is the test for using brackets correctly.' }),
+          rng => TF(rng, { statement: 'An ellipsis can show that words have been left out of a quotation.', answer: true, learn: 'ellipsis', explain: 'The meaning of the quotation must not change.' }),
+          rng => TF(rng, { statement: 'Dashes make an aside less noticeable than brackets do.', answer: false, learn: 'punct-effect', explain: 'The reverse: dashes draw attention; brackets play the aside down.' }),
+          rng => TF(rng, { statement: '“A well-known author” and “the author is well known” are both punctuated correctly.', answer: true, learn: 'hyphen', explain: 'The hyphen is used before the noun, and usually not after it.' }),
+          rng => TF(rng, { statement: 'The Oxford comma is the comma before the final “and” in a list.', answer: true, learn: 'oxford', explain: '“Apples, bread, and milk.”' }),
+          rng => TF(rng, { statement: 'A single dash can create a dramatic pause before the end of a sentence.', answer: true, learn: 'dash', explain: '“We opened the box and found – nothing.”' }),
+          rng => TF(rng, { statement: 'An ellipsis is written with four dots.', answer: false, learn: 'ellipsis', explain: 'Three dots: …' })
         ]
       }
     ]

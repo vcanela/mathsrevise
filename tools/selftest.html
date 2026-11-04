@@ -46,6 +46,10 @@
       ...Manifest.UNITS.map(u => ({ url: '../' + u.page, kind: 'unit' })),
       ...Manifest.live().flatMap(ex => sets.map(s => ({
         url: `../${ex.href}?set=${s}`, kind: 'exercise', id: ex.id
+      }))),
+      // The Year 9 challenge set is a different set of questions: test it too.
+      ...Manifest.live().filter(ex => ex.challenge).flatMap(ex => sets.map(() => ({
+        url: `../${ex.href}?set=challenge`, kind: 'exercise', id: ex.id
       })))
     ];
 

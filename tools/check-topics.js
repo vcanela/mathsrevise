@@ -232,46 +232,55 @@ for (const id of ids) {
   });
   const usedCards = new Set();
 
-  let counts = new Set();
-  for (const diff of ['core', 'hard', 'expert']) {
-    for (let run = 0; run < RUNS; run++) {
-      const rng = new RNG(run * 7919 + 13);
-      let qs;
-      try { qs = topic.generate(rng, diff); }
-      catch (err) { fail(`${id}/${diff}/seed${run}`, 'generate threw: ' + err.message); continue; }
-      if (!Array.isArray(qs) || !qs.length) { fail(`${id}/${diff}/seed${run}`, 'generate returned nothing'); continue; }
-      counts.add(qs.length);
-      qs.forEach((q, i) => checkQuestion(`${id}/${diff}/seed${run}/Q${i + 1}`, q));
-      if (cardIds.length) qs.forEach((q, i) => {
-        if (!q.learn) fail(`${id}/Q${i + 1}`, 'no Learn it card linked');
-        else if (!cardIds.includes(q.learn)) fail(`${id}/Q${i + 1}`, 'links to missing card ' + q.learn);
-        else usedCards.add(q.learn);
-      });
-    }
-  }
-  if (counts.size > 1) fail(id, 'question count varies between runs: ' + [...counts].join(', '));
-  for (const c of cardIds) if (!usedCards.has(c)) unlinked.push(`${id}:${c}`);
-
-  // "Try one like it" regenerates the same topic at the same index, so the
-  // index has to mean the same kind of question every time. If a generator
-  // ever starts varying what it emits at a position, a student asking for a
-  // similar question would silently get an unrelated one.
-  for (const diff of ['core', 'expert']) {
-    const kinds = [];
-    for (let run = 0; run < Math.min(RUNS, 120); run++) {
-      let qs;
-      try { qs = topic.generate(new RNG(run * 7919 + 13), diff); } catch (_) { continue; }
-      (qs || []).forEach((q, i) => {
-        (kinds[i] = kinds[i] || new Set()).add(q.input && q.input.kind);
-      });
-    }
-    kinds.forEach((set, i) => {
-      if (set.size > 1) {
-        fail(`${id}/${diff}/Q${i + 1}`,
-             'question type varies by run, so "one like it" would not match: ' + [...set].join(' | '));
+  // A topic with a Year 9 challenge set is checked twice: once for the usual
+  // set and once for the challenge set, which draws on different slots.
+  if (!!topic.hasChallenge !== !!(Manifest.exercise(id) || {}).challenge)
+    fail(id, 'manifest `challenge` flag does not match the topic');
+  for (const mode of topic.hasChallenge ? [false, true] : [false]) {
+    Sci.challenge = mode;
+    const tid = id + (mode ? '+challenge' : '');
+    let counts = new Set();
+    for (const diff of ['core', 'hard', 'expert']) {
+      for (let run = 0; run < RUNS; run++) {
+        const rng = new RNG(run * 7919 + 13);
+        let qs;
+        try { qs = topic.generate(rng, diff); }
+        catch (err) { fail(`${tid}/${diff}/seed${run}`, 'generate threw: ' + err.message); continue; }
+        if (!Array.isArray(qs) || !qs.length) { fail(`${tid}/${diff}/seed${run}`, 'generate returned nothing'); continue; }
+        counts.add(qs.length);
+        qs.forEach((q, i) => checkQuestion(`${tid}/${diff}/seed${run}/Q${i + 1}`, q));
+        if (cardIds.length) qs.forEach((q, i) => {
+          if (!q.learn) fail(`${tid}/Q${i + 1}`, 'no Learn it card linked');
+          else if (!cardIds.includes(q.learn)) fail(`${tid}/Q${i + 1}`, 'links to missing card ' + q.learn);
+          else usedCards.add(q.learn);
+        });
       }
-    });
+    }
+    if (counts.size > 1) fail(tid, 'question count varies between runs: ' + [...counts].join(', '));
+
+    // "Try one like it" regenerates the same topic at the same index, so the
+    // index has to mean the same kind of question every time. If a generator
+    // ever starts varying what it emits at a position, a student asking for a
+    // similar question would silently get an unrelated one.
+    for (const diff of ['core', 'expert']) {
+      const kinds = [];
+      for (let run = 0; run < Math.min(RUNS, 120); run++) {
+        let qs;
+        try { qs = topic.generate(new RNG(run * 7919 + 13), diff); } catch (_) { continue; }
+        (qs || []).forEach((q, i) => {
+          (kinds[i] = kinds[i] || new Set()).add(q.input && q.input.kind);
+        });
+      }
+      kinds.forEach((set, i) => {
+        if (set.size > 1) {
+          fail(`${tid}/${diff}/Q${i + 1}`,
+               'question type varies by run, so "one like it" would not match: ' + [...set].join(' | '));
+        }
+      });
+    }
   }
+  Sci.challenge = false;
+  for (const c of cardIds) if (!usedCards.has(c)) unlinked.push(`${id}:${c}`);
 }
 
 // ── Report ───────────────────────────────────────────────────────────────────

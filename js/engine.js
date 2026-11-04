@@ -744,6 +744,7 @@ const Exercise = (() => {
 
   function toolbar(cfg) {
     const set = Seed.setNumber();
+    const challenge = !!cfg.hasChallenge && Seed.challenge();
     const mkLink = n => {
       const u = new URL(location.href);
       if (n === null) u.searchParams.delete('set'); else u.searchParams.set('set', n);
@@ -751,10 +752,14 @@ const Exercise = (() => {
     };
     const picker = h('select', {
       class: 'set-picker', 'aria-label': 'Question set',
-      onchange(ev) { location.href = mkLink(ev.target.value === 'free' ? null : Number(ev.target.value)); }
+      onchange(ev) {
+        const v = ev.target.value;
+        location.href = mkLink(v === 'free' ? null : v === 'challenge' ? v : Number(v));
+      }
     },
       h('option', { value: 'free', text: 'Free practice (new every time)', selected: set === null }),
-      [1, 2, 3, 4, 5, 6].map(n => h('option', { value: n, text: 'Set ' + n, selected: set === n })));
+      [1, 2, 3, 4, 5, 6].map(n => h('option', { value: n, text: 'Set ' + n, selected: set === n })),
+      cfg.hasChallenge ? h('option', { value: 'challenge', text: 'Year 9 challenge', selected: challenge }) : null);
 
     // A practice session has no set picker: its questions are chosen for the
     // student, and today's set is already fixed by the date.
@@ -770,7 +775,9 @@ const Exercise = (() => {
         '↻ New questions'),
       picker,
       set !== null ? h('span', { class: 'tool-note', text: 'Everyone gets the same questions in set ' + set + '.' })
-                   : null);
+        : challenge ? h('span', { class: 'tool-note', text: 'Year 9 questions: harder than the usual sets. Learn it has the new ideas.' })
+        : cfg.hasChallenge ? h('a', { class: 'tool-btn', href: mkLink('challenge') }, '★ Year 9 challenge')
+        : null);
   }
 
   // ── Learn it: the short reading section at the top of a page ──────────────
@@ -808,6 +815,7 @@ const Exercise = (() => {
         try { c.draw(Geo.canvas(svg, w, (c.diagram && c.diagram.h) || 150), Geo); }
         catch (err) { console.error('learn diagram failed', err); }
       }
+      if (c.years) card.appendChild(h('span', { class: 'learn-year', text: 'Year ' + c.years }));
       card.appendChild(h('h3', { html: c.title }));
       card.appendChild(h('div', { class: 'learn-text', html: c.text }));
       grid.appendChild(card);
@@ -943,6 +951,9 @@ const Exercise = (() => {
     const rng   = Seed.rng(cfg.id);
     // Prefer science items this student has not met, except in a shared set.
     if (typeof Sci !== 'undefined') Sci.memory = Seed.setNumber() === null;
+    // ?set=challenge builds the Year 9 set, for topics that have one.
+    const challenge = !practice && !!cfg.hasChallenge && Seed.challenge();
+    if (typeof Sci !== 'undefined') Sci.challenge = challenge;
     const difficulty = level.level >= 4 ? 'expert' : level.level >= 3 ? 'hard' : 'core';
 
     let questions;
@@ -982,7 +993,8 @@ const Exercise = (() => {
     root.innerHTML = '';
 
     root.appendChild(h('header', { class: 'page-head' },
-      practice ? h('span', { class: 'eyebrow', text: cfg.eyebrow || 'Daily practice' }) : null,
+      practice ? h('span', { class: 'eyebrow', text: cfg.eyebrow || 'Daily practice' })
+        : challenge ? h('span', { class: 'eyebrow', text: 'Year 9 challenge' }) : null,
       h('h1', { text: cfg.title }),
       h('p', { text: cfg.blurb || (unit ? unit.name : '') })));
 
