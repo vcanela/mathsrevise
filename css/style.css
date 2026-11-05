@@ -1331,3 +1331,30 @@ mjx-container[display="true"] { margin: 0.6em 0 !important; }
   .qcard, .card, .example { break-inside: avoid; box-shadow: none; }
   .page-head { border-bottom: 2px solid #000; }
 }
+
+/* ── Puzzle grids (Unit 6) ───────────────────────────────────────────────── */
+.pgrid {
+  border-collapse: collapse; margin: 0.7rem 0 0.3rem;
+  font-family: var(--font-sans); font-size: 1.05rem;
+}
+.pgrid td {
+  width: 2.4rem; height: 2.4rem; padding: 0;
+  text-align: center; vertical-align: middle;
+  border: 1.5px solid var(--ink-soft); background: var(--surface);
+}
+.pgrid td.out {
+  border: none; background: none;
+  color: var(--ink-soft); font-size: 0.82rem; font-weight: 600; line-height: 1.1;
+}
+.pgrid td.ask { background: var(--surface-2); color: var(--brand); font-weight: 700; }
+.pgrid.sudoku td:nth-child(2) { border-right: 3px solid var(--ink); }
+.pgrid.sudoku tr:nth-child(2) td { border-bottom: 3px solid var(--ink); }
+.pyramid { display: flex; flex-direction: column; align-items: center; gap: 4px; width: max-content; margin: 0.7rem 0 0.3rem; }
+.pyr-row { display: flex; gap: 4px; }
+.pyr-cell {
+  width: 2.8rem; height: 2.1rem;
+  display: flex; align-items: center; justify-content: center;
+  border: 1.5px solid var(--ink-soft); border-radius: var(--radius-s);
+  background: var(--surface); font-family: var(--font-sans); font-weight: 600;
+}
+.pyr-cell.ask { background: var(--surface-2); color: var(--brand); }

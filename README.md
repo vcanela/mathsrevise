@@ -156,7 +156,7 @@ tools/
 | 3 Geometry | 6 | angle rules, triangles, parallel lines, polygons, circles, nets |
 | 4 Algebra Meets Geometry | 3 | angles and lengths as expressions: build the equation, then solve it |
 | 5 Maths in Words | 3 | English to algebra, algebra to English, word problems |
-| 6 Problem Solving | 2 (3 to come) | non-routine problems in the style of the Otago Problem Challenge, grouped by strategy: make a list, two unknowns without algebra |
+| 6 Problem Solving | 5 | non-routine problems in the style of the Otago Problem Challenge, grouped by strategy: make a list, two unknowns without algebra, digits and numbers, what stays the same, logic and grids |
 
 Unit 6 is extension work. Its problems are original, written in the style of the University of
 Otago Problem Challenge for intermediate schools, and every answer is found by trying every case

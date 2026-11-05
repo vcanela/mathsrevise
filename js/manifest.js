@@ -89,9 +89,9 @@ const Manifest = (() => {
       exercises: [
         { n: 1, id: 'u6e1', title: 'Make a List', tag: 'Count every case, miss none' },
         { n: 2, id: 'u6e2', title: 'Two Unknowns, No Algebra', tag: 'Assume, check, adjust' },
-        { n: 3, id: 'u6e3', title: 'Digits and Numbers', tag: 'Think about place value', soon: true },
-        { n: 4, id: 'u6e4', title: 'What Stays the Same', tag: 'Find the quantity that does not change', soon: true },
-        { n: 5, id: 'u6e5', title: 'Logic and Grids', tag: 'Reason from the clues', soon: true }
+        { n: 3, id: 'u6e3', title: 'Digits and Numbers', tag: 'Think about place value' },
+        { n: 4, id: 'u6e4', title: 'What Stays the Same', tag: 'Find the quantity that does not change' },
+        { n: 5, id: 'u6e5', title: 'Logic and Grids', tag: 'Reason from the clues' }
       ]
     },
 
