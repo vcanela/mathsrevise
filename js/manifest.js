@@ -79,6 +79,21 @@ const Manifest = (() => {
         { n: 3, id: 'u5e3', title: 'Word Problems to Equations', tag: 'Set it up, then solve it' }
       ]
     },
+    {
+      // Non-routine problems in the style of the Otago Problem Challenge,
+      // grouped by strategy rather than topic. They take minutes, not
+      // seconds, so they are untimed and stay out of the daily mix.
+      key: 6, subject: 'maths', label: '6', short: 'Unit 6', name: 'Unit 6: Problem Solving', icon: '?',
+      topicFile: 'problems', mix: false,
+      blurb: 'Puzzles that need a plan before a calculation. Take your time, and ask for a nudge if you are stuck.',
+      exercises: [
+        { n: 1, id: 'u6e1', title: 'Make a List', tag: 'Count every case, miss none' },
+        { n: 2, id: 'u6e2', title: 'Two Unknowns, No Algebra', tag: 'Assume, check, adjust' },
+        { n: 3, id: 'u6e3', title: 'Digits and Numbers', tag: 'Think about place value', soon: true },
+        { n: 4, id: 'u6e4', title: 'What Stays the Same', tag: 'Find the quantity that does not change', soon: true },
+        { n: 5, id: 'u6e5', title: 'Logic and Grids', tag: 'Reason from the clues', soon: true }
+      ]
+    },
 
     // ── Science ─────────────────────────────────────────────────────────────
     // Topics follow the knowledge headings of Phase 3 (Years 7–8) in the
@@ -206,7 +221,7 @@ const Manifest = (() => {
     for (const ex of u.exercises) ex.unit = u;
   }
 
-  /** A unit by its key: 1–5 for maths; 'chemistry', 'physics', 'earth-space' or 'biology'
+  /** A unit by its key: 1–6 for maths; 'chemistry', 'physics', 'earth-space' or 'biology'
    *  for science; 'reading', 'writing' or 'oral' for English. */
   const unit = key => UNITS.find(u => String(u.key) === String(key)) || UNITS[0];
 

@@ -136,6 +136,7 @@ js/
     geometry.js         unit 3
     combined.js         unit 4
     words.js            unit 5
+    problems.js         unit 6, problem solving
     science-y7.js       Year 7 science
     science-y8.js       Year 8 science
 tools/
@@ -155,6 +156,14 @@ tools/
 | 3 Geometry | 6 | angle rules, triangles, parallel lines, polygons, circles, nets |
 | 4 Algebra Meets Geometry | 3 | angles and lengths as expressions: build the equation, then solve it |
 | 5 Maths in Words | 3 | English to algebra, algebra to English, word problems |
+| 6 Problem Solving | 2 (3 to come) | non-routine problems in the style of the Otago Problem Challenge, grouped by strategy: make a list, two unknowns without algebra |
+
+Unit 6 is extension work. Its problems are original, written in the style of the University of
+Otago Problem Challenge for intermediate schools, and every answer is found by trying every case
+in code rather than typed in, so a generated puzzle with no answer, or two, is rejected and
+rebuilt. Its exercises are `untimed: true`: the countdown is hidden and points depend on nudges
+used instead of speed (15 unaided, then 12, 10, 8). The unit is `mix: false` in the manifest,
+so the daily mix never draws from it.
 
 ## Getting unstuck
 
@@ -166,6 +175,10 @@ Both routes end at **Try one like it**, which is the part that actually teaches.
 an explanation is recognition, not recall — watching someone else solve it strengthens nothing.
 The step that consolidates is the one they do unaided immediately afterwards, and without this
 the next question is a different topic and the moment is lost.
+
+A question can carry its own `hints`, a list of nudges that each give a little more away. Then
+**Stuck?** hands them out one at a time ("Nudge 1 of 3", "Another nudge") before the full
+working, in place of the topic's general rule. Unit 6 uses this on every question.
 
 The same button appears on any question answered **wrong**, which is the same moment
 pedagogically and used to be a dead end.

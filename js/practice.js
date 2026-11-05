@@ -41,7 +41,9 @@ const Practice = (() => {
    */
   function priorities(subject) {
     // Only exercises that exist yet, and only from the subject being practised.
-    return Manifest.live(subject).map(ex => {
+    // A unit marked `mix: false` (problem solving) is never drawn: its
+    // questions take minutes each and would swamp a short session.
+    return Manifest.live(subject).filter(ex => ex.unit.mix !== false).map(ex => {
       const rec  = MRG.getExercise(ex.id);
       const seen = (rec.attempts || 0) > 0;
       const gap  = daysSince(rec.last);

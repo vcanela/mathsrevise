@@ -20,7 +20,12 @@
 //   { prompt, note, tag, draw, diagram:{w,h}, input:{…}, explain, learn }
 //
 // `learn` names the "Learn it" card that answers the question; "Stuck?" then
-// links to it.
+// links to it. `hints` is an optional list of nudges, each giving a little
+// more away, shown one at a time before the full working.
+//
+// A topic marked `untimed: true` hides the countdown and scores by hints
+// used instead of by speed: 15 unaided, then 12, 10 and 8. Problem solving
+// takes as long as it takes, and a clock would push students to guess.
 //
 // Input kinds: number, fill, choice, expr, word, spot, match, order, sort, label.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -523,7 +528,7 @@ const Exercise = (() => {
     const card = h('article', { class: 'qcard' + (depth ? ' qcard-follow' : ''), id: 'q' + n });
 
     const bar  = h('div', { class: 'tbar-fill' });
-    const wrap = h('div', { class: 'tbar', style: state.level.timerVisible ? '' : 'display:none' }, bar);
+    const wrap = h('div', { class: 'tbar', style: state.level.timerVisible && !state.untimed ? '' : 'display:none' }, bar);
     card.appendChild(wrap);
 
     // A reading passage already shown on this page folds away on later
@@ -598,6 +603,8 @@ const Exercise = (() => {
     const helpRow = h('div', { class: 'qhelp' });
     const helpBody = h('div', { class: 'qhelp-body', style: 'display:none' });
     let helpLevel = 0;                       // 0 none, 1 nudge, 2 full working
+    const hints = q.hints || [];
+    let hintsUsed = 0;
 
     const stuckBtn = h('button', {
       type: 'button', class: 'help-btn',
@@ -617,8 +624,27 @@ const Exercise = (() => {
 
     function takeHelp() {
       if (state.done.has(n) && helpLevel >= 2) return;
-      helpLevel++;
       helpBody.style.display = '';
+
+      // A question with its own nudges hands them out one at a time, and
+      // only then the full working, in place of the topic's general nudge.
+      if (hintsUsed < hints.length) {
+        hintsUsed++;
+        helpLevel = 1;
+        const step = h('p', { class: 'help-step' },
+          h('strong', { text: hints.length > 1 ? `Nudge ${hintsUsed} of ${hints.length}` : 'Nudge' }));
+        step.insertAdjacentHTML('beforeend', hints[hintsUsed - 1]);
+        helpBody.appendChild(step);
+        if (hintsUsed === 1) {
+          const link = learnLink(q);
+          if (link) helpBody.appendChild(h('p', { class: 'help-step help-learn' }, link));
+        }
+        stuckBtn.textContent = hintsUsed < hints.length ? 'Another nudge' : 'Show me how';
+        MJ.typeset([step]);
+        return;
+      }
+
+      helpLevel = hints.length ? 2 : helpLevel + 1;
 
       if (helpLevel === 1) {
         // The rule, with no numbers in it. Enough for a student who knows the
@@ -632,9 +658,9 @@ const Exercise = (() => {
         if (link) helpBody.appendChild(h('p', { class: 'help-step help-learn' }, link));
         stuckBtn.textContent = 'Show me how';
       } else {
-        helpBody.innerHTML +=
+        helpBody.insertAdjacentHTML('beforeend',
           '<p class="help-step"><strong>How it is done</strong>' +
-          (q.explain || 'Work through it a line at a time.') + '</p>';
+          (q.explain || 'Work through it a line at a time.') + '</p>');
         stuckBtn.style.display = 'none';
         // Taking the full working settles this question: it scores nothing,
         // but nothing is lost either. The marks are available on the twin.
@@ -700,7 +726,8 @@ const Exercise = (() => {
 
       // A follow-up is a second chance, so getting it wrong costs nothing.
       // Charging for it would make "try one like it" something to avoid.
-      let pts = MRG.scoreQuestion(res.ok, elapsed);
+      // Untimed: each nudge taken counts like a slower answer would.
+      let pts = MRG.scoreQuestion(res.ok, state.untimed ? [0, 1e4, 2e4, 4e4][Math.min(hintsUsed, 3)] : elapsed);
       if (depth > 0) pts = Math.max(0, pts);
       state.score += pts;
 
@@ -983,7 +1010,7 @@ const Exercise = (() => {
 
     const state = {
       level, done: new Set(), score: 0, base, difficulty,
-      hint: cfg.hint, maxDepth: 2,
+      hint: cfg.hint, maxDepth: 2, untimed: !!cfg.untimed,
       onAnswered: () => {}, addFollowUp: () => {}
     };
 
