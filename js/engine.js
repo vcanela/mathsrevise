@@ -27,7 +27,10 @@
 // used instead of by speed: 15 unaided, then 12, 10 and 8. Problem solving
 // takes as long as it takes, and a clock would push students to guess.
 //
-// Input kinds: number, fill, choice, expr, word, spot, match, order, sort, label.
+// Input kinds: number, fill, choice, expr, word, spot, match, order, sort,
+// label, write. A `write` question is free writing: nothing marks it, so it
+// is untimed, earns full points once it is long enough, and then shows a
+// checklist and a model for the student to judge their own draft against.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const Exercise = (() => {
@@ -520,15 +523,97 @@ const Exercise = (() => {
     };
   };
 
+  /**
+   * write — a short piece of free writing. Nothing can mark writing here, so
+   * "Finished" only checks there is enough of it; the review that follows is
+   * the student's own, against a checklist and a model. The box stays open
+   * afterwards, because the checklist exists to send them back into it.
+   * Drafts are kept in the browser, so a reload loses nothing, and "Copy my
+   * writing" puts the brief and the draft on the clipboard for the teacher.
+   */
+  Inputs.write = spec => {
+    const min = spec.minWords || 40;
+    const key = spec.key ? 'mrg_write_' + spec.key : null;
+    const box = h('textarea', {
+      class: 'write-box', rows: spec.rows || 7, spellcheck: 'true',
+      placeholder: spec.placeholder || 'Write here…', 'aria-label': 'Your writing'
+    });
+    try { if (key) box.value = localStorage.getItem(key) || ''; } catch (_) {}
+
+    const words = () => (box.value.trim().match(/\S+/g) || []).length;
+    const count = h('span', { class: 'write-count' });
+    const paint = () => {
+      const n = words();
+      count.textContent = `${n} word${n === 1 ? '' : 's'}` + (n < min ? ` · aim for at least ${min}` : '');
+      count.classList.toggle('short', n < min);
+    };
+    box.addEventListener('input', () => {
+      paint();
+      try { if (key) localStorage.setItem(key, box.value); } catch (_) {}
+    });
+    paint();
+
+    const done = h('button', { type: 'button', class: 'qsubmit sort-check', html: '&#10003; Finished' });
+    done.addEventListener('click', () =>
+      done.dispatchEvent(new CustomEvent('ans-submit', { bubbles: true })));
+
+    const copy = h('button', {
+      type: 'button', class: 'tool-btn write-copy', text: 'Copy my writing',
+      onclick() {
+        const text = (spec.title ? spec.title + '\n\n' : '') + box.value.trim() + '\n';
+        const said = msg => { copy.textContent = msg; setTimeout(() => { copy.textContent = 'Copy my writing'; }, 2500); };
+        // The clipboard API needs a secure page and the browser's permission.
+        // Failing that, select the draft and try the older copy command; if
+        // even that is blocked, the text is left selected for a manual copy.
+        const fallback = () => {
+          box.focus();
+          box.select();
+          let ok = false;
+          try { ok = document.execCommand('copy'); } catch (_) {}
+          said(ok ? 'Copied' : 'Selected: now press Ctrl+C or ⌘C');
+        };
+        if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(() => said('Copied'), fallback);
+        else fallback();
+      }
+    });
+
+    const review = h('div', { class: 'write-review', style: 'display:none' });
+
+    return {
+      node: h('div', { class: 'write' }, box,
+        h('div', { class: 'sort-foot write-foot' }, count, done), review),
+      filled: () => words() >= min,
+      focus:  () => box.focus(),
+      lock:   () => { done.disabled = true; },
+      check() {
+        review.appendChild(h('p', { class: 'write-head', text: 'Check your own writing' }));
+        review.appendChild(h('ul', { class: 'write-checks' }, (spec.checklist || []).map(c =>
+          h('li', {}, h('label', {}, h('input', { type: 'checkbox' }), h('span', { html: c }))))));
+        review.appendChild(h('p', { class: 'write-tip',
+          text: 'Anything you could not tick? Change your writing above; it is still open.' }));
+        if (spec.model) {
+          review.appendChild(h('p', { class: 'write-head', text: 'One way to do it' }));
+          review.appendChild(h('div', { class: 'write-model', html: spec.model }));
+        }
+        review.appendChild(h('div', { class: 'write-foot' }, copy));
+        review.style.display = '';
+        return { ok: true, written: true, correctHTML: '' };
+      }
+    };
+  };
+
   // ── One question card ─────────────────────────────────────────────────────
   // `n` is the label shown in the margin: "3" for an original question, "3a"
   // for the follow-up a student asked for after getting 3 wrong.
   function buildCard(state, q, n, depth) {
     depth = depth || 0;
     const card = h('article', { class: 'qcard' + (depth ? ' qcard-follow' : ''), id: 'q' + n });
+    // Free writing takes as long as it takes: no clock, and no worked answer
+    // to give away before the student has written their own.
+    const writing = q.input.kind === 'write';
 
     const bar  = h('div', { class: 'tbar-fill' });
-    const wrap = h('div', { class: 'tbar', style: state.level.timerVisible && !state.untimed ? '' : 'display:none' }, bar);
+    const wrap = h('div', { class: 'tbar', style: state.level.timerVisible && !state.untimed && !writing ? '' : 'display:none' }, bar);
     card.appendChild(wrap);
 
     // A reading passage already shown on this page folds away on later
@@ -616,6 +701,7 @@ const Exercise = (() => {
       onclick() { spawnTwin(); }
     }, 'Try one like it');
 
+    if (writing && !hints.length) stuckBtn.style.display = 'none';
     helpRow.appendChild(stuckBtn);
     helpRow.appendChild(twinBtn);
     answerArea.appendChild(helpBody);
@@ -640,9 +726,12 @@ const Exercise = (() => {
           if (link) helpBody.appendChild(h('p', { class: 'help-step help-learn' }, link));
         }
         stuckBtn.textContent = hintsUsed < hints.length ? 'Another nudge' : 'Show me how';
+        // Writing has nudges only; the model waits until the draft is done.
+        if (writing && hintsUsed === hints.length) stuckBtn.style.display = 'none';
         MJ.typeset([step]);
         return;
       }
+      if (writing) return;
 
       helpLevel = hints.length ? 2 : helpLevel + 1;
 
@@ -702,7 +791,7 @@ const Exercise = (() => {
 
     const timer = new QuestionTimer(bar, state.level.timerSecs);
 
-    const start = () => { if (!state.done.has(n) && !timer.hasStarted()) timer.start(); };
+    const start = () => { if (!writing && !state.done.has(n) && !timer.hasStarted()) timer.start(); };
     (input.inputs || []).forEach(el => {
       el.addEventListener('focus', start);
       el.addEventListener('keydown', ev => {
@@ -727,12 +816,16 @@ const Exercise = (() => {
       // A follow-up is a second chance, so getting it wrong costs nothing.
       // Charging for it would make "try one like it" something to avoid.
       // Untimed: each nudge taken counts like a slower answer would.
-      let pts = MRG.scoreQuestion(res.ok, state.untimed ? [0, 1e4, 2e4, 4e4][Math.min(hintsUsed, 3)] : elapsed);
+      // Writing long enough earns full marks: the quality is the student's to
+      // judge against the checklist, not the engine's.
+      let pts = writing ? 15 : MRG.scoreQuestion(res.ok, state.untimed ? [0, 1e4, 2e4, 4e4][Math.min(hintsUsed, 3)] : elapsed);
       if (depth > 0) pts = Math.max(0, pts);
       state.score += pts;
 
       fb.className = 'qfeedback ' + (res.ok ? 'good' : 'bad');
-      fb.innerHTML = res.ok
+      fb.innerHTML = res.written
+        ? '<strong>Written</strong>' + (q.explain ? q.explain : '')
+        : res.ok
         ? '<strong>Correct</strong>' + (q.explain ? q.explain : '')
         : '<strong>Not quite</strong>' + res.correctHTML + (q.explain ? '<br>' + q.explain : '');
 

@@ -177,6 +177,16 @@ function checkQuestion(where, q) {
       if (new Set(inp.markers).size !== inp.markers.length) fail(where, 'two labels share the same answer');
       break;
     }
+    case 'write': {
+      if (!inp.key || !/^[a-z0-9-]+$/.test(inp.key)) fail(where, 'write needs a key of lower-case letters, digits and hyphens: ' + inp.key);
+      if (!Array.isArray(inp.checklist) || inp.checklist.length < 3) fail(where, 'write needs a checklist of 3+ points');
+      if (!inp.model || !String(inp.model).trim()) fail(where, 'write needs a model answer');
+      if (!isInt(inp.minWords) || inp.minWords < 10) fail(where, 'write needs a sensible minWords: ' + inp.minWords);
+      // The model should itself pass the length check it sets.
+      const modelWords = (String(inp.model).replace(/<[^>]+>/g, ' ').trim().match(/\S+/g) || []).length;
+      if (modelWords < inp.minWords) fail(where, `write model has ${modelWords} words, fewer than minWords ${inp.minWords}`);
+      break;
+    }
     default:
       fail(where, 'unknown input kind: ' + inp.kind);
   }

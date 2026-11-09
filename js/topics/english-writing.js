@@ -5,8 +5,10 @@
 //
 // The site practises what can be checked: word knowledge, grammar,
 // punctuation, language features and close reading of short passages written
-// for this site. Reading whole texts, writing them, and speaking are left to
-// the classroom. Questions tagged Extension reach towards Year 9.
+// for this site. Reading whole texts and speaking are left to the classroom.
+// W16 and W17 end with a short piece of free writing, which the student
+// checks against a list and a model. Questions tagged Extension reach
+// towards Year 9.
 //
 // Every example is written to have one defensible answer. Keep it that way
 // when adding more: if a second option could be argued for, change it.
@@ -3603,6 +3605,768 @@
           rng => TF(rng, { statement: 'A thesis should be something a reader could disagree with.', answer: true, learn: 'thesis', explain: 'If nobody could disagree, there is nothing to argue.' }),
           rng => TF(rng, { statement: 'In a literary essay, you should refer to the author by their first name.', answer: false, learn: 'style', explain: 'Use their surname, or “the writer”.' }),
           rng => TF(rng, { statement: 'Asking why a writer made a particular choice can help you analyse a text.', answer: true, learn: 'purpose', explain: 'Every detail in a well-crafted text is a choice with a purpose.' })
+        ]
+      }
+    ]
+  });
+
+  // ═══ W16 Evidence and persuasion ══════════════════════════════════════════
+  // Writing › Composition › Persuasive writing (Years 7–8). W13 teaches the
+  // shape of a persuasive text; this exercise works on what fills it: claims
+  // backed by specific evidence, explained, and the reader's worries answered.
+  // The last question is free writing, checked by the student against a list.
+  // Extension: claim only what you can prove.
+  // Year 9 challenge: ethos, pathos and logos; how reliable evidence is;
+  // answering the strongest objection; explaining evidence; a rebuttal
+  // paragraph written in full.
+
+  Sci.topic({
+    id: 'ew16', unit: 'writing',
+    title: 'Evidence and Persuasion',
+    blurb: 'A reason only persuades once it is proved. Back up every claim, explain it, and answer the reader’s worries.',
+    hint: 'A claim is what you want the reader to believe; evidence is what makes it believable. Make evidence specific (a number, an example, an expert, ' +
+          'your own experience), explain how it proves the point, and answer the reader’s strongest worry instead of ignoring it.',
+
+    learn: [
+      { id: 'claim', title: 'Claim and evidence',
+        text: '<p>A <strong>claim</strong> is what you want the reader to believe: <em>Gymnastics builds strength.</em></p>' +
+              '<p><strong>Evidence</strong> is what makes it believable: <em>After six months, I could do ten chin-ups instead of two.</em></p>' +
+              '<p>Repeating the claim in stronger words is not evidence.</p>' },
+      { id: 'kinds', title: 'Kinds of evidence',
+        text: Sci.table(['Kind', 'Sounds like'], [['fact or number', '22 of 28 students said …'], ['expert', 'Our coach of fifteen years says …'],
+                ['experience', 'When I started, I could not …'], ['example', 'For example, the school down the road …']]) },
+      { id: 'specific', title: 'Be specific',
+        text: '<p>Vague evidence only repeats the point. Specific evidence proves it.</p>' +
+              '<p>Vague: <em>You learn lots of life lessons.</em></p>' +
+              '<p>Specific: <em>I fell off the beam fifty times before I landed my first cartwheel on it.</em></p>' },
+      { id: 'pee', title: 'Point, evidence, explain, link', wide: true,
+        text: '<ol class="learn-steps"><li><strong>Point:</strong> one reason, in one sentence</li><li><strong>Evidence:</strong> the specific proof</li>' +
+              '<li><strong>Explain:</strong> how the proof supports the point. <em>This shows that …</em> is only a start: say <em>how</em>.</li>' +
+              '<li><strong>Link:</strong> tie it back to what you want the reader to do or believe</li></ol>' +
+              '<p>Three reasons proved like this persuade more than six reasons listed.</p>' },
+      { id: 'other', title: 'Answer the worry',
+        text: '<p>Your reader already has doubts. Name the worry fairly, admit what is true in it, then answer it:</p>' +
+              '<p><em>Some parents worry that gymnastics is dangerous. It is true that falls happen. However, beginners train on thick mats, with a coach beside them.</em></p>' },
+      { id: 'reader', title: 'Know your reader',
+        text: '<p>Ask: who will read this, and what do <em>they</em> care about?</p>' +
+              '<ul><li>Parents: safety, cost, their child’s happiness</li><li>A principal: supervision, cost, learning</li><li>Friends: fun, who else is going</li></ul>' +
+              '<p>Choose reasons and words that suit that reader.</p>' },
+      { id: 'overclaim', title: 'Extension: claim only what you can prove',
+        text: '<p>Words like <em>always, never, every, everything</em> make a claim impossible to prove, and a reader who finds one exception stops trusting you.</p>' +
+              '<p><em>Most, many, often, can</em> make claims you can back up.</p>' },
+      { id: 'appeals', title: 'Ethos, pathos and logos', years: '9', wide: true,
+        text: Sci.table(['Appeal', 'Persuades through', 'Example'], [
+                ['<strong>Ethos</strong>', 'trust in the speaker’s knowledge or character', '<em>As a coach for twenty years, I have seen …</em>'],
+                ['<strong>Pathos</strong>', 'the reader’s feelings', '<em>Imagine your child’s face the first time they stick a landing.</em>'],
+                ['<strong>Logos</strong>', 'reasons, facts and logic', '<em>A full year of lessons costs less than one school trip.</em>']]) +
+              '<p>Strong arguments use all three, but logos carries the weight: feelings and trust without reasons do not last.</p>' },
+      { id: 'reliable', title: 'How reliable is the evidence?', years: '9', wide: true,
+        text: '<p>Before you use evidence, test it with three questions:</p>' +
+              '<ul><li><strong>Who</strong> produced it, and do they know the field?</li><li><strong>How</strong> did they find it out: one story, or many cases measured carefully?</li>' +
+              '<li><strong>Do they gain</strong> if you believe it? A seller praising their own product may be biased.</li></ul>' +
+              '<p>One case (<em>my cousin broke her arm</em>) cannot show how common something is.</p>' },
+      { id: 'strongest', title: 'Answer the strongest objection', years: '9', wide: true,
+        text: '<p>Answer the best version of the other side, in words its supporters would accept. Twisting it into something silly and knocking that down is a ' +
+              '<strong>straw man</strong>, and it convinces nobody.</p>' +
+              '<p>Straw man: <em>People against the skate park want teenagers to sit at home all day.</em></p>' +
+              '<p>Fair: <em>Some residents worry that a skate park would be noisy at night.</em></p>' }
+    ],
+
+    examples: [
+      {
+        title: 'Example 1: one reason, proved',
+        steps: ['<strong>Point:</strong> <em>Gymnastics builds strength that helps in every other sport.</em>',
+                '<strong>Evidence:</strong> <em>After a year of training, I could climb the rope in PE without using my legs.</em>',
+                '<strong>Explain:</strong> <em>That strength comes from holding my own body weight on the bars and rings every week.</em>',
+                '<strong>Link:</strong> <em>A child who starts in gymnastics is ready for whatever sport comes next.</em>']
+      },
+      {
+        title: 'Example 2: answering the worry',
+        steps: ['<strong>Name it:</strong> <em>Some parents worry that gymnastics is dangerous.</em>',
+                '<strong>Admit what is true:</strong> <em>It is true that falls happen.</em>',
+                '<strong>Answer it:</strong> <em>However, beginners train on thick mats, and a coach spots every new skill.</em>',
+                'Taking the worry seriously makes the writer more believable, not less.']
+      }
+    ],
+
+    slots: [
+      { name: 'Claim or evidence?', learn: 'claim',
+        items: [rng => Sci.sort(rng, { prompt: 'Is each sentence a claim or evidence?', bins: ['Claim', 'Evidence'],
+          items: [
+            { text: 'Gymnastics is one of the best sports for young children.', bin: 0 },
+            { text: 'Our school should open the pool at lunchtime.', bin: 0 },
+            { text: 'Swimming lessons should be free for every child.', bin: 0 },
+            { text: 'Learning a musical instrument makes you a better learner.', bin: 0 },
+            { text: 'Every school should have a vegetable garden.', bin: 0 },
+            { text: 'In our class survey, 22 of 28 students said they would swim at lunch if they could.', bin: 1 },
+            { text: 'Last term, our garden club grew 40 kilograms of vegetables for the canteen.', bin: 1 },
+            { text: 'After a year of gymnastics, I could hold a handstand for thirty seconds.', bin: 1 },
+            { text: 'Our coach, who has taught for fifteen years, says most injuries happen when warm-ups are skipped.', bin: 1 },
+            { text: 'A child’s entry to the local pool costs $6, so a family of three pays $18 a visit.', bin: 1 }
+          ], pick: 6,
+          explain: 'A claim is what the writer wants you to believe. Evidence is a fact, number, example, expert view or experience that makes a claim believable.' })] },
+
+      { name: 'The strongest evidence', learn: 'specific',
+        items: [
+          ['Gymnastics builds strength.', 'After six months of training, I could do ten chin-ups instead of two.',
+           ['Gymnastics is really, really good for you.', 'Lots of people do gymnastics.', 'Gymnastics is my favourite sport.'],
+           'It shows a specific, measurable change. The others repeat the opinion, give a fact about popularity that says nothing about strength, or state a preference.'],
+          ['The library should open before school.', 'Twenty students already wait outside the library doors every morning before 8.30.',
+           ['Libraries are important places.', 'I think the library should definitely open earlier.', 'The library has more than 5,000 books.'],
+           'It shows that students would use it. The others are vague, repeat the claim more strongly, or give a fact that does not bear on opening times.'],
+          ['Our class should go to camp this year.', 'Last year’s class said camp was where they made friends outside their usual group, and 25 of 27 wanted to go again.',
+           ['Camp is awesome.', 'Camps usually have bunk beds.', 'We really, really want to go to camp.'],
+           'It gives a specific benefit and a number. The others are an opinion, an irrelevant fact and the claim said louder.'],
+          ['Young players should try more than one sport.', 'Our netball coach noticed that players who also did athletics were quicker to the ball.',
+           ['Sport is good for you.', 'There are hundreds of sports in the world.', 'I play three sports and I love all of them.'],
+           'It is an observation from someone who watches players closely, and it links a second sport to a real improvement. Loving your sports is a feeling, not proof.'],
+          ['Phones should stay in bags during class.', 'In the week our class kept phones in bags, our teacher counted half as many interruptions.',
+           ['Phones are distracting, and that is a fact.', 'Most phones have cameras.', 'I find phones annoying.'],
+           'It measures what changed. Calling something a fact does not make it evidence.'],
+          ['Swimming lessons should be part of every school year.', 'In a check last term, 9 of our 28 Year 7 students could not swim 25 metres.',
+           ['Swimming is fun in summer.', 'Everyone should learn to swim because it matters.', 'Our local pool has a hydroslide.'],
+           'It shows the need with a number. The others are a feeling, the claim repeated and an irrelevant fact.']
+        ].map(([claim, right, wrong, why]) => rng => C(rng, { prompt: `Which sentence is the best evidence for this claim? <em>${claim}</em>`, right, wrong, explain: why })) },
+
+      { name: 'Vague or specific?', learn: 'specific',
+        items: [
+          ['gymnastics teaches you to keep going', 'I fell off the beam more than fifty times before I landed my first cartwheel on it.',
+           ['Gymnastics teaches you lots of life lessons.', 'You learn things in gymnastics that help you in life.', 'Gymnastics teaches you stuff like never giving up and that.']],
+          ['the playground is unsafe', 'Two students sprained their ankles last month on the cracked asphalt beside the bike shed.',
+           ['The playground has some problems.', 'The playground is really not safe at all.', 'Some things about the playground could be better.']],
+          ['the club makes new members welcome', 'On my first night, an older gymnast showed me where to put my bag and partnered me for the warm-up.',
+           ['The club is a friendly place to be.', 'Everyone at the club is really nice.', 'The club has a great community.']],
+          ['canteen food costs too much', 'A sandwich at the canteen costs $7.50, but the same sandwich costs $4 at the dairy across the road.',
+           ['Canteen food costs a lot.', 'The canteen is way too expensive.', 'Prices at the canteen are quite high, honestly.']],
+          ['reading helps your writing', 'After reading twelve novels last term, I started writing dialogue the way real authors do.',
+           ['Reading is good for your writing.', 'Reading helps with lots of things.', 'People who read a lot are better at writing.']],
+          ['the bus is unreliable', 'This term, the 7.45 bus has been more than ten minutes late on eight mornings.',
+           ['The bus is always late.', 'The bus is unreliable.', 'The bus has a lot of problems with time.']]
+        ].map(([point, right, wrong]) => rng => C(rng, { prompt: `A writer wants to show that <strong>${point}</strong>. Which sentence proves it best?`, right, wrong,
+          explain: 'Specific details (numbers, names, real moments) give the reader something to believe. The vague versions only say the point again.' })) },
+
+      { name: 'What kind of evidence?', learn: 'kinds',
+        items: [Sci.gen(rng => {
+          const pool = [
+            ['A fact or number', ['Our pool is open 70 hours a week, but students can use it for only 3 of them.', 'Nine out of ten families in our survey said sport fees had gone up this year.']],
+            ['An expert’s view', ['Our school nurse says most playground injuries happen on the hard courts.', 'A physiotherapist told our class that stretching after sport reduces soreness.']],
+            ['A personal experience', ['When I started gymnastics, I could not touch my toes; now I can do the splits.', 'On my first club night I was nervous, until the coach learned my name.']],
+            ['An example', ['For example, the school down the road turned its old tennis court into a garden.', 'Take the Year 8 market day, where students ran stalls and kept a budget.']]
+          ];
+          return Sci.match(rng, 'Match each piece of evidence to its kind.', pool.map(([kind, lines]) => [rng.pick(lines), kind]),
+            'Facts and numbers can be checked; an expert knows the field; personal experience is your own story; an example is one particular case that stands for the point.');
+        })] },
+
+      { name: 'Build the paragraph', learn: 'pee',
+        items: [
+          ['Gymnastics builds strength that helps in every other sport.', 'After a year of training, I could climb the rope in PE without using my legs.',
+           'That strength comes from holding my own body weight on the bars and rings every week.', 'A child who starts in gymnastics is ready for whatever sport comes next.'],
+          ['Our school should open the pool at lunchtime.', 'In our class survey, 22 of 28 students said they would swim at lunch if they could.',
+           'That many swimmers shows the pool would be used, not wasted.', 'Opening it at lunch would turn an empty pool into a busy one.'],
+          ['A school garden would help students eat better.', 'At the school down the road, students who worked in the garden began eating its vegetables at lunch.',
+           'Growing food makes it familiar, and familiar food is food you are willing to try.', 'Our students deserve the same chance.'],
+          ['Walking to school gives students a healthy start to the day.', 'For most of our class, the walk to school takes about fifteen minutes.',
+           'Fifteen minutes each way adds up to half an hour of exercise, without a single training session.', 'That is a habit worth encouraging.'],
+          ['Learning an instrument teaches you to keep going.', 'It took me three months of daily practice before I could play a whole song on the guitar.',
+           'Those months taught me that small, steady practice gets results, and that helps in every subject.', 'Every student deserves the chance to learn one.']
+        ].map(seq => rng => Sci.order(rng, 'Put the sentences of this persuasive paragraph in order.', seq,
+          'Point, evidence, explain, link: say it, prove it, show how the proof supports it, then tie it back to the argument.')) },
+
+      { name: 'Spot the unsupported claim', learn: 'claim',
+        items: [
+          [['Gymnastics is a great first sport for young children.', 'In one session, children practise balance on the beam, strength on the bars and flexibility on the floor.',
+            'Gymnastics also makes children better at maths.', 'Beginners start with rolls and simple balances, on soft mats.',
+            'At our club, coaches add a new skill only once the one before it is safe.'], 2,
+           'Every other sentence gives a detail that supports the opening claim. The claim about maths is a big new idea with nothing behind it: prove it or cut it.'],
+          [['Our school should open the library at lunchtime.', 'At the moment, it closes at 12.30 every day.',
+            'In our survey, 31 students said they had nowhere quiet to read at lunch.', 'A lunchtime library would end bullying at our school.',
+            'Two parent volunteers have already offered to help supervise.'], 3,
+           'Ending bullying is a huge claim, and nothing in the paragraph supports it. The other sentences are specific facts about the library.'],
+          [['Swimming lessons should be part of every school year.', 'In a check last term, 9 of our 28 Year 7 students could not swim 25 metres.',
+            'Lessons at the local pool cost the school $4 per student per session.', 'Ten sessions would cost each student $40 for the whole year.',
+            'Swimming is the most important skill anyone can ever learn.'], 4,
+           '“The most important skill anyone can ever learn” is an overclaim with no evidence. The rest of the paragraph is built on checkable numbers.'],
+          [['Our class should look after a class pet.', 'Pets stop students from ever feeling stressed.',
+            'Room 12 kept guinea pigs last year, and students took turns feeding them every day.', 'Their teacher says the feeding roster never missed a day.',
+            'A guinea pig costs about $40 and lives happily in a classroom cage.'], 1,
+           'The paragraph proves that a class can care for a pet reliably. Nothing in it supports the claim about stress, and “ever” makes it impossible to prove.'],
+          [['Our town needs a skate park.', 'Right now, skaters use the supermarket car park, where cars come and go.',
+            'Last month, a petition for a skate park collected 600 signatures.', 'The council has a spare corner of the sports ground beside the courts.',
+            'A skate park would make our town famous.'], 4,
+           'Fame is a new claim with no evidence. The other sentences give the need, the support and a place to build it.']
+        ].map(([lines, wrong, why]) => rng => Sci.spot(rng, {
+          prompt: 'One sentence in this paragraph makes a claim that nothing backs up. Which one?',
+          lines, wrong, find: true, cue: 'Click the claim with no evidence behind it.', explain: why })) },
+
+      { name: 'Answer the worry', learn: 'other',
+        items: [Sci.gen(rng => {
+          const pool = [
+            ['Gymnastics looks dangerous.', 'Beginners train on thick mats, and a coach spots every new skill.'],
+            ['School camp costs too much.', 'The school fundraises every year and helps families who need it.'],
+            ['Club training takes up too many evenings.', 'Beginner classes run for one hour, once a week.'],
+            ['A school garden would be too much work.', 'A roster across all classes needs only twenty minutes a week from each.'],
+            ['Walking to school alone is not safe.', 'Children can walk in groups along a route with crossing patrols.'],
+            ['Learning an instrument is too expensive.', 'The school lends instruments to beginners for free.']
+          ];
+          return Sci.match(rng, 'Match each worry to the answer that deals with it.', rng.sample(pool, 4),
+            'A good answer takes the worry seriously and gives a specific fact that shrinks it.');
+        })] },
+
+      { name: 'Know your reader', learn: 'reader',
+        items: [
+          ['You are persuading <strong>parents</strong> to enrol their child in a gymnastics club.',
+           'Your child will be coached in small groups, on safe equipment, by qualified coaches.',
+           ['Gymnastics is so fun, you have to try it, bro.', 'Parents never understand how cool gymnastics is.', 'Gymnastics has the best flips of any sport.'],
+           'Parents care about safety and good teaching, and the sentence speaks to both in a respectful tone.'],
+          ['You are persuading your <strong>principal</strong> to open the pool at lunchtime.',
+           'Opening the pool at lunch would need one supervising teacher, and two have already volunteered.',
+           ['The pool is sitting there doing nothing, which is honestly ridiculous.', 'Everyone wants the pool open, so just open it.', 'Swimming at lunch would be epic.'],
+           'A principal’s first question is who would supervise. The sentence answers it, politely.'],
+          ['You are persuading <strong>classmates</strong> to join the kapa haka group.',
+           'Practice is on Thursdays at lunch, and you will learn your first waiata in week one.',
+           ['Group performance is associated with improved wellbeing in adolescents.', 'Parents, please support your children to join.', 'The board of trustees values cultural participation.'],
+           'Classmates want to know when it is and what they will do. The others are written for researchers, parents or the board.'],
+          ['You are persuading the <strong>town council</strong> to build a skate park.',
+           'A skate park would give young people a safe place to skate, away from the supermarket car park.',
+           ['Skating is sick and everyone knows it.', 'If you don’t build it, you’re just old and boring.', 'I want somewhere to do kickflips.'],
+           'A council cares about safety and the whole town, and expects a respectful tone.'],
+          ['You are persuading <strong>Year 4 students</strong> to join a lunchtime reading club.',
+           'Every week we read a funny book together, and there are snacks!',
+           ['Literacy outcomes improve markedly with regular sustained reading.', 'Teachers should ensure that students attend.', 'Reading clubs are associated with achievement gains.'],
+           'Younger children respond to fun, in simple words. The others are written for adults.']
+        ].map(([task, right, wrong, why]) => rng => C(rng, { prompt: `${task} Which sentence suits this reader best?`, right, wrong,
+          explain: why + ' Persuasion works when it speaks to what this reader cares about, in language that suits them.' })) },
+
+      { name: 'True or false', learn: 'claim',
+        items: [
+          rng => TF(rng, { statement: 'Evidence is the part of an argument that makes a claim believable.', answer: true, learn: 'claim', explain: 'Without it, a claim is only an opinion.' }),
+          rng => TF(rng, { statement: 'Repeating your claim in stronger words counts as evidence.', answer: false, learn: 'claim', explain: '“It is really, really good” is still only the claim.' }),
+          rng => TF(rng, { statement: 'Your own experience can be evidence, if it is specific.', answer: true, learn: 'kinds', explain: 'A real moment, a number or a change you noticed can prove a point.' }),
+          rng => TF(rng, { statement: 'A strong persuasive piece never mentions what the other side thinks.', answer: false, learn: 'other', explain: 'Answering the reader’s worries makes the argument stronger.' }),
+          rng => TF(rng, { statement: 'After giving evidence, you should explain how it supports your point.', answer: true, learn: 'pee', explain: 'Evidence does not always speak for itself; the explanation connects it to the point.' }),
+          rng => TF(rng, { statement: 'The more reasons you list, the more persuasive your writing is.', answer: false, learn: 'pee', explain: 'Three reasons, each proved and explained, beat six bare ones.' })
+        ] },
+
+      { name: 'Extension: claim only what you can prove', learn: 'overclaim', challenge: 'also',
+        items: [
+          ['Gymnastics builds strength in the arms, legs and core.', ['Gymnastics gives you everything you could ever need.', 'Gymnastics is the best sport in the entire world.', 'Every child who does gymnastics becomes a champion.']],
+          ['Most students in our survey wanted a longer lunch.', ['Every single student wants a longer lunch.', 'A longer lunch would solve all of the school’s problems.', 'Nobody has ever liked short lunches.']],
+          ['Regular swimming can improve your fitness.', ['Swimming will keep you healthy forever.', 'Swimming is always better than any other exercise.', 'Everyone who swims is fit.']],
+          ['Many players find that a second sport improves their balance.', ['Playing two sports guarantees you will turn professional.', 'Nobody who plays only one sport ever improves.', 'A second sport fixes every weakness.']],
+          ['Learning an instrument can help you concentrate.', ['Learning an instrument makes you a genius.', 'Musicians never lose concentration.', 'Every musician gets top marks at school.']]
+        ].map(([right, wrong]) => rng => C(rng, { tag: EXT, prompt: 'Which claim could a writer actually back up?', right, wrong,
+          explain: 'Words such as always, never, every, everything and nobody make a claim impossible to prove. Can, many and most make claims you can support, and a careful claim makes you more believable.' })) },
+
+      { name: 'Write it: prove one reason', learn: 'pee',
+        items: [
+          rng => Sci.write(rng, {
+            key: 'w16-reason', title: 'W16 Write it: one reason, for parents', minWords: 50,
+            prompt: '<strong>Write a persuasive paragraph for parents.</strong> Give <em>one</em> reason why children should take up gymnastics, or another sport you know well. Use point, evidence, explain, link.',
+            hints: ['Pick the reason you can prove best. Your own experience counts as evidence if it is specific: a number, a moment, a change you noticed.',
+                    'Write four sentences: the point, the evidence, how the evidence proves the point, and a link back to the parent’s decision.'],
+            checklist: ['My first sentence states one clear reason.', 'I give <strong>specific</strong> evidence: a number, an example, an expert or my own experience.',
+                        'I explain <em>how</em> the evidence proves the point.', 'My last sentence links back to the parent’s decision.',
+                        'Every sentence ends with a full stop, not a comma.'],
+            model: '<p>Gymnastics teaches children to keep trying when something is hard. When I began on the beam, I fell off more than fifty times before I landed my first cartwheel on it. ' +
+                   'Each fall taught me to adjust a little, and my coaches cheered the attempts as loudly as the successes. A child who learns that lesson in the gym carries it into the classroom, ' +
+                   'which makes gymnastics worth far more than the cost of a leotard.</p>',
+            explain: 'Read your paragraph aloud once. Wherever you run out of breath, or the sense runs on, you probably need a full stop.' }),
+          rng => Sci.write(rng, {
+            key: 'w16-worry', title: 'W16 Write it: answering a worry', minWords: 50,
+            prompt: '<strong>Write a paragraph that answers a parent’s worry</strong> about a sport or activity you know well: that it is dangerous, too expensive, or takes too much time. Name the worry fairly, then answer it.',
+            hints: ['Start by naming the worry the way a sensible parent would put it: “Some parents worry that …”.',
+                    'Admit what is true in the worry, then answer it with something specific: how the risk is managed, what it really costs, how long it really takes.'],
+            checklist: ['I name the worry fairly, without mocking it.', 'I admit what is true in it.', 'I answer it with a specific fact, example or experience.',
+                        'My last sentence links back to why the activity is still worth it.', 'Every sentence ends with a full stop, not a comma.'],
+            model: '<p>Some parents worry that gymnastics is dangerous, and it is true that falls happen. However, beginners train on thick mats, and a coach stands beside them for every new skill. ' +
+                   'Skills are learned in small steps, so a child learns to roll long before they learn to flip. In three years at my club, the worst injury I have seen was a sprained wrist, which healed in a fortnight. ' +
+                   'With that much care, gymnastics is safer than most parents expect.</p>',
+            explain: 'Check that you answered the worry with a fact, not with “it’s fine, trust me”.' }),
+          rng => Sci.write(rng, {
+            key: 'w16-principal', title: 'W16 Write it: a proposal to the principal', minWords: 50,
+            prompt: '<strong>Write a persuasive paragraph to your principal.</strong> Give one reason the school should offer a new lunchtime activity of your choice: a club, a sport or a space. Use point, evidence, explain, link.',
+            hints: ['Think about what a principal worries about: supervision, cost and safety. Your evidence should help with at least one of these.',
+                    'A small survey of your class, or something you have seen happen at lunch, makes good evidence.'],
+            checklist: ['My first sentence states one clear reason.', 'I give <strong>specific</strong> evidence, such as a number or something I have seen.',
+                        'I explain how the evidence proves the point.', 'My tone is polite and suits a principal.', 'Every sentence ends with a full stop, not a comma.'],
+            model: '<p>The school should open the gym at lunchtime for a climbing club. At the moment, more than thirty students sit on the steps outside the gym every lunchtime with nothing to do. ' +
+                   'When Room 9 ran a trial climbing session last term, twenty of them came, and the duty teacher reported no behaviour problems at all. ' +
+                   'A climbing club would turn bored students into busy ones, and it would cost the school only one teacher’s lunchtime a week.</p>',
+            explain: 'Check your tone: would you be comfortable reading this aloud in the principal’s office?' }),
+          rng => Sci.write(rng, {
+            key: 'w16-friend', title: 'W16 Write it: two reasons, for a friend', minWords: 80, rows: 10,
+            prompt: '<strong>Write two paragraphs for a friend</strong> who is choosing a sport: convince them to try yours. Give two reasons, one per paragraph, each with specific evidence.',
+            hints: ['Choose the two reasons your friend would care about most, and the evidence for each, before you start writing.',
+                    'Start the second paragraph with a word that signals a new reason: “Second”, “Also” or “Best of all”.'],
+            checklist: ['I write two paragraphs, one reason in each.', 'Each reason has <strong>specific</strong> evidence.', 'I explain how each piece of evidence proves the reason.',
+                        'My tone suits a friend.', 'I finish by telling my friend what to do.'],
+            model: '<p>You should try touch rugby with me this summer. First, it is easy to start: there is no tackling, so all you need is a pair of shoes, and our Thursday team still has two spots. ' +
+                   'In my first game I scored a try, even though I had never played before.</p>' +
+                   '<p>Second, it gets you fit without feeling like training. We run for forty minutes a game, but because you are chasing the ball, you barely notice. ' +
+                   'By the end of last season I could run the school cross-country without stopping. Come along on Thursday and see for yourself.</p>',
+            explain: 'Check that each paragraph does one job: one reason, proved.' })
+        ] },
+
+      // ── Year 9 challenge: these positions appear only in the challenge set.
+
+      {
+        name: 'Year 9: ethos, pathos, logos', learn: 'appeals', challenge: 'only',
+        items: [rng => Sci.sort(rng, { prompt: 'Which appeal does each sentence mainly use?', bins: ['Ethos', 'Pathos', 'Logos'],
+          items: [
+            { text: 'As a coach for twenty years, I have seen what early training can do.', bin: 0 },
+            { text: 'Speaking as a surf lifeguard, I can tell you that floating saves lives.', bin: 0 },
+            { text: 'Our school nurse, who treats every playground injury, supports this change.', bin: 0 },
+            { text: 'Imagine your child’s face the first time they stick a landing.', bin: 1 },
+            { text: 'No child should feel left out because their family cannot afford the fees.', bin: 1 },
+            { text: 'Picture the empty pool glittering in the sun while students swelter on the field.', bin: 1 },
+            { text: 'The pool is open seventy hours a week, but students can use only three of them.', bin: 2 },
+            { text: 'Lessons cost $4 a session, so a full year costs less than one school trip.', bin: 2 },
+            { text: 'Fewer cars at the gate would mean less traffic, and so fewer near misses.', bin: 2 }
+          ], pick: 6,
+          explain: 'Ethos builds trust in the speaker; pathos stirs the reader’s feelings; logos gives reasons, facts and logic.' })]
+      },
+
+      {
+        name: 'Year 9: how reliable is it?', learn: 'reliable', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'Which evidence is most reliable for the claim that a later school start improves concentration?',
+            right: 'A study that compared students’ test results before and after their schools changed start times.',
+            wrong: ['A post online from someone who says they feel sleepy in the mornings.', 'An energy drink advert that says students are always tired.', 'A friend who says “everyone knows” teenagers are sleepy.'],
+            explain: 'The study measures many students carefully, and its authors gain nothing from the answer. The others are one person, a biased seller and a rumour.' }),
+          rng => C(rng, { prompt: 'Why is this weak evidence? <em>“My cousin did gymnastics and broke her arm, so gymnastics is too dangerous.”</em>',
+            right: 'One case cannot show how common injuries are across all gymnasts.',
+            wrong: ['It is too short.', 'It uses an example.', 'It mentions a relative.'],
+            explain: 'A single story can be true and still mislead. To judge how dangerous a sport is, you need many cases, counted.' }),
+          rng => C(rng, { prompt: 'A website that sells trampolines says trampolining is the safest sport. Why should a reader be cautious?',
+            right: 'The seller gains if readers believe it, so the claim may be biased.',
+            wrong: ['Websites are never correct.', 'Trampolining is not a real sport.', 'The claim is too short to be true.'],
+            explain: 'Ask whether the source gains from the claim. That does not prove it false, but it is a reason to look for an independent source.' }),
+          rng => C(rng, { prompt: 'Which evidence would best support the claim that the town needs a skate park?',
+            right: 'Council records of how many complaints about skaters in the supermarket car park were made this year.',
+            wrong: ['A skater’s opinion that skating is the best sport.', 'A photo of a skate park in another country.', 'A list of famous skaters.'],
+            explain: 'Official records show the size of the problem a skate park would solve. The others show enthusiasm, not need.' }),
+          rng => C(rng, { prompt: 'Which questions best test whether evidence is reliable?',
+            right: 'Who produced it, how did they find it out, and do they gain from it?',
+            wrong: ['Is it written in a nice font?', 'Does it agree with what I already think?', 'Was it the first result in my search?'],
+            explain: 'Who, how and who gains: these test the source, not how convenient the evidence is.' })
+        ]
+      },
+
+      {
+        name: 'Year 9: the strongest objection', learn: 'strongest', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'A writer argues for a later school start. Which version of the opposing view should they answer?',
+            right: 'A later start would push after-school sport and part-time jobs later into the evening.',
+            wrong: ['Opponents just want students to suffer.', 'Some people hate change for no reason.', 'Critics have obviously never been teenagers.'],
+            explain: 'It is the fairest and strongest form of the objection. The others insult opponents, so answering them proves nothing.' }),
+          rng => C(rng, { prompt: 'Which sentence is a <strong>straw man</strong>?',
+            right: 'People who oppose the skate park think young people should sit at home all day.',
+            wrong: ['Some residents worry that the skate park would be noisy at night.', 'It is true that a skate park would cost money to build.', 'Critics point out that the proposed site floods in winter.'],
+            explain: 'It twists the other side into something nobody actually believes. The others state real concerns fairly.' }),
+          rng => C(rng, { prompt: 'A writer argues that children should start gymnastics young. Which objection is the strongest one to answer?',
+            right: 'Heavy training at a young age can cause overuse injuries if it is not managed carefully.',
+            wrong: ['Leotards come in ugly colours.', 'Some people just do not like gymnastics.', 'Gymnastics is not on TV very often.'],
+            explain: 'It is a serious concern a careful parent might raise. Answering it, for example by describing how beginner training is limited, builds trust.' }),
+          rng => C(rng, { prompt: 'What makes a rebuttal convincing?',
+            right: 'It concedes what is true in the objection, then answers it with evidence.',
+            wrong: ['It ignores the objection and repeats the thesis more loudly.', 'It attacks the people who disagree.', 'It says the objection is not worth discussing.'],
+            explain: 'Conceding shows you are fair; evidence shows you are right.' })
+        ]
+      },
+
+      {
+        name: 'Year 9: explaining the evidence', learn: 'pee', challenge: 'only',
+        items: [
+          ['Gymnastics teaches persistence.', 'I fell off the beam more than fifty times before I landed a cartwheel on it.',
+           'Each fall was a small failure to recover from, so the skill was built out of fifty decisions to keep going.',
+           ['This shows that gymnastics teaches persistence.', 'The beam is only ten centimetres wide.', 'Falling off the beam hurts.']],
+          ['The library should open at lunch.', 'In our survey, 31 students said they had nowhere quiet to read at lunch.',
+           'Thirty-one students is more than a full class, so a lunchtime library would be used, not wasted.',
+           ['This proves that the library should open.', 'Surveys are a kind of research.', 'Libraries are quiet places.']],
+          ['Walking to school builds fitness.', 'For most of our class, the walk to school takes about fifteen minutes each way.',
+           'Thirty minutes a day, five days a week, adds up to two and a half hours of exercise without a single training session.',
+           ['So walking is good for you.', 'Fifteen minutes is a quarter of an hour.', 'Some students ride bikes instead.']],
+          ['Swimming lessons are affordable.', 'Lessons at the local pool cost $4 per student per session.',
+           'Ten sessions would cost $40 a student, less than a single school trip, so the cost is no barrier.',
+           ['That is why lessons are affordable.', 'Four dollars is a lot for some people.', 'Swimming pools are expensive to heat.']]
+        ].map(([point, ev, right, wrong]) => rng => C(rng, {
+          prompt: `<strong>Point:</strong> <em>${point}</em> <strong>Evidence:</strong> <em>${ev}</em> Which sentence best explains how the evidence proves the point?`, right, wrong,
+          explain: '“This shows that …” followed by the point only repeats it. A real explanation says <em>how</em> the evidence leads to the point.' }))
+      },
+
+      {
+        name: 'Year 9: write a rebuttal', learn: 'strongest', challenge: 'only',
+        items: [
+          rng => Sci.write(rng, {
+            key: 'w16-y9-rebut', title: 'W16 Year 9 Write it: rebutting the strongest objection', minWords: 70, rows: 9,
+            prompt: '<strong>Choose an issue you care about.</strong> Write a paragraph that answers the <em>strongest</em> objection to your view: name it fairly, concede what is true, counter it with evidence, and link back to your position.',
+            hints: ['Write down the objection a sensible opponent would make. If you could answer it in one breath, it is probably not the strongest one.',
+                    'Use the four moves: name it, concede (“It is true that …”), counter (“However, …”) and link (“So, …”).'],
+            checklist: ['I answer the <strong>strongest</strong> objection, not a weak or twisted one.', 'I state it in words its supporters would accept.',
+                        'I concede what is true in it.', 'I counter it with specific evidence, and explain how the evidence answers it.', 'My last sentence links back to my position.'],
+            model: '<p>The strongest objection to a later school start is that it would push after-school sport and part-time jobs later into the evening. ' +
+                   'It is true that winter trainings could finish after dark, and that some students rely on work after school. ' +
+                   'However, a school that moves its start by thirty minutes can move its whole day by the same amount, so trainings would shift by half an hour, not more. ' +
+                   'Players who sleep enough also tend to learn skills faster and recover better. A later start, then, would not cost students their sport or their jobs; it would help them do both well.</p>',
+            explain: 'Read the objection as your opponent would. Would they say you described their view fairly?' })
+        ]
+      }
+    ]
+  });
+
+
+  // ═══ W17 Show, don't tell ═════════════════════════════════════════════════
+  // Writing › Composition › Descriptive writing (Years 7–8): precise verbs,
+  // sensory detail, fitting comparisons, cutting empty words, and slowing a
+  // movement down so the reader can see it. W12 chooses between words; this
+  // exercise builds whole descriptions. The last question is free writing.
+  // Extension: sentence length and pace.
+  // Year 9 challenge: naming devices, what an image suggests, the telling
+  // detail, keeping an image consistent, and an extended metaphor written
+  // in full.
+
+  Sci.topic({
+    id: 'ew17', unit: 'writing',
+    title: 'Show, Don’t Tell',
+    blurb: 'Description that lets the reader see, hear and feel the moment, instead of being told about it.',
+    hint: 'Telling names a feeling or quality; showing gives the details that prove it. Use strong verbs, details from several senses, comparisons that fit, ' +
+          'and cut empty words such as amazing, very and kind of. Slow a movement down, one stage at a time.',
+
+    learn: [
+      { id: 'show', title: 'Show, don’t tell', wide: true,
+        text: '<p><strong>Telling</strong> names the feeling or quality. <strong>Showing</strong> gives the details, and lets the reader work it out.</p>' +
+              Sci.table(['Telling', 'Showing'], [['Ana was nervous.', 'Ana retied her laces three times and could not keep still on the line.'],
+                ['The gym was noisy.', 'Coaches shouted over the thud of landings and the squeak of shoes.'],
+                ['The giant is amazing.', 'At the top, she passes through a handstand, still for a heartbeat, above the bar.']]) },
+      { id: 'verbs', title: 'Strong verbs',
+        text: '<p>One precise verb beats a weak verb with an adverb.</p>' +
+              Sci.table(['Weak', 'Strong'], [['ran quickly', 'sprinted, raced'], ['went round', 'swung, whipped, circled'], ['fell down', 'crashed, collapsed, slumped'], ['said loudly', 'shouted, bellowed']]) },
+      { id: 'senses', title: 'Use the senses',
+        text: '<p>Sight is only one sense. Add what the reader would:</p><ul><li><strong>hear:</strong> the thud of a landing</li><li><strong>touch:</strong> chalk rough on the palms</li>' +
+              '<li><strong>smell:</strong> chlorine and wet towels</li><li><strong>feel in the body:</strong> the stomach dropping at the top of a swing</li></ul>' },
+      { id: 'empty', title: 'Cut the empty words',
+        text: '<p><em>Amazing, very, really, nice, good, kind of, stuff, things</em> take up space and tell the reader nothing.</p>' +
+              '<p>Replace them with a detail: not <em>really amazing</em>, but what made it so.</p>' },
+      { id: 'simile', title: 'Comparisons that fit',
+        text: '<p>A <strong>simile</strong> compares using <em>like</em> or <em>as</em>; a <strong>metaphor</strong> says one thing <em>is</em> another.</p>' +
+              '<p>A comparison works when both things share the quality you mean: a body <em>straight as a ruler</em>.</p>' },
+      { id: 'slow', title: 'Slow it down',
+        text: '<p>A fast movement needs slow writing. Break it into stages, one sentence each, and carry the reader through with time words: <em>then, as, at the top, just before</em>.</p>' },
+      { id: 'pace', title: 'Extension: sentence length and pace',
+        text: '<p><strong>Short sentences</strong> speed the reader up and build tension. <em>She stepped up. Breathed. Went.</em></p>' +
+              '<p><strong>Long, flowing sentences</strong> slow the reader down, or carry a smooth movement from start to finish.</p>' },
+      { id: 'imagery', title: 'Naming the devices', years: '9', wide: true,
+        text: Sci.table(['Device', 'What it does', 'Example'], [
+                ['<strong>Simile</strong>', 'compares using like or as', '<em>She spun like a top.</em>'],
+                ['<strong>Metaphor</strong>', 'says one thing is another', '<em>The beam was a tightrope over a canyon.</em>'],
+                ['<strong>Personification</strong>', 'gives a thing human actions or feelings', '<em>The bar groaned beneath her.</em>'],
+                ['<strong>Onomatopoeia</strong>', 'a word that sounds like its meaning', '<em>Thud. Clatter. Thwack.</em>'],
+                ['<strong>Alliteration</strong>', 'repeats the first sound of nearby words', '<em>Swift, strong strokes</em>']]) +
+              '<p>Naming the device is only the start: say what it <em>suggests</em>, and why the writer chose it.</p>' },
+      { id: 'detail', title: 'The telling detail', years: '9', wide: true,
+        text: '<p>One small, specific, surprising detail can suggest more than a paragraph of description.</p>' +
+              '<p>Instead of <em>the team was sad after the loss</em>: <em>Nobody turned the music on in the van home.</em></p>' +
+              '<p>Ask: what would only someone who was really there notice?</p>' },
+      { id: 'extended', title: 'Keeping an image consistent', years: '9', wide: true,
+        text: '<p>An <strong>extended metaphor</strong> carries one image through a whole passage: if the race is a storm, the start is a gust, the crowd is thunder, and the finish is the calm after.</p>' +
+              '<p>A <strong>mixed metaphor</strong> jumps between images that clash, <em>a well-oiled machine that blossomed</em>, and the picture falls apart.</p>' }
+    ],
+
+    examples: [
+      {
+        title: 'Example 1: from telling to showing',
+        steps: ['<strong>Tell:</strong> <em>The diver was scared.</em>',
+                '<strong>Ask:</strong> what would you see, hear or feel if you were watching her?',
+                '<strong>Show:</strong> <em>At the end of the ten-metre board, Mere curled her toes over the edge and looked anywhere but down.</em>']
+      },
+      {
+        title: 'Example 2: slowing down a giant',
+        steps: ['<strong>Too fast:</strong> <em>She went round the bar.</em>',
+                '<strong>Stage by stage:</strong> <em>She kicks her legs back, then drives them forward. Her body stretches long as it sweeps beneath the bar. ' +
+                'At the top, she passes through a handstand, still for a heartbeat, before she drops into the next swing.</em>',
+                'Strong verbs (kicks, drives, sweeps) and time words (then, at the top, before) carry the reader through the movement.']
+      }
+    ],
+
+    slots: [
+      { name: 'Show or tell?', learn: 'show',
+        items: [rng => Sci.sort(rng, { prompt: 'Does each sentence tell or show?', bins: ['Telling', 'Showing'],
+          items: [
+            { text: 'Ana was nervous before the race.', bin: 0 },
+            { text: 'The gym was very noisy.', bin: 0 },
+            { text: 'Tama was exhausted after training.', bin: 0 },
+            { text: 'The water was really cold.', bin: 0 },
+            { text: 'Mia was proud of her routine.', bin: 0 },
+            { text: 'The crowd was excited.', bin: 0 },
+            { text: 'Ana retied her laces three times and could not keep still on the line.', bin: 1 },
+            { text: 'Coaches shouted over the thud of landings and the squeak of shoes on the sprung floor.', bin: 1 },
+            { text: 'Tama dropped his bag at the door and lay flat on the hallway carpet.', bin: 1 },
+            { text: 'The first step into the water stole my breath and turned my toes numb.', bin: 1 },
+            { text: 'Mia saluted the judges with a grin she could not hide.', bin: 1 },
+            { text: 'The stand roared and stamped as the runners turned for home.', bin: 1 }
+          ], pick: 6,
+          explain: 'Telling names the feeling or quality (nervous, noisy, proud). Showing gives the actions and details that let the reader work it out.' })] },
+
+      { name: 'The stronger verb', learn: 'verbs',
+        items: [Sci.gen(rng => {
+          const [s, right] = rng.pick([
+            ['The sprinter ▢ out of the blocks.', 'exploded'],
+            ['The gymnast ▢ around the high bar.', 'whipped'],
+            ['The diver ▢ into the pool with barely a splash.', 'sliced'],
+            ['The ball ▢ off the rim and out of the court.', 'ricocheted'],
+            ['After the final whistle, the team ▢ onto the grass.', 'collapsed'],
+            ['The runner ▢ across the finish line, barely able to stand.', 'staggered'],
+            ['The skateboarder ▢ down the ramp.', 'hurtled'],
+            ['The trampoline ▢ her high into the air.', 'flung']
+          ]);
+          return C(rng, { prompt: `Which verb paints the clearest picture? <em>${s}</em>`, right, wrong: ['went', 'moved', 'got'], wide: false,
+            explain: `“${right}” shows exactly how it happened. Weak verbs such as “went”, “moved” and “got” leave the reader to guess.` });
+        })] },
+
+      { name: 'Which sense?', learn: 'senses',
+        items: [Sci.gen(rng => {
+          const pool = [
+            ['Sight', ['Chalk dust drifted in the light above the bars.', 'The scoreboard flashed red as the clock ran down.']],
+            ['Sound', ['The springboard boomed under her feet.', 'Spikes clattered on the concrete as the runners walked out.']],
+            ['Touch', ['The bar was rough with chalk under my palms.', 'Cold, wet sand squeezed between my toes.']],
+            ['Smell', ['The changing room smelt of chlorine and wet towels.', 'The air was thick with the smell of cut grass.']],
+            ['Feeling in the body', ['My stomach dropped as I hung upside down at the top of the swing.', 'My heart hammered against my ribs on the start line.']]
+          ];
+          return Sci.match(rng, 'Match each detail to the sense it uses.', rng.sample(pool, 4).map(([sense, lines]) => [rng.pick(lines), sense]),
+            'Details from several senses, including what the body feels, put the reader inside the moment.');
+        })] },
+
+      { name: 'Cut the empty words', learn: 'empty',
+        items: [
+          ['The giant is a really amazing skill that is kind of hard.', 'The giant looks effortless, but it takes months to learn.',
+           ['The giant is a very, very amazing skill.', 'The giant is an amazing and really hard skill, kind of.', 'The giant is really amazing.']],
+          ['The view from the top was very nice and really good.', 'From the top, we could see three bays and snow on the far ranges.',
+           ['The view from the top was really, really nice.', 'The view was very nice and good and amazing.', 'The view from the top was kind of nice.']],
+          ['The race was really hard and I was very tired.', 'By the last lap, my legs burned and every breath scraped my throat.',
+           ['The race was very, very hard and I was really tired.', 'The race was hard. I was tired. It was hard.', 'The race was kind of really hard.']],
+          ['The food at camp was good and stuff.', 'At camp we ate sausages charred on the barbecue and drank hot chocolate by the fire.',
+           ['The food at camp was really good and stuff.', 'The food was good, things like that.', 'Camp food was nice and good.']],
+          ['Our new gym is very big and really cool.', 'Our new gym has a sprung floor, a foam pit and a ceiling high enough for the rings.',
+           ['Our new gym is really, really big and very cool.', 'Our new gym is big and cool and stuff.', 'Our gym is very new and big.']]
+        ].map(([draft, right, wrong]) => rng => C(rng, { prompt: `<em>${draft}</em> Which revision cuts the empty words and says the most?`, right, wrong,
+          explain: 'Words such as very, really, amazing, nice, kind of and stuff tell the reader nothing. The best revision replaces them with details the reader can see or feel.' })) },
+
+      { name: 'The simile that fits', learn: 'simile',
+        items: [
+          ['At the top of the giant, her body was as straight ▢.', 'as a ruler', ['as a wet noodle', 'as a pile of laundry', 'as a sleepy cat'], 'a ruler and her body are both perfectly straight'],
+          ['The swimmer cut through the water ▢.', 'like a blade', ['like a brick', 'like a beach ball', 'like a sleeping seal'], 'a blade cuts cleanly, as the swimmer does'],
+          ['The roar of the crowd rolled around the stadium ▢.', 'like thunder', ['like a whisper', 'like a feather', 'like a tiptoe'], 'thunder is loud and rolls, like the roar'],
+          ['Before the race, my legs were shaking ▢.', 'like jelly on a plate', ['like a rock', 'like a statue', 'like a steel post'], 'jelly wobbles, like nervous legs'],
+          ['The trampoline flung me upward ▢.', 'like a stone from a slingshot', ['like a stone dropped in a pond', 'like a leaf settling on the ground', 'like a snail on a wall'], 'a slingshot launches fast and high'],
+          ['After the loss, the changing room was as quiet ▢.', 'as a library', ['as a fireworks display', 'as a rock concert', 'as a playground at lunch'], 'a library is known for its silence']
+        ].map(([s, right, wrong, why]) => rng => C(rng, { prompt: `Which comparison fits best? <em>${s}</em>`, right, wrong, wide: false,
+          explain: `A comparison works when both things share the quality you mean: ${why}.` })) },
+
+      { name: 'Slow it down', learn: 'slow',
+        items: [
+          ['She swings her legs back to build momentum.', 'Her body stretches long as it sweeps beneath the bar.',
+           'Rising up the far side, she pulls her hips towards the bar.', 'At the top, she passes through a handstand above the bar.'],
+          ['She walks to the end of the board and stops.', 'Her arms swing up as she springs into the air.',
+           'At the peak, she folds in half to touch her toes.', 'She straightens and slices into the water.'],
+          ['On “marks”, he settles his feet against the blocks.', 'On “set”, he lifts his hips and holds still.',
+           'At the gun, he drives off both blocks.', 'His first strides are short and low, then he rises to full speed.'],
+          ['She runs a curved path towards the bar.', 'She plants her outside foot and drives her knee upward.',
+           'Turning her back to the bar, she arches over it.', 'She tucks her chin and lands on her shoulders in the mat.'],
+          ['He raises his arms and steps forward into a lunge.', 'His first hand reaches for the mat, then his second.',
+           'His legs pass over the top, straight and wide.', 'He lands one foot, then the other, and rises to stand tall.']
+        ].map(seq => rng => Sci.order(rng, 'Put the stages of this movement in order.', seq,
+          'Describing a movement in stages, with strong verbs and time words, lets the reader see it happen.')) },
+
+      { name: 'The most vivid version', learn: 'show',
+        items: [
+          ['landing a vault', 'Her feet hit the mat together and stuck, and the gym erupted.', ['She did the vault and it was good.', 'The vault was landed by her well.', 'She landed and it was really amazing.']],
+          ['the start of a swimming race', 'The hooter blared, and eight swimmers stretched out over the water.', ['The race started and everyone went.', 'Then the swimming race began.', 'It was the start and it was exciting.']],
+          ['a cold morning at training', 'Our breath hung in clouds as we jogged laps of the frosty field.', ['It was really cold at training.', 'Training was cold that morning.', 'The morning was very cold and not warm.']],
+          ['scoring the winning goal', 'The ball skimmed off my boot, curled past the keeper’s fingertips and rippled the net.', ['I scored and we won.', 'The goal was scored by me.', 'I kicked it and it was a really good goal.']],
+          ['falling off the beam', 'My foot slid off the edge, and the mat rushed up to meet me.', ['I fell off the beam.', 'I fell off, which was bad.', 'Falling happened to me on the beam.']]
+        ].map(([moment, right, wrong]) => rng => C(rng, { prompt: `Which sentence brings <strong>${moment}</strong> most vividly to life?`, right, wrong,
+          explain: 'Vivid writing uses precise verbs and concrete details, so the reader sees the moment instead of being told about it.' })) },
+
+      { name: 'Show the feeling', learn: 'show',
+        items: [
+          ['nervous', 'Sam', 'Sam wiped his palms on his shorts for the third time and stared at the beam.'],
+          ['proud', 'Aroha', 'Aroha held her medal up to the light and could not stop grinning.'],
+          ['exhausted', 'Leo', 'Leo dragged himself up the stairs, one heavy step at a time.'],
+          ['disappointed', 'Jess', 'Jess stared at the scoreboard, then slowly unpinned her number.'],
+          ['excited', 'The twins', 'The twins bounced on their toes, talking over each other, while they waited for the doors to open.']
+        ].map(([feel, who, right]) => rng => {
+          const was = who === 'The twins' ? 'were' : 'was';
+          return C(rng, { prompt: `Which sentence <strong>shows</strong> that ${who === 'The twins' ? 'the twins are' : who + ' is'} ${feel}, without naming the feeling?`, right,
+            wrong: [`${who} ${was} really ${feel}.`, `${who} ${was} very, very ${feel} that day.`, `${who} felt ${feel}, and it showed.`],
+            explain: 'Showing gives the actions and details that let the reader work out the feeling. The other sentences simply name it.' });
+        }) },
+
+      { name: 'True or false', learn: 'show',
+        items: [
+          rng => TF(rng, { statement: 'Showing means naming the feeling clearly so the reader cannot miss it.', answer: false, learn: 'show', explain: 'That is telling. Showing gives details and lets the reader work the feeling out.' }),
+          rng => TF(rng, { statement: 'A strong verb can replace a weak verb and an adverb, as “sprinted” replaces “ran quickly”.', answer: true, learn: 'verbs', explain: 'One precise word does the work of two vague ones.' }),
+          rng => TF(rng, { statement: 'Words such as “amazing” and “very” make description more precise.', answer: false, learn: 'empty', explain: 'They are empty: they tell the reader that something is impressive without saying how.' }),
+          rng => TF(rng, { statement: 'Good description can use sounds, smells and feelings in the body, not only sight.', answer: true, learn: 'senses', explain: 'Several senses put the reader inside the moment.' }),
+          rng => TF(rng, { statement: 'A simile works best when the two things share the quality you mean.', answer: true, learn: 'simile', explain: '“Straight as a ruler” works because rulers are straight.' }),
+          rng => TF(rng, { statement: 'A fast movement is best described in one quick sentence.', answer: false, learn: 'slow', explain: 'Slow it down: one stage per sentence lets the reader see what happens.' })
+        ] },
+
+      { name: 'Extension: sentence length and pace', learn: 'pace', challenge: 'also',
+        items: [
+          rng => C(rng, { tag: EXT, prompt: 'Which version builds the most tension?',
+            right: 'She chalked her hands. Stepped up. Breathed. Went.',
+            wrong: ['She chalked her hands and stepped up and breathed and then she went.', 'After chalking her hands and stepping up, she breathed, and then she went for it.', 'She chalked up, which she always did, and after a breath she stepped up and went.'],
+            explain: 'Short sentences, even fragments, make the reader pause at every step, which builds tension.' }),
+          rng => C(rng, { tag: EXT, prompt: 'Why might a writer describe a long swim in one long, flowing sentence?',
+            right: 'Its rhythm can mirror the smooth, unbroken movement through the water.',
+            wrong: ['Long sentences are always better than short ones.', 'It makes the swim feel jerky and sudden.', 'Short sentences are not allowed in description.'],
+            explain: 'Sentence length is a choice: a flowing sentence can feel like flowing movement.' }),
+          rng => C(rng, { tag: EXT, prompt: 'Which version uses a short sentence for the greatest impact?',
+            right: 'For three weeks I fell off the beam every single day. Then, one Tuesday, I didn’t.',
+            wrong: ['Beam. Falling. Weeks. Tuesday.', 'For three weeks I fell off the beam, and then one Tuesday I didn’t, which was good.', 'I fell off the beam for three weeks, then one Tuesday I stayed on it, which surprised me.'],
+            explain: 'The long first sentence builds up the struggle; the short second one lands the change. The fragments lose the meaning, and the others bury the moment.' }),
+          rng => C(rng, { tag: EXT, prompt: 'A writer uses six short sentences in a row to describe a calm, lazy afternoon. What is the likely effect?',
+            right: 'The writing feels choppy and tense, which fights against the calm mood.',
+            wrong: ['The scene feels more peaceful.', 'The reader slows down and relaxes.', 'Sentence length has no effect on mood.'],
+            explain: 'Short sentences speed the reader up. A calm scene suits longer, flowing sentences.' }),
+          rng => C(rng, { tag: EXT, prompt: 'Which version best slows down the moment at the top of a giant?',
+            right: 'For one long heartbeat she hung upside down above the bar, perfectly still, while the whole gym seemed to hold its breath.',
+            wrong: ['She went over the top.', 'Top. Over. Down.', 'At the top she was upside down and then she came down.'],
+            explain: 'A longer sentence, with detail, stretches the moment out, as time seems to stretch for the gymnast.' })
+        ] },
+
+      { name: 'Write it: describe a moment', learn: 'slow',
+        items: [
+          rng => Sci.write(rng, {
+            key: 'w17-skill', title: 'W17 Write it: my favourite skill', minWords: 60, rows: 9,
+            prompt: '<strong>Describe your favourite skill</strong> from a sport or activity you know well, for a reader who has never seen it. Slow it down: one stage at a time, with strong verbs and at least two senses.',
+            hints: ['Before you write, list the stages of the skill in order: three or four of them.',
+                    'For each stage, choose one strong verb and one detail you would see, hear or feel. Then add a comparison for the moment that is hardest to picture.'],
+            checklist: ['I describe the skill in stages, in order.', 'I use strong verbs instead of “went”, “did” or “moved”.', 'I use at least two senses, or a feeling in the body.',
+                        'I cut empty words such as “amazing”, “very” and “kind of”.', 'I use at least one comparison that fits.'],
+            model: '<p>A giant begins with a hang. I grip the high bar, chalk biting into my palms, and kick my legs back to build a swing. ' +
+                   'On the way down, my body stretches long and straight, and the air rushes past my ears as I sweep beneath the bar. ' +
+                   'Rising up the far side, I squeeze my hips towards it, and for one heartbeat I pass through a handstand, upside down above the bar, ' +
+                   'before I drop into the next circle like a pendulum that never stops.</p>',
+            explain: 'Read it to someone who has never seen the skill. Could they picture each stage?' }),
+          rng => Sci.write(rng, {
+            key: 'w17-before', title: 'W17 Write it: the moment before', minWords: 50,
+            prompt: '<strong>Describe the moment before</strong> a race, game or performance begins. Show how you feel without naming the feeling.',
+            hints: ['Think about what your body does when you are waiting: your hands, your feet, your breathing, your heart.',
+                    'Add one sound from the room around you, and end on the moment it all begins.'],
+            checklist: ['I never name the feeling (nervous, excited, scared).', 'I show it through actions and the body.', 'I include at least one sound or other sense.',
+                        'I use strong verbs and cut empty words.', 'My last sentence is the moment it begins.'],
+            model: '<p>The hall goes quiet except for the hum of the lights. I stand at the corner of the floor and press my toes into the carpet, once, twice, three times. ' +
+                   'My heart thumps in my ears. Somewhere behind me a chair scrapes, and I flinch. The judge lifts her hand. I breathe out slowly, raise my arms, and the music begins.</p>',
+            explain: 'Underline any feeling word you used. Can you replace it with an action?' }),
+          rng => Sci.write(rng, {
+            key: 'w17-place', title: 'W17 Write it: a place I train', minWords: 50,
+            prompt: '<strong>Describe a place where you train or play</strong> (a gym, a pool, a field, a court) so that a reader could picture it with their eyes shut. Use at least three senses.',
+            hints: ['Start with the first thing that hits you as you walk in: a smell, a sound, the temperature.',
+                    'Move through the space as you would: the door, the middle, your favourite corner. One detail at each stop.'],
+            checklist: ['I use at least three senses.', 'Each detail is specific, not “nice” or “big”.', 'I use strong verbs.', 'The reader moves through the place in a clear order.',
+                        'Every sentence ends with a full stop, not a comma.'],
+            model: '<p>The pool hall hits you before you are through the door: warm, wet air, thick with chlorine. Inside, light ripples across the ceiling in shifting nets of white. ' +
+                   'Whistles shriek, and every shout bounces off the tiles and comes back twice as loud. ' +
+                   'The lane ropes clack together as a swimmer turns, and the tiles at the edge are slippery and cool under bare feet.</p>',
+            explain: 'Count your senses. If one sense does all the work, swap a sight for a sound or a smell.' }),
+          rng => Sci.write(rng, {
+            key: 'w17-tellshow', title: 'W17 Write it: from telling to showing', minWords: 40,
+            prompt: 'Turn this telling sentence into a showing paragraph: <em>“After the match, the team was exhausted but happy.”</em> Do not use the words <em>exhausted</em> or <em>happy</em>.',
+            hints: ['What does a tired body do? What does a happy face do? Write one detail for each.',
+                    'Choose one person in the team to zoom in on, and one detail of the field or the changing room.'],
+            checklist: ['I do not use the words exhausted or happy.', 'I show tiredness through bodies and actions.', 'I show happiness through faces, voices or actions.',
+                        'I zoom in on at least one person or object.', 'I use strong verbs and cut empty words.'],
+            model: '<p>When the final whistle went, half the team dropped straight onto the grass. Hemi lay on his back, chest heaving, laughing at nothing. ' +
+                   'Mud streaked our socks to the knees, and someone’s boot had lost its laces. Nobody could be bothered to stand up, but every one of us was grinning at the sky.</p>',
+            explain: 'Give your paragraph to someone else. Can they name both feelings without being told?' })
+        ] },
+
+      // ── Year 9 challenge: these positions appear only in the challenge set.
+
+      {
+        name: 'Year 9: name the device', learn: 'imagery', challenge: 'only',
+        items: [Sci.gen(rng => {
+          const pool = [
+            ['Simile', ['She spun like a top.', 'The crowd swayed like grass in the wind.']],
+            ['Metaphor', ['The beam was a tightrope over a canyon.', 'Her final routine was a firework.']],
+            ['Personification', ['The bar groaned as she swung beneath it.', 'The wind shoved the runners back down the straight.']],
+            ['Onomatopoeia', ['Thwack! The ball left the bat.', 'The springboard went thud, thud, thud.']],
+            ['Alliteration', ['Swift, strong strokes sent her surging ahead.', 'Big, bold bounds carried him over the bar.']]
+          ];
+          return Sci.match(rng, 'Match each sentence to the device it uses.', rng.sample(pool, 4).map(([device, lines]) => [rng.pick(lines), device]),
+            'Simile: like or as. Metaphor: one thing is another. Personification: a thing acts like a person. Onomatopoeia: a word that sounds like its meaning. Alliteration: repeated first sounds.');
+        })]
+      },
+
+      {
+        name: 'Year 9: what the image suggests', learn: 'imagery', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: '<em>The beam was a tightrope over a canyon.</em> What does this metaphor suggest?',
+            right: 'The beam felt dangerously narrow, and a mistake felt enormous.', wrong: ['The beam was outdoors.', 'The gymnast enjoyed the beam.', 'The beam was made of rope.'],
+            explain: 'A tightrope is thin and a canyon is a long drop: together they make the beam feel narrow and the stakes high.' }),
+          rng => C(rng, { prompt: '<em>The wind shoved the runners back down the straight.</em> What does the verb “shoved” suggest?',
+            right: 'The wind was strong, almost hostile, working against them.', wrong: ['The wind was gentle.', 'The runners were pushing each other.', 'The runners were cheating.'],
+            explain: '“Shoved” is rough and deliberate. Personifying the wind turns it into an opponent.' }),
+          rng => C(rng, { prompt: '<em>Her final routine was a firework.</em> What does this metaphor suggest?',
+            right: 'It was explosive and dazzling, and over quickly, leaving a lasting impression.', wrong: ['It was dangerous and should be banned.', 'It took place at night.', 'It was slow and calm.'],
+            explain: 'A firework is bright, sudden and brief, and people remember it after it is gone.' }),
+          rng => C(rng, { prompt: '<em>The stadium held its breath.</em> What is the effect of this personification?',
+            right: 'It shows the whole crowd falling silent together, in suspense.', wrong: ['It shows that the stadium was empty.', 'It suggests the air was polluted.', 'It shows that the stadium was old.'],
+            explain: 'People hold their breath in suspense. Giving that action to the stadium makes thousands of people act as one.' }),
+          rng => C(rng, { prompt: '<em>The pool was a sheet of glass.</em> What does this suggest about the water?',
+            right: 'It was perfectly still and smooth, not yet disturbed.', wrong: ['It was sharp and dangerous.', 'It was frozen solid.', 'It was full of swimmers.'],
+            explain: 'Glass is flat, smooth and clear. The image also hints that the stillness is about to be broken.' })
+        ]
+      },
+
+      {
+        name: 'Year 9: the telling detail', learn: 'detail', challenge: 'only',
+        items: [
+          ['a gymnast waiting to compete', 'She rubs the old tape on her wrist with her thumb, over and over.', ['She waits for her turn.', 'She is wearing a leotard.', 'She looks at the other gymnasts.']],
+          ['an old sports club', 'The honours board stops at 1987, the gold paint flaking off the last name.', ['The club is quite old.', 'There are some old things on the walls.', 'The club has been there a long time.']],
+          ['a team after a loss', 'Nobody turns the music on in the van home.', ['The team is sad.', 'The team lost the game.', 'Everyone is disappointed.']],
+          ['a coach who cares', 'She learns every child’s name on their first night, and the name of their dog.', ['She is a kind coach.', 'She is good at coaching.', 'She likes the children.']]
+        ].map(([scene, right, wrong]) => rng => C(rng, { prompt: `Which detail does the most to bring <strong>${scene}</strong> to life?`, right, wrong,
+          explain: 'A telling detail is small, specific and suggestive: it lets the reader feel far more than it states.' }))
+      },
+
+      {
+        name: 'Year 9: keep the image consistent', learn: 'extended', challenge: 'only',
+        items: [
+          rng => C(rng, { prompt: 'Which sentence mixes its metaphors?',
+            right: 'The team was a well-oiled machine that blossomed into a roaring lion.',
+            wrong: ['The team was a well-oiled machine, every part turning in time.', 'The team was a wave, building and then breaking over the defence.', 'The team was one creature with fifteen legs and a single mind.'],
+            explain: 'A machine cannot blossom, and a flower does not roar: three clashing images in one sentence. The others keep to one image each.' }),
+          rng => C(rng, { prompt: 'A writer begins: <em>The race was a storm.</em> Which sentence continues the image best?',
+            right: 'The runners broke from the line in a single gust, and thunder rolled from the stands.',
+            wrong: ['The runners were like ants at a picnic.', 'The race was also a long book with many chapters.', 'The runners ran round the track quickly.'],
+            explain: 'Gust and thunder belong to the storm, so the image grows. The others switch to new images or drop it altogether.' }),
+          rng => C(rng, { prompt: 'Why do careful writers avoid mixed metaphors?',
+            right: 'Clashing images confuse the reader instead of sharpening the picture.',
+            wrong: ['Metaphors are not allowed in description.', 'Only one metaphor is allowed in a whole text.', 'Mixed metaphors are too short.'],
+            explain: 'Each image asks the reader to picture something. Two that clash cancel each other out.' }),
+          rng => C(rng, { prompt: 'Which ending keeps the extended metaphor going? <em>Her routine was a story. The opening tumble was a bold first line; the leaps built the middle chapters …</em>',
+            right: '… and the dismount was the final full stop.',
+            wrong: ['… and the dismount was a rocket taking off.', '… and the dismount was really good.', '… and then she finished the routine.'],
+            explain: 'First line, chapters, full stop: every part of the routine stays inside the image of a story.' })
+        ]
+      },
+
+      {
+        name: 'Year 9: write an extended metaphor', learn: 'extended', challenge: 'only',
+        items: [
+          rng => Sci.write(rng, {
+            key: 'w17-y9-metaphor', title: 'W17 Year 9 Write it: an extended metaphor', minWords: 70, rows: 9,
+            prompt: '<strong>Describe a moment in sport or performance using one extended metaphor</strong> that runs through the whole paragraph. Choose the image first (a storm, a machine, a story, a dance), then keep every detail inside it.',
+            hints: ['Choose an image with many parts. A storm has clouds, gusts, thunder, rain and calm; a machine has gears, engines and fuel.',
+                    'Map each stage of your moment onto a part of the image before you write: the start is the first gust, the crowd is the thunder …'],
+            checklist: ['I state the image near the start.', 'Every detail stays inside that one image.', 'No second image clashes with it.',
+                        'The image suggests something about the moment, not only how it looks.', 'I end on a detail that closes the image.'],
+            model: '<p>The final was a storm. It gathered slowly: the crowd thickened in the stands like cloud, and the air pressed low and heavy over the track. ' +
+                   'When the gun cracked, the runners broke from their blocks in a single gust. Down the back straight they swept as one front, hard and relentless, until the bend tore them apart. ' +
+                   'By the line it had blown itself out: eight runners scattered like leaves, and the stands still rumbling with thunder.</p>',
+            explain: 'Highlight every word that belongs to your image. Anything left over may be a crack in the metaphor.' })
         ]
       }
     ]

@@ -172,7 +172,9 @@ const Manifest = (() => {
         { id: 'ew11', code: 'W11', slug: 'colons-semicolons', title: 'Colons, Semicolons and Comma Splices', tag: 'Joining and introducing', years: '7–8', challenge: true },
         { id: 'ew12', code: 'W12', slug: 'choosing-words', title: 'Choosing Words', tag: 'Shades of meaning and tone', years: '7–8', challenge: true },
         { id: 'ew13', code: 'W13', slug: 'structuring-writing', title: 'Structuring Writing', tag: 'Persuade, inform, entertain', years: '7–8', challenge: true },
-        { id: 'ew15', code: 'W15', slug: 'literary-essay', title: 'The Literary Essay', tag: 'Thesis, evidence and analysis', year: 9 }
+        { id: 'ew15', code: 'W15', slug: 'literary-essay', title: 'The Literary Essay', tag: 'Thesis, evidence and analysis', year: 9 },
+        { id: 'ew16', code: 'W16', slug: 'evidence-persuasion', title: 'Evidence and Persuasion', tag: 'Prove it, explain it, answer the worry', years: '7–8', challenge: true },
+        { id: 'ew17', code: 'W17', slug: 'show-dont-tell', title: 'Show, Don’t Tell', tag: 'Verbs, senses and detail', years: '7–8', challenge: true }
       ]
     },
     {

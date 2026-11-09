@@ -147,6 +147,12 @@
         case 'label':
           box.appendChild(h('ol', {}, inp.markers.map(n => h('li', { class: 'rv-right', text: n }))));
           break;
+        case 'write':
+          box.appendChild(h('div', { html: `<strong>Free writing</strong>, at least ${inp.minWords} words. Checklist:` }));
+          box.appendChild(h('ul', {}, inp.checklist.map(c => h('li', { html: c }))));
+          box.appendChild(h('div', { html: '<strong>Model</strong>' }));
+          box.appendChild(h('div', { class: 'rv-right', html: inp.model }));
+          break;
         default:
           box.appendChild(h('div', { text: '(' + inp.kind + ')' }));
       }

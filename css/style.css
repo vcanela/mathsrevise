@@ -1034,6 +1034,38 @@ main {
 .sort-foot { margin-top: 0.6rem; }
 .sort-check { margin-left: 0; padding: 0.42rem 0.85rem; font-family: var(--font-sans); font-size: 0.85rem; }
 
+/* ── Free writing ─────────────────────────────────────────────────────────── */
+.write-box {
+  display: block; width: 100%; resize: vertical; min-height: 9rem;
+  padding: 0.7rem 0.8rem;
+  font-family: var(--font-serif); font-size: 1rem; line-height: 1.6;
+  color: var(--ink); background: var(--surface);
+  border: 1px solid var(--rule); border-radius: var(--radius-s);
+}
+.write-box:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+.write-foot { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.5rem; }
+.write-count { font-family: var(--font-mono); font-size: 0.8rem; color: var(--good); }
+.write-count.short { color: var(--ink-faint); }
+.write-review {
+  margin-top: 0.9rem; padding: 0.8rem 0.9rem;
+  border: 1px solid var(--rule); border-radius: var(--radius-s); background: var(--surface-2);
+}
+.write-head {
+  margin: 0 0 0.35rem; font-family: var(--font-sans); font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.13em; text-transform: uppercase; color: var(--brand-ink);
+}
+.write-head:not(:first-child) { margin-top: 0.9rem; }
+.write-checks { list-style: none; margin: 0; padding: 0; }
+.write-checks li { margin: 0.25rem 0; }
+.write-checks label { display: flex; gap: 0.5rem; align-items: baseline; cursor: pointer; }
+.write-checks input { accent-color: var(--brand); flex: none; }
+.write-tip { margin: 0.4rem 0 0; font-size: 0.88rem; color: var(--ink-soft); font-style: italic; }
+.write-model {
+  font-family: var(--font-serif); line-height: 1.6;
+  padding: 0.6rem 0.8rem; background: var(--surface); border-left: 3px solid var(--brand);
+}
+.write-model p { margin: 0 0 0.5rem; } .write-model p:last-child { margin: 0; }
+
 /* ── Label the diagram ────────────────────────────────────────────────────── */
 .label-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr)); gap: 0.4rem; }
 .label-row {

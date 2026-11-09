@@ -103,7 +103,7 @@
         if (p.kind === 'exercise') {
           if (cards === 0) problems.push('no questions rendered');
           doc.querySelectorAll('.qcard').forEach((c, i) => {
-            if (!c.querySelector('.ans-box, .choice, .spot-line, .match-item, .order-chip, .sort-btn, .label-select')) {
+            if (!c.querySelector('.ans-box, .choice, .spot-line, .match-item, .order-chip, .sort-btn, .label-select, .write-box')) {
               problems.push(`Q${i + 1} has no answer control`);
             }
             if (!c.querySelector('.qtext').textContent.trim()) problems.push(`Q${i + 1} has an empty prompt`);

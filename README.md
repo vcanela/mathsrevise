@@ -71,7 +71,7 @@ and lists any card no question links to.
 English follows **Phase 3 (Years 7–8)** of *English Years 0–10* (2025, in effect from 2026), grouped
 by strand: Reading, Writing and Oral Language. It practises what can be checked (word knowledge,
 grammar, punctuation, language features, and close reading of short passages written for this
-site) and leaves reading whole texts, writing them, and speaking to the classroom. Questions tagged
+site) and leaves reading whole texts and speaking to the classroom. Questions tagged
 **Extension** reach towards Year 9. English uses the same banked-question helpers as science
 (`Sci` in `js/science.js`) and lives in `js/topics/english-reading.js`, `english-writing.js` and `english-oral.js`; codes are R (reading), W (writing)
 and O (oral language). The curriculum PDF is in `reference/`.
@@ -84,6 +84,14 @@ questions are tagged *Year 9*. The new ideas get Learn it cards with `years: '9'
 the challenge page; the checker fails if the two disagree. The content follows the Year 9 column of
 Phase 4 in the curriculum. W15, The Literary Essay, is Year 9 throughout (`year: 9` in the manifest), built on a
 short story and a poem written for the site.
+
+**Free writing.** W16 (Evidence and Persuasion) and W17 (Show, Don't Tell) each end with a `write`
+question (`Sci.write`): a brief, a text box and a minimum word count. Nothing marks the writing, so
+the question is untimed and earns full points once it is long enough; the student then ticks a
+checklist against their own draft and sees a model, and the box stays open for revising. **Stuck?**
+gives the nudges only, never the model. Drafts are kept in the browser, so a reload loses nothing,
+and **Copy my writing** puts the brief and the draft on the clipboard to hand to a teacher. Writing
+questions stay out of the daily mix.
 
 **Reviewing content.** Authored science items can't be verified by a script: a wrong fact would
 pass every test. `tools/review-science.html` lists every item with all its options, the marked

@@ -232,6 +232,20 @@ const Sci = (() => {
     };
   }
 
+  /**
+   * A piece of free writing. `prompt` is the brief, `checklist` what the
+   * student ticks off afterwards, `model` one way to do it, shown only once
+   * they have written their own. `key` keeps the draft in the browser.
+   */
+  function write(rng, o) {
+    return {
+      prompt: o.prompt, note: o.note, tag: o.tag, hints: o.hints,
+      input: { kind: 'write', key: o.key, title: o.title, minWords: o.minWords || 40, rows: o.rows,
+               placeholder: o.placeholder, checklist: o.checklist, model: o.model },
+      explain: o.explain, learn: o.learn
+    };
+  }
+
   /** A small data table, as HTML, for putting inside a prompt. */
   function table(head, rows) {
     const cell = (t, tag) => `<${tag}>${t}</${tag}>`;
@@ -245,7 +259,7 @@ const Sci = (() => {
                  'Hemi', 'Grace', 'Losa', 'Arjun', 'Kiri', 'Noah', 'Isla', 'Tane', 'Mei', 'Oliver'];
   const name = rng => rng.pick(NAMES);
 
-  return { topic, gen, choice, tf, sort, label, spot, match, order, word, table, name, NAMES, m, markSeen,
+  return { topic, gen, choice, tf, sort, label, spot, match, order, word, write, table, name, NAMES, m, markSeen,
            set memory(on) { memory = !!on; }, get memory() { return memory; },
            set challenge(on) { challenge = !!on; }, get challenge() { return challenge; } };
 })();
