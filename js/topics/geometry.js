@@ -167,7 +167,7 @@
           prompt: comp
             ? `Two angles are <strong>complementary</strong> and one of them is ${deg(a)}. What is the other?`
             : `Two angles are <strong>supplementary</strong> and one of them is ${deg(a + 40)}. What is the other?`,
-          note: comp ? 'Complementary angles add to 90°.' : 'Supplementary angles add to 180°.',
+          tip: comp ? 'Complementary angles add to 90°.' : 'Supplementary angles add to 180°.',
           input: { kind: 'number', suffix: '°', answer: comp ? 90 - a : 180 - (a + 40), width: 76 },
           explain: comp
             ? `<span class="work">\\(90 - ${a} = ${90 - a}\\)</span>`
@@ -447,7 +447,7 @@
           out.push({
             prompt: `The angles of a triangle are in the ratio ${nice.join(' : ')}. How big is the largest angle?`,
             tag: 'Challenge',
-            note: `The ${t} parts together make 180°.`,
+            tip: `The ${t} parts together make 180°.`,
             input: { kind: 'number', suffix: '°', answer: unit * big, width: 76 },
             explain: `<span class="work">\\(180 \\div ${t} = ${unit}\\) per part, so the largest is \\(${big} \\times ${unit} = ${unit * big}\\).</span>`
           });
@@ -457,7 +457,7 @@
           out.push({
             prompt: `The angles of a triangle are in the ratio ${parts.join(' : ')}. How big is the largest angle?`,
             tag: 'Challenge',
-            note: `The ${tot} parts together make 180°.`,
+            tip: `The ${tot} parts together make 180°.`,
             input: { kind: 'number', suffix: '°', answer: unit * big, width: 76 },
             explain: `<span class="work">\\(180 \\div ${tot} = ${unit}\\) per part, so the largest is \\(${big} \\times ${unit} = ${unit * big}\\).</span>`
           });
@@ -839,7 +839,7 @@
         const n = hard ? rng.int(4, 20) : rng.int(4, 12);
         out.push({
           prompt: `The interior angles of a polygon add to ${deg(180 * (n - 2))}. How many sides does it have?`,
-          note: 'Solve ' + m(`180(n - 2) = ${180 * (n - 2)}`) + ' for ' + m('n') + '.',
+          tip: 'Solve ' + m(`180(n - 2) = ${180 * (n - 2)}`) + ' for ' + m('n') + '.',
           input: { kind: 'number', prefix: m('n') + ' =', answer: n, width: 76 },
           explain: `<span class="work">\\(${180 * (n - 2)} \\div 180 = ${n - 2}\\), so \\(n - 2 = ${n - 2}\\) and \\(n = ${n}\\).</span>`
         });
@@ -850,7 +850,7 @@
         const n = rng.pick(REG);
         out.push({
           prompt: `How big is each <strong>exterior</strong> angle of ${regular(n)}?`,
-          note: 'The exterior angles of any polygon add to 360°.',
+          tip: 'The exterior angles of any polygon add to 360°.',
           diagram: { w: 190, h: 165 },
           draw: (d, G) => {
             const p = G.fit(G.regularPolygon(n), 190, 165, 34);
@@ -891,7 +891,7 @@
         out.push({
           prompt: `Each interior angle of a regular polygon is ${deg(each)}. How many sides does it have?`,
           tag: 'Challenge',
-          note: 'Try the exterior angle: it is ' + m(`180 - ${each}`) + ', and they add to 360°.',
+          tip: 'Try the exterior angle: it is ' + m(`180 - ${each}`) + ', and they add to 360°.',
           input: { kind: 'number', prefix: m('n') + ' =', answer: n, width: 76 },
           explain: `<span class="work">Exterior angle \\(= 180 - ${each} = ${180 - each}\\). Then \\(360 \\div ${180 - each} = ${n}\\).</span>`
         });
@@ -1171,7 +1171,7 @@
         const k = rng.int(2, 4), A = rng.int(4, 20);
         out.push({
           prompt: `A shape of area ${A} cm² is enlarged by a scale factor of ${k}. What is the new area?`,
-          note: 'Area scales by the square of the scale factor.',
+          tip: 'Area scales by the square of the scale factor.',
           input: { kind: 'number', suffix: 'cm²', answer: A * k * k, width: 84 },
           explain: `<span class="work">\\(${A} \\times ${k}^2 = ${A} \\times ${k * k} = ${A * k * k}\\)</span>`
         });

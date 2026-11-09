@@ -132,8 +132,8 @@
         const q = phrase(rng, i === 2 || hard ? TWO : SIMPLE, v);
         out.push({
           prompt: `Write <strong>“${q.en}”</strong> as an expression.`,
-          note: i === 0 ? 'Type it as you would write it, for example <code>2n + 5</code> or <code>3(n - 1)</code>.' : null,
-          input: { kind: 'expr', answer: q.ex, display: m(q.tex), placeholder: 'e.g. 2' + v + ' + 5' },
+          tip: 'Type it as you would write it, for example <code>2k + 5</code> or <code>3(k - 1)</code>.',
+          input: { kind: 'expr', answer: q.ex, display: m(q.tex) },
           explain: `<span class="work">\\(${q.tex}\\)</span>`
         });
       }
@@ -196,7 +196,7 @@
         out.push({
           prompt: `Does <strong>“${en}”</strong> need a bracket?`,
           tag: 'Challenge',
-          note: 'A bracket means the whole thing inside gets multiplied.',
+          tip: 'A bracket means the whole thing inside gets multiplied.',
           input: { kind: 'choice', options: opts, correct: opts.findIndex(o => o.right) },
           explain: needsBracket
             ? `<span class="work">The sum happens first, so it goes in a bracket: \\(${a}(${v} + ${b})\\).</span>`
@@ -217,7 +217,7 @@
         out.push({
           prompt: kind.en,
           tag: 'Challenge',
-          input: { kind: 'expr', answer: kind.ex, display: m(kind.tex), placeholder: 'e.g. 3n + 4' },
+          input: { kind: 'expr', answer: kind.ex, display: m(kind.tex) },
           explain: `<span class="work">\\(${kind.tex}\\)</span>`
         });
       })();
@@ -340,7 +340,7 @@
         out.push({
           prompt: `Do ${m(left)} and ${m(right)} always give the same answer?`,
           tag: i === 1 ? 'Challenge' : null,
-          note: 'Try substituting a number if you are not sure.',
+          tip: 'Try substituting a number if you are not sure.',
           input: { kind: 'choice', options: ['Yes, always', 'No, they are different'], correct: same ? 0 : 1 },
           explain: same
             ? `<span class="work">Expanding the bracket gives \\(${S([[a, v], [a * b, '']])}\\), which is the same expression.</span>`
@@ -460,7 +460,7 @@
         const answer = c.direct !== undefined ? c.direct : n;
         out.push({
           prompt: c.text,
-          note: 'The equation is ' + m(c.eq) + '.',
+          tip: 'The equation is ' + m(c.eq) + '.',
           input: { kind: 'number', suffix: c.unit === '$' ? null : c.unit, prefix: c.unit === '$' ? '$' : null, answer, width: 84 },
           explain: `<span class="work">Solving \\(${c.eq}\\) gives ${answer}${c.unit === '$' ? '' : ' ' + c.unit}.</span>`
         });
@@ -510,7 +510,7 @@
         out.push({
           prompt: `${count === 2 ? 'Two' : 'Three'} consecutive whole numbers add up to ${total}. What is the smallest one?`,
           tag: 'Challenge',
-          note: count === 2
+          tip: count === 2
             ? 'If the smallest is ' + m('n') + ', the next is ' + m('n + 1') + '.'
             : 'If the smallest is ' + m('n') + ', the others are ' + m('n + 1') + ' and ' + m('n + 2') + '.',
           input: { kind: 'number', answer: n, width: 78 },
@@ -527,7 +527,7 @@
         out.push({
           prompt: `Two numbers add to ${total}. One is ${diff2} bigger than the other. What is the smaller number?`,
           tag: 'Challenge',
-          note: 'Call the smaller one ' + m('n') + '. Then the other is ' + m(`n + ${diff2}`) + '.',
+          tip: 'Call the smaller one ' + m('n') + '. Then the other is ' + m(`n + ${diff2}`) + '.',
           input: { kind: 'number', answer: small, width: 78 },
           explain: `<span class="work">\\(n + (n + ${diff2}) = ${total}\\), so \\(2n = ${total - diff2}\\) and \\(n = ${small}\\). The other is ${small + diff2}.</span>`
         });
@@ -540,7 +540,7 @@
         out.push({
           prompt: `A parent is ${times} times as old as their child. Their ages add to ${total}. How old is the child?`,
           tag: 'Challenge',
-          note: 'If the child is ' + m('c') + ', the parent is ' + m(`${times}c`) + '.',
+          tip: 'If the child is ' + m('c') + ', the parent is ' + m(`${times}c`) + '.',
           input: { kind: 'number', suffix: 'years', answer: child, width: 78 },
           explain: `<span class="work">\\(c + ${times}c = ${total}\\), so \\(${times + 1}c = ${total}\\) and \\(c = ${child}\\). The parent is ${child * times}.</span>`
         });

@@ -59,7 +59,7 @@
         const ans = round(add ? a + b : big - small, 2);
         out.push({
           prompt: m(add ? `${a} + ${b}` : `${big} - ${small}`),
-          note: i === 0 ? 'Line up the decimal points before you start.' : null,
+          tip: 'Line up the decimal points before you start.',
           input: { kind: 'number', prefix: '=', answer: ans, tol: TOL, decimal: true, width: 96 },
           explain: `<span class="work">\\(${add ? `${a} + ${b}` : `${big} - ${small}`} = ${ans}\\)</span>`
         });
@@ -70,7 +70,7 @@
         const w = rng.int(4, 20), b = round(rng.int(1, w - 1) + rng.int(1, 99) / 100, 2);
         out.push({
           prompt: m(`${w} - ${b}`),
-          note: 'Write the whole number with two decimal places first.',
+          tip: 'Write the whole number with two decimal places first.',
           input: { kind: 'number', prefix: '=', answer: round(w - b, 2), tol: TOL, decimal: true, width: 96 },
           explain: `<span class="work">\\(${w}.00 - ${b} = ${round(w - b, 2)}\\)</span>`
         });
@@ -104,7 +104,7 @@
         const sorted = [...vals].sort((a, b) => a - b);
         out.push({
           prompt: 'Put these decimals in order, smallest first.',
-          note: 'Compare tenths before hundredths: 0.45 is smaller than 0.5.',
+          tip: 'Compare tenths before hundredths: 0.45 is smaller than 0.5.',
           input: {
             kind: 'order',
             items: vals.map(v => m(String(v))),
@@ -152,7 +152,7 @@
         out.push({
           prompt: `Two items cost $${items[0].toFixed(2)} and $${items[1].toFixed(2)}. You pay with $${paid}. How much change do you get?`,
           tag: 'Challenge',
-          note: 'Two steps: add the items, then subtract from what you paid.',
+          tip: 'Two steps: add the items, then subtract from what you paid.',
           input: { kind: 'number', prefix: '$', answer: round(paid - total, 2), tol: TOL, decimal: true, width: 96 },
           explain: `<span class="work">Total \\(${items[0]} + ${items[1]} = ${total}\\); change \\(${paid} - ${total} = ${round(paid - total, 2)}\\)</span>`
         });
@@ -218,7 +218,7 @@
         const pa = 1, pb = hard ? 2 : 1;
         out.push({
           prompt: m(`${a} \\times ${b}`),
-          note: i === 0 ? 'Count the decimal places in both numbers, then put them all back at the end.' : null,
+          tip: 'Count the decimal places in both numbers, then put them all back at the end.',
           input: { kind: 'number', prefix: '=', answer: round(a * b, 5), tol: TOL, decimal: true, width: 96 },
           explain: `<span class="work">\\(${Math.round(a * 10)} \\times ${Math.round(b * 10 ** pb)} = ${Math.round(a * 10) * Math.round(b * 10 ** pb)}\\), with ${pa + pb} decimal places: \\(${round(a * b, 5)}\\)</span>`
         });
@@ -281,7 +281,7 @@
         out.push({
           prompt: 'Which of these gives the <strong>largest</strong> answer?',
           tag: 'Challenge',
-          note: 'Dividing by a number below 1 makes things bigger.',
+          tip: 'Dividing by a number below 1 makes things bigger.',
           input: { kind: 'choice', options: pool, correct: pool.indexOf(best) },
           explain: `<span class="work">Working them out: ${pool.map(o => round(o.v, 3)).join(', ')}.</span>`
         });
@@ -344,7 +344,8 @@
         const [n, dd] = simplify(add ? a + b : big - small, d);
         out.push({
           prompt: m(add ? `\\frac{${a}}{${d}} + \\frac{${b}}{${d}}` : `\\frac{${big}}{${d}} - \\frac{${small}}{${d}}`),
-          note: i === 0 ? 'The denominators already match. Give your answer in its simplest form.' : null,
+          note: i === 0 ? 'Give your answer in its simplest form.' : null,
+          tip: 'The denominators already match, so only the tops change.',
           input: { kind: 'fill', parts: [{ text: '=' }, { frac: { num: { answer: n }, den: { answer: dd } } }] },
           explain: `<span class="work">\\(${add ? `${a} + ${b}` : `${big} - ${small}`} = ${add ? a + b : big - small}\\) over ${d}, which simplifies to \\(${texFrac(n, dd)}\\).</span>`
         });
@@ -383,7 +384,7 @@
           prompt: m(add
             ? `\\frac{${n1}}{${d1}} + \\frac{${n2}}{${d2}}`
             : `\\frac{${big[0]}}{${big[1]}} - \\frac{${small[0]}}{${small[1]}}`),
-          note: i === 0 ? 'Rewrite both fractions over a common denominator first.' : null,
+          tip: 'Rewrite both fractions over a common denominator first.',
           input: { kind: 'fill', parts: [{ text: '=' }, { frac: { num: { answer: n }, den: { answer: dd } } }] },
           explain: `<span class="work">Over ${L}: \\(${texFrac(t1, L)}\\) and \\(${texFrac(t2, L)}\\), giving \\(${texFrac(raw, L)} = ${texFrac(n, dd)}\\).</span>`
         });
@@ -415,7 +416,7 @@
         const whole = d * rng.int(2, 12);
         out.push({
           prompt: `What is ${m(`\\frac{${n}}{${d}}`)} of ${whole}?`,
-          note: 'Divide by the bottom, then multiply by the top.',
+          tip: 'Divide by the bottom, then multiply by the top.',
           input: { kind: 'number', answer: whole / d * n, width: 84 },
           explain: `<span class="work">\\(${whole} \\div ${d} = ${whole / d}\\), then \\(\\times ${n} = ${whole / d * n}\\)</span>`
         });
@@ -429,7 +430,7 @@
         out.push({
           prompt: 'Put these fractions in order, smallest first.',
           tag: 'Challenge',
-          note: 'Comparing over a common denominator, or as decimals, both work.',
+          tip: 'Comparing over a common denominator, or as decimals, both work.',
           input: { kind: 'order', items: picks.map(([n, d]) => m(`\\frac{${n}}{${d}}`)), answer: order },
           explain: `<span class="work">As decimals: ${picks.map(([n, d]) => round(n / d, 3)).join(', ')}.</span>`
         });
@@ -447,7 +448,7 @@
         out.push({
           prompt: m(`${w}\\frac{${n1}}{${d}} + \\frac{${n2}}{${d}}`),
           tag: 'Challenge',
-          note: 'Add the fraction parts. If they make more than a whole, carry it over.',
+          tip: 'Add the fraction parts. If they make more than a whole, carry it over.',
           input: {
             kind: 'fill',
             parts: [
@@ -503,7 +504,7 @@
         const [n, d] = simplify(n1 * n2, d1 * d2);
         out.push({
           prompt: m(`\\frac{${n1}}{${d1}} \\times \\frac{${n2}}{${d2}}`),
-          note: i === 0 ? 'Multiply straight across, then simplify.' : null,
+          tip: 'Multiply straight across, then simplify.',
           input: { kind: 'fill', parts: [{ text: '=' }, { frac: { num: { answer: n }, den: { answer: d } } }] },
           explain: `<span class="work">\\(\\frac{${n1} \\times ${n2}}{${d1} \\times ${d2}} = ${texFrac(n1 * n2, d1 * d2)} = ${texFrac(n, d)}\\)</span>`
         });
@@ -533,7 +534,7 @@
         const [n, d] = simplify(n1 * d2, d1 * n2);
         out.push({
           prompt: m(`\\frac{${n1}}{${d1}} \\div \\frac{${n2}}{${d2}}`),
-          note: i === 0 ? 'Keep, change, flip. The answer may be bigger than 1.' : null,
+          tip: 'Keep, change, flip. The answer may be bigger than 1.',
           input: { kind: 'fill', parts: [{ text: '=' }, { frac: { num: { answer: n }, den: { answer: d } } }] },
           explain: `<span class="work">\\(\\frac{${n1}}{${d1}} \\times \\frac{${d2}}{${n2}} = ${texFrac(n1 * d2, d1 * n2)} = ${texFrac(n, d)}\\)</span>`
         });
@@ -564,7 +565,7 @@
         out.push({
           prompt: m(`\\frac{${n}}{${d}} \\times ${w}`),
           tag: 'Challenge',
-          note: 'A whole number is just that number over 1.',
+          tip: 'A whole number is just that number over 1.',
           input: { kind: 'number', prefix: '=', answer: n * w / d, width: 84 },
           explain: `<span class="work">\\(\\frac{${n} \\times ${w}}{${d}} = ${texFrac(n * w, d)} = ${n * w / d}\\)</span>`
         });
@@ -576,7 +577,7 @@
         out.push({
           prompt: `Dividing a number by ${m(`\\frac{${n}}{${d}}`)} makes it…`,
           tag: 'Challenge',
-          note: 'Flipping gives ' + m(`\\frac{${d}}{${n}}`) + ', which is bigger than 1.',
+          tip: 'Flipping gives ' + m(`\\frac{${d}}{${n}}`) + ', which is bigger than 1.',
           input: {
             kind: 'choice',
             options: ['bigger', 'smaller', 'exactly the same'],

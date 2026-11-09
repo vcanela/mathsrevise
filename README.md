@@ -191,6 +191,13 @@ A question can carry its own `hints`, a list of nudges that each give a little m
 **Stuck?** hands them out one at a time ("Nudge 1 of 3", "Another nudge") before the full
 working, in place of the topic's general rule. Unit 6 uses this on every question.
 
+Nothing that helps with the method is shown before a student tries. A question's `note` sits
+under the prompt for everyone, so it holds only instructions needed to answer at all ("two
+answers: x, then the angle"). Method help is a `tip`: **Stuck?** gives the topic's general rule
+first, then the tip, then the full working. Answer boxes never show a worked example as a
+placeholder; `check-topics.js` fails if one contains "e.g." or a digit. On the timed paper,
+which has no Stuck?, tips simply do not appear.
+
 The same button appears on any question answered **wrong**, which is the same moment
 pedagogically and used to be a dead end.
 

@@ -392,7 +392,7 @@
           const dbl = out.length - base.length - suf.length === 1;
           return Sci.word(rng, {
             prompt: `Add <strong>-${suf}</strong> to <strong>${base}</strong>.`,
-            note: 'Say the word aloud and listen for the stressed syllable.',
+            tip: 'Say the word aloud and listen for the stressed syllable.',
             answer: out, placeholder: 'type the new word',
             explain: `<strong>${out}</strong>. The stress is ${stress}, ${dbl ? 'on the last syllable, so the final consonant doubles' : 'not on the last syllable, so the consonant stays single'}.`
           });
@@ -679,7 +679,7 @@
           const suffix = out.endsWith('ous') ? '-ous' : out.endsWith('ition') ? '-ition' : '-ation';
           return Sci.word(rng, {
             prompt: `Add <strong>${suffix}</strong> to <strong>${base}</strong>.`,
-            note: yr8 ? 'Year 8: watch the consonant.' : 'Watch the vowel in the last syllable.',
+            tip: yr8 ? 'Watch the consonant.' : 'Watch the vowel in the last syllable.',
             answer: out, placeholder: 'type the new word',
             explain: `<strong>${out}</strong>. ${yr8 ? 'The f changes to v before the suffix.' : 'The vowel in the last syllable changes spelling and sound when the suffix is added.'}`
           });
@@ -884,7 +884,7 @@
             ['disappear', ['dissappear', 'disapear', 'dissapear'], 'dis + appear: appear starts with a, so there is only one s (and appear has its own double p).']
           ]);
           return C(rng, {
-            prompt: 'Which spelling is correct?', note: 'Think about the prefix and the root it joins.',
+            prompt: 'Which spelling is correct?', tip: 'Think about the prefix and the root it joins.',
             right, wrong, wide: false,
             explain: `<strong>${right}</strong>. ${why}`
           });
@@ -1508,7 +1508,7 @@
           const [adj, noun] = rng.pick(ABSTRACT);
           return Sci.word(rng, {
             prompt: `Write the abstract noun that comes from <strong>${adj}</strong>.`,
-            note: adj === 'kind' ? 'For example: brave → bravery.' : 'For example: kind → kindness.',
+            tip: adj === 'kind' ? 'For example: brave → bravery.' : 'For example: kind → kindness.',
             answer: noun, placeholder: 'type the noun',
             explain: `<strong>${noun}</strong> is the abstract noun formed from <em>${adj}</em>. It names an idea you cannot touch.`
           });
@@ -1768,7 +1768,7 @@
           ]);
           return Sci.word(rng, {
             prompt: `Write the abstract noun that comes from the verb <strong>${verb}</strong>.`,
-            note: 'Common endings: -tion, -sion, -ment, -ance, -ence, -al.',
+            tip: 'Common endings: -tion, -sion, -ment, -ance, -ence, -al.',
             answer: noun, placeholder: 'type the noun',
             explain: `${verb} → <strong>${noun}</strong>. It names an idea, not a thing you can touch.`
           });

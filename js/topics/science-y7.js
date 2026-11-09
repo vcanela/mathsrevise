@@ -804,7 +804,7 @@
           return {
             prompt: `${who} times a toy car over ${Fmt.num(dist)} m, three times:` +
                     Sci.table(['Trial 1', 'Trial 2', 'Trial 3'], [trials.map(x => x.toFixed(1) + ' s')]),
-            note: 'Average the three times first, then use the average to work out the speed.',
+            tip: 'Average the three times first, then use the average to work out the speed.',
             input: {
               kind: 'fill',
               parts: [
@@ -1598,7 +1598,7 @@
             const next = { 'new Moon': 'first quarter', 'first quarter': 'full Moon', 'full Moon': 'last quarter', 'last quarter': 'new Moon' }[from];
             return {
               prompt: `About how many days are there between ${from} and ${next}?`,
-              note: 'The four main phases split the 29.5-day cycle into four.',
+              tip: 'The four main phases split the 29.5-day cycle into four.',
               input: { kind: 'number', answer: 7.4, tol: 0.65, decimal: true, suffix: 'days', width: 74 },
               explain: `${m('29.5 \\div 4 \\approx 7.4')}, so about a week: 7 or 8 days.`
             };

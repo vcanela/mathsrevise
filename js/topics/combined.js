@@ -192,7 +192,7 @@
           prompt: onLine
             ? 'These angles sit on a straight line. Write the equation.'
             : 'These angles meet at a point. Write the equation.',
-          note: 'Collect the ' + m('x') + ' terms, collect the numbers, and set them equal to the total.',
+          tip: 'Collect the ' + m('x') + ' terms, collect the numbers, and set them equal to the total.',
           diagram: { w: 255, h: onLine ? 150 : 185 },
           draw: d => Dia.angleFan(d, { lowCentre: onLine, baseline: onLine, rays, marks }),
           input: equationBoxes(e),
@@ -289,7 +289,7 @@
         out.push({
           prompt: 'Write the equation for the angles of this pentagon.',
           tag: 'Challenge',
-          note: 'Work out the total with ' + m('180(n - 2)') + ' first.',
+          tip: 'Work out the total with ' + m('180(n - 2)') + ' first.',
           diagram: pts ? { w: 250, h: 200 } : undefined,
           draw: pts ? ((d, G) => {
             const p = G.fit(pts, 250, 200, 46);
@@ -661,7 +661,7 @@
           prompt: `A rectangle is ${m('x')} cm wide and ${m(`x + ${k}`)} cm long, and ${m(`x = ${x}`)}. ` +
                   'What is its <strong>area</strong>?',
           tag: 'Challenge',
-          note: 'Area is width × length, not the sides added.',
+          tip: 'Area is width × length, not the sides added.',
           diagram: { w: 225, h: 148 },
           draw: rectDraw(x, x + k, m('x'), m(`x + ${k}`)),
           input: { kind: 'number', suffix: 'cm²', answer: x * (x + k), width: 84 },

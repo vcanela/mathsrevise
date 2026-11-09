@@ -1453,14 +1453,14 @@
         return {
           prompt: 'Put one A, one B and one C in every row and every column of the grid, leaving one square in each row and column empty. ' +
                   'Each letter outside the grid is the <em>first</em> letter you meet looking in along its arrow (empty squares are skipped).' + table +
-                  `What is the ${which} row, from left to right? Use * for the empty square (for example A*BC).`,
+                  `What is the ${which} row, from left to right? Type the four squares in order, with * for the empty one (for example P*QR).`,
           learn: 'compare',
           hints: [
             'A clue does not say the letter is in the first square: the first square might be empty, and then the letter is in the second.',
             'The letters seen from the two ends of a row (or column) are its first and last letters, so the third letter must sit between them.',
             'Fill in what is certain, then use "one of each in every column" to finish. Pencil in possibilities and cross them out.'
           ],
-          input: { kind: 'word', answer: [ans, ans.replace('*', '.'), ans.replace('*', '-'), ans.replace('*', '_')], placeholder: 'e.g. A*BC', width: 110 },
+          input: { kind: 'word', answer: [ans, ans.replace('*', '.'), ans.replace('*', '-'), ans.replace('*', '_')], placeholder: 'type the row', width: 110 },
           explain: 'The finished grid:' + gridHTML(4, 4, (r, c) => target.g[r][c] === '*' ? '' : target.g[r][c], (r) => r === row ? 'ask' : '', 'letters') +
             `The ${which} row is ${ans}. Check each clue by looking in along its arrow.`
         };

@@ -67,6 +67,11 @@ function checkQuestion(where, q) {
   if (typeof q.prompt !== 'string' || !q.prompt.trim()) return fail(where, 'empty prompt');
   if (/undefined|NaN/.test(q.prompt)) return fail(where, 'prompt contains undefined/NaN', q.prompt.slice(0, 90));
   if (q.note && /undefined|NaN/.test(q.note)) fail(where, 'note contains undefined/NaN');
+  if (q.tip && /undefined|NaN/.test(q.tip)) fail(where, 'tip contains undefined/NaN');
+  // An answer box's placeholder is shown before the student has tried, so it
+  // must never be a worked example ("e.g. 2y + 5"): that is a tip's job.
+  const ph = q.input && q.input.placeholder;
+  if (ph && (/\be\.g\./i.test(ph) || /\d/.test(ph))) fail(where, 'placeholder gives an example: ' + ph);
   if (q.explain && /undefined|NaN/.test(q.explain)) fail(where, 'explain contains undefined/NaN', q.explain.slice(0, 90));
 
   const inp = q.input;

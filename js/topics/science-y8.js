@@ -581,7 +581,7 @@
           const right = same ? 'They are equally concentrated' : (cA > cB ? 'Jug A' : 'Jug B');
           return {
             prompt: `Jug A has ${gA} g of drink powder in ${vA} mL of water. Jug B has ${gB} g in ${vB} mL. Which is more concentrated?`,
-            note: 'Compare how much powder there is in the same volume of water.',
+            tip: 'Compare how much powder there is in the same volume of water.',
             input: {
               kind: 'choice',
               options: ['Jug A', 'Jug B', 'They are equally concentrated'].map(o => ({ html: o, right: o === right })),
@@ -1415,7 +1415,7 @@
           let b = Sci.name(rng); while (b === a) b = Sci.name(rng);
           return {
             prompt: `${a} (${big} kg) sits ${d1} m from the pivot of a seesaw. How far from the pivot must ${b} (${small} kg) sit on the other side to balance it?`,
-            note: 'The lighter person has to sit further out.',
+            tip: 'The lighter person has to sit further out.',
             input: { kind: 'number', answer: d2, tol: 0.01, decimal: true, suffix: 'm', width: 74 },
             explain: `For balance, weight × distance must match on both sides: ${m(`${big} \\times ${d1} = ${small} \\times d`)}, so ${m(`d = ${big * d1} \\div ${small} = ${d2}`)} m.`
           };

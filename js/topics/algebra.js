@@ -86,8 +86,8 @@
               { text: '+' },  { input: { answer: sv, width: 62 } }, { text: m(v) }
             ]
           },
-          note: (su < 0 || sv < 0 || order.some(([c]) => c < 0))
-            ? 'Type a negative coefficient as <code>-3</code>. Leave the + sign as it is.' : null,
+          // Shown on every one, so it never hints that this answer is negative.
+          note: 'If a coefficient is negative, type its minus sign in the box, as in <code>-3</code>. Leave the + sign as it is.',
           explain: `<span class="work">\\(${u}\\): ${cu.map(Fmt.signed).join(' ')} = ${Fmt.num(su)}; \\(${v}\\): ${cv.map(Fmt.signed).join(' ')} = ${Fmt.num(sv)}</span>`
         });
       }
@@ -138,8 +138,8 @@
         const answer = S([[ansU, u], [ansV, v]]);
         out.push({
           prompt: 'Simplify ' + m(S(order)) + ' and type the whole answer.',
-          note: 'Type it as you would write it, for example <code>4x - 3y</code>.',
-          input: { kind: 'expr', answer, prefix: '=', placeholder: 'e.g. 4' + u + ' - 3' + v },
+          tip: 'Type it as you would write it, for example <code>4a - 3b</code>.',
+          input: { kind: 'expr', answer, prefix: '=' },
           explain: `<span class="work">\\(${u}\\): ${cu.map(Fmt.signed).join(' ')} = ${Fmt.num(ansU)}; \\(${v}\\): ${cv.map(Fmt.signed).join(' ')} = ${Fmt.num(ansV)}, giving \\(${answer}\\)</span>`
         });
       })();
@@ -279,7 +279,7 @@
         const k = -rng.int(2, 7), b = rng.int(2, 8), c = rng.nonZero(-9, 9);
         out.push({
           prompt: 'Expand ' + m(`${k}(${S([[b, v], [c, '']])})`),
-          note: 'Watch the signs: a negative outside changes both of them.',
+          tip: 'Watch the signs: a negative outside changes both of them.',
           input: {
             kind: 'fill',
             parts: [
@@ -298,7 +298,7 @@
         const answer = S([[k * b, v], [k * c, '']]);
         out.push({
           prompt: 'Expand ' + m(`${k}(${S([[b, v], [c, '']])})`) + ' and type the answer.',
-          input: { kind: 'expr', answer, prefix: '=', placeholder: 'e.g. 6' + v + ' + 15' },
+          input: { kind: 'expr', answer, prefix: '=' },
           explain: `<span class="work">\\(${answer}\\)</span>`
         });
       })();
@@ -368,8 +368,8 @@
         out.push({
           prompt: 'Expand and simplify ' + m(`${S([[a, v], [b, '']])} - ${k}(${S([[c, v], [e, '']])})`),
           tag: 'Challenge',
-          note: 'Subtracting a bracket flips every sign inside it.',
-          input: { kind: 'expr', answer: S([[av, v], [ac, '']]), prefix: '=', placeholder: 'e.g. 2' + v + ' - 7' },
+          tip: 'Subtracting a bracket flips every sign inside it.',
+          input: { kind: 'expr', answer: S([[av, v], [ac, '']]), prefix: '=' },
           explain: `<span class="work">\\(-${k}(${S([[c, v], [e, '']])}) = ${S([[-k * c, v], [-k * e, '']])}\\), so the answer is \\(${S([[av, v], [ac, '']])}\\).</span>`
         });
       })();
@@ -439,7 +439,7 @@
         const bb = b / gcd(b, c), cc = c / gcd(b, c);
         const K = k * gcd(b, c);
         out.push({
-          prompt: 'Factorise ' + m(S([[K * bb, v], [K * cc, '']])),
+          prompt: 'Factorise ' + m(S([[K * bb, v], [K * cc, '']])) + ' completely.',
           input: {
             kind: 'fill',
             parts: [
@@ -448,7 +448,7 @@
               { input: { answer: cc, width: 54 } }, { text: ')' }
             ]
           },
-          note: i === 0 ? 'The first box is the highest common factor.' : null,
+          tip: 'The first box is the highest common factor.',
           explain: `<span class="work">HCF is ${K}: \\(${K}(${S([[bb, v], [cc, '']])})\\)</span>`
         });
       }
@@ -495,7 +495,7 @@
         const k = rng.int(2, 7);
         const b = rng.int(2, 6), c = i === 1 ? -rng.int(1, 7) : rng.int(1, 7);
         out.push({
-          prompt: 'Factorise ' + m(S([[k * b, v + '^2'], [k * c, v]])),
+          prompt: 'Factorise ' + m(S([[k * b, v + '^2'], [k * c, v]])) + ' completely.',
           input: {
             kind: 'fill',
             parts: [
@@ -504,7 +504,7 @@
               { input: { answer: c, width: 52 } }, { text: ')' }
             ]
           },
-          note: i === 0 ? 'Both terms contain a ' + m(v) + ', so it comes outside too.' : null,
+          tip: 'Both terms contain a ' + m(v) + ', so it comes outside too.',
           explain: `<span class="work">\\(${T(k, v)}(${S([[b, v], [c, '']])})\\)</span>`
         });
       }
@@ -519,10 +519,10 @@
         out.push({
           prompt: 'Factorise ' + m(target) + ' completely.',
           tag: i === 1 ? 'Challenge' : null,
-          note: i === 0 ? 'Type it with a bracket, for example <code>3(2x + 5)</code>.' : null,
+          tip: 'Type it with a bracket, for example <code>3(2x + 5)</code>.',
           input: {
             kind: 'expr', mode: 'factorised', answer: target, prefix: '=',
-            display: m(`${K}(${S([[b, v], [c, '']])})`), placeholder: 'e.g. 3(2' + v + ' + 5)'
+            display: m(`${K}(${S([[b, v], [c, '']])})`)
           },
           explain: `<span class="work">HCF is ${K}.</span>`
         });
@@ -534,7 +534,7 @@
         const K = rng.pick([2, 3, 4, 5, 6]);
         const a = rng.int(2, 6), b = rng.nonZero(-7, 7), c = rng.int(1, 7);
         out.push({
-          prompt: 'Factorise ' + m(S([[K * a, v + '^2'], [K * b, v], [K * c, '']])),
+          prompt: 'Factorise ' + m(S([[K * a, v + '^2'], [K * b, v], [K * c, '']])) + ' completely.',
           tag: 'Challenge',
           input: {
             kind: 'fill',
@@ -545,7 +545,7 @@
               { input: { answer: c, width: 50 } }, { text: ')' }
             ]
           },
-          note: 'Only a number comes out here: the last term has no ' + m(v) + '.',
+          tip: 'Only a number comes out here: the last term has no ' + m(v) + '.',
           explain: `<span class="work">\\(${K}(${S([[a, v + '^2'], [b, v], [c, '']])})\\)</span>`
         });
       })();
@@ -677,7 +677,7 @@
         const c = x / a + b;
         out.push({
           prompt: 'Solve ' + m(`\\frac{${v}}{${a}} ${b < 0 ? '-' : '+'} ${Math.abs(b)} = ${c}`),
-          note: 'Here ' + m(v) + ' is divided by ' + a + ', so the last step multiplies.',
+          tip: 'Here ' + m(v) + ' is divided by ' + a + ', so the last step multiplies.',
           input: { kind: 'number', prefix: m(v) + ' =', answer: x, width: 78 },
           explain: `<span class="work">${b < 0 ? 'Add ' + Math.abs(b) : 'Subtract ' + b}: \\(\\frac{${v}}{${a}} = ${c - b}\\). Multiply both sides by ${a}: \\(${v} = ${x}\\).</span>`
         });
@@ -704,7 +704,7 @@
         out.push({
           prompt: 'Solve ' + m(`${S([[a, v], [b, '']])} = ${c}`),
           tag: 'Challenge',
-          note: 'Dividing by a negative number flips the sign of the answer.',
+          tip: 'Dividing by a negative number flips the sign of the answer.',
           input: { kind: 'number', prefix: m(v) + ' =', answer: x, width: 78 },
           explain: `<span class="work">\\(${T(a, v)} = ${Fmt.num(c - b)}\\), then divide by ${a}: \\(${v} = ${Fmt.num(x)}\\).</span>`
         });
@@ -719,7 +719,7 @@
         out.push({
           prompt: 'Is ' + m(`${v} = ${wrongX}`) + ' a solution of ' + m(`${S([[a, v], [b, '']])} = ${c}`) + '?',
           tag: 'Challenge',
-          note: 'Substitute and see what the left side comes to.',
+          tip: 'Substitute and see what the left side comes to.',
           input: {
             kind: 'choice',
             options: [
@@ -866,7 +866,7 @@
         const b = (c - a) * x + d;
         out.push({
           prompt: 'Solve ' + m(`${S([[a, v], [b, '']])} = ${S([[c, v], [d, '']])}`),
-          note: 'The bigger group of letters is on the right this time.',
+          tip: 'The bigger group of letters is on the right this time.',
           input: { kind: 'number', prefix: m(v) + ' =', answer: x, width: 78 },
           explain: `<span class="work">Take ${T(a, v)} from both sides: \\(${Fmt.num(b)} = ${S([[c - a, v], [d, '']])}\\), so \\(${T(c - a, v)} = ${Fmt.num(b - d)}\\) and \\(${v} = ${x}\\).</span>`
         });
@@ -910,7 +910,7 @@
           out.push({
             prompt: 'Solve ' + m(`${k1}(${S([[1, v], [pp, '']])}) = ${k2}(${S([[1, v], [qq, '']])})`),
             tag: 'Challenge',
-            note: 'Expand both brackets first.',
+            tip: 'Expand both brackets first.',
             input: { kind: 'number', prefix: m(v) + ' =', answer: x, width: 78 },
             explain: `<span class="work">Expanding: \\(${S([[k1, v], [k1 * pp, '']])} = ${S([[k2, v], [k2 * qq, '']])}\\), which gives \\(${v} = ${x}\\).</span>`
           });
@@ -929,7 +929,7 @@
                   `I get the same answer as multiplying the number by ${c} and adding ${d}. ` +
                   'What is the number?',
           tag: 'Challenge',
-          note: 'Write the equation first: ' + m(`${T(a, v)} + ${b} = ${T(c, v)} + ${d}`),
+          tip: 'Write the equation first: ' + m(`${T(a, v)} + ${b} = ${T(c, v)} + ${d}`),
           input: { kind: 'number', prefix: 'The number is', answer: x, width: 78 },
           explain: `<span class="work">\\(${S([[a, v], [b, '']])} = ${S([[c, v], [d, '']])}\\) gives \\(${T(a - c, v)} = ${d - b}\\), so \\(${v} = ${x}\\).</span>`
         });

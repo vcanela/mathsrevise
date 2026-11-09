@@ -138,7 +138,7 @@ const Sci = (() => {
     const opts = [{ html: o.right, right: true }, ...o.wrong.map(w => ({ html: w, right: false }))];
     const options = o.keepOrder ? opts : rng.shuffle(opts);
     return {
-      prompt: o.prompt, note: o.note, tag: o.tag, draw: o.draw, diagram: o.diagram,
+      prompt: o.prompt, note: o.note, tip: o.tip, tag: o.tag, draw: o.draw, diagram: o.diagram,
       input: { kind: 'choice', options, correct: options.findIndex(x => x.right), wide: o.wide !== false },
       explain: o.explain, learn: o.learn
     };
@@ -148,7 +148,7 @@ const Sci = (() => {
   function tf(rng, o) {
     return {
       prompt: 'True or false? <em>' + o.statement + '</em>',
-      note: o.note, tag: o.tag,
+      note: o.note, tip: o.tip, tag: o.tag,
       input: {
         kind: 'choice',
         options: [{ html: 'True', right: !!o.answer }, { html: 'False', right: !o.answer }],
@@ -170,7 +170,7 @@ const Sci = (() => {
       if (o.bins.every((_, b) => chosen.some(it => it.bin === b))) break;
     }
     return {
-      prompt: o.prompt, note: o.note, tag: o.tag, draw: o.draw, diagram: o.diagram,
+      prompt: o.prompt, note: o.note, tip: o.tip, tag: o.tag, draw: o.draw, diagram: o.diagram,
       input: { kind: 'sort', bins: o.bins, items: chosen.map(it => ({ html: it.text, bin: it.bin })),
                // The whole bank, which the review page lists. The engine ignores it.
                bank: o.items.map(it => ({ html: it.text, bin: it.bin })) },
@@ -185,7 +185,7 @@ const Sci = (() => {
   function label(rng, o) {
     const options = [...new Set(o.options || o.markers)].sort((a, b) => a.localeCompare(b));
     return {
-      prompt: o.prompt, note: o.note, tag: o.tag, draw: o.draw, diagram: o.diagram,
+      prompt: o.prompt, note: o.note, tip: o.tip, tag: o.tag, draw: o.draw, diagram: o.diagram,
       input: { kind: 'label', markers: o.markers, options },
       explain: o.explain, learn: o.learn
     };
@@ -194,7 +194,7 @@ const Sci = (() => {
   /** Spot the misconception: a line of reasoning with one wrong step. */
   function spot(rng, o) {
     return {
-      prompt: o.prompt, note: o.note, tag: o.tag,
+      prompt: o.prompt, note: o.note, tip: o.tip, tag: o.tag,
       input: { kind: 'spot', lines: o.lines, wrong: o.wrong, find: o.find,
                cue: o.cue || 'Click the first line that is wrong.' },
       explain: o.explain, learn: o.learn
@@ -226,7 +226,7 @@ const Sci = (() => {
   /** Type a word: `answer` is the spelling, or a list of acceptable spellings. */
   function word(rng, o) {
     return {
-      prompt: o.prompt, note: o.note, tag: o.tag,
+      prompt: o.prompt, note: o.note, tip: o.tip, tag: o.tag,
       input: { kind: 'word', answer: o.answer, prefix: o.prefix, suffix: o.suffix, placeholder: o.placeholder, width: o.width },
       explain: o.explain, learn: o.learn
     };
@@ -239,7 +239,7 @@ const Sci = (() => {
    */
   function write(rng, o) {
     return {
-      prompt: o.prompt, note: o.note, tag: o.tag, hints: o.hints,
+      prompt: o.prompt, note: o.note, tip: o.tip, tag: o.tag, hints: o.hints,
       input: { kind: 'write', key: o.key, title: o.title, minWords: o.minWords || 40, rows: o.rows,
                placeholder: o.placeholder, checklist: o.checklist, model: o.model },
       explain: o.explain, learn: o.learn

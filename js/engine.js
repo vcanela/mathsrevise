@@ -21,7 +21,12 @@
 //
 // `learn` names the "Learn it" card that answers the question; "Stuck?" then
 // links to it. `hints` is an optional list of nudges, each giving a little
-// more away, shown one at a time before the full working.
+// more away, shown one at a time before the full working. `tip` is a single
+// specific nudge, given after the topic's general rule.
+//
+// `note` sits under the prompt for everyone to see, so it is only for
+// instructions a student needs to answer at all ("two answers: x, then the
+// angle"). Anything that helps with the method is a `tip`.
 //
 // A topic marked `untimed: true` hides the countdown and scores by hints
 // used instead of by speed: 15 unaided, then 12, 10 and 8. Problem solving
@@ -689,7 +694,12 @@ const Exercise = (() => {
     const helpRow = h('div', { class: 'qhelp' });
     const helpBody = h('div', { class: 'qhelp-body', style: 'display:none' });
     let helpLevel = 0;                       // 0 none, 1 nudge, 2 full working
-    const hints = q.hints || [];
+    // A question's `tip` is help it used to show up front. It now waits
+    // behind Stuck?, after the topic's general rule: the idea first, then the
+    // specific push, then the full working.
+    const ownTopic = q.origin && window.Topics && window.Topics[q.origin.topicId];
+    const generalHint = (ownTopic && ownTopic.hint) || state.hint;
+    const hints = q.hints || (q.tip ? (generalHint ? [generalHint, q.tip] : [q.tip]) : []);
     let hintsUsed = 0;
 
     const stuckBtn = h('button', {
