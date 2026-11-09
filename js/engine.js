@@ -593,7 +593,8 @@ const Exercise = (() => {
           text: 'Anything you could not tick? Change your writing above; it is still open.' }));
         if (spec.model) {
           review.appendChild(h('p', { class: 'write-head', text: 'One way to do it' }));
-          review.appendChild(h('div', { class: 'write-model', html: spec.model }));
+          // The wrapper casts the shadow: the model's torn outline clips its own.
+          review.appendChild(h('div', { class: 'write-model-wrap' }, h('div', { class: 'write-model', html: spec.model })));
         }
         review.appendChild(h('div', { class: 'write-foot' }, copy));
         review.style.display = '';
@@ -717,13 +718,13 @@ const Exercise = (() => {
       if (hintsUsed < hints.length) {
         hintsUsed++;
         helpLevel = 1;
-        const step = h('p', { class: 'help-step' },
+        const step = h('p', { class: 'help-step help-nudge' },
           h('strong', { text: hints.length > 1 ? `Nudge ${hintsUsed} of ${hints.length}` : 'Nudge' }));
         step.insertAdjacentHTML('beforeend', hints[hintsUsed - 1]);
         helpBody.appendChild(step);
         if (hintsUsed === 1) {
           const link = learnLink(q);
-          if (link) helpBody.appendChild(h('p', { class: 'help-step help-learn' }, link));
+          if (link) helpBody.appendChild(h('p', { class: 'help-learn' }, link));
         }
         stuckBtn.textContent = hintsUsed < hints.length ? 'Another nudge' : 'Show me how';
         // Writing has nudges only; the model waits until the draft is done.
@@ -742,9 +743,9 @@ const Exercise = (() => {
         const topic = q.origin && window.Topics && window.Topics[q.origin.topicId];
         const nudge = (topic && topic.hint) || state.hint ||
                       'Look back at the worked examples at the top of the page.';
-        helpBody.innerHTML = '<p class="help-step"><strong>Where to start</strong>' + nudge + '</p>';
+        helpBody.innerHTML = '<p class="help-step help-nudge"><strong>Where to start</strong>' + nudge + '</p>';
         const link = learnLink(q);
-        if (link) helpBody.appendChild(h('p', { class: 'help-step help-learn' }, link));
+        if (link) helpBody.appendChild(h('p', { class: 'help-learn' }, link));
         stuckBtn.textContent = 'Show me how';
       } else {
         helpBody.insertAdjacentHTML('beforeend',

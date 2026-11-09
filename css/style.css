@@ -73,6 +73,20 @@
   --plank:       #c9a774;
   --paper-strip: #fffef9;
 
+  /* Paper objects on the desk: sticky notes, index cards, mounts, pins. */
+  --note:       #fcefa3;
+  --sheet:      #fffdf7;
+  --card:       #fffcf3;
+  --card-line:  rgba(64, 120, 190, 0.20);
+  --card-rule:  rgba(200, 70, 70, 0.60);
+  --mount:      #f2ecdc;
+  --deckle:     #f2ecdc;
+  --lift:       rgba(40, 32, 18, 0.30);
+  --pin-hi:     #ff9e90;
+  --pin:        #c63b2c;
+  --pin-lo:     #6d1a12;
+  --paper-shadow: 0 1px 2px rgba(0, 0, 0, .12), 0 8px 16px -10px var(--lift);
+
   --radius:   4px;
   --radius-s: 3px;
   --shadow:   0 1px 1px rgba(40, 32, 18, .05), 0 6px 18px -8px rgba(40, 32, 18, .18);
@@ -131,6 +145,16 @@
     --water:       rgba(100, 160, 210, 0.16);
     --plank:       #8a7148;
     --paper-strip: #222a2f;
+
+    /* Paper stays paper in the dark, dimmed as if under a desk lamp. */
+    --note:       #d8cb85;
+    --sheet:      #e0dbcd;
+    --card:       #ddd7c8;
+    --mount:      #a9a290;
+    --deckle:     #ddd6c4;
+    --card-line:  rgba(40, 80, 140, 0.24);
+    --card-rule:  rgba(150, 45, 45, 0.55);
+    --lift:       rgba(0, 0, 0, 0.65);
 
     --shadow: 0 1px 1px rgba(0, 0, 0, .3), 0 8px 22px -10px rgba(0, 0, 0, .6);
   }
@@ -260,15 +284,21 @@ main {
 
 /* ── Daily practice panel ─────────────────────────────────────────────────── */
 .habit {
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-left: 3px solid var(--accent);
-  border-radius: var(--radius);
-  padding: 1.1rem 1.25rem;
-  margin-bottom: 1.6rem;
-  box-shadow: var(--shadow);
+  position: relative;
+  background: var(--sheet);
+  border-radius: 2px;
+  padding: 1.2rem 1.3rem;
+  margin: 1.4rem 0 1.6rem;
+  box-shadow: var(--paper-shadow);
 }
-.habit-done { border-left-color: var(--good); }
+/* The pin: red while today's practice is waiting, green once it is done. */
+.habit::before {
+  content: ''; position: absolute; top: -5px; left: 50%; z-index: 1;
+  width: 18px; height: 18px; margin-left: -9px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 32%, var(--pin-hi) 0 12%, var(--pin) 45%, var(--pin-lo) 100%);
+  box-shadow: 3px 4px 4px rgba(0, 0, 0, .35);
+}
+.habit-done { --pin-hi: #9be0b4; --pin: #2f8a52; --pin-lo: #143d24; }
 
 .habit-main {
   display: flex; align-items: center; justify-content: space-between;
@@ -423,18 +453,37 @@ main {
 .examples-toggle.open::before { transform: rotate(90deg); }
 .examples-toggle:hover { color: var(--ink); }
 
+/* ── Paper objects ─────────────────────────────────────────────────────────
+   Sticky notes, index cards, mounted pages and pinned notes keep dark ink in
+   either theme: the paper is dimmed in the dark, not inverted. These set the
+   ink and pen colours for everything inside them. */
+.help-step, .paper-note, .hint, .learn-card, .passage, .write-model, .habit {
+  --ink: #1f2427; --ink-soft: #3b4448; --ink-faint: #555f64;
+  --good: #245a3a; --bad: #8e2a20; --brand: #0f5c63; --brand-ink: #0a4249;
+  --brand-soft: #dcebe9; --accent: #a9640f; --accent-ink: #7d4908;
+  --surface: rgba(255, 255, 255, 0.6); --surface-2: rgba(0, 0, 0, 0.05);
+  --rule: rgba(0, 0, 0, 0.2); --rule-soft: rgba(0, 0, 0, 0.1);
+  color: var(--ink-soft);
+}
+.help-step, .passage, .learn-card { position: relative; }
+
 /* ── Reading passages (English) ──────────────────────────────────────────── */
 .passage {
-  margin: 0.4rem 0 0.9rem; padding: 0.9rem 1.1rem;
-  background: var(--surface-2); border-left: 3px solid var(--brand);
-  border-radius: var(--radius-s);
+  margin: 1.1rem 14px 1.6rem; padding: 0.9rem 1.1rem;
+  background: var(--sheet); border-radius: 1px;
+  box-shadow: 0 0 0 12px var(--mount), 0 1px 0 13px rgba(0, 0, 0, .06), 0 10px 20px 6px var(--lift);
   font-family: var(--font-serif); font-size: 0.98rem; line-height: 1.65; color: var(--ink);
 }
 .passage p + p { margin-top: 0.55rem; }
 .passage-title { font-family: var(--font-sans); font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 0.4rem; }
 .passage .poem { font-style: italic; }
 /* A few lines of verse inside a question. */
-.qtext .poem { margin: 0.5rem 0 0.6rem; padding-left: 0.9rem; border-left: 3px solid var(--rule); line-height: 1.6; }
+.qtext .poem { margin: 0.5rem 0 0.6rem; padding-left: 1.2rem; line-height: 1.6; }
+.passage .poem { padding-left: 0.3rem; }
+@media (max-width: 600px) {
+  .passage { margin: 0.8rem 7px 1.2rem; padding: 0.75rem 0.85rem;
+    box-shadow: 0 0 0 6px var(--mount), 0 1px 0 7px rgba(0, 0, 0, .06), 0 8px 14px 3px var(--lift); }
+}
 .passage-again { margin: 0.2rem 0 0.7rem; font-family: var(--font-sans); font-size: 0.86rem; }
 .passage-again > summary { cursor: pointer; color: var(--brand-ink); font-weight: 600; }
 .passage-again[open] > summary { margin-bottom: 0.3rem; }
@@ -452,12 +501,10 @@ main {
   gap: 0.9rem;
 }
 .learn-card {
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-top: 3px solid var(--brand);
-  border-radius: var(--radius);
+  background: var(--card);
+  border-radius: 2px;
   padding: 0.9rem 1rem 1rem;
-  box-shadow: var(--shadow);
+  box-shadow: var(--paper-shadow);
   display: flex; flex-direction: column;
   scroll-margin: 5rem;
 }
@@ -475,25 +522,31 @@ main {
   font-family: var(--font-serif);
   font-size: 1rem; font-weight: 600;
   color: var(--ink);
-  margin-bottom: 0.35rem;
+  /* An index card: a red rule under the heading… */
+  border-bottom: 1.5px solid var(--card-rule);
+  padding-bottom: 0.25rem; margin-bottom: 0.3rem;
 }
-.learn-text { font-size: 0.9rem; line-height: 1.5; color: var(--ink-soft); }
-.learn-text p + p { margin-top: 0.4rem; }
+/* …and faint blue lines, one per line of text. */
+.learn-text {
+  font-size: 0.9rem; line-height: 1.5rem; color: var(--ink-soft);
+  background: repeating-linear-gradient(transparent 0 calc(1.5rem - 1px), var(--card-line) calc(1.5rem - 1px) 1.5rem);
+}
+.learn-text .data-table { background: var(--card); }
 .learn-text strong { color: var(--ink); }
-.learn-text ul { margin: 0.3rem 0 0 1.1rem; }
+.learn-text ul { margin: 0 0 0 1.1rem; }
 .learn-text li { margin-bottom: 0.15rem; }
 .learn-text .data-table { margin: 0.45rem 0 0.1rem; font-size: 0.84rem; width: 100%; }
 .learn-text .data-table td, .learn-text .data-table th {
   font-family: var(--font-sans); text-align: left; padding: 0.25rem 0.5rem;
 }
-.learn-steps { list-style: none; counter-reset: ls; margin: 0.4rem 0 0.4rem !important; }
+.learn-steps { list-style: none; counter-reset: ls; margin: 0 !important; }
 .learn-steps li {
   counter-increment: ls; position: relative;
-  padding: 0.2rem 0 0.2rem 1.7rem; margin: 0 !important;
+  padding: 0 0 0 1.7rem; margin: 0 !important;
 }
 .learn-steps li::before {
   content: counter(ls);
-  position: absolute; left: 0; top: 0.22rem;
+  position: absolute; left: 0; top: 0.12rem;
   width: 1.2rem; height: 1.2rem; border-radius: 50%;
   background: var(--brand-soft); color: var(--brand-ink);
   font-size: 0.72rem; font-weight: 600;
@@ -505,7 +558,7 @@ main {
 }
 @keyframes learn-flash {
   0%, 30% { box-shadow: 0 0 0 3px var(--accent); }
-  100%    { box-shadow: var(--shadow); }
+  100%    { box-shadow: var(--paper-shadow); }
 }
 .learn-card.flash { animation: learn-flash 1.8s ease-out; }
 .help-learn { margin-top: 0.3rem; }
@@ -567,12 +620,11 @@ main {
 
 .hint {
   position: relative;
-  background: var(--warn-soft);
-  color: var(--warn);
-  border: 1px solid var(--rule);
-  border-color: color-mix(in srgb, var(--warn) 22%, transparent);
-  border-radius: var(--radius);
-  padding: 0.75rem 1rem 0.75rem 1.1rem;
+  background: var(--note);
+  border-radius: 1px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .10);
+  padding: 0.75rem 1rem 0.8rem 1.1rem;
+  margin-bottom: 0.8rem;
   font-size: 0.9rem;
 }
 .hint strong {
@@ -580,6 +632,7 @@ main {
   font-size: 0.7rem; font-weight: 600;
   letter-spacing: 0.13em; text-transform: uppercase;
   display: block; margin-bottom: 0.15rem;
+  color: var(--accent-ink);
 }
 
 /* ── Section heading with a rule running off to the right ─────────────────── */
@@ -959,12 +1012,22 @@ main {
 .help-step {
   font-size: 0.9rem; line-height: 1.55;
   color: var(--ink-soft);
-  background: var(--surface-2);
-  border-left: 2px solid var(--brand);
-  border-radius: 0 var(--radius-s) var(--radius-s) 0;
-  padding: 0.6rem 0.85rem;
-  margin-bottom: 0.4rem;
+  background: var(--note);
+  border-radius: 1px;
+  padding: 0.7rem 0.95rem 0.8rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .10);
 }
+/* A sticky note with lifted corners: a shadow under each bottom corner,
+   drawn just below the note so nothing sits on the text. */
+.help-step::after, .paper-note::after, .hint::after {
+  content: ''; position: absolute; left: 2%; right: 2%; top: 100%; height: 12px; pointer-events: none;
+  background:
+    radial-gradient(ellipse 34% 100% at 12% 0, var(--lift), transparent 72%),
+    radial-gradient(ellipse 34% 100% at 88% 0, var(--lift), transparent 72%);
+}
+/* A nudge is short, so it may sit slightly askew; never one with maths in it. */
+.help-nudge:not(:has(mjx-container)) { transform: rotate(-0.5deg); }
 .help-step strong {
   display: block;
   font-family: var(--font-sans);
@@ -1060,9 +1123,35 @@ main {
 .write-checks label { display: flex; gap: 0.5rem; align-items: baseline; cursor: pointer; }
 .write-checks input { accent-color: var(--brand); flex: none; }
 .write-tip { margin: 0.4rem 0 0; font-size: 0.88rem; color: var(--ink-soft); font-style: italic; }
+.write-model-wrap { filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .15)) drop-shadow(0 6px 8px var(--lift)); }
 .write-model {
   font-family: var(--font-serif); line-height: 1.6;
-  padding: 0.6rem 0.8rem; background: var(--surface); border-left: 3px solid var(--brand);
+  padding: 1rem 1.2rem; background: var(--deckle); color: var(--ink);
+  /* A deckled edge: the rough outline of handmade paper. */
+  clip-path: polygon(
+    0.0% 0.0px, 2.5% 2.9px, 5.0% 0.9px, 7.5% 0.7px, 10.0% 2.3px, 12.5% 1.7px, 15.0% 1.1px, 17.5% 2.4px,
+    20.0% 2.4px, 22.5% 1.7px, 25.0% 2.2px, 27.5% 2.0px, 30.0% 2.6px, 32.5% 0.8px, 35.0% 1.2px, 37.5% 2.3px,
+    40.0% 2.2px, 42.5% 0.2px, 45.0% 2.2px, 47.5% 1.5px, 50.0% 3.0px, 52.5% 2.6px, 55.0% 0.4px, 57.5% 1.6px,
+    60.0% 3.0px, 62.5% 2.2px, 65.0% 2.1px, 67.5% 1.8px, 70.0% 2.9px, 72.5% 2.9px, 75.0% 1.2px, 77.5% 1.1px,
+    80.0% 2.7px, 82.5% 1.1px, 85.0% 0.5px, 87.5% 1.0px, 90.0% 1.4px, 92.5% 0.9px, 95.0% 3.0px, 97.5% 1.8px,
+    100.0% 2.3px, calc(100% - 2.8px) 5.0%, calc(100% - 0.2px) 10.0%, calc(100% - 0.9px) 15.0%,
+    calc(100% - 1.8px) 20.0%, calc(100% - 1.6px) 25.0%, calc(100% - 1.3px) 30.0%, calc(100% - 0.6px) 35.0%,
+    calc(100% - 2.9px) 40.0%, calc(100% - 0.2px) 45.0%, calc(100% - 1.2px) 50.0%, calc(100% - 1.1px) 55.0%,
+    calc(100% - 2.1px) 60.0%, calc(100% - 3.0px) 65.0%, calc(100% - 1.6px) 70.0%, calc(100% - 0.5px) 75.0%,
+    calc(100% - 1.3px) 80.0%, calc(100% - 0.9px) 85.0%, calc(100% - 1.2px) 90.0%, calc(100% - 1.4px) 95.0%,
+    calc(100% - 1.1px) 100.0%, 97.5% calc(100% - 1.7px), 95.0% calc(100% - 2.0px), 92.5% calc(100% - 0.7px),
+    90.0% calc(100% - 2.9px), 87.5% calc(100% - 1.5px), 85.0% calc(100% - 2.8px), 82.5% calc(100% - 2.0px),
+    80.0% calc(100% - 2.0px), 77.5% calc(100% - 1.7px), 75.0% calc(100% - 1.6px), 72.5% calc(100% - 2.2px),
+    70.0% calc(100% - 3.0px), 67.5% calc(100% - 1.3px), 65.0% calc(100% - 2.3px), 62.5% calc(100% - 0.8px),
+    60.0% calc(100% - 1.9px), 57.5% calc(100% - 1.1px), 55.0% calc(100% - 1.1px), 52.5% calc(100% - 1.3px),
+    50.0% calc(100% - 2.5px), 47.5% calc(100% - 2.8px), 45.0% calc(100% - 0.4px), 42.5% calc(100% - 2.6px),
+    40.0% calc(100% - 0.2px), 37.5% calc(100% - 1.3px), 35.0% calc(100% - 0.5px), 32.5% calc(100% - 0.2px),
+    30.0% calc(100% - 3.2px), 27.5% calc(100% - 0.7px), 25.0% calc(100% - 2.0px), 22.5% calc(100% - 0.5px),
+    20.0% calc(100% - 1.5px), 17.5% calc(100% - 1.9px), 15.0% calc(100% - 0.4px), 12.5% calc(100% - 2.9px),
+    10.0% calc(100% - 2.8px), 7.5% calc(100% - 2.8px), 5.0% calc(100% - 2.8px), 2.5% calc(100% - 2.9px),
+    0.0% calc(100% - 2.4px), 0.9px 95.0%, 0.0px 90.0%, 0.8px 85.0%, 0.2px 80.0%, 0.0px 75.0%, 2.0px 70.0%,
+    0.7px 65.0%, 2.4px 60.0%, 1.6px 55.0%, 2.2px 50.0%, 0.8px 45.0%, 2.8px 40.0%, 0.8px 35.0%, 1.2px 30.0%,
+    2.9px 25.0%, 0.4px 20.0%, 1.6px 15.0%, 0.0px 10.0%, 2.9px 5.0%);
 }
 .write-model p { margin: 0 0 0.5rem; } .write-model p:last-child { margin: 0; }
 
@@ -1106,17 +1195,20 @@ main {
 .qfeedback {
   font-size: 0.92rem; line-height: 1.55;
   margin-top: 0.65rem;
-  padding-left: 0.75rem;
-  border-left: 2px solid currentColor;
 }
 .qfeedback:empty { display: none; }
 .qfeedback.good { color: var(--good); }
 .qfeedback.bad  { color: var(--bad); }
 .qfeedback strong {
   font-family: var(--font-sans);
-  font-size: 0.72rem; font-weight: 600;
-  letter-spacing: 0.13em; text-transform: uppercase;
-  display: block; margin-bottom: 0.1rem;
+  font-size: 0.74rem; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  /* Stamped in the margin, in the pen's colour. */
+  display: table; margin: 0.1rem 0 0.45rem;
+  padding: 0.1rem 0.55rem;
+  border: 2px solid currentColor; border-radius: 4px;
+  transform: rotate(-3deg); transform-origin: left center;
+  opacity: 0.88;
 }
 .qfeedback .why  { color: var(--ink-faint); font-style: italic; }
 .qfeedback .work { color: var(--ink-soft); font-style: italic; }
@@ -1361,6 +1453,10 @@ mjx-container[display="true"] { margin: 0.6em 0 !important; }
   .examples-toggle, .lvl-modal { display: none !important; }
   body { background: #fff; color: #000; }
   .qcard, .card, .example { break-inside: avoid; box-shadow: none; }
+  .help-step, .paper-note, .hint, .learn-card, .passage, .habit { box-shadow: none; transform: none; border: 1px solid #999; }
+  .help-step::after, .paper-note::after, .hint::after, .habit::before { display: none; }
+  .write-model-wrap { filter: none; }
+  .passage { margin: 0.6rem 0; }
   .page-head { border-bottom: 2px solid #000; }
 }
 
@@ -1458,8 +1554,9 @@ mjx-container[display="true"] { margin: 0.6em 0 !important; }
   background: var(--accent-soft); color: var(--accent-ink); font-size: 0.92rem;
 }
 .paper-note {
-  margin: 0.4rem 0 0; padding: 0.5rem 0.8rem; border-left: 3px solid var(--accent);
-  color: var(--ink-soft); font-size: 0.9rem; font-style: italic;
+  position: relative; margin: 0.8rem 0 1.2rem; padding: 0.6rem 0.9rem;
+  background: var(--note); border-radius: 1px; box-shadow: 0 1px 1px rgba(0, 0, 0, .10);
+  color: var(--ink-soft); font-size: 0.9rem;
 }
 .paper-foot { display: flex; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0 2rem; }
 
