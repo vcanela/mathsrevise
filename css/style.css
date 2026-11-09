@@ -311,16 +311,6 @@ main {
 }
 .habit-go { flex: none; white-space: nowrap; display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
-/* An exercise not written yet: visible, so the year's shape is clear, but inert. */
-.card-soon {
-  box-shadow: none;
-  background: transparent;
-  border-style: dashed;
-  opacity: 0.62;
-}
-.card-soon:hover { transform: none; border-color: var(--rule); }
-.card-soon::before { display: none; }
-.card-soon .card-mark { background: transparent; }
 
 .habit-week {
   display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;
@@ -439,6 +429,42 @@ main.home { margin-top: 1.2rem; margin-bottom: 1rem; }
 .home-doodle { float: right; width: 46px; height: 46px; margin: -0.2rem -0.2rem 0.2rem 0.6rem; color: var(--brand-ink); }
 .home-doodle svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .home-foot { margin-top: 1rem; padding: 0.9rem 1.5rem 1.2rem; }
+
+/* ── Unit pages: the same language as home ────────────────────────────────── */
+.unit-head {
+  max-width: var(--maxw); margin: 0 auto;
+  padding: 0.7rem 1.5rem 0;
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 0.8rem 2rem; flex-wrap: wrap;
+}
+.unit-title { flex: 1 1 24rem; }
+.unit-title h1 { font-size: 1.9rem; font-weight: 600; letter-spacing: -0.012em; line-height: 1.15; }
+.unit-title p { color: var(--ink-soft); margin-top: 0.2rem; }
+.unit-title .unit-facts { font-family: var(--font-sans); font-size: 0.82rem; color: var(--accent-ink); margin-top: 0.35rem; }
+.unit-side { flex: 0 1 27rem; display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem; }
+.unit-side .xpbar { margin: 0; box-shadow: none; width: 100%; padding: 0.4rem 0.7rem; }
+.unit-cols { grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); }
+.unit-cols.single { grid-template-columns: minmax(0, 40rem); }
+.unit-cols.single .home-col:last-child .home-note { left: calc(100% - 0.6rem); right: auto; transform: rotate(-1deg); }
+.unit-code {
+  flex: none; min-width: 2.3rem; padding: 0.15rem 0.35rem; text-align: center;
+  font-family: var(--font-serif); font-style: italic; font-size: 0.85rem; font-weight: 600;
+  color: var(--accent-ink); background: var(--accent-soft); border-radius: var(--radius-s);
+}
+.unit-badge {
+  flex: none; font-family: var(--font-sans); font-size: 0.68rem; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap;
+  color: var(--brand-ink); background: var(--brand-soft); border-radius: 999px; padding: 0.1rem 0.5rem;
+}
+.unit-star { flex: none; color: var(--accent); font-size: 0.85rem; }
+.home-row.soon { opacity: 0.55; cursor: default; }
+.home-row.soon:hover { background: none; }
+.note-btns { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.7rem; }
+.note-btns .tool-btn { margin-top: 0; }
+@media (max-width: 760px) {
+  .unit-cols, .unit-cols.single { grid-template-columns: minmax(0, 1fr); }
+  .unit-side { align-items: stretch; flex-basis: 100%; }
+  .unit-side .home-stars { align-self: flex-start; }
+}
 
 /* On a phone the subjects stack, and a row's note opens in place beneath it. */
 @media (max-width: 760px) {
@@ -1390,90 +1416,9 @@ main.home { margin-top: 1.2rem; margin-bottom: 1rem; }
 }
 .lvl-box button { margin-top: 1.2rem; }
 
-/* ── Cards on the home and unit pages ─────────────────────────────────────── */
-.grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
-  gap: 1rem; margin-top: 1.3rem;
-}
-.card {
-  display: flex; flex-direction: column;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  padding: 1.2rem 1.25rem 1.05rem;
-  text-decoration: none; color: inherit;
-  box-shadow: var(--shadow);
-  transition: transform .16s ease, border-color .16s ease;
-  position: relative; overflow: hidden;
-}
-/* A coloured tab along the top edge, appearing on hover. */
-.card::before {
-  content: '';
-  position: absolute; left: 0; right: 0; top: 0; height: 2px;
-  background: var(--accent);
-  transform: scaleX(0); transform-origin: left;
-  transition: transform .22s ease;
-}
-.card:hover { transform: translateY(-2px); border-color: var(--brand); }
-.card:hover::before { transform: scaleX(1); }
-/* The section number, set as in a textbook contents page. */
-.card-mark {
-  width: 2.3rem; height: 2.3rem; margin-bottom: 0.65rem;
-  display: grid; place-items: center;
-  border: 1px solid var(--rule);
-  border-color: color-mix(in srgb, var(--accent) 32%, transparent);
-  border-radius: var(--radius-s);
-  background: var(--accent-soft);
-  color: var(--accent-ink);
-  font-family: var(--font-serif);
-  font-size: 0.95rem; font-weight: 600; font-style: italic;
-}
-/* Science cards carry the year the knowledge belongs to, top right. */
-.card-challenge {
-  font-family: var(--font-sans); font-size: 0.78rem; font-weight: 600;
-  color: var(--accent-ink); margin-top: -0.2rem;
-}
-.card-year {
-  position: absolute; top: 1rem; right: 1rem;
-  font-family: var(--font-sans); font-size: 0.7rem; font-weight: 600;
-  letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--brand-ink); background: var(--brand-soft);
-  border-radius: 999px; padding: 0.15rem 0.55rem;
-}
-/* Curriculum sub-strand headings on a science subject page. */
-.strand-head {
-  font-family: var(--font-sans); font-size: 0.78rem; font-weight: 600;
-  letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink-soft);
-  margin: 2rem 0 0.8rem;
-}
-.strand-head:first-of-type { margin-top: 1.4rem; }
-.card h3 {
-  font-family: var(--font-serif);
-  font-size: 1.06rem; font-weight: 600; line-height: 1.35;
-}
-.card p {
-  font-size: 0.9rem; color: var(--ink-soft); margin-top: 0.25rem;
-}
-.card-foot {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 0.5rem; margin-top: auto; padding-top: 0.85rem;
-  font-family: var(--font-sans); font-size: 0.76rem; color: var(--ink-faint);
-}
+/* Stars earned, on home and unit page rows. */
 .card-stars { color: var(--accent); letter-spacing: 0.12em; font-size: 0.85rem; }
 .card-stars.none { color: var(--rule); }
-
-.unit-progress {
-  display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
-  font-family: var(--font-sans); font-size: 0.82rem; color: var(--ink-soft);
-  margin-top: 1rem;
-}
-.unit-progress .bar {
-  flex: 1; min-width: 120px; max-width: 280px; height: 7px;
-  background: var(--surface-2);
-  border: 1px solid var(--rule-soft);
-  border-radius: 2px; overflow: hidden;
-}
-.unit-progress .bar i { display: block; height: 100%; background: var(--accent); }
 
 /* ── Footer ───────────────────────────────────────────────────────────────── */
 .page-foot {
@@ -1537,7 +1482,7 @@ mjx-container[display="true"] { margin: 0.6em 0 !important; }
   .toolbar, .qsubmit, .xpbar, .progress, .results-btns, .back-link, .tbar,
   .examples-toggle, .lvl-modal { display: none !important; }
   body { background: #fff; color: #000; }
-  .qcard, .card, .example { break-inside: avoid; box-shadow: none; }
+  .qcard, .example { break-inside: avoid; box-shadow: none; }
   .help-step, .paper-note, .hint, .learn-card, .passage, .habit { box-shadow: none; transform: none; border: 1px solid #999; }
   .help-step::after, .paper-note::after, .hint::after, .habit::before, .qcard::after, .example::after { display: none; }
   .qcard, .example { border: 1px solid #999; }

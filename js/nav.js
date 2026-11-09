@@ -14,14 +14,6 @@ const Nav = (() => {
   const stars = n => h('span', { class: 'card-stars' + (n ? '' : ' none'),
                                  text: '★'.repeat(n) + '☆'.repeat(3 - n) });
 
-  function progressBar(label, got, max) {
-    const pct = max ? (got / max) * 100 : 0;
-    return h('div', { class: 'unit-progress' },
-      h('span', { text: label }),
-      h('div', { class: 'bar' }, h('i', { style: `width:${pct.toFixed(1)}%` })),
-      h('span', { text: `${got} of ${max} stars` }));
-  }
-
   function xpStrip() {
     const info = MRG.getLevelInfo();
     const next = info.next ? `${info.xpToNext} XP to <strong>${info.next.name}</strong>` : '<strong>Top level</strong>';
@@ -29,28 +21,6 @@ const Nav = (() => {
       h('span', { class: 'xp-rank', text: info.current.name }),
       h('div', { class: 'xp-track' }, h('div', { class: 'xp-fill', style: `width:${info.pct.toFixed(1)}%` })),
       h('span', { class: 'xp-text', html: `${info.xp} XP &middot; ${next}` }));
-  }
-
-  /** One exercise card. Exercises not written yet show as a quiet placeholder. */
-  function exerciseCard(ex, prefix) {
-    if (ex.soon) {
-      return h('div', { class: 'card card-soon', 'aria-disabled': 'true' },
-        h('div', { class: 'card-mark', text: ex.label }),
-        h('h3', { text: ex.title }),
-        h('p', { text: ex.tag }),
-        h('div', { class: 'card-foot' }, h('span', { text: 'Coming soon' })));
-    }
-    const rec = MRG.getExercise(ex.id);
-    return h('a', { class: 'card', href: prefix + ex.href },
-      h('div', { class: 'card-mark', text: ex.label }),
-      ex.year ? h('span', { class: 'card-year', text: 'Year ' + ex.year })
-        : ex.years ? h('span', { class: 'card-year', text: 'Years ' + ex.years }) : null,
-      h('h3', { text: ex.title }),
-      h('p', { text: ex.tag }),
-      ex.challenge ? h('p', { class: 'card-challenge', text: '★ Year 9 challenge' }) : null,
-      h('div', { class: 'card-foot' },
-        h('span', { text: rec.attempts ? `Best ${rec.bestScore} pts` : 'Not started yet' }),
-        stars(rec.stars || 0)));
   }
 
   // ── Home: doodles ──────────────────────────────────────────────────────────
@@ -131,6 +101,36 @@ const Nav = (() => {
     }, 'Reset progress on this device');
   }
 
+  /**
+   * Rows that bring out a note: on hover and keyboard focus through CSS, and
+   * where there is no hover, on a first tap, with the second tap going in. A
+   * tap elsewhere, or Escape, puts notes and pop-ups away.
+   */
+  let wired = false;
+  function wireNotes(container) {
+    const noHover = matchMedia('(hover: none)');
+    const closeAll = except => {
+      document.querySelectorAll('.home-item.open').forEach(li => { if (li !== except) li.classList.remove('open'); });
+    };
+    container.addEventListener('click', ev => {
+      const row = ev.target.closest('a.home-row');
+      if (!row || !noHover.matches) return;
+      const li = row.parentElement;
+      if (!li.classList.contains('open')) { ev.preventDefault(); closeAll(li); li.classList.add('open'); }
+    });
+    if (wired) return;
+    wired = true;
+    document.addEventListener('click', ev => {
+      if (!ev.target.closest('.home-item')) closeAll();
+      document.querySelectorAll('details.pop[open]').forEach(d => { if (!d.contains(ev.target)) d.open = false; });
+    });
+    document.addEventListener('keydown', ev => {
+      if (ev.key !== 'Escape') return;
+      closeAll();
+      document.querySelectorAll('details.pop[open]').forEach(d => { d.open = false; });
+    });
+  }
+
   // ── Home ──────────────────────────────────────────────────────────────────
   // One screen on a laptop: the subjects side by side as short lists, each
   // section's details on a note that comes out of it. The explaining lives
@@ -175,41 +175,54 @@ const Nav = (() => {
 
     root.appendChild(h('footer', { class: 'page-foot home-foot' }, 'Revision'));
 
-    // Where there is no hover, the first tap on a row shows its note and the
-    // second goes in. A tap elsewhere, or Escape, puts notes and pop-ups away.
-    const noHover = matchMedia('(hover: none)');
-    const closeAll = except => {
-      document.querySelectorAll('.home-item.open').forEach(li => { if (li !== except) li.classList.remove('open'); });
-    };
-    cols.addEventListener('click', ev => {
-      const row = ev.target.closest('.home-row');
-      if (!row || !noHover.matches) return;
-      const li = row.parentElement;
-      if (!li.classList.contains('open')) { ev.preventDefault(); closeAll(li); li.classList.add('open'); }
-    });
-    document.addEventListener('click', ev => {
-      if (!ev.target.closest('.home-item')) closeAll();
-      document.querySelectorAll('details.pop[open]').forEach(d => { if (!d.contains(ev.target)) d.open = false; });
-    });
-    document.addEventListener('keydown', ev => {
-      if (ev.key !== 'Escape') return;
-      closeAll();
-      document.querySelectorAll('details.pop[open]').forEach(d => { d.open = false; });
-    });
+    wireNotes(cols);
   }
 
   // ── Unit page ─────────────────────────────────────────────────────────────
+  // The same language as the home page: a short header, then the exercises as
+  // a list on a sheet (one per science strand, side by side), each with a note
+  // holding its details and a way straight into its Year 9 challenge. What
+  // every exercise shares is said once, in the header, not on every row.
+  const yearOf = ex => (ex.year ? 'Year ' + ex.year : ex.years ? 'Years ' + ex.years : null);
+
+  function exerciseItem(ex, common) {
+    if (ex.soon) {
+      return h('li', { class: 'home-item' },
+        h('div', { class: 'home-row soon', 'aria-disabled': 'true' },
+          h('span', { class: 'unit-code', text: ex.label }),
+          h('span', { class: 'home-name', text: ex.title }),
+          h('span', { class: 'unit-badge', text: 'Coming soon' })));
+    }
+    const rec = MRG.getExercise(ex.id);
+    const href = '../' + ex.href;
+    const year = yearOf(ex);
+    // Science codes already say the year (7.5, 8.6), so only an odd one out
+    // elsewhere, such as a Year 9 exercise among Years 7–8, gets a badge.
+    const odd = year && !ex.unit.exercises.every(e => e.year) && year !== common.year;
+    return h('li', { class: 'home-item' },
+      h('a', { class: 'home-row', href },
+        h('span', { class: 'unit-code', text: ex.label }),
+        h('span', { class: 'home-name', text: ex.title }),
+        odd ? h('span', { class: 'unit-badge', text: year }) : null,
+        ex.challenge && !(common.challenge && year === common.year) ? h('span', { class: 'unit-star', title: 'Has a Year 9 challenge', text: '★' }) : null,
+        stars(rec.stars || 0)),
+      h('aside', { class: 'home-note' },
+        h('h3', { text: ex.title }),
+        h('p', { text: ex.tag }),
+        h('p', { class: 'home-meta', text: [year, rec.attempts ? `best ${rec.bestScore} pts` : 'not started yet']
+          .filter(Boolean).join(' · ').replace(/^./, c => c.toUpperCase()) }),
+        h('div', { class: 'note-btns' },
+          h('a', { class: 'tool-btn primary', href }, 'Practise'),
+          ex.challenge ? h('a', { class: 'tool-btn', href: href + '?set=challenge' }, '★ Year 9 challenge') : null)));
+  }
+
   function renderUnit(key) {
     const u = Manifest.unit(key);
     const subj = Manifest.subject(u.subject);
+    const title = u.subject === 'maths' ? u.name.replace(/^Unit \d+: /, '') : u.name;
     document.title = u.name + ' · Revision';
     const root = document.getElementById('app') || document.body;
     root.innerHTML = '';
-
-    root.appendChild(h('header', { class: 'page-head' },
-      h('span', { class: 'eyebrow', text: u.subject === 'maths' ? subj.name + ' · ' + u.short : subj.name }),
-      h('h1', { text: u.subject === 'maths' ? u.name.replace(/^Unit \d+: /, '') : u.name }),
-      h('p', { text: u.blurb })));
 
     root.appendChild(h('nav', { class: 'crumbs' },
       h('a', { href: '../index.html', text: 'Home' }),
@@ -218,33 +231,56 @@ const Nav = (() => {
       h('span', { text: '/' }),
       h('span', { class: 'here', text: u.short })));
 
-    const main = h('main');
-    root.appendChild(main);
-    main.appendChild(xpStrip());
+    // What every live exercise shares, said once.
+    const live = u.exercises.filter(e => !e.soon);
+    // The year most exercises share; only the odd ones out show their own.
+    const years = live.map(yearOf).filter(Boolean);
+    const tally = years.reduce((t, y) => t.set(y, (t.get(y) || 0) + 1), new Map());
+    const [topYear, topCount] = [...tally].sort((a, b) => b[1] - a[1])[0] || [null, 0];
+    const common = {
+      year: topCount > live.length / 2 ? topYear : null,
+      challenge: false
+    };
+    // A challenge on every exercise of the common year is said once. An odd
+    // one out, such as W15 (Year 9 throughout), carries its own year badge.
+    const usual = live.filter(e => yearOf(e) === common.year);
+    common.challenge = usual.length > 1 && usual.every(e => e.challenge);
+    const facts = [
+      u.subject === 'maths' ? u.short : null,
+      live.length && live.every(e => e.year) ? 'Year 7 and Year 8 topics'
+        : common.year && common.challenge ? `${common.year}, each with a ★ Year 9 challenge`
+        : common.year
+    ].filter(Boolean);
 
     const p = Manifest.progress(u.key);
-    main.appendChild(progressBar(u.subject === 'maths' ? 'This unit' : 'This subject', p.stars, p.max));
+    root.appendChild(h('header', { class: 'unit-head' },
+      h('div', { class: 'unit-title' },
+        h('h1', { text: title }),
+        h('p', { text: u.blurb }),
+        facts.length ? h('p', { class: 'unit-facts', text: facts.join(' · ') }) : null),
+      h('div', { class: 'unit-side' },
+        h('span', { class: 'home-stars', text: `★ ${p.stars} of ${p.max}` }),
+        xpStrip())));
+
+    const main = h('main', { class: 'home unit' });
+    root.appendChild(main);
 
     // Science subjects are laid out by curriculum sub-strand, each with its
     // Year 7 topic before the Year 8 one it leads into.
     const strands = [...new Set(u.exercises.map(ex => ex.strand).filter(Boolean))];
-    // A lone sub-strand is still named, unless it just repeats the subject's name.
-    if (strands.length > 1 || (strands.length === 1 && strands[0].toLowerCase() !== u.name.toLowerCase())) {
-      for (const st of strands) {
-        main.appendChild(h('h2', { class: 'strand-head', text: st }));
-        const grid = h('div', { class: 'grid' });
-        for (const ex of u.exercises.filter(e => e.strand === st)) grid.appendChild(exerciseCard(ex, '../'));
-        main.appendChild(grid);
-      }
-    } else {
-      const grid = h('div', { class: 'grid' });
-      for (const ex of u.exercises) grid.appendChild(exerciseCard(ex, '../'));
-      main.appendChild(grid);
+    const named = strands.length > 1 || (strands.length === 1 && strands[0].toLowerCase() !== u.name.toLowerCase());
+    const groups = named ? strands.map(st => [st, u.exercises.filter(e => e.strand === st)]) : [[null, u.exercises]];
+
+    const cols = h('div', { class: 'home-cols unit-cols' + (groups.length === 1 ? ' single' : ''), style: `--cols:${groups.length}` });
+    for (const [name, list] of groups) {
+      cols.appendChild(h('section', { class: 'home-col' },
+        name ? h('div', { class: 'home-col-head' }, h('h2', { text: name })) : null,
+        h('ul', { class: 'home-list' }, list.map(ex => exerciseItem(ex, common)))));
     }
+    main.appendChild(cols);
+    wireNotes(cols);
 
-    main.appendChild(h('a', { class: 'back-link', href: '../index.html#' + u.subject }, '← All ' + subj.name.toLowerCase()));
-
-    root.appendChild(h('footer', { class: 'page-foot', text: 'Revision · ' + u.name }));
+    root.appendChild(h('footer', { class: 'page-foot home-foot', text: 'Revision · ' + u.name }));
   }
 
   return { renderHome, renderUnit };
