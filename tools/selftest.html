@@ -148,6 +148,9 @@
               }
             }
           });
+        } else if (p.kind === 'home') {
+          if (doc.querySelectorAll('.home-row').length === 0) problems.push('no sections listed');
+          if (doc.querySelectorAll('.home-note').length !== doc.querySelectorAll('.home-row').length) problems.push('a section has no note');
         } else if (p.kind === 'setup') {
           if (!doc.querySelector('.paper-chip')) problems.push('no set-up options rendered');
         } else if (doc.querySelectorAll('.card').length === 0) {

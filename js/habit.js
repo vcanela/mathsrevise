@@ -61,7 +61,8 @@ const Habit = (() => {
   }
 
   /**
-   * The panel shown on the home page.
+   * The strip on the home page: one row with today's mixes, this week's dots,
+   * and the practice record behind a small pop-up once there is one.
    * `base` is the path prefix back to the site root.
    */
   function panel(base) {
@@ -70,35 +71,26 @@ const Habit = (() => {
     const done = MRG.practisedToday();
     const sum = MRG.habitSummary();
 
-    const box = h('section', { class: 'habit' + (done ? ' habit-done' : '') });
-
-    box.appendChild(h('div', { class: 'habit-main' },
-      h('div', { class: 'habit-text' },
-        h('h2', { text: done ? 'Practice done for today' : "Today's practice" }),
-        h('p', { class: 'habit-sub', text: done
-          ? 'Tomorrow is what counts. Go again now if you want more, but the day is already in.'
-          : 'Five questions, about two minutes, mixed across the topics you have seen least recently. Any subject counts.' })),
-      // One mix per subject; finishing either counts as today's practice.
+    return h('section', { class: 'habit' + (done ? ' habit-done' : '') },
+      h('h2', { class: 'habit-title', text: done ? 'Done for today' : "Today's practice" }),
+      // One mix per subject; finishing any counts as today's practice.
       h('div', { class: 'habit-go' },
         Manifest.SUBJECTS.filter(s => Manifest.count(s.id) > 0).map((s, i) =>
           h('a', {
             class: 'tool-btn' + (i === 0 && !done ? ' primary' : ''),
             href: base + 'practice.html?subject=' + s.id
-          }, s.name + ' mix')))));
-
-    box.appendChild(h('div', { class: 'habit-week' },
-      weekDots(wk),
-      h('span', { class: 'habit-weekline', text: weekLine(wk, done) })));
-
-    // The long view, but only once there is something to look at.
-    if (sum.total > 0) {
-      const cal = h('details', { class: 'habit-cal' },
-        h('summary', { text: `Practice record · ${sum.total} ${sum.total === 1 ? 'day' : 'days'} so far` }),
-        calendarGrid(10));
-      box.appendChild(cal);
-    }
-
-    return box;
+          }, s.name + ' mix'))),
+      h('div', { class: 'habit-week' },
+        weekDots(wk),
+        h('span', { class: 'habit-weekline', text: weekLine(wk, done) }),
+        // The long view, but only once there is something to look at.
+        sum.total > 0
+          ? h('details', { class: 'pop pop-record' },
+              h('summary', { text: 'Record' }),
+              h('div', { class: 'pop-note' },
+                h('p', { class: 'pop-head', text: `Practice record · ${sum.total} ${sum.total === 1 ? 'day' : 'days'} so far` }),
+                calendarGrid(10)))
+          : null));
   }
 
   return { panel, weekDots, weekLine, calendarGrid };

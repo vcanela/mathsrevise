@@ -115,7 +115,7 @@ ago. Fixed sets (`?set=N`) ignore this, so they stay identical for a whole class
 ## Layout
 
 ```
-index.html              home page (rendered from the manifest)
+index.html              home page: subjects side by side, each section's details on a note (rendered from the manifest)
 practice.html           the daily mix (?subject=maths or ?subject=science)
 paper.html              the timed paper (maths)
 units/unit-N.html       one per maths unit
@@ -369,7 +369,7 @@ a different one (the shuffle button) and `?set=N` seeds it identically for every
 how a class can be given the same practice.
 
 **Regularity is a weekly target, not a streak.** The goal is four days a week, resetting every
-Monday, shown as seven dots plus a calendar of recent weeks. A streak is a number you can
+Monday, shown as seven dots, with a calendar of recent weeks behind the "Record" link. A streak is a number you can
 lose, and the students most likely to lose one — away for a weekend, off ill, on holiday over
 a term break — are exactly the ones worth keeping. A weekly target costs a missed day and
 nothing more, and the calendar gives the satisfying part of a streak with no failure state.
@@ -384,7 +384,7 @@ encouragement: effort XP is capped per day, so it is literally true.
 XP, stars, best scores and practice days live in `localStorage` on the student's own device.
 Nothing is sent anywhere and there is no account. Levels unlock a timer (level 2), a tighter
 countdown (level 3) and the harder question sets (level 4). "Reset progress on this device"
-is on the home page.
+is under "What is this?" on the home page.
 
 Star XP is awarded once per star tier per exercise, as before. On top of that there is a small
 **effort XP** award for finishing any set, so the bar still moves for a student who has already
