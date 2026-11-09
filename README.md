@@ -288,10 +288,20 @@ IBM Plex Mono in the answer boxes. MathJax sets formulas in a serif face, so the
 them is serif too and the two sit together rather than clashing.
 
 Answers are fill-in-the-blank boxes ruled in ochre underneath, multiple choice is lettered
-a) b) c) d) as in a printed exercise, and marking uses pen colours: a green or red rule down
-the margin of the card, a small-caps verdict, and the working set in italic like a note in
-the margin. Colours are all custom properties, and the diagrams read the same tokens, so
-dark mode needs nothing extra from a diagram author.
+a) b) c) d) as in a printed exercise, and marking uses pen colours: a teacher's mark written
+over the card's top right corner (a tick, a slash for "not yet", or a circled H for answered
+with help), the verdict as a rubber stamp, and the working set in italic like a note in the
+margin. Colours are all custom properties, and the diagrams read the same tokens, so dark mode
+needs nothing extra from a diagram author.
+
+**A study desk.** Question cards and worked examples are sheets lying on the desk, with lifted
+corners; a "one like it" follow-up is a second sheet tucked under the one it came from. Smaller
+boxes are paper objects chosen for their job: nudges and Remember tips are sticky notes, Learn it
+cards are index cards, reading passages sit in a cream mount, model answers are deckled paper,
+and the daily panel is a pinned note whose pin turns green once practice is done. Paper objects
+keep dark ink in both themes (dimmed, not inverted, in the dark), with text contrast of at least
+4.5:1; the question sheets themselves follow the theme. Nothing long tilts, and nothing with
+maths or an input in it tilts at all. All of it is CSS, with no images, and it flattens for print.
 
 ## Timed paper
 

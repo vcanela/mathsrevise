@@ -86,6 +86,9 @@
   --pin:        #c63b2c;
   --pin-lo:     #6d1a12;
   --paper-shadow: 0 1px 2px rgba(0, 0, 0, .12), 0 8px 16px -10px var(--lift);
+  /* Question cards and worked examples: sheets lying flat on the desk. */
+  --lift-soft:  rgba(40, 32, 18, 0.20);
+  --sheet-shadow: 0 1px 2px rgba(0, 0, 0, .10), 0 3px 8px -4px var(--lift-soft);
 
   --radius:   4px;
   --radius-s: 3px;
@@ -155,6 +158,7 @@
     --card-line:  rgba(40, 80, 140, 0.24);
     --card-rule:  rgba(150, 45, 45, 0.55);
     --lift:       rgba(0, 0, 0, 0.65);
+    --lift-soft:  rgba(0, 0, 0, 0.55);
 
     --shadow: 0 1px 1px rgba(0, 0, 0, .3), 0 8px 22px -10px rgba(0, 0, 0, .6);
   }
@@ -573,11 +577,10 @@ main {
 
 .example {
   background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
+  border-radius: 2px;
   padding: 1.15rem 1.3rem 1.2rem;
-  margin-bottom: 0.9rem;
-  box-shadow: var(--shadow);
+  margin-bottom: 1.1rem;
+  box-shadow: var(--sheet-shadow);
   position: relative;
 }
 /* The printed rule that runs under a worked-example heading. */
@@ -713,24 +716,46 @@ main {
 .qlist { display: flex; flex-direction: column; gap: 0.85rem; }
 
 .qcard {
-  position: relative;
+  position: relative; z-index: 1;
   scroll-margin-top: 1rem;
   background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
+  border-radius: 2px;
   padding: 1.05rem 1.2rem 1.1rem;
-  box-shadow: var(--shadow);
+  box-shadow: var(--sheet-shadow);
   transition: box-shadow .2s ease;
 }
-/* Marked in pen down the margin. */
-.qcard.was-right::before,
-.qcard.was-wrong::before {
-  content: '';
-  position: absolute; left: -1px; top: -1px; bottom: -1px;
-  width: 3px; border-radius: var(--radius) 0 0 var(--radius);
+/* A sheet on the desk: a shadow under each lifted bottom corner, drawn just
+   below the card. Worked examples are sheets too. */
+.qcard::after, .example::after {
+  content: ''; position: absolute; left: 3%; right: 3%; top: 100%; height: 9px; pointer-events: none;
+  background:
+    radial-gradient(ellipse 32% 100% at 10% 0, var(--lift-soft), transparent 72%),
+    radial-gradient(ellipse 32% 100% at 90% 0, var(--lift-soft), transparent 72%);
 }
-.qcard.was-right::before { background: var(--good); }
-.qcard.was-wrong::before { background: var(--bad); }
+
+/* The teacher's mark, in pen, running off the top right corner: a tick, a
+   slash for "not yet", or a circled H for answered with help. Each stroke is
+   written on, unless the device asks for less motion. */
+.qmark {
+  position: absolute; top: -14px; right: -10px; z-index: 2;
+  width: 52px; height: 48px; overflow: visible; pointer-events: none;
+  fill: none; stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round;
+  transform: rotate(-4deg);
+}
+.qmark.right  { color: var(--good); }
+.qmark.wrong  { color: var(--bad); }
+.qmark.helped { color: var(--brand); }
+.qmark path { stroke: currentColor; stroke-dasharray: 1; stroke-dashoffset: 1; animation: pen .38s cubic-bezier(.4, .1, .3, 1) forwards; }
+.qmark text {
+  fill: currentColor; stroke: none; opacity: 0; animation: ink .3s .3s forwards;
+  font-family: var(--font-serif); font-style: italic; font-weight: 600;
+}
+@keyframes pen { to { stroke-dashoffset: 0; } }
+@keyframes ink { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .qmark path { animation: none; stroke-dashoffset: 0; }
+  .qmark text { animation: none; opacity: 1; }
+}
 .qcard.nudge { animation: nudge .35s ease; }
 @keyframes nudge { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 
@@ -1038,20 +1063,17 @@ main {
 }
 
 /* A question answered by reading the working: neither right nor wrong. */
-.qcard.was-helped::before {
-  content: '';
-  position: absolute; left: -1px; top: -1px; bottom: -1px;
-  width: 3px; background: var(--brand);
-  border-radius: var(--radius) 0 0 var(--radius);
-}
 .qcard.was-helped .qfeedback { color: var(--ink-soft); }
 .qcard.was-helped .qfeedback strong { color: var(--brand-ink); }
 
-/* The follow-up card, set slightly in from its parent. */
+/* The follow-up card: a second sheet, tucked under the one it came from. */
 .qcard-follow {
-  margin-left: 1.5rem;
-  border-left: 2px solid var(--accent-soft);
+  z-index: 0;
+  margin-top: -1.3rem; margin-left: 1.3rem;
 }
+.qcard.qcard-follow { padding-top: 1.7rem; }
+/* Its mark sits below the overlap, where it can be seen. */
+.qcard-follow .qmark { top: 0.5rem; }
 .qnum-follow {
   background: var(--surface-2);
   border-color: var(--rule);
@@ -1067,7 +1089,7 @@ main {
 }
 
 @media (max-width: 600px) {
-  .qcard-follow { margin-left: 0.6rem; }
+  .qcard-follow { margin-left: 0.7rem; }
 }
 
 /* ── Sort into groups ─────────────────────────────────────────────────────── */
@@ -1214,7 +1236,7 @@ main {
 .qfeedback .work { color: var(--ink-soft); font-style: italic; }
 
 .pts {
-  position: absolute; right: 1rem; top: 0.55rem;
+  position: absolute; right: 3.4rem; top: 0.55rem;
   font-family: var(--font-mono);
   font-size: 0.85rem; font-weight: 600;
   pointer-events: none;
@@ -1454,7 +1476,10 @@ mjx-container[display="true"] { margin: 0.6em 0 !important; }
   body { background: #fff; color: #000; }
   .qcard, .card, .example { break-inside: avoid; box-shadow: none; }
   .help-step, .paper-note, .hint, .learn-card, .passage, .habit { box-shadow: none; transform: none; border: 1px solid #999; }
-  .help-step::after, .paper-note::after, .hint::after, .habit::before { display: none; }
+  .help-step::after, .paper-note::after, .hint::after, .habit::before, .qcard::after, .example::after { display: none; }
+  .qcard, .example { border: 1px solid #999; }
+  .qmark path { animation: none; stroke-dashoffset: 0; }
+  .qmark text { animation: none; opacity: 1; }
   .write-model-wrap { filter: none; }
   .passage { margin: 0.6rem 0; }
   .page-head { border-bottom: 2px solid #000; }

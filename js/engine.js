@@ -760,6 +760,7 @@ const Exercise = (() => {
           input.lock();
           submit.disabled = true;
           card.classList.add('answered', 'was-helped');
+          markCard(card, 'helped');
           fb.className = 'qfeedback';
           fb.innerHTML = '<strong>Answered with help</strong>' +
             'No marks for this one, and none lost. Try the next one to earn them.';
@@ -813,6 +814,7 @@ const Exercise = (() => {
       input.lock();
       submit.disabled = true;
       card.classList.add('answered', res.ok ? 'was-right' : 'was-wrong');
+      markCard(card, res.ok ? 'right' : 'wrong');
 
       // A follow-up is a second chance, so getting it wrong costs nothing.
       // Charging for it would make "try one like it" something to avoid.
@@ -842,6 +844,23 @@ const Exercise = (() => {
     }
 
     return { card, focus: input.focus, label: n };
+  }
+
+  /**
+   * The teacher's mark in the card's top right corner: a tick, a slash for
+   * "not yet", or a circled H for answered with help. Drawn as pen strokes,
+   * so the CSS can animate each one being written.
+   */
+  const MARKS = {
+    right:  '<path pathLength="1" d="M7 25 C11 28 14 32 18 38 C24 25 32 14 44 6"/>',
+    wrong:  '<path pathLength="1" d="M13 38 C21 27 30 17 39 7"/>',
+    helped: '<path pathLength="1" d="M26 7 C14 6 7 14 7 24 C7 34 15 41 25 41 C35 41 42 33 42 23 C42 14 35 7 26 8"/>' +
+            '<text x="24.5" y="30" font-size="17" text-anchor="middle">H</text>'
+  };
+  function markCard(card, kind) {
+    const old = card.querySelector(':scope > .qmark');
+    if (old) old.remove();
+    card.insertAdjacentHTML('beforeend', `<svg class="qmark ${kind}" viewBox="0 0 48 44" aria-hidden="true">${MARKS[kind]}</svg>`);
   }
 
   function floatPoints(card, pts) {
@@ -1315,5 +1334,5 @@ const Exercise = (() => {
     MJ.typeset();
   }
 
-  return { run, Inputs, h, esc };
+  return { run, Inputs, h, esc, markCard };
 })();

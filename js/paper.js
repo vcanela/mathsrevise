@@ -471,6 +471,7 @@ const Paper = (() => {
       p.ok = !!res.ok;
       p.inTime = p.last === null || p.last <= totalMs;
       const q = p.c.card && p.it.parts[p.it.cards.indexOf(p.c)].q;
+      Exercise.markCard(p.c.card, p.ok ? 'right' : 'wrong');
       p.c.fb.className = 'qfeedback ' + (p.ok ? 'good' : 'bad');
       p.c.fb.innerHTML = (p.ok ? '<strong>Correct' + (p.inTime ? '' : ', after time') + '</strong>' : '<strong>Not quite</strong>' + (res.correctHTML || '')) +
         (q.explain ? (p.ok ? '' : '<br>') + q.explain : '');
