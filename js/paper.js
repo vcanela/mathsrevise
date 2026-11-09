@@ -139,14 +139,15 @@ const Paper = (() => {
     document.title = 'Timed Paper · Revision';
     root = document.getElementById('app') || document.body;
     root.innerHTML = '';
-    root.appendChild(h('header', { class: 'page-head' },
-      h('span', { class: 'eyebrow', text: eyebrow }),
-      h('h1', { text: 'Timed Paper' }),
-      h('p', { text: 'Practise sharing your time across a whole paper, so no marks are left unclaimed at the end.' })));
     root.appendChild(h('nav', { class: 'crumbs' },
       h('a', { href: 'index.html', text: 'Home' }), h('span', { text: '/' }),
       h('a', { href: 'index.html#maths', text: 'Maths' }), h('span', { text: '/' }),
       h('span', { class: 'here', text: 'Timed paper' })));
+    root.appendChild(h('header', { class: 'unit-head' },
+      h('div', { class: 'unit-title' },
+        h('h1', { text: 'Timed Paper' }),
+        h('p', { text: 'Practise sharing your time across a whole paper, so no marks are left unclaimed at the end.' }),
+        h('p', { class: 'unit-facts', text: eyebrow }))));
     main = h('main', { class: 'paper' });
     root.appendChild(main);
     root.appendChild(h('footer', { class: 'page-foot', text: 'Revision · Timed paper' }));

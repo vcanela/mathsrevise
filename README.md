@@ -301,6 +301,13 @@ with help), the verdict as a rubber stamp, and the working set in italic like a 
 margin. Colours are all custom properties, and the diagrams read the same tokens, so dark mode
 needs nothing extra from a diagram author.
 
+**Page layout.** Home, unit and exercise pages share one compact header: breadcrumbs, the title,
+a line about it, a facts line, and a small XP bar. On an exercise page, Learn it and the worked
+examples are two buttons side by side. The examples start open on a first visit and closed once
+the exercise has been done, so a returning student finds question 1 on the first screen; a
+student's own choice is remembered. "Your turn" and the progress strip stay pinned to the top
+while the questions scroll, and the results come up as a pinned note.
+
 **A study desk.** Question cards and worked examples are sheets lying on the desk, with lifted
 corners; a "one like it" follow-up is a second sheet tucked under the one it came from. Smaller
 boxes are paper objects chosen for their job: nudges and Remember tips are sticky notes, Learn it

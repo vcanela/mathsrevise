@@ -529,6 +529,18 @@ main.home { margin-top: 1.2rem; margin-bottom: 1rem; }
 .results-week strong { color: var(--accent-ink); }
 
 /* ── Worked examples: set like a textbook ─────────────────────────────────── */
+/* Learn it and the worked examples sit side by side as two buttons; each
+   opens its content in place, below them. */
+.study { margin: 0.4rem 0 1.4rem; }
+.study-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.study .examples { margin: 0; }
+.study .learn-body, .study .examples-body { margin-top: 1rem; }
+.study-bar .examples-toggle {
+  margin: 0; padding: 0.45rem 0.85rem;
+  border: 1px solid var(--rule); border-radius: var(--radius-s); background: var(--surface);
+  letter-spacing: 0.08em;
+}
+.study-bar .examples-toggle.open { border-color: var(--brand); color: var(--brand-ink); background: var(--brand-soft); }
 .examples { margin-bottom: 2rem; }
 .examples-toggle {
   display: flex; align-items: center; gap: 0.5rem;
@@ -554,7 +566,7 @@ main.home { margin-top: 1.2rem; margin-bottom: 1rem; }
    Sticky notes, index cards, mounted pages and pinned notes keep dark ink in
    either theme: the paper is dimmed in the dark, not inverted. These set the
    ink and pen colours for everything inside them. */
-.help-step, .paper-note, .hint, .learn-card, .passage, .write-model, .habit, .home-note, .pop-note {
+.help-step, .paper-note, .hint, .learn-card, .passage, .write-model, .habit, .home-note, .pop-note, .results {
   --ink: #1f2427; --ink-soft: #3b4448; --ink-faint: #555f64;
   --good: #245a3a; --bad: #8e2a20; --brand: #0f5c63; --brand-ink: #0a4249;
   --brand-soft: #dcebe9; --accent: #a9640f; --accent-ink: #7d4908;
@@ -732,22 +744,18 @@ main.home { margin-top: 1.2rem; margin-bottom: 1rem; }
 }
 
 /* ── Section heading with a rule running off to the right ─────────────────── */
-.section-head {
-  display: flex; align-items: baseline; gap: 0.9rem;
-  margin: 0 0 1rem;
+/* "Your turn" and the progress strip, pinned to the top while the questions
+   scroll past, so "3 of 10 answered" is always in view. */
+.turn-bar {
+  position: sticky; top: 0; z-index: 15;
+  display: flex; align-items: center; gap: 0.5rem 1rem;
+  margin: 0 0 1rem; padding: 0.55rem 0.8rem;
+  background: var(--surface); border-radius: 2px; box-shadow: var(--sheet-shadow);
 }
-.section-head h2 {
-  font-family: var(--font-serif);
-  font-size: 1.3rem; font-weight: 600; letter-spacing: -0.01em;
-  white-space: nowrap;
-}
-.section-head::after {
-  content: '';
-  flex: 1; height: 1px;
-  background: var(--rule);
-  align-self: center;
-}
-.qcount { color: var(--ink-faint); white-space: nowrap; }
+.turn-bar h2 { font-size: 1.1rem; font-weight: 600; white-space: nowrap; }
+.turn-bar .progress { flex: 1; margin: 0; }
+/* Clear of the pinned bar when a link scrolls to the results. */
+.results { scroll-margin-top: 4.5rem; }
 
 /* ── Toolbar ──────────────────────────────────────────────────────────────── */
 .toolbar {
@@ -777,14 +785,6 @@ main.home { margin-top: 1.2rem; margin-bottom: 1rem; }
   background: var(--surface); color: var(--ink);
 }
 .tool-note { font-family: var(--font-sans); font-size: 0.8rem; color: var(--ink-faint); }
-.mode-flag {
-  font-family: var(--font-sans); font-size: 0.83rem; font-weight: 500;
-  color: var(--accent-ink); background: var(--accent-soft);
-  border: 1px solid var(--rule);
-  border-color: color-mix(in srgb, var(--accent) 28%, transparent);
-  border-radius: var(--radius-s);
-  padding: 0.45rem 0.85rem; margin-bottom: 1rem;
-}
 
 /* ── Progress strip ───────────────────────────────────────────────────────── */
 .progress {
@@ -810,7 +810,8 @@ main.home { margin-top: 1.2rem; margin-bottom: 1rem; }
 
 .qcard {
   position: relative; z-index: 1;
-  scroll-margin-top: 1rem;
+  /* Clear of the pinned progress bar when scrolled to. */
+  scroll-margin-top: 4.5rem;
   background: var(--surface);
   border-radius: 2px;
   padding: 1.05rem 1.2rem 1.1rem;
@@ -1344,21 +1345,20 @@ main.home { margin-top: 1.2rem; margin-bottom: 1rem; }
 
 /* ── Results: the marked cover sheet ──────────────────────────────────────── */
 .results {
-  margin-top: 1.6rem;
+  margin-top: 2rem;
   padding: 1.8rem 1.5rem;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  background: var(--sheet);
+  border-radius: 2px;
+  box-shadow: var(--paper-shadow);
   text-align: center;
   position: relative;
 }
+/* The results are a note pinned up at the end, like today's practice. */
 .results::before {
-  content: '';
-  position: absolute; inset: 6px;
-  border: 1px solid var(--rule-soft);
-  border-radius: 2px;
-  pointer-events: none;
+  content: ''; position: absolute; top: -5px; left: 50%; z-index: 1;
+  width: 18px; height: 18px; margin-left: -9px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 32%, var(--pin-hi) 0 12%, var(--pin) 45%, var(--pin-lo) 100%);
+  box-shadow: 3px 4px 4px rgba(0, 0, 0, .35);
 }
 .results-stars {
   font-size: 1.7rem; letter-spacing: 0.22em;
@@ -1379,13 +1379,6 @@ main.home { margin-top: 1.2rem; margin-bottom: 1rem; }
   color: var(--ink-faint); margin-top: 0.35rem;
 }
 .results-btns { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; margin-top: 1.2rem; }
-
-.back-link {
-  display: inline-block; margin-top: 1.8rem;
-  font-family: var(--font-sans); font-size: 0.87rem;
-  text-decoration: none; color: var(--ink-soft);
-}
-.back-link:hover { color: var(--brand); }
 
 /* ── Level-up ─────────────────────────────────────────────────────────────── */
 .lvl-modal {
@@ -1479,7 +1472,7 @@ mjx-container[display="true"] { margin: 0.6em 0 !important; }
 
 /* ── Print: a clean worksheet ─────────────────────────────────────────────── */
 @media print {
-  .toolbar, .qsubmit, .xpbar, .progress, .results-btns, .back-link, .tbar,
+  .toolbar, .qsubmit, .xpbar, .turn-bar, .results-btns, .tbar, .study-bar, .results::before,
   .examples-toggle, .lvl-modal { display: none !important; }
   body { background: #fff; color: #000; }
   .qcard, .example { break-inside: avoid; box-shadow: none; }

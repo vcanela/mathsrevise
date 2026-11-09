@@ -1018,7 +1018,12 @@ const Exercise = (() => {
   function examplesBlock(cfg) {
     if (!cfg.examples || !cfg.examples.length) return null;
     const wrap = h('section', { class: 'examples' });
-    const open = localStorage.getItem('mrg_ex_open_' + cfg.id) !== '0';
+    // Open on a first visit, when a worked example is worth reading before
+    // trying; closed once the exercise has been done, so the questions come
+    // first. A student's own choice, once made, is remembered.
+    let saved = null;
+    try { saved = localStorage.getItem('mrg_ex_open_' + cfg.id); } catch (_) {}
+    const open = saved === null ? !((MRG.getExercise(cfg.id) || {}).attempts > 0) : saved !== '0';
     const body = h('div', { class: 'examples-body', style: open ? '' : 'display:none' });
     const toggle = h('button', {
       type: 'button', class: 'examples-toggle' + (open ? ' open' : ''),
@@ -1026,9 +1031,9 @@ const Exercise = (() => {
         const now = body.style.display === 'none';
         body.style.display = now ? '' : 'none';
         toggle.classList.toggle('open', now);
-        localStorage.setItem('mrg_ex_open_' + cfg.id, now ? '1' : '0');
+        try { localStorage.setItem('mrg_ex_open_' + cfg.id, now ? '1' : '0'); } catch (_) {}
       }
-    }, 'Worked examples');
+    }, 'Worked examples', h('span', { class: 'learn-count', text: String(cfg.examples.length) }));
     wrap.appendChild(toggle);
     wrap.appendChild(body);
 
@@ -1142,12 +1147,6 @@ const Exercise = (() => {
     const root = document.getElementById('app') || document.body;
     root.innerHTML = '';
 
-    root.appendChild(h('header', { class: 'page-head' },
-      practice ? h('span', { class: 'eyebrow', text: cfg.eyebrow || 'Daily practice' })
-        : challenge ? h('span', { class: 'eyebrow', text: 'Year 9 challenge' }) : null,
-      h('h1', { text: cfg.title }),
-      h('p', { text: cfg.blurb || (unit ? unit.name : '') })));
-
     root.appendChild(practice
       ? h('nav', { class: 'crumbs' },
           h('a', { href: base + 'index.html', text: 'Home' }),
@@ -1160,19 +1159,34 @@ const Exercise = (() => {
           h('span', { text: '/' }),
           h('span', { class: 'here', text: cfg.title })));
 
+    // A compact header, as on the unit pages: the title, one line about it,
+    // and the facts (code, year, which set) on a line of their own.
+    const exInfo = practice ? null : Manifest.exercise(cfg.id);
+    const facts = practice ? [cfg.eyebrow || 'Daily practice'] : [
+      exInfo && (unit.subject === 'maths' ? `${unit.short} · Exercise ${exInfo.n}` : exInfo.label),
+      exInfo && (exInfo.year ? 'Year ' + exInfo.year : exInfo.years ? 'Years ' + exInfo.years : null),
+      challenge ? '★ Year 9 challenge set' : null
+    ];
+    if (difficulty === 'expert') facts.push('Expert mode: the hard set');
+    root.appendChild(h('header', { class: 'unit-head' },
+      h('div', { class: 'unit-title' },
+        h('h1', { text: cfg.title }),
+        h('p', { text: cfg.blurb || (unit ? unit.name : '') }),
+        h('p', { class: 'unit-facts', text: facts.filter(Boolean).join(' · ') })),
+      h('div', { class: 'unit-side' }, xpHeader())));
+
     const main = h('main');
     root.appendChild(main);
 
-    main.appendChild(xpHeader());
+    // Learn it and the worked examples side by side, each opening in place.
     page.base = base; page.id = cfg.id;
-    const learn = learnBlock(cfg);
-    if (learn) main.appendChild(learn);
-    const ex = examplesBlock(cfg);
-    if (ex) main.appendChild(ex);
+    const study = [learnBlock(cfg), examplesBlock(cfg)].filter(Boolean);
+    if (study.length) {
+      main.appendChild(h('section', { class: 'study' },
+        h('div', { class: 'study-bar' }, study.map(b => b.querySelector('.examples-toggle'))),
+        study));
+    }
 
-    main.appendChild(h('div', { class: 'section-head' },
-      h('h2', { text: practice ? 'Mixed questions' : 'Your turn' }),
-      h('span', { class: 'qcount', text: originalTotal + ' questions' })));
     main.appendChild(toolbar(cfg));
     if (practice && cfg.topics && cfg.topics.length) {
       main.appendChild(h('p', { class: 'practice-drawn' },
@@ -1184,14 +1198,11 @@ const Exercise = (() => {
         ]).flat()));
     }
 
-    if (difficulty === 'expert') {
-      main.appendChild(h('div', { class: 'mode-flag', text: 'Expert mode: these questions are the hard set.' }));
-    }
-
     const progress = h('div', { class: 'progress' },
       h('div', { class: 'progress-fill' }),
       h('span', { class: 'progress-text' }));
-    main.appendChild(progress);
+    main.appendChild(h('div', { class: 'turn-bar' },
+      h('h2', { text: practice ? 'Mixed questions' : 'Your turn' }), progress));
 
     const list = h('div', { class: 'qlist' });
     main.appendChild(list);
@@ -1219,11 +1230,6 @@ const Exercise = (() => {
 
     const results = h('section', { class: 'results', style: 'display:none' });
     main.appendChild(results);
-
-    main.appendChild(practice
-      ? h('a', { class: 'back-link', href: base + 'index.html' }, '← Back to all units')
-      : h('a', { class: 'back-link', href: base + unit.page },
-          '← Back to ' + unit.name));
 
     root.appendChild(h('footer', { class: 'page-foot',
       text: 'Revision · ' + (unit ? unit.name : cfg.footer || 'Daily practice') }));
