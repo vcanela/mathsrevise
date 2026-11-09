@@ -43,6 +43,10 @@
       { url: '../practice.html', kind: 'exercise', id: 'practice' },
       { url: '../practice.html?subject=science', kind: 'exercise', id: 'practice-science' },
       { url: '../practice.html?subject=english', kind: 'exercise', id: 'practice-english' },
+      // The timed paper: its set-up screen, then a short and a full paper in reading time.
+      { url: '../paper.html', kind: 'setup' },
+      { url: '../paper.html?length=short&pace=standard&units=1,2,3,4,5&diff=core&seed=11', kind: 'exercise', id: 'paper' },
+      { url: '../paper.html?length=full&pace=exam&units=2,4&diff=expert&seed=12', kind: 'exercise', id: 'paper' },
       ...Manifest.UNITS.map(u => ({ url: '../' + u.page, kind: 'unit' })),
       ...Manifest.live().flatMap(ex => sets.map(s => ({
         url: `../${ex.href}?set=${s}`, kind: 'exercise', id: ex.id
@@ -144,6 +148,8 @@
               }
             }
           });
+        } else if (p.kind === 'setup') {
+          if (!doc.querySelector('.paper-chip')) problems.push('no set-up options rendered');
         } else if (doc.querySelectorAll('.card').length === 0) {
           problems.push('no cards rendered');
         }

@@ -66,6 +66,15 @@ const Nav = (() => {
         stars(p.max ? Math.round((p.stars / p.max) * 3) : 0)));
   }
 
+  /** The timed paper sits with the maths units: practice at managing time. */
+  function paperCard() {
+    return h('a', { class: 'card', href: 'paper.html' },
+      h('div', { class: 'card-mark', text: 'T' }),
+      h('h3', { text: 'Timed Paper' }),
+      h('p', { text: 'A mixed paper against one clock. Plan your time across every question, then see where it actually went.' }),
+      h('div', { class: 'card-foot' }, h('span', { text: 'Short or full · 15 to 38 minutes' })));
+  }
+
   function resetButton() {
     return h('button', {
       type: 'button', class: 'tool-btn',
@@ -110,7 +119,8 @@ const Nav = (() => {
           h('span', { class: 'qcount', text: `${Manifest.count(s.id)} exercises` })),
         h('p', { class: 'subject-blurb', text: s.blurb }),
         progressBar(s.name, p.stars, p.max),
-        h('div', { class: 'grid' }, Manifest.units(s.id).map(unitCard))));
+        h('div', { class: 'grid' }, Manifest.units(s.id).map(unitCard),
+          s.id === 'maths' ? paperCard() : null)));
     }
 
     main.appendChild(h('div', { class: 'toolbar', style: 'margin-top:2rem' }, resetButton()));

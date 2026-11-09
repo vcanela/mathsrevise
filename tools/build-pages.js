@@ -122,6 +122,15 @@ write('practice.html', shell({
   boot: 'Practice.start();'
 }));
 
+// ── Timed paper ──────────────────────────────────────────────────────────────
+// Maths only, so it loads the maths topic files.
+write('paper.html', shell({
+  title: 'Timed Paper · Revision',
+  up: '',
+  scripts: [...CORE, ...Manifest.units('maths').flatMap(u => u.topicFiles.map(f => 'topics/' + f)), 'paper'],
+  boot: 'Paper.start();'
+}));
+
 // ── Unit pages ───────────────────────────────────────────────────────────────
 for (const u of Manifest.UNITS) {
   write(u.page, shell({

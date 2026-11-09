@@ -117,6 +117,7 @@ ago. Fixed sets (`?set=N`) ignore this, so they stay identical for a whole class
 ```
 index.html              home page (rendered from the manifest)
 practice.html           the daily mix (?subject=maths or ?subject=science)
+paper.html              the timed paper (maths)
 units/unit-N.html       one per maths unit
 exercises/unit-N/…      one per maths exercise; each is a ~20 line shell
 science/year-N.html     one per science year
@@ -128,6 +129,7 @@ js/
   engine.js             renders an exercise page: cards, inputs, scoring, results
   nav.js                renders the home and unit pages
   practice.js           picks what is due and builds the mixed session
+  paper.js              the timed paper: builds it, times it, and the reflection after
   habit.js              the daily panel: weekly target and practice calendar
   game.js               XP, levels, stars and practice days, in localStorage
   timer.js              the per-question countdown bar
@@ -149,6 +151,7 @@ js/
     science-y8.js       Year 8 science
 tools/
   check-topics.js       generates ~200k questions and checks them (node)
+  check-paper.js        builds ~3,000 timed papers and checks their sections and marks (node)
   selftest.html         loads every page in a browser and checks it renders
   check-diagrams.html   measures every diagram against its own viewBox
   review-science.html   every authored science item and its answer, for a teacher to read
@@ -289,6 +292,43 @@ a) b) c) d) as in a printed exercise, and marking uses pen colours: a green or r
 the margin of the card, a small-caps verdict, and the working set in italic like a note in
 the margin. Colours are all custom properties, and the diagrams read the same tokens, so
 dark mode needs nothing extra from a diagram author.
+
+## Timed paper
+
+`paper.html` is practice at managing time in an assessment, for maths. The skill is budgeting,
+not speed: see the whole paper, give each question time in proportion to its marks, notice when
+one runs over, and move on so the easy marks at the end are not left unclaimed. So there are no
+points for going fast, only marks.
+
+**The paper.** Section A is one question each from Units 1 to 5, early in a topic's set (1 mark
+each). Section B is parts (a), (b) and (c) from one topic, one from each third of its set, so
+they rise in difficulty (1 mark a part). Section C is one Unit 6 problem at core difficulty,
+worth 5 marks, all or nothing: it is the question that tempts a student to stay too long. A
+short paper is 4 + 2 + 1 questions (15 marks), a full paper 8 + 4 + 1 (25 marks).
+
+**The clock.** Every question's budget is its marks times the pace: Relaxed 1.5 minutes a mark
+(about an IB maths paper), Standard 1.2, Exam 1.0. The paper time is the total, rounded up:
+15 to 23 minutes for a short paper, 25 to 38 for a full one. These rates are a first guess,
+to be tuned once students have sat a few.
+
+**The flow.** Reading time shows every question, inert, with its marks and budget, and asks
+four predictions: which question first, which last, which will take longest, and whether they
+will finish in time. Then the clock starts. One question is on screen at a time, so time spent
+can be measured; students move freely, flag questions to come back to, and can change any
+answer until they hand in. Nothing is marked before then. Past 1.5 times a question's budget a
+quiet note suggests flagging it and moving on. When time runs out a banner says so, but the
+paper stays open: anything answered afterwards counts as after time.
+
+**The results.** Marks in time and after time; each prediction against what happened; a bar per
+question of time spent against budget; one or two lessons from simple rules (blank questions at
+time-up and what they would have cost, the worst overspend as a share of time and marks, working
+straight through, time to spare); and a line against the last paper, kept in the browser. Then
+every answer, marked, with the usual working. A paper counts as the day's practice and earns XP
+from the in-time marks.
+
+**Sharing.** `paper.html?length=full&pace=exam&units=1,2,3&diff=core&seed=4821` is one specific
+paper, the same for everyone; the reading screen has a button that copies it.
+`node tools/check-paper.js` builds about 3,000 papers and checks every one.
 
 ## Daily practice and keeping it up
 
