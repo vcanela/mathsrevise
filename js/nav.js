@@ -61,9 +61,9 @@ const Nav = (() => {
       h('aside', { class: 'home-note' },
         doodle(key),
         h('h3', { text: full }),
+        h('div', { class: 'note-btns' }, h('a', { class: 'tool-btn primary', href }, 'Open')),
         h('p', { text: blurb }),
-        h('p', { class: 'home-meta', text: meta }),
-        h('a', { class: 'tool-btn primary', href }, 'Open')));
+        h('p', { class: 'home-meta', text: meta })));
   }
 
   function unitItem(u) {
@@ -102,22 +102,54 @@ const Nav = (() => {
   }
 
   /**
-   * Rows that bring out a note: on hover and keyboard focus through CSS, and
-   * where there is no hover, on a first tap, with the second tap going in. A
-   * tap elsewhere, or Escape, puts notes and pop-ups away.
+   * Rows that bring out a note. With a mouse, the note follows the pointer
+   * with a little intent: it stays up briefly after the pointer leaves its
+   * row, and another row only takes over once the pointer rests on it, so
+   * the trip to the note's buttons can cross a neighbouring row. Keyboard
+   * focus shows a note through CSS. Where there is no hover, a first tap
+   * shows the note and a second goes in. A tap elsewhere, or Escape, puts
+   * notes and pop-ups away.
    */
-  let wired = false;
+  const SHOW_DELAY = 200;      // ms resting on another row before it takes over
+  const HIDE_DELAY = 400;      // ms a note lingers after the pointer leaves
+  let wired = false, current = null, showTimer = null, hideTimer = null;
+
+  function closeAll(except) {
+    document.querySelectorAll('.home-item.open').forEach(li => { if (li !== except) li.classList.remove('open'); });
+    if (!except) current = null;
+  }
+  function openItem(li) {
+    clearTimeout(showTimer); clearTimeout(hideTimer);
+    closeAll(li);
+    li.classList.add('open');
+    current = li;
+  }
+
   function wireNotes(container) {
     const noHover = matchMedia('(hover: none)');
-    const closeAll = except => {
-      document.querySelectorAll('.home-item.open').forEach(li => { if (li !== except) li.classList.remove('open'); });
-    };
     container.addEventListener('click', ev => {
       const row = ev.target.closest('a.home-row');
       if (!row || !noHover.matches) return;
       const li = row.parentElement;
-      if (!li.classList.contains('open')) { ev.preventDefault(); closeAll(li); li.classList.add('open'); }
+      if (!li.classList.contains('open')) { ev.preventDefault(); openItem(li); }
     });
+    for (const li of container.querySelectorAll('.home-item')) {
+      if (!li.querySelector('.home-note')) continue;
+      li.addEventListener('pointerenter', ev => {
+        if (ev.pointerType === 'touch') return;
+        clearTimeout(showTimer);
+        if (li === current) { clearTimeout(hideTimer); return; }
+        // Nothing open yet: show at once. Another note open: wait to see
+        // whether the pointer is only passing through on its way there.
+        showTimer = setTimeout(() => openItem(li), current ? SHOW_DELAY : 0);
+      });
+      li.addEventListener('pointerleave', ev => {
+        if (ev.pointerType === 'touch') return;
+        clearTimeout(showTimer);
+        if (li !== current) return;
+        hideTimer = setTimeout(() => { if (current === li) closeAll(); }, HIDE_DELAY);
+      });
+    }
     if (wired) return;
     wired = true;
     document.addEventListener('click', ev => {
@@ -128,6 +160,12 @@ const Nav = (() => {
       if (ev.key !== 'Escape') return;
       closeAll();
       document.querySelectorAll('details.pop[open]').forEach(d => { d.open = false; });
+    });
+    // Coming back with the Back button restores the page as it was left, with
+    // the clicked row still focused and its note open. Start clean instead.
+    window.addEventListener('pageshow', () => {
+      closeAll();
+      if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
     });
   }
 
@@ -208,12 +246,12 @@ const Nav = (() => {
         stars(rec.stars || 0)),
       h('aside', { class: 'home-note' },
         h('h3', { text: ex.title }),
-        h('p', { text: ex.tag }),
-        h('p', { class: 'home-meta', text: [year, rec.attempts ? `best ${rec.bestScore} pts` : 'not started yet']
-          .filter(Boolean).join(' · ').replace(/^./, c => c.toUpperCase()) }),
         h('div', { class: 'note-btns' },
           h('a', { class: 'tool-btn primary', href }, 'Practise'),
-          ex.challenge ? h('a', { class: 'tool-btn', href: href + '?set=challenge' }, '★ Year 9 challenge') : null)));
+          ex.challenge ? h('a', { class: 'tool-btn', href: href + '?set=challenge' }, '★ Year 9 challenge') : null),
+        h('p', { text: ex.tag }),
+        h('p', { class: 'home-meta', text: [year, rec.attempts ? `best ${rec.bestScore} pts` : 'not started yet']
+          .filter(Boolean).join(' · ').replace(/^./, c => c.toUpperCase()) })));
   }
 
   function renderUnit(key) {

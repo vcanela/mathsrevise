@@ -393,7 +393,7 @@ main.home { margin-top: 1.2rem; margin-bottom: 1rem; }
   padding: 0.4rem 0.35rem; border-radius: 2px;
   color: var(--ink); text-decoration: none;
 }
-.home-row:hover, .home-item:focus-within .home-row, .home-item.open .home-row { background: var(--surface-2); }
+.home-row:hover, .home-item:has(:focus-visible) .home-row, .home-item.open .home-row { background: var(--surface-2); }
 .home-row:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
 .home-icon {
   flex: none; width: 1.6rem; height: 1.6rem; display: grid; place-items: center;
@@ -420,12 +420,14 @@ main.home { margin-top: 1.2rem; margin-bottom: 1rem; }
   transition: opacity .15s ease, visibility .15s;
 }
 .home-col:last-child .home-note { left: auto; right: calc(100% - 0.6rem); transform: rotate(1deg); }
-.home-item:hover .home-note, .home-item:focus-within .home-note, .home-item.open .home-note {
+/* Shown by the script on hover (with a little intent) or tap, and for keyboard
+   focus here; never for the focus a mouse click leaves behind. */
+.home-item:has(:focus-visible) .home-note, .home-item.open .home-note {
   visibility: visible; opacity: 1; pointer-events: auto;
 }
 .home-note h3 { font-family: var(--font-serif); font-size: 1rem; color: var(--ink); margin-bottom: 0.3rem; }
 .home-meta { margin-top: 0.45rem; font-weight: 600; color: var(--ink); }
-.home-note .tool-btn { margin-top: 0.7rem; }
+.home-note .note-btns { margin: 0.45rem 0 0.55rem; }
 .home-doodle { float: right; width: 46px; height: 46px; margin: -0.2rem -0.2rem 0.2rem 0.6rem; color: var(--brand-ink); }
 .home-doodle svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .home-foot { margin-top: 1rem; padding: 0.9rem 1.5rem 1.2rem; }
