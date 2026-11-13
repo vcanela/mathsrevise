@@ -120,9 +120,9 @@ const Practice = (() => {
       if (!all || !all.length) continue;
 
       // Spread the picks across the set rather than clustering at the easy end.
-      // Free writing stays on its own exercise page: it is too long for a
-      // quick mixed session.
-      const can = all.map((_, i) => i).filter(i => all[i].input.kind !== 'write');
+      // Free writing and programs stay on their own exercise pages: they are
+      // too long for a quick mixed session.
+      const can = all.map((_, i) => i).filter(i => !['write', 'code'].includes(all[i].input.kind));
       const idx = rng.shuffle(can).slice(0, Math.min(perTopic, can.length));
       idx.sort((a, b) => a - b);
       for (const i of idx) {

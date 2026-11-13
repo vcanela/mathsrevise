@@ -16,7 +16,8 @@ const Manifest = (() => {
   const SUBJECTS = [
     { id: 'maths',   name: 'Maths',   blurb: 'Number, algebra, geometry, and where they meet.' },
     { id: 'science', name: 'Science', blurb: 'Years 7 and 8, following the 2027 NZ Curriculum, grouped by subject.' },
-    { id: 'english', name: 'English', blurb: 'Years 7 and 8, following the 2026 NZ Curriculum: the words, grammar and reading skills behind your class work, with Year 9 challenges when you want more.' }
+    { id: 'english', name: 'English', blurb: 'Years 7 and 8, following the 2026 NZ Curriculum: the words, grammar and reading skills behind your class work, with Year 9 challenges when you want more.' },
+    { id: 'coding',  name: 'Coding',  blurb: 'Python from scratch for Years 9 and 10: reading, running, fixing and writing programs, following the NZ digital technologies progress outcomes.' }
   ];
 
   // `key` identifies a unit everywhere (topic files, URLs, progress). Maths
@@ -183,6 +184,32 @@ const Manifest = (() => {
       exercises: [
         { id: 'eo14', code: 'O14', slug: 'discussion', title: 'Language for Discussion and Argument', tag: 'Modal language, questions, respectful disagreement', years: '7–8', challenge: true }
       ]
+    },
+
+    // ── Coding ──────────────────────────────────────────────────────────────
+    // Python for Years 9–10, run in the page by Skulpt. The progress outcomes
+    // for computational thinking (PO4 to PO5) ask for inputs, outputs,
+    // sequence, selection with comparative and logical operators, variables
+    // of different data types, iteration, and organised testing and debugging.
+    {
+      key: 'basics', subject: 'coding', short: 'Python Basics', name: 'Python Basics', icon: '›',
+      blurb: 'Printing, strings, variables, types, input and decisions: the first programs.',
+      exercises: [
+        { id: 'cb1', code: 'C1', slug: 'output-strings', title: 'Output and Strings', tag: 'print, quotes, joining and reading errors', years: '9–10' },
+        { id: 'cb2', code: 'C2', slug: 'variables-types', title: 'Variables and Types', tag: 'Storing values, int, float, str, bool, f-strings', years: '9–10' },
+        { id: 'cb3', code: 'C3', slug: 'input-calculation', title: 'Input and Calculation', tag: 'Asking the user, converting what they type', years: '9–10', soon: true },
+        { id: 'cb4', code: 'C4', slug: 'decisions', title: 'Decisions', tag: 'if, elif, else, and, or, not', years: '9–10', soon: true }
+      ]
+    },
+    {
+      key: 'loops', subject: 'coding', short: 'Loops, Lists and Functions', name: 'Loops, Lists and Functions', icon: '↻',
+      blurb: 'Repeating, collecting and reusing: programs that do real work.',
+      exercises: [
+        { id: 'cl5', code: 'C5', slug: 'while-loops', title: 'While Loops', tag: 'Repeat until something changes', years: '9–10', soon: true },
+        { id: 'cl6', code: 'C6', slug: 'for-range', title: 'For Loops and range', tag: 'Counting, tables and turtle patterns', years: '9–10', soon: true },
+        { id: 'cl7', code: 'C7', slug: 'lists', title: 'Lists', tag: 'Collections, indexing, searching', years: '9–10', soon: true },
+        { id: 'cl8', code: 'C8', slug: 'functions', title: 'Functions', tag: 'def, parameters and return', years: '9–10', soon: true }
+      ]
     }
   ];
 
@@ -196,6 +223,14 @@ const Manifest = (() => {
       for (const ex of u.exercises) {
         ex.href  = `${u.dir}/exercise-${ex.n}.html`;
         ex.label = `${u.key}.${ex.n}`;
+      }
+    } else if (u.subject === 'coding') {
+      u.page = `coding/${u.key}.html`;
+      u.dir  = `coding/${u.key}`;
+      u.topicFiles = ['coding-' + u.key];
+      for (const ex of u.exercises) {
+        ex.label = ex.code;
+        ex.href  = `${u.dir}/${ex.slug}.html`;
       }
     } else if (u.subject === 'english') {
       u.page = `english/${u.key}.html`;

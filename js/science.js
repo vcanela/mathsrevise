@@ -227,7 +227,7 @@ const Sci = (() => {
   function word(rng, o) {
     return {
       prompt: o.prompt, note: o.note, tip: o.tip, tag: o.tag,
-      input: { kind: 'word', answer: o.answer, prefix: o.prefix, suffix: o.suffix, placeholder: o.placeholder, width: o.width },
+      input: { kind: 'word', answer: o.answer, exact: o.exact, prefix: o.prefix, suffix: o.suffix, placeholder: o.placeholder, width: o.width },
       explain: o.explain, learn: o.learn
     };
   }

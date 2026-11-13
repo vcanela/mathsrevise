@@ -40,7 +40,9 @@ const Nav = (() => {
     biology: '<path d="M9 39 C9 19 21 8 40 8 C40 28 29 39 9 39 Z"/><path d="M9 39 L33 15 M18 30 H26 M23 25 V18"/>',
     reading: '<path d="M24 14 C18 10 10 10 6 12 V36 C10 34 18 34 24 38 C30 34 38 34 42 36 V12 C38 10 30 10 24 14 Z"/><path d="M24 14 V38"/>',
     writing: '<path d="M10 38 L12 30 L34 8 L40 14 L18 36 Z"/><path d="M30 12 L36 18 M12 30 L18 36"/>',
-    oral: '<path d="M5 9 H28 V23 H16 L10 29 V23 H5 Z"/><path d="M22 27 H43 V39 H38 V44 L32 39 H22 Z"/>'
+    oral: '<path d="M5 9 H28 V23 H16 L10 29 V23 H5 Z"/><path d="M22 27 H43 V39 H38 V44 L32 39 H22 Z"/>',
+    basics: '<rect x="5" y="9" width="38" height="30" rx="2"/><path d="M5 16 H43 M11 24 L16 28 L11 32 M20 33 H29"/>',
+    loops: '<path d="M38 18 A15 15 0 1 0 39 30"/><path d="M38 8 V18 H28"/><path d="M19 22 H29 M19 28 H26"/>'
   };
   const doodle = key => h('span', { class: 'home-doodle', 'aria-hidden': 'true',
     html: `<svg viewBox="0 0 48 48">${DOODLES[key] || ''}</svg>` });

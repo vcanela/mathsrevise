@@ -41,7 +41,7 @@ global.localStorage = {
 };
 
 for (const f of ['js/rng.js', 'js/format.js', 'js/algebra.js', 'js/geometry.js',
-                 'js/diagrams.js', 'js/game.js', 'js/manifest.js', 'js/science.js']) {
+                 'js/diagrams.js', 'js/game.js', 'js/manifest.js', 'js/science.js', 'js/python.js']) {
   vm.runInThisContext(fs.readFileSync(path.join(ROOT, f), 'utf8'), { filename: f });
 }
 
@@ -182,6 +182,14 @@ function checkQuestion(where, q) {
       if (new Set(inp.markers).size !== inp.markers.length) fail(where, 'two labels share the same answer');
       break;
     }
+    case 'code': {
+      // Running the programs is check-coding.js's job; here, only the shape.
+      if (!inp.key || !/^[a-z0-9-]+$/.test(inp.key)) fail(where, 'code needs a key of lower-case letters, digits and hyphens: ' + inp.key);
+      if (!inp.model || !String(inp.model).trim()) fail(where, 'code needs a model program');
+      if (!Array.isArray(inp.tests) || !inp.tests.length) fail(where, 'code needs at least one test');
+      else inp.tests.forEach((t, i) => { if (typeof t.expect !== 'string') fail(where, `code test ${i + 1} has no expected output`); });
+      break;
+    }
     case 'write': {
       if (!inp.key || !/^[a-z0-9-]+$/.test(inp.key)) fail(where, 'write needs a key of lower-case letters, digits and hyphens: ' + inp.key);
       if (!Array.isArray(inp.checklist) || inp.checklist.length < 3) fail(where, 'write needs a checklist of 3+ points');
@@ -198,7 +206,7 @@ function checkQuestion(where, q) {
 
   // Authored science items lean entirely on their explanation: it is the
   // "Show me how" step and the feedback after a wrong answer.
-  if ((where.startsWith('s') || where.startsWith('e')) && !(q.explain && String(q.explain).trim())) fail(where, 'science or English question has no explanation');
+  if (/^[sec]/.test(where) && !(q.explain && String(q.explain).trim())) fail(where, 'science, English or coding question has no explanation');
 
   // Diagrams must draw without throwing and without emitting NaN coordinates.
   if (q.draw) {

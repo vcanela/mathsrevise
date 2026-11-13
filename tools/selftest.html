@@ -43,6 +43,7 @@
       { url: '../practice.html', kind: 'exercise', id: 'practice' },
       { url: '../practice.html?subject=science', kind: 'exercise', id: 'practice-science' },
       { url: '../practice.html?subject=english', kind: 'exercise', id: 'practice-english' },
+      { url: '../practice.html?subject=coding', kind: 'exercise', id: 'practice-coding' },
       // The timed paper: its set-up screen, then a short and a full paper in reading time.
       { url: '../paper.html', kind: 'setup' },
       { url: '../paper.html?length=short&pace=standard&units=1,2,3,4,5&diff=core&seed=11', kind: 'exercise', id: 'paper' },
@@ -107,7 +108,7 @@
         if (p.kind === 'exercise') {
           if (cards === 0) problems.push('no questions rendered');
           doc.querySelectorAll('.qcard').forEach((c, i) => {
-            if (!c.querySelector('.ans-box, .choice, .spot-line, .match-item, .order-chip, .sort-btn, .label-select, .write-box')) {
+            if (!c.querySelector('.ans-box, .choice, .spot-line, .match-item, .order-chip, .sort-btn, .label-select, .write-box, .code-box')) {
               problems.push(`Q${i + 1} has no answer control`);
             }
             if (!c.querySelector('.qtext').textContent.trim()) problems.push(`Q${i + 1} has an empty prompt`);

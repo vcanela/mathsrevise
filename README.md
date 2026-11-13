@@ -108,6 +108,34 @@ tab and every 15 minutes, and shows a "Refresh" bar if a newer version is live. 
 itself, since points are saved only when a set is finished. The footer shows the version and date,
 so a student's screen can be compared with the live site.
 
+### Coding
+
+Python from scratch for **Years 9 and 10**, pitched at the computational thinking progress
+outcomes PO4 to PO5 (*Technology in the New Zealand Curriculum*; the PDF and the development
+paper behind it are in `reference/`): programs with inputs, outputs, sequence, selection with
+comparative and logical operators, variables of different data types and iteration, with an
+organised approach to testing and debugging. Codes run C1 to C8 across two units, Python Basics
+(C1–C4) and Loops, Lists and Functions (C5–C8). C1 Output and Strings and C2 Variables and Types
+are written; the rest are listed as coming soon.
+
+Programs run in the page with **Skulpt**, pinned to 1.2.0 and loaded deferred from jsDelivr on
+coding exercise pages only (`js/python.js` wraps it). A program that runs for more than three
+seconds is stopped. Error messages keep Python's own names, with a plain-English line added.
+
+Each exercise follows **PRIMM** (Predict, Run, Investigate, Modify, Make): predict the output,
+read the error, spot the line that breaks, put scrambled lines in order (Parsons problems),
+trace the variables, then change a program and write one. The new `code` question is an editor
+with Run and Check: Check runs the program against hidden tests, which can set the program's
+variables to other values (`set`) and answer `input()` (`inputs`), so typing the answer in does
+not pass. A failed check is not final: it scores 15, 12, 10 or 8 by how many checks it took.
+Code questions stay out of the daily mix.
+
+Skulpt is not quite real Python: `41 / 5` prints `8.199999999999999`, and a missing bracket is
+reported on the line after it. So **`node tools/check-coding.js`** runs every program a question
+shows through both Skulpt and `python3`, and fails unless both agree with the answer; it also
+checks every model program passes its tests and every starter program does not. The first run
+fetches Skulpt from the pinned address into `tools/.cache/` and confirms its checksum.
+
 **Not seen recently.** In free practice and the daily mix, each science slot prefers items the
 student has not yet answered (remembered per topic in the browser), then the ones answered longest
 ago. Fixed sets (`?set=N`) ignore this, so they stay identical for a whole class.
@@ -129,6 +157,7 @@ js/
   engine.js             renders an exercise page: cards, inputs, scoring, results
   nav.js                renders the home and unit pages
   practice.js           picks what is due and builds the mixed session
+  python.js             Python in the page (Skulpt): runs programs, tests them, the code question
   paper.js              the timed paper: builds it, times it, and the reflection after
   habit.js              the daily panel: weekly target and practice calendar
   game.js               XP, levels, stars and practice days, in localStorage
@@ -149,9 +178,11 @@ js/
     problems.js         unit 6, problem solving
     science-y7.js       Year 7 science
     science-y8.js       Year 8 science
+    coding-basics.js    Coding: Python Basics (C1, C2)
 tools/
   check-topics.js       generates ~200k questions and checks them (node)
   check-paper.js        builds ~3,000 timed papers and checks their sections and marks (node)
+  check-coding.js       runs every coding question's programs in Skulpt and real Python (node + python3)
   selftest.html         loads every page in a browser and checks it renders
   check-diagrams.html   measures every diagram against its own viewBox
   review-science.html   every authored science item and its answer, for a teacher to read
@@ -257,7 +288,7 @@ Use `rng` for every random choice, never `Math.random`, or `?set=N` stops being 
 
 ## Testing
 
-All three checks should pass before committing.
+All of these checks should pass before committing.
 
 ```bash
 node tools/check-topics.js 400
@@ -268,6 +299,14 @@ and checks each one against its own answer key: numeric answers are whole number
 tolerance is given, fractions are in lowest terms, typed answers parse and match, multiple
 choice has exactly one correct option and no duplicate options, matches and orderings are real
 permutations, and every diagram draws without producing a `NaN` coordinate.
+
+```bash
+node tools/check-coding.js
+```
+
+Runs every program shown in a coding question through Skulpt and through real Python, and checks
+both print exactly the expected answer (or raise the expected error); then runs every model
+program against its tests, and every starter program to make sure it does not already pass.
 
 ```bash
 # with the dev server running, open:

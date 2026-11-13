@@ -33,7 +33,8 @@
 // takes as long as it takes, and a clock would push students to guess.
 //
 // Input kinds: number, fill, choice, expr, word, spot, match, order, sort,
-// label, write. A `write` question is free writing: nothing marks it, so it
+// label, write, code. A `code` question (js/python.js) is a program the
+// student writes and runs, checked against tests. A `write` question is free writing: nothing marks it, so it
 // is untimed, earns full points once it is long enough, and then shows a
 // checklist and a model for the student to judge their own draft against.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -235,9 +236,12 @@ const Exercise = (() => {
       focus:  () => box.focus(),
       lock:   () => { box.disabled = true; },
       check() {
-        const ok = answers.some(a => normWord(a) === normWord(box.value));
+        // `exact` is for a program's output, where capitals and spacing are
+        // part of the answer: only spaces at either end are forgiven.
+        const same = spec.exact ? (a, b) => String(a).trim() === String(b).trim() : (a, b) => normWord(a) === normWord(b);
+        const ok = answers.some(a => same(a, box.value));
         box.classList.add(ok ? 'ok' : 'bad');
-        return { ok, correctHTML: 'Answer: <strong>' + esc(answers[0]) + '</strong>' };
+        return { ok, correctHTML: 'Answer: ' + (spec.exact ? '<code class="out">' + esc(answers[0]) + '</code>' : '<strong>' + esc(answers[0]) + '</strong>') };
       }
     };
   };
@@ -617,9 +621,11 @@ const Exercise = (() => {
     // Free writing takes as long as it takes: no clock, and no worked answer
     // to give away before the student has written their own.
     const writing = q.input.kind === 'write';
+    // A program, like a piece of writing, takes as long as it takes.
+    const longForm = writing || q.input.kind === 'code';
 
     const bar  = h('div', { class: 'tbar-fill' });
-    const wrap = h('div', { class: 'tbar', style: state.level.timerVisible && !state.untimed && !writing ? '' : 'display:none' }, bar);
+    const wrap = h('div', { class: 'tbar', style: state.level.timerVisible && !state.untimed && !longForm ? '' : 'display:none' }, bar);
     card.appendChild(wrap);
 
     // A reading passage already shown on this page folds away on later
@@ -803,7 +809,7 @@ const Exercise = (() => {
 
     const timer = new QuestionTimer(bar, state.level.timerSecs);
 
-    const start = () => { if (!writing && !state.done.has(n) && !timer.hasStarted()) timer.start(); };
+    const start = () => { if (!longForm && !state.done.has(n) && !timer.hasStarted()) timer.start(); };
     (input.inputs || []).forEach(el => {
       el.addEventListener('focus', start);
       el.addEventListener('keydown', ev => {
@@ -831,7 +837,11 @@ const Exercise = (() => {
       // Untimed: each nudge taken counts like a slower answer would.
       // Writing long enough earns full marks: the quality is the student's to
       // judge against the checklist, not the engine's.
-      let pts = writing ? 15 : MRG.scoreQuestion(res.ok, state.untimed ? [0, 1e4, 2e4, 4e4][Math.min(hintsUsed, 3)] : elapsed);
+      // A program is checked as often as the student likes; it scores by how
+      // many checks it took to pass, as Unit 6 scores by nudges taken.
+      let pts = writing ? 15
+        : q.input.kind === 'code' ? (res.ok ? [15, 12, 10, 8][Math.min(res.fails || 0, 3)] : 0)
+        : MRG.scoreQuestion(res.ok, state.untimed ? [0, 1e4, 2e4, 4e4][Math.min(hintsUsed, 3)] : elapsed);
       if (depth > 0) pts = Math.max(0, pts);
       state.score += pts;
 

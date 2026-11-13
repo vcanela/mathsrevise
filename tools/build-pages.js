@@ -23,11 +23,21 @@ const CORE = ['rng', 'format', 'algebra', 'geometry', 'diagrams', 'game', 'manif
 // banked questions (Sci), and the science diagrams.
 const SCIENCE = ['science'];
 
-/** The scripts an exercise in this unit needs, in load order. */
-const scriptsFor = u => [...CORE, ...(u.subject !== 'maths' ? SCIENCE : []), ...u.topicFiles.map(f => 'topics/' + f)];
+// Coding pages run Python in the page with Skulpt, pinned to one version. It
+// is about 1 MB, so only coding exercise pages load it, deferred: the page
+// draws first and Python is ready a moment later.
+const SKULPT = ['https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js',
+                'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js'];
 
-// The daily mix can draw from any unit, so it loads every topic file.
-const ALL_TOPICS = [...new Set(Manifest.UNITS.flatMap(u => u.topicFiles.map(f => 'topics/' + f)))];
+/** The scripts an exercise in this unit needs, in load order. */
+const scriptsFor = u => [...CORE, ...(u.subject !== 'maths' ? SCIENCE : []),
+  ...(u.subject === 'coding' ? ['python'] : []), ...u.topicFiles.map(f => 'topics/' + f),
+  ...(u.subject === 'coding' ? SKULPT : [])];
+
+// The daily mix can draw from any unit, so it loads every topic file that
+// exists: a unit whose exercises are all still to come has none yet.
+const ALL_TOPICS = [...new Set(Manifest.UNITS.filter(u => u.exercises.some(e => !e.soon))
+  .flatMap(u => u.topicFiles.map(f => 'topics/' + f)))];
 
 /**
  * A short hash of every script and stylesheet, stamped onto the asset links.
@@ -66,7 +76,10 @@ const BUILT = (() => {
 })();
 
 function shell({ title, up, scripts, boot }) {
-  const s = [...scripts, 'update'].map(src => `  <script src="${up}js/${src}.js?v=${VERSION}"></script>`).join('\n');
+  // A full URL is a pinned library from a CDN: loaded deferred, in order.
+  const s = [...scripts, 'update'].map(src => /^https:/.test(src)
+    ? `  <script src="${src}" defer></script>`
+    : `  <script src="${up}js/${src}.js?v=${VERSION}"></script>`).join('\n');
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -118,7 +131,7 @@ write('index.html', shell({
 write('practice.html', shell({
   title: "Today's practice · Revision",
   up: '',
-  scripts: [...CORE, ...SCIENCE, ...ALL_TOPICS, 'practice'],
+  scripts: [...CORE, ...SCIENCE, 'python', ...ALL_TOPICS, 'practice'],
   boot: 'Practice.start();'
 }));
 
@@ -205,5 +218,5 @@ for (const top of ['exercises', 'science', 'english']) {
 }
 
 console.log(written.join('\n'));
-console.log(`\n${Manifest.UNITS.length} units, ${Manifest.count('maths')} maths, ${Manifest.count('science')} science and ` +
-            `${Manifest.count('english')} English exercises live, asset version ${VERSION}.`);
+console.log(`\n${Manifest.UNITS.length} units, ${Manifest.count('maths')} maths, ${Manifest.count('science')} science, ` +
+            `${Manifest.count('english')} English and ${Manifest.count('coding')} coding exercises live, asset version ${VERSION}.`);
