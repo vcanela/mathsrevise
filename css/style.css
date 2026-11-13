@@ -1670,3 +1670,8 @@ code.out { font-family: var(--font-mono); background: var(--code-bg); padding: 0
   border: 2px solid currentColor; border-radius: 4px; transform: rotate(-3deg); transform-origin: left center;
   font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.88;
 }
+/* Code with its own Run button, in a prompt: see it before predicting it. */
+.try { margin: 0.55rem 0 0.4rem; }
+.try pre.code { margin: 0; }
+.try-run { margin-top: 0.45rem; font-size: 0.82rem; padding: 0.3rem 0.85rem; }
+.try-out { margin-top: 0.45rem; }

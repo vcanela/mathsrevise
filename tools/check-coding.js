@@ -117,12 +117,15 @@ const sameError = (got, want) => got === want || (want === 'SyntaxError' && /^(I
   for (const id of ids) {
     const topic = Topics[id];
     if (!topic) { fail(id, 'no topic for ' + id); continue; }
+    // The main set and, where there is one, the Challenge set.
+    for (const mode of topic.hasChallenge ? [false, true] : [false]) {
+    Sci.challenge = mode;
     for (let seed = 1; seed <= SEEDS; seed++) {
       let qs;
       try { qs = topic.generate(new RNG(seed * 7919 + 13), 'core'); } catch (e) { fail(`${id}/seed ${seed}`, 'generate threw: ' + e.message); continue; }
       qs.forEach((q, i) => {
         questions++;
-        const where = `${id} Q${i + 1} (${q.slot})`;
+        const where = `${id}${mode ? ' challenge' : ''} Q${i + 1} (${q.slot})`;
         if (q.input.kind === 'code') {
           const s = q.input;
           if (!s.model || !s.tests || !s.tests.length) fail(where, 'code question needs a model and tests');
@@ -137,6 +140,8 @@ const sameError = (got, want) => got === want || (want === 'SyntaxError' && /^(I
         }
       });
     }
+    }
+    Sci.challenge = false;
   }
 
   // ── Programs shown in questions ──

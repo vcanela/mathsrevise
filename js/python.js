@@ -4,6 +4,7 @@
 // 1.2.0 and loaded from a CDN, on coding pages only). This file holds:
 //
 //   Py.block(src), Py.inline(src)   code set in a prompt, with simple colouring
+//   Py.tryIt(src)                   code with a ▶ Run button, to see before predicting
 //   Py.run(src, o)                  run a program → { out, error }
 //   Py.test(src, tests)             run it against tests → { pass, failed }
 //   Exercise.Inputs.code            the "write a program" question
@@ -51,9 +52,43 @@ const Py = (() => {
   const inline = src => `<code class="code-inline">${highlight(src)}</code>`;
   /** A program's output, as it would appear on screen. */
   const output = text => `<pre class="code-out-static">${esc(text)}</pre>`;
+  /**
+   * A program the student can run where it stands: seeing first, then
+   * predicting, is the gentle way in. The buttons are wired once, below.
+   */
+  const tryIt = src => `<div class="try"><pre class="code">${highlight(src)}</pre>` +
+    `<button type="button" class="tool-btn try-run" data-src="${esc(src)}">&#9654; Run</button>` +
+    `<pre class="code-out try-out" style="display:none"></pre></div>`;
 
   // ── Running ───────────────────────────────────────────────────────────────
-  const available = () => typeof Sk !== 'undefined';
+  const available = () => typeof Sk !== 'undefined' && !!Sk.builtinFiles;
+
+  // Coding pages load Skulpt themselves (tools/build-pages.js, same address).
+  // Anywhere else, such as the daily mix, it is fetched the first time a
+  // program is run, so a maths mix never downloads it.
+  const SKULPT = ['https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js',
+                  'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js'];
+  let loading = null;
+  const waitFor = (ok, ms) => new Promise(res => {
+    const t0 = Date.now();
+    (function poll() { if (ok() || Date.now() - t0 > ms) res(); else setTimeout(poll, 100); })();
+  });
+  function load() {
+    if (available() || typeof document === 'undefined' || !document.head) return Promise.resolve();
+    if (!loading) {
+      const onPage = SKULPT.every(url => [...document.scripts].some(sc => sc.src === url));
+      loading = (onPage
+        ? waitFor(available, 15000)
+        : SKULPT.reduce((p, url) => p.then(() => new Promise(res => {
+            const tag = document.createElement('script');
+            tag.src = url; tag.onload = res; tag.onerror = res;
+            document.head.appendChild(tag);
+          })), Promise.resolve()))
+        // If it failed (no connection), let the next Run try again.
+        .then(() => { if (!available()) loading = null; });
+    }
+    return loading;
+  }
 
   const FRIENDLY = {
     SyntaxError: 'Python could not read this line. Look for a missing bracket, quote mark or colon.',
@@ -90,7 +125,7 @@ const Py = (() => {
    */
   function run(src, o) {
     o = o || {};
-    const job = queue.then(() => new Promise(resolve => {
+    const job = queue.then(() => (available() ? null : load())).then(() => new Promise(resolve => {
       if (!available()) { resolve({ out: '', error: { name: 'Unavailable', line: null, text: 'Python could not load. Check the internet connection and reload the page.' } }); return; }
       let out = '';
       const answers = o.inputs ? o.inputs.slice() : null;
@@ -278,5 +313,25 @@ const Py = (() => {
   }
   if (typeof Exercise !== 'undefined') Exercise.Inputs.code = codeInput;
 
-  return { LIMIT, highlight, block, inline, output, run, test, norm, withValues, describe, available };
+  // ── ▶ Run on code in prompts, learn cards and examples ────────────────────
+  if (typeof document !== 'undefined' && document.addEventListener) {
+    document.addEventListener('click', async ev => {
+      const btn = ev.target.closest && ev.target.closest('.try-run');
+      if (!btn || btn.disabled) return;
+      const box = btn.parentElement.querySelector('.try-out');
+      btn.disabled = true;
+      box.style.display = '';
+      box.textContent = '';
+      const res = await run(btn.dataset.src, { onOut: t => box.appendChild(document.createTextNode(t)) });
+      if (res.error) {
+        const err = document.createElement('span');
+        err.className = 'code-err';
+        err.textContent = (box.textContent ? '\n' : '') + `${res.error.name}${res.error.line ? ' on line ' + res.error.line : ''}: ${res.error.text}`;
+        box.appendChild(err);
+      } else if (!box.textContent) box.textContent = '(The program printed nothing.)';
+      btn.disabled = false;
+    });
+  }
+
+  return { LIMIT, highlight, block, inline, output, tryIt, run, test, norm, withValues, describe, available };
 })();

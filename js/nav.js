@@ -244,13 +244,13 @@ const Nav = (() => {
         h('span', { class: 'unit-code', text: ex.label }),
         h('span', { class: 'home-name', text: ex.title }),
         odd ? h('span', { class: 'unit-badge', text: year }) : null,
-        ex.challenge && !(common.challenge && year === common.year) ? h('span', { class: 'unit-star', title: 'Has a Year 9 challenge', text: '★' }) : null,
+        ex.challenge && !(common.challenge && year === common.year) ? h('span', { class: 'unit-star', title: 'Has a ' + Manifest.challenge(ex.unit).name, text: '★' }) : null,
         stars(rec.stars || 0)),
       h('aside', { class: 'home-note' },
         h('h3', { text: ex.title }),
         h('div', { class: 'note-btns' },
           h('a', { class: 'tool-btn primary', href }, 'Practise'),
-          ex.challenge ? h('a', { class: 'tool-btn', href: href + '?set=challenge' }, '★ Year 9 challenge') : null),
+          ex.challenge ? h('a', { class: 'tool-btn', href: href + '?set=challenge' }, '★ ' + Manifest.challenge(ex.unit).name) : null),
         h('p', { text: ex.tag }),
         h('p', { class: 'home-meta', text: [year, rec.attempts ? `best ${rec.bestScore} pts` : 'not started yet']
           .filter(Boolean).join(' · ').replace(/^./, c => c.toUpperCase()) })));
@@ -288,7 +288,7 @@ const Nav = (() => {
     const facts = [
       u.subject === 'maths' ? u.short : null,
       live.length && live.every(e => e.year) ? 'Year 7 and Year 8 topics'
-        : common.year && common.challenge ? `${common.year}, each with a ★ Year 9 challenge`
+        : common.year && common.challenge ? `${common.year}, each with a ★ ${Manifest.challenge(u).name}`
         : common.year
     ].filter(Boolean);
 

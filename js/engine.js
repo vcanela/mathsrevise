@@ -903,6 +903,7 @@ const Exercise = (() => {
   }
 
   function toolbar(cfg) {
+    const ch = Manifest.challenge((Manifest.exercise(cfg.id) || {}).unit);
     const set = Seed.setNumber();
     const challenge = !!cfg.hasChallenge && Seed.challenge();
     const mkLink = n => {
@@ -919,7 +920,7 @@ const Exercise = (() => {
     },
       h('option', { value: 'free', text: 'Free practice (new every time)', selected: set === null }),
       [1, 2, 3, 4, 5, 6].map(n => h('option', { value: n, text: 'Set ' + n, selected: set === n })),
-      cfg.hasChallenge ? h('option', { value: 'challenge', text: 'Year 9 challenge', selected: challenge }) : null);
+      cfg.hasChallenge ? h('option', { value: 'challenge', text: ch.name, selected: challenge }) : null);
 
     // A practice session has no set picker: its questions are chosen for the
     // student, and today's set is already fixed by the date.
@@ -935,8 +936,8 @@ const Exercise = (() => {
         '↻ New questions'),
       picker,
       set !== null ? h('span', { class: 'tool-note', text: 'Everyone gets the same questions in set ' + set + '.' })
-        : challenge ? h('span', { class: 'tool-note', text: 'Year 9 questions: harder than the usual sets. Learn it has the new ideas.' })
-        : cfg.hasChallenge ? h('a', { class: 'tool-btn', href: mkLink('challenge') }, '★ Year 9 challenge')
+        : challenge ? h('span', { class: 'tool-note', text: ch.note })
+        : cfg.hasChallenge ? h('a', { class: 'tool-btn', href: mkLink('challenge') }, '★ ' + ch.name)
         : null);
   }
 
@@ -1175,7 +1176,7 @@ const Exercise = (() => {
     const facts = practice ? [cfg.eyebrow || 'Daily practice'] : [
       exInfo && (unit.subject === 'maths' ? `${unit.short} · Exercise ${exInfo.n}` : exInfo.label),
       exInfo && (exInfo.year ? 'Year ' + exInfo.year : exInfo.years ? 'Years ' + exInfo.years : null),
-      challenge ? '★ Year 9 challenge set' : null
+      challenge ? '★ ' + Manifest.challenge(unit).name.replace(/^(?!.*set$)(.*)$/, '$1 set') : null
     ];
     if (difficulty === 'expert') facts.push('Expert mode: the hard set');
     root.appendChild(h('header', { class: 'unit-head' },

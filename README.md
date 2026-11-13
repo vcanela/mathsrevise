@@ -122,9 +122,17 @@ Programs run in the page with **Skulpt**, pinned to 1.2.0 and loaded deferred fr
 coding exercise pages only (`js/python.js` wraps it). A program that runs for more than three
 seconds is stopped. Error messages keep Python's own names, with a plain-English line added.
 
-Each exercise follows **PRIMM** (Predict, Run, Investigate, Modify, Make): predict the output,
-read the error, spot the line that breaks, put scrambled lines in order (Parsons problems),
-trace the variables, then change a program and write one. The new `code` question is an editor
+Each exercise has two sets. The main set is a **walk-through** for a student meeting Python for
+the first time: one idea per question, seen running before it is predicted, then changed. Code in
+a prompt can carry its own **▶ Run** button (`Py.tryIt`), so the first question of an idea is
+answered by watching ("Run it. What did it print?"), the next by predicting, and the next by
+changing one thing in an almost-finished program; every question has nudges. The **★ Challenge
+set** (`?set=challenge`, a unit's `challengeName` in the manifest) holds the harder questions,
+for students working to a high standard: predict the output, read the error, spot the line that
+breaks, Parsons problems, tracing, then larger programs to change and write. Both follow PRIMM
+(Predict, Run, Investigate, Modify, Make). Coding exercises are untimed and score by nudges
+taken, as Unit 6 does. Outside coding pages, such as the daily mix, Skulpt is fetched the first
+time Run is pressed. The new `code` question is an editor
 with Run and Check: Check runs the program against hidden tests, which can set the program's
 variables to other values (`set`) and answer `input()` (`inputs`), so typing the answer in does
 not pass. A failed check is not final: it scores 15, 12, 10 or 8 by how many checks it took.

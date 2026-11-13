@@ -35,7 +35,7 @@
     const opts = (o && o.options) || ERRORS;
     return {
       prompt: (o && o.prompt) || 'What happens when this program runs?' + P(code),
-      tag: o && o.tag,
+      tag: o && o.tag, hints: o && o.hints,
       input: { kind: 'choice', options: opts.map(x => ({ html: x === 'No error' ? 'It runs without an error' : x, right: x === ans })), correct: opts.indexOf(ans), wide: false },
       explain: why
     };
@@ -46,7 +46,7 @@
   // ═══ C1 Output and Strings ══════════════════════════════════════════════════
 
   Sci.topic({
-    id: 'cb1', unit: 'basics',
+    id: 'cb1', unit: 'basics', untimed: true,
     title: 'Output and Strings',
     blurb: 'print(), text in quotes, joining and repeating, and what Python’s error messages are telling you.',
     hint: 'print() shows what is in its brackets, then starts a new line. Text goes in quote marks. A comma between items adds a space ' +
@@ -93,8 +93,144 @@
     ],
 
     slots: [
+      // ── The walk-through: one idea at a time, seen running before it is
+      //    predicted, then changed. The Challenge set (below) asks for more.
+
+      // 1 · See it run.
+      { name: 'Your first program', learn: 'print',
+        items: [Sci.gen(rng => {
+          const msg = rng.pick(['Kia ora', 'Hello, world', 'Good morning', 'Coding is fun', 'Hi there']);
+          const code = `print("${msg}")`;
+          return py(out(rng, { prompt: 'This is a whole Python program. Press <strong>▶ Run</strong> to run it. What does it print?' + Py.tryIt(code), answer: msg,
+            hints: ['Press ▶ Run under the program, and look in the dark box that appears.',
+                    'Type exactly what is in the dark box. The quote marks are not printed: they only show Python where the text starts and ends.'],
+            explain: '<code>print()</code> shows the text inside its brackets. The quote marks tell Python where the text starts and ends; they are not printed.' }),
+            { code, output: msg });
+        })] },
+
+      // 2 · Predict it.
+      { name: 'Predict it', learn: 'print',
+        items: [Sci.gen(rng => {
+          const msg = rng.pick(['See you soon', 'Python rocks', 'Go team', 'Ka pai', 'Lunch time']);
+          const code = `print("${msg}")`;
+          return py(out(rng, { prompt: 'No Run button this time. What will this program print?' + P(code), answer: msg,
+            hints: ['It works like the last one: print() shows the text in its brackets.', 'Leave out the quote marks.'],
+            explain: 'print() shows the text between the quote marks, without the quote marks.' }), { code, output: msg });
+        })] },
+
+      // 3 · One line each.
+      { name: 'Two lines', learn: 'print',
+        items: [Sci.gen(rng => {
+          const [a, b] = rng.sample(['Kia ora', 'Ready', 'Steady', 'Go', 'Hello', 'Goodbye'], 2);
+          const code = `print("${a}")\nprint("${b}")`;
+          return py(C(rng, { prompt: 'Run this program. Which shows what it printed?' + Py.tryIt(code), right: O(`${a}\n${b}`),
+            wrong: [O(`${a} ${b}`), O(`${a}${b}`), O(`${b}\n${a}`)],
+            hints: ['Press ▶ Run and compare the dark box with the answers.', 'Each print() starts its own new line, and the lines run from the top down.'],
+            explain: 'Each print() prints one line, and Python runs the lines in order, from the top down.' }), { code, output: `${a}\n${b}` });
+        })] },
+
+      // 4 · Numbers are worked out; text is not.
+      { name: 'Sums and text', learn: 'print',
+        items: [Sci.gen(rng => {
+          const a = rng.int(2, 9), b = rng.int(2, 9), second = rng.chance();
+          const code = `print(${a} + ${b})\nprint("${a} + ${b}")`;
+          const ans = second ? `${a} + ${b}` : String(a + b);
+          return py(out(rng, { prompt: `Run this program. What did the <strong>${second ? 'second' : 'first'}</strong> line print?` + Py.tryIt(code), answer: ans, width: 140,
+            hints: ['Press ▶ Run: there are two lines of output, one for each print().', 'The first line has no quote marks, so Python works the sum out. The second has quote marks, so it is printed just as it is written.'],
+            explain: 'Without quote marks, Python works the sum out. With quote marks it is text, printed exactly as written.' }),
+            { code, output: `${a + b}\n${a} + ${b}` });
+        })] },
+
+      // 5 · Predict: quotes or not.
+      { name: 'Predict: quotes or not?', learn: 'print',
+        items: [Sci.gen(rng => {
+          const a = rng.int(2, 9), b = rng.int(2, 9), quoted = rng.chance();
+          const code = quoted ? `print("${a} * ${b}")` : `print(${a} * ${b})`;
+          const ans = quoted ? `${a} * ${b}` : String(a * b);
+          return py(out(rng, { prompt: 'In Python, <code>*</code> means times. What will this print?' + P(code), answer: ans, width: 140,
+            hints: ['Look for quote marks inside the brackets.', 'No quote marks: Python works it out. Quote marks: it prints the text exactly as written.'],
+            explain: quoted ? 'The quote marks make it text, so it is printed exactly as written.' : `No quote marks, so Python works it out: ${a} × ${b} = ${a * b}.` }),
+            { code, output: ans });
+        })] },
+
+      // 6 · A comma between items.
+      { name: 'A comma between', learn: 'join',
+        items: [Sci.gen(rng => {
+          const label = rng.pick(['Score:', 'Age:', 'Lives:', 'Level']), n = rng.int(2, 99);
+          const code = `print("${label}", ${n})`;
+          const ans = `${label} ${n}`;
+          return py(out(rng, { prompt: 'This print() has two things in it, with a comma between. Run it. What does it print?' + Py.tryIt(code), answer: ans,
+            hints: ['Run it and look closely at the gap.', 'A comma prints the two things one after the other, with one space between.'],
+            explain: 'A comma prints each item with a space between them. It can mix text and numbers.' }), { code, output: ans });
+        })] },
+
+      // 7 · Joining with +.
+      { name: 'Joining with +', learn: 'join',
+        items: [Sci.gen(rng => {
+          const [a, b] = rng.pick([['sun', 'shine'], ['foot', 'ball'], ['rain', 'bow'], ['star', 'fish'], ['pop', 'corn']]);
+          const code = `print("${a}" + "${b}")`;
+          return py(out(rng, { prompt: 'Now a <code>+</code> between two pieces of text. Run it. What does it print?' + Py.tryIt(code), answer: a + b,
+            hints: ['Run it, and look for a space this time.', '+ joins text straight on, with nothing between: no space.'],
+            explain: '+ joins pieces of text together with nothing between them. A comma would have added a space.' }), { code, output: a + b });
+        })] },
+
+      // 8 · Change one thing.
+      { name: 'Change one thing', learn: 'print',
+        items: [Sci.gen(rng => {
+          const to = rng.pick(['Mere', 'Leo', 'Priya', 'Hemi', 'Ana']);
+          const starter = 'print("Kia ora, Sam")';
+          const target = `Kia ora, ${to}`;
+          return {
+            prompt: `This program prints <code>Kia ora, Sam</code>. Change it so it says hello to <strong>${to}</strong> instead. ` +
+                    'Press ▶ Run to try it, then ✓ Check when it is right.',
+            input: { kind: 'code', key: 'cb1-hello', starter, model: `print("${target}")`, tests: [{ expect: target }] },
+            hints: ['Click in the box and change the name between the quote marks.', 'Keep everything else exactly the same: the comma, the space, the quote marks and the brackets.'],
+            explain: 'One way to do it:' + P(`print("${target}")`)
+          };
+        })] },
+
+      // 9 · Meet an error.
+      { name: 'Your first error', learn: 'errors',
+        items: [
+          ['Print("Hello")', 'NameError', 'Python cares about capitals. It knows print, but not Print, so it reports a NameError: a name it does not know.'],
+          ['print("Hello)', 'SyntaxError', 'The closing quote mark is missing, so Python cannot read the line: a SyntaxError.'],
+          ['print("Age: " + 14)', 'TypeError', '+ cannot join text to a number. Mixing types like that is a TypeError.']
+        ].map(([code, ans, why]) => rng => py(whichError(code, ans, why, {
+          options: ['SyntaxError', 'NameError', 'TypeError'],
+          prompt: 'This program has a mistake. Run it: instead of running, Python shows an error message. What is the error called?' + Py.tryIt(code),
+          hints: ['Press ▶ Run and read the first word of the message in the dark box.', 'Every error message starts with its name, then the line it happened on.'] }),
+          { code, error: ans })) },
+
+      // 10 · Fix it.
+      { name: 'Fix it', learn: 'errors',
+        items: [
+          ['Print("Hello")', 'Hello', 'Print needs a small p: print.'],
+          ['print("Kia ora)', 'Kia ora', 'The closing quote mark is missing, after Kia ora.'],
+          ['print("Ready"', 'Ready', 'The closing bracket is missing, at the very end.']
+        ].map(([starter, target, why]) => rng => ({
+          prompt: `This program should print <code>${target}</code>, but it has a mistake. Fix it, then press ✓ Check.`,
+          input: { kind: 'code', key: 'cb1-fix', starter, model: `print("${target}")`, tests: [{ expect: target }] },
+          hints: ['Press ▶ Run first: the error message names the problem and the line.', why],
+          explain: why + ' The fixed program:' + P(`print("${target}")`)
+        })) },
+
+      // 11 · Make it.
+      { name: 'Make it: two lines', learn: 'print',
+        items: [Sci.gen(rng => {
+          const a = rng.pick(['Kia ora', 'Hello']), b = rng.pick(['I am learning Python', 'This is my first program', 'Coding is fun']);
+          const target = `${a}\n${b}`;
+          const model = `print("${a}")\nprint("${b}")`;
+          return {
+            prompt: 'Now write a program from nothing. It should print exactly these two lines:' + O(target),
+            input: { kind: 'code', key: 'cb1-first', starter: '# Write your program below this line\n', model, tests: [{ expect: target }] },
+            hints: ['You need two print() lines, one for each line of output.', 'Put each line of text inside quote marks, inside the brackets: print("…").'],
+            explain: 'One way to do it:' + P(model) + 'A line starting with # is a comment: Python ignores it.'
+          };
+        })] },
+
+      // ── Challenge set: the same ideas, taken to a high standard.
       // 1 · Predict: a comma or a plus.
-      { name: 'What does it print?', learn: 'join',
+      { challenge: 'only', name: 'What does it print?', learn: 'join',
         items: [Sci.gen(rng => {
           const [a, b] = rng.pick([['Kia', 'ora'], ['Good', 'morning'], ['Hello', 'world'], ['Team', 'Blue'], ['Level', 'up'], ['Game', 'over']]);
           const n = rng.int(2, 99);
@@ -109,7 +245,7 @@
         })] },
 
       // 2 · Predict: joining and repeating.
-      { name: 'Joining and repeating', learn: 'join',
+      { challenge: 'only', name: 'Joining and repeating', learn: 'join',
         items: [Sci.gen(rng => {
           const s = rng.pick(['ha', 'Go', 'na', 'ab', 'yo']), k = rng.int(2, 4);
           const a = rng.int(1, 9), b = rng.int(1, 9);
@@ -124,7 +260,7 @@
         })] },
 
       // 3 · Predict: lines of output.
-      { name: 'Lines of output', learn: 'sepend',
+      { challenge: 'only', name: 'Lines of output', learn: 'sepend',
         items: [Sci.gen(rng => {
           const [a, b, c] = rng.sample(['Red', 'Blue', 'Gold', 'Green', 'Black', 'White'], 3);
           const gap = rng.pick([' ', '']);
@@ -137,7 +273,7 @@
         })] },
 
       // 4 · Read the error.
-      { name: 'Read the error', learn: 'errors',
+      { challenge: 'only', name: 'Read the error', learn: 'errors',
         items: [
           ['print("Kia ora)', 'SyntaxError', 'The closing quote mark is missing, so Python cannot tell where the text ends.'],
           ['print("Hello"', 'SyntaxError', 'The closing bracket is missing.'],
@@ -154,7 +290,7 @@
         ].map(([code, ans, why, output]) => rng => py(whichError(code, ans, why), ans === 'No error' ? { code, output } : { code, error: ans })) },
 
       // 5 · Spot the line that breaks.
-      { name: 'Spot the bug', learn: 'errors',
+      { challenge: 'only', name: 'Spot the bug', learn: 'errors',
         items: [Sci.gen(rng => {
           const name = rng.pick(NAMES), row = rng.pick('ABCDEF'), seat = rng.int(2, 30);
           const lines = [`print("Ticket for", "${name}")`, `print("Seat:", "${row}${seat}")`, 'print("Doors open at 7 pm")', 'print("Enjoy the show!")'];
@@ -177,7 +313,7 @@
         })] },
 
       // 6 · Parsons: put the lines in order.
-      { name: 'Put it in order', learn: 'print',
+      { challenge: 'only', name: 'Put it in order', learn: 'print',
         items: [Sci.gen(rng => {
           const [shop, item1, item2] = rng.pick([['Corner Dairy', 'Pie', 'Milk'], ['School Canteen', 'Wrap', 'Juice'], ['Surf Shop', 'Wax', 'Leash']]);
           const p1 = rng.int(2, 9), p2 = rng.int(2, 9);
@@ -188,7 +324,7 @@
         })] },
 
       // 7 · Quotes inside text.
-      { name: 'Quotes inside text', learn: 'quotes',
+      { challenge: 'only', name: 'Quotes inside text', learn: 'quotes',
         items: [
           ["It's my turn", 'print("It\'s my turn")', ["print('It's my turn')", "print(It's my turn)", 'print("It\'s my turn)']],
           ['She said "Kia ora"', 'print(\'She said "Kia ora"\')', ['print("She said "Kia ora"")', 'print(She said "Kia ora")', 'print(\'She said "Kia ora")']],
@@ -200,7 +336,7 @@
           { code: right, output: target })) },
 
       // 8 · Inside a string.
-      { name: 'Inside a string', learn: 'index',
+      { challenge: 'only', name: 'Inside a string', learn: 'index',
         items: [Sci.gen(rng => {
           const w = rng.pick(['python', 'kowhai', 'planet', 'silver', 'guitar', 'school', 'rocket']);
           const forms = [
@@ -215,7 +351,7 @@
         })] },
 
       // 9 · Make: print exactly this.
-      { name: 'Make it: print exactly this', learn: 'print',
+      { challenge: 'only', name: 'Make it: print exactly this', learn: 'print',
         items: [Sci.gen(rng => {
           const name = rng.pick(NAMES), team = rng.pick(['Blue', 'Gold', 'Green']), n = rng.int(3, 12);
           const target = `Player: ${name}\nTeam: ${team}\nNumber: ${n}`;
@@ -229,7 +365,7 @@
         })] },
 
       // 10 · Modify: change a working program.
-      { name: 'Change it', learn: 'join',
+      { challenge: 'only', name: 'Change it', learn: 'join',
         items: [Sci.gen(rng => {
           const from = rng.pick(['Sam', 'Ana']), to = rng.pick(['Mere', 'Leo', 'Priya']), k = rng.int(2, 4);
           const starter = `name = "${from}"\nprint("Kia ora " + name)`;
@@ -245,7 +381,7 @@
         })] },
 
       // 11 · Extension: sep and end.
-      { name: 'Extension: sep and end', learn: 'sepend',
+      { challenge: 'only', name: 'Extension: sep and end', learn: 'sepend',
         items: [Sci.gen(rng => {
           const [a, b, c] = rng.sample(['x', 'y', 'z', '1', '2', '3'], 3);
           const sep = rng.pick(['-', '', ', ', '...']);
@@ -261,7 +397,7 @@
   // ═══ C2 Variables and Types ═════════════════════════════════════════════════
 
   Sci.topic({
-    id: 'cb2', unit: 'basics',
+    id: 'cb2', unit: 'basics', untimed: true,
     title: 'Variables and Types',
     blurb: 'Storing values in variables, the four basic types, dividing, converting, and f-strings.',
     hint: 'A variable is a name for a value: x = 5 stores 5 under the name x, working out the right side first. Lines run top to bottom, so a later ' +
@@ -308,8 +444,129 @@
     ],
 
     slots: [
+      // ── The walk-through: one idea at a time, seen running before it is
+      //    predicted, then changed. The Challenge set (below) asks for more.
+
+      // 1 · A variable stores a value.
+      { name: 'A box with a name', learn: 'store',
+        items: [Sci.gen(rng => {
+          const n = rng.int(11, 16);
+          const code = `age = ${n}\nprint(age)`;
+          return py(out(rng, { prompt: 'The first line stores a number under the name <code>age</code>. Run the program. What does it print?' + Py.tryIt(code), answer: String(n), width: 100,
+            hints: ['Press ▶ Run and look in the dark box.', 'print(age) has no quote marks, so it prints what is stored in age, not the word age.'],
+            explain: `<code>age = ${n}</code> stores ${n} under the name age. <code>print(age)</code> shows what is stored there.` }), { code, output: String(n) });
+        })] },
+
+      // 2 · Predict it.
+      { name: 'Predict it', learn: 'store',
+        items: [Sci.gen(rng => {
+          const v = rng.pick(['lives', 'goals', 'points', 'year']), n = rng.int(2, 30);
+          const code = `${v} = ${n}\nprint(${v})`;
+          return py(out(rng, { prompt: 'What will this print?' + P(code), answer: String(n), width: 100,
+            hints: [`The first line stores ${n} in ${v}.`, `print(${v}) shows what is stored in ${v}.`],
+            explain: `${v} holds ${n}, so that is what is printed.` }), { code, output: String(n) });
+        })] },
+
+      // 3 · Change the value.
+      { name: 'Change the value', learn: 'store',
+        items: [Sci.gen(rng => {
+          const m = rng.intExcept(10, 18, [13]);
+          return {
+            prompt: `This program prints 13. Change it so it prints <strong>${m}</strong>, by changing only the first line. Run it to try, then ✓ Check.`,
+            input: { kind: 'code', key: 'cb2-value', starter: 'age = 13\nprint(age)', model: `age = ${m}\nprint(age)`, tests: [{ expect: String(m) }] },
+            hints: ['The number on the first line is what gets stored.', `Change 13 to ${m} on the first line, and leave the second line alone.`],
+            explain: 'Changing what is stored changes what is printed:' + P(`age = ${m}\nprint(age)`)
+          };
+        })] },
+
+      // 4 · Two variables in a sum.
+      { name: 'Two variables', learn: 'store',
+        items: [Sci.gen(rng => {
+          const a = rng.int(2, 9), b = rng.int(2, 9);
+          const code = `apples = ${a}\npears = ${b}\nprint(apples + pears)`;
+          return py(out(rng, { prompt: 'Two variables this time. Run it. What does it print?' + Py.tryIt(code), answer: String(a + b), width: 100,
+            hints: ['Run it first.', `apples holds ${a} and pears holds ${b}, so apples + pears is ${a} + ${b}.`],
+            explain: `Python looks up each name and adds what they hold: ${a} + ${b} = ${a + b}.` }), { code, output: String(a + b) });
+        })] },
+
+      // 5 · Text in a variable.
+      { name: 'Text in a variable', learn: 'store',
+        items: [Sci.gen(rng => {
+          const nm = rng.pick(NAMES);
+          const code = `name = "${nm}"\nprint("Hi", name)`;
+          const ans = `Hi ${nm}`;
+          return py(out(rng, { prompt: 'A variable can hold text too. Run it. What does it print?' + Py.tryIt(code), answer: ans,
+            hints: ['Run it and copy the dark box exactly.', 'The comma puts a space between Hi and whatever name holds.'],
+            explain: `name holds the text ${nm}, so the program prints Hi, a space, then ${nm}.` }), { code, output: ans });
+        })] },
+
+      // 6 · Predict: the name or what it holds?
+      { name: 'Quotes or not?', learn: 'store',
+        items: [Sci.gen(rng => {
+          const nm = rng.pick(NAMES), quoted = rng.chance();
+          const code = `name = "${nm}"\nprint(${quoted ? '"name"' : 'name'})`;
+          const ans = quoted ? 'name' : nm;
+          return py(C(rng, { prompt: 'What will this print?' + P(code), right: O(ans), wrong: [O(quoted ? nm : 'name'), 'An error'], wide: false,
+            hints: ['Look at what is inside print(): does it have quote marks?', 'With quote marks, "name" is just the word name. Without, name means the variable, and what it holds is printed.'],
+            explain: quoted ? 'The quote marks make "name" plain text, so the word name is printed.' : `Without quote marks, name is the variable, so what it holds is printed: ${nm}.` }),
+            { code, output: ans });
+        })] },
+
+      // 7 · Adding to a variable.
+      { name: 'Adding to a variable', learn: 'store',
+        items: [Sci.gen(rng => {
+          const s0 = rng.int(3, 20), k = rng.int(2, 9);
+          const code = `score = ${s0}\nscore = score + ${k}\nprint(score)`;
+          return py(out(rng, { prompt: 'The second line looks odd: score is on both sides. Run it. What does it print?' + Py.tryIt(code), answer: String(s0 + k), width: 100,
+            hints: ['Run it first.', `Python works out the right side first: score + ${k} is ${s0} + ${k}. Then it stores that back in score.`],
+            explain: `= means "store", not "equals". The right side, ${s0} + ${k}, is worked out first, and the answer ${s0 + k} is stored back in score.` }),
+            { code, output: String(s0 + k) });
+        })] },
+
+      // 8 · Dividing gives a decimal.
+      { name: 'Dividing', learn: 'types',
+        items: [Sci.gen(rng => {
+          const a = 2 * rng.int(3, 20);
+          const code = `print(${a} / 2)`;
+          const ans = `${a / 2}.0`;
+          return py(out(rng, { prompt: 'Run it. What does it print? Look carefully at the end.' + Py.tryIt(code), answer: ans, width: 100,
+            hints: ['Run it and copy exactly what appears, including the end.', 'Dividing with / always gives a decimal number (a float), so even a whole answer ends in .0.'],
+            explain: `/ always gives a float: a number with a decimal point. So ${a} / 2 prints ${ans}, not ${a / 2}.` }), { code, output: ans });
+        })] },
+
+      // 9 · Change one thing.
+      { name: 'Change one thing', learn: 'store',
+        items: [Sci.gen(rng => {
+          const p = rng.int(2, 9);
+          const starter = `price = ${p}\ncount = 3\nprint(price * count)`;
+          const model = starter.replace('count = 3', 'count = 5');
+          return {
+            prompt: `This program works out the cost of 3 pies at $${p} each. Change it so it works out the cost of <strong>5</strong> pies. Run it to try, then ✓ Check.`,
+            input: { kind: 'code', key: 'cb2-pies', starter, model, tests: [{ expect: String(p * 5) }] },
+            hints: ['Which variable holds how many pies?', 'Change count = 3 to count = 5. The last line works the cost out for you.'],
+            explain: 'Only the stored value needed to change:' + P(model)
+          };
+        })] },
+
+      // 10 · Make it: use the variable.
+      { name: 'Make it: use the variable', learn: 'store',
+        items: [Sci.gen(rng => {
+          const nm = rng.pick(NAMES), other = rng.pick(NAMES.filter(x => x !== nm));
+          const starter = `name = "${nm}"\n# Print Kia ora, then the name, using the variable\n`;
+          const model = `name = "${nm}"\nprint("Kia ora", name)`;
+          return {
+            prompt: `Finish the program so it prints <code>Kia ora ${nm}</code>, using the variable <code>name</code>. ` +
+                    'The checker will also try a different name, so use the variable rather than typing the name in.',
+            input: { kind: 'code', key: 'cb2-name', starter, model,
+                     tests: [{ expect: `Kia ora ${nm}` }, { set: { name: `"${other}"` }, expect: `Kia ora ${other}` }] },
+            hints: ['print("Kia ora", name) prints Kia ora, a space, then whatever name holds.', `Use name, without quote marks, not the word "${nm}".`],
+            explain: 'One way to do it:' + P(model) + 'Because it uses the variable, it works whatever name holds.'
+          };
+        })] },
+
+      // ── Challenge set: the same ideas, taken to a high standard.
       // 1 · Predict: reassigning.
-      { name: 'What does it print?', learn: 'reassign',
+      { challenge: 'only', name: 'What does it print?', learn: 'reassign',
         items: [Sci.gen(rng => {
           const p = rng.int(2, 9), q = rng.int(2, 9), r = rng.intExcept(2, 20, [p]);
           const code = `a = ${p}\nb = a + ${q}\na = ${r}\nprint(a, b)`;
@@ -320,7 +577,7 @@
         })] },
 
       // 2 · Trace the variables.
-      { name: 'Trace the program', learn: 'store',
+      { challenge: 'only', name: 'Trace the program', learn: 'store',
         items: [Sci.gen(rng => {
           const a = rng.int(2, 9), b = rng.int(1, 9), c = rng.int(2, 4);
           const x1 = a, y2 = a + b, x3 = y2 * c, y4 = x3 - y2;
@@ -338,7 +595,7 @@
         })] },
 
       // 3 · Which type?
-      { name: 'Which type?', learn: 'types',
+      { challenge: 'only', name: 'Which type?', learn: 'types',
         items: [rng => {
           const bank = [['7', 0], ['-3', 0], ['100', 0], ['7.0', 1], ['0.5', 1], ['-2.25', 1], ['"7"', 2], ['"hello"', 2], ['"3.5"', 2], ['"True"', 2],
                         ['True', 3], ['False', 3]];
@@ -349,7 +606,7 @@
         }] },
 
       // 4 · Dividing.
-      { name: 'Dividing', learn: 'divide',
+      { challenge: 'only', name: 'Dividing', learn: 'divide',
         items: [Sci.gen(rng => {
           // Dividing by 2, 4 or 8 gives a decimal that binary stores exactly:
           // Skulpt and real Python print others differently (41 / 5).
@@ -364,7 +621,7 @@
         })] },
 
       // 5 · Converting types.
-      { name: 'Converting', learn: 'convert',
+      { challenge: 'only', name: 'Converting', learn: 'convert',
         items: [Sci.gen(rng => {
           const a = rng.int(2, 9), b = rng.int(10, 40), k = rng.int(2, 4), h = rng.int(1, 9);
           const forms = [
@@ -381,7 +638,7 @@
         })] },
 
       // 6 · Read the error.
-      { name: 'Read the error', learn: 'convert',
+      { challenge: 'only', name: 'Read the error', learn: 'convert',
         items: [
           ['score = 10\nprint(Score)', 'NameError', 'Score with a capital S is a different name from score, and it was never given a value.'],
           ['print(age)\nage = 14', 'NameError', 'Lines run top to bottom: age has no value yet when line 1 runs.'],
@@ -397,7 +654,7 @@
           ans === 'No error' ? { code, output } : { code, error: ans })) },
 
       // 7 · Allowed names.
-      { name: 'Allowed names?', learn: 'names',
+      { challenge: 'only', name: 'Allowed names?', learn: 'names',
         items: [rng => {
           const bank = [['score', 0], ['total_2', 0], ['_count', 0], ['firstName', 0], ['Year9', 0], ['max_speed', 0],
                         ['2nd', 1], ['my score', 1], ['first-name', 1], ['class', 1], ['9year', 1], ['for', 1]];
@@ -408,7 +665,7 @@
         }] },
 
       // 8 · f-strings.
-      { name: 'f-strings', learn: 'fstring',
+      { challenge: 'only', name: 'f-strings', learn: 'fstring',
         items: [Sci.gen(rng => {
           const name = rng.pick(NAMES), age = rng.int(12, 15), k = rng.int(2, 5);
           const code = `name = "${name}"\nage = ${age}\nprint(f"{name} will be {age + ${k}} in ${k} years")`;
@@ -418,7 +675,7 @@
         })] },
 
       // 9 · Parsons: swap two values.
-      { name: 'Swap two values', learn: 'reassign',
+      { challenge: 'only', name: 'Swap two values', learn: 'reassign',
         items: [Sci.gen(rng => {
           const a = rng.int(2, 9), b = rng.intExcept(2, 9, [a]);
           const seq = ['temp = a', 'a = b', 'b = temp', 'print(a, b)'];
@@ -428,7 +685,7 @@
         })] },
 
       // 10 · Make: speed.
-      { name: 'Make it: speed', learn: 'divide',
+      { challenge: 'only', name: 'Make it: speed', learn: 'divide',
         items: [Sci.gen(rng => {
           const [d, t] = rng.pick([[120, 1.5], [90, 2], [150, 3], [60, 0.5]]);
           const starter = `distance = ${d}\ntime = ${t}\n# Print the speed, worked out from distance and time\n`;
@@ -444,7 +701,7 @@
         })] },
 
       // 11 · Make: temperature.
-      { name: 'Make it: temperature', learn: 'fstring',
+      { challenge: 'only', name: 'Make it: temperature', learn: 'fstring',
         items: [Sci.gen(rng => {
           const c = rng.pick([25, 30, 15]);
           const starter = `celsius = ${c}\n# Print the temperature in Fahrenheit\n`;
@@ -459,7 +716,7 @@
         })] },
 
       // 12 · Extension: hours and minutes.
-      { name: 'Extension: hours and minutes', learn: 'divide',
+      { challenge: 'only', name: 'Extension: hours and minutes', learn: 'divide',
         items: [Sci.gen(rng => {
           const m = rng.int(61, 299);
           const code = `minutes = ${m}\nprint(minutes // 60, "h", minutes % 60, "min")`;

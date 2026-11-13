@@ -193,16 +193,20 @@ const Manifest = (() => {
     // of different data types, iteration, and organised testing and debugging.
     {
       key: 'basics', subject: 'coding', short: 'Python Basics', name: 'Python Basics', icon: '›',
+      challengeName: 'Challenge set', challengeTag: 'Challenge',
+      challengeNote: 'Challenge questions: the same ideas, taken to a high standard.',
       blurb: 'Printing, strings, variables, types, input and decisions: the first programs.',
       exercises: [
-        { id: 'cb1', code: 'C1', slug: 'output-strings', title: 'Output and Strings', tag: 'print, quotes, joining and reading errors', years: '9–10' },
-        { id: 'cb2', code: 'C2', slug: 'variables-types', title: 'Variables and Types', tag: 'Storing values, int, float, str, bool, f-strings', years: '9–10' },
+        { id: 'cb1', code: 'C1', slug: 'output-strings', title: 'Output and Strings', tag: 'print, quotes, joining and reading errors', years: '9–10', challenge: true },
+        { id: 'cb2', code: 'C2', slug: 'variables-types', title: 'Variables and Types', tag: 'Storing values, int, float, str, bool, f-strings', years: '9–10', challenge: true },
         { id: 'cb3', code: 'C3', slug: 'input-calculation', title: 'Input and Calculation', tag: 'Asking the user, converting what they type', years: '9–10', soon: true },
         { id: 'cb4', code: 'C4', slug: 'decisions', title: 'Decisions', tag: 'if, elif, else, and, or, not', years: '9–10', soon: true }
       ]
     },
     {
       key: 'loops', subject: 'coding', short: 'Loops, Lists and Functions', name: 'Loops, Lists and Functions', icon: '↻',
+      challengeName: 'Challenge set', challengeTag: 'Challenge',
+      challengeNote: 'Challenge questions: the same ideas, taken to a high standard.',
       blurb: 'Repeating, collecting and reusing: programs that do real work.',
       exercises: [
         { id: 'cl5', code: 'C5', slug: 'while-loops', title: 'While Loops', tag: 'Repeat until something changes', years: '9–10', soon: true },
@@ -270,6 +274,13 @@ const Manifest = (() => {
   /** The exercises that actually exist yet, optionally for one subject. */
   const live = subjectId => units(subjectId).flatMap(u => u.exercises.filter(e => !e.soon));
 
+  /** What a unit calls its harder set: English says "Year 9 challenge", coding "Challenge set". */
+  const challenge = u => ({
+    name: (u && u.challengeName) || 'Year 9 challenge',
+    tag: (u && u.challengeTag) || 'Year 9',
+    note: (u && u.challengeNote) || 'Year 9 questions: harder than the usual sets. Learn it has the new ideas.'
+  });
+
   /** An exercise by its id, with its unit attached. */
   const exercise = id => UNITS.flatMap(u => u.exercises).find(e => e.id === id) || null;
 
@@ -291,5 +302,5 @@ const Manifest = (() => {
     return { stars, max: list.length * 3, started, total: list.length };
   }
 
-  return { SUBJECTS, UNITS, unit, units, subject, live, exercise, count, progress };
+  return { SUBJECTS, UNITS, unit, units, subject, live, exercise, count, progress, challenge };
 })();
