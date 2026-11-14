@@ -148,29 +148,30 @@ const Manifest = (() => {
     // Chemistry does not land on ionic bonding. Codes keep the year (9.1, 10.2).
     {
       key: 'atoms-reactions', subject: 'science', short: 'Atoms and Reactions', name: 'Atoms and Reactions', icon: 'A',
-      topicFiles: ['science-y9'],
+      topicFiles: ['science-y9', 'science-y10'],
       challengeName: 'Challenge set', challengeTag: 'Challenge',
       challengeNote: 'Challenge questions: the same ideas, taken to a high standard.',
       blurb: 'Atoms, the periodic table, bonding and chemical reactions.',
       exercises: [
         { id: 's9e1', slug: 'atoms-periodic-table', title: 'Atoms and the Periodic Table', tag: 'Protons, neutrons, electrons, shells, groups', strand: 'Matter', challenge: true },
-        { id: 's9e2', slug: 'acids-bases', title: 'Acids, Bases and Gas Tests', tag: 'pH, indicators, identifying gases', strand: 'Chemical change', soon: true },
-        { id: 's10e1', slug: 'bonding-equations', title: 'Bonding, Formulas and Equations', tag: 'Ions, covalent bonds, balancing', strand: 'Matter', soon: true },
-        { id: 's10e2', slug: 'reaction-types', title: 'Types of Reaction', tag: 'Combination, combustion, decomposition, neutralisation', strand: 'Chemical change', soon: true }
+        { id: 's9e2', slug: 'acids-bases', title: 'Acids, Bases and Gas Tests', tag: 'pH, indicators, identifying gases', strand: 'Chemical change', challenge: true },
+        { id: 's10e1', slug: 'bonding-equations', title: 'Bonding, Formulas and Equations', tag: 'Ions, covalent bonds, balancing', strand: 'Matter', challenge: true },
+        { id: 's10e2', slug: 'reaction-types', title: 'Types of Reaction', tag: 'Combination, combustion, decomposition, neutralisation', strand: 'Chemical change', challenge: true }
       ]
     },
     {
       key: 'electricity-forces', subject: 'science', short: 'Electricity, Waves and Forces', name: 'Electricity, Waves and Forces', icon: 'Ω',
-      topicFiles: ['science-y9'],
+      topicFiles: ['science-y9', 'science-y10'],
       challengeName: 'Challenge set', challengeTag: 'Challenge',
       challengeNote: 'Challenge questions: the same ideas, taken to a high standard.',
       blurb: 'Circuits, motion and acceleration, pressure, and waves.',
       exercises: [
         { id: 's9e3', slug: 'circuits', title: 'Electric Circuits', tag: 'Current, voltage, series and parallel', strand: 'Matter, interactions and energy', challenge: true },
-        { id: 's9e4', slug: 'motion-acceleration', title: 'Motion and Acceleration', tag: 'Net force, position–time graphs', strand: 'Motion and forces', soon: true },
-        { id: 's10e3', slug: 'waves', title: 'Waves, Sound and Light', tag: 'Frequency, wavelength, the EM spectrum', strand: 'Matter, interactions and energy', soon: true },
-        { id: 's10e4', slug: 'force-mass-acceleration', title: 'Force, Mass and Acceleration', tag: 'F = ma, free-body diagrams', strand: 'Motion and forces', soon: true },
-        { id: 's10e5', slug: 'pressure-buoyancy', title: 'Pressure and Buoyancy', tag: 'Force on an area, fluids, floating', strand: 'Motion and forces', soon: true }
+        { id: 's10e3', slug: 'waves', title: 'Waves, Sound and Light', tag: 'Frequency, wavelength, the EM spectrum', strand: 'Matter, interactions and energy', challenge: true },
+        { id: 's9e4', slug: 'motion-forces', title: 'Motion and Forces', tag: 'Net force, balanced forces, position–time graphs', strand: 'Motion and forces', challenge: true },
+        { id: 's9e5', slug: 'pressure', title: 'Pressure', tag: 'Force on an area, P = F ÷ A', strand: 'Motion and forces', challenge: true },
+        { id: 's10e4', slug: 'force-mass-acceleration', title: 'Force, Mass and Acceleration', tag: 'F = ma, inertia, force pairs', strand: 'Motion and forces', challenge: true },
+        { id: 's10e5', slug: 'fluids-buoyancy', title: 'Fluids and Buoyancy', tag: 'Pressure in fluids, hydraulics, floating', strand: 'Motion and forces', challenge: true }
       ]
     },
 

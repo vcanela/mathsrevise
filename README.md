@@ -52,14 +52,19 @@ is git-ignored and never published.
 
 **Years 9–10** (Phase 4) have units of their own, so a Year 7 student opening Chemistry does not
 land on ionic bonding: **Atoms and Reactions** and **Electricity, Waves and Forces**, with codes
-that keep the year (9.1, 10.2) and a ★ Challenge set on every exercise. Two are written, 9.1
-Atoms and the Periodic Table and 9.3 Electric Circuits; the rest of those units are listed as
-coming soon, and Earth Systems and The Living Body are still to be added. They bring new
-diagrams in `js/science.js`: Bohr diagrams and a labelled atom, the first four periods of the
-periodic table, circuit diagrams (series or parallel, with ammeters, voltmeters and switches,
-drawn from a description so a meter shows exactly the reading the question uses) and energy
-transfer (Sankey) diagrams drawn to scale. The curriculum does not ask for V = IR in Year 9, so
-neither do the questions.
+that keep the year (9.1, 10.2) and a ★ Challenge set on every exercise. Both units are written:
+Atoms and Reactions (9.1 Atoms and the Periodic Table, 9.2 Acids, Bases and Gas Tests, 10.1
+Bonding, Formulas and Equations, 10.2 Types of Reaction) and Electricity, Waves and Forces (9.3
+Electric Circuits, 9.4 Motion and Forces, 9.5 Pressure, 10.3 Waves, Sound and Light, 10.4 Force,
+Mass and Acceleration, 10.5 Fluids and Buoyancy). Earth Systems and The Living Body are still to
+be added. They bring new diagrams in `js/science.js`: Bohr diagrams and a labelled atom, the
+first four periods of the periodic table, circuit diagrams (series or parallel, with ammeters,
+voltmeters and switches, drawn from a description so a meter shows exactly the reading the
+question uses), energy transfer (Sankey) diagrams drawn to scale, the pH scale in universal
+indicator colours, transverse and longitudinal waves, and a tank of water. Chemical equations are
+balanced in `fill` boxes, one per coefficient. The curriculum does not ask for V = IR, the wave
+equation or moles at this level, so neither do the questions. `Sci.choice` takes `options` for
+answers with a natural order (acidic, neutral, alkaline), shown in that order whichever is right.
 
 Science questions come in two kinds. **Quantitative** ones (speed, mass, reading a graph) are
 generated with fresh numbers, like the maths. **Conceptual** ones cannot be, so each question
@@ -208,7 +213,8 @@ js/
     problems.js         unit 6, problem solving
     science-y7.js       Year 7 science
     science-y8.js       Year 8 science
-    science-y9.js       Year 9 science (9.1 Atoms and the Periodic Table, 9.3 Electric Circuits)
+    science-y9.js       Year 9 science (9.1 to 9.5)
+    science-y10.js      Year 10 science (10.1 to 10.5)
     coding-basics.js    Coding: Python Basics (C1 to C4)
     coding-loops.js     Coding: Loops, Lists and Functions (C5 to C8)
 tools/

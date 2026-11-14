@@ -65,14 +65,14 @@ const isPerm = (arr, n) => arr.length === n && [...arr].sort((a, b) => a - b).ev
 function checkQuestion(where, q) {
   checked++;
   if (typeof q.prompt !== 'string' || !q.prompt.trim()) return fail(where, 'empty prompt');
-  if (/undefined|NaN/.test(q.prompt)) return fail(where, 'prompt contains undefined/NaN', q.prompt.slice(0, 90));
-  if (q.note && /undefined|NaN/.test(q.note)) fail(where, 'note contains undefined/NaN');
-  if (q.tip && /undefined|NaN/.test(q.tip)) fail(where, 'tip contains undefined/NaN');
+  if (/undefined|\bNaN\b/.test(q.prompt)) return fail(where, 'prompt contains undefined/NaN', q.prompt.slice(0, 90));
+  if (q.note && /undefined|\bNaN\b/.test(q.note)) fail(where, 'note contains undefined/NaN');
+  if (q.tip && /undefined|\bNaN\b/.test(q.tip)) fail(where, 'tip contains undefined/NaN');
   // An answer box's placeholder is shown before the student has tried, so it
   // must never be a worked example ("e.g. 2y + 5"): that is a tip's job.
   const ph = q.input && q.input.placeholder;
   if (ph && (/\be\.g\./i.test(ph) || /\d/.test(ph))) fail(where, 'placeholder gives an example: ' + ph);
-  if (q.explain && /undefined|NaN/.test(q.explain)) fail(where, 'explain contains undefined/NaN', q.explain.slice(0, 90));
+  if (q.explain && /undefined|\bNaN\b/.test(q.explain)) fail(where, 'explain contains undefined/NaN', q.explain.slice(0, 90));
 
   const inp = q.input;
   if (!inp || !inp.kind) return fail(where, 'no input spec');
@@ -111,7 +111,7 @@ function checkQuestion(where, q) {
         return fail(where, 'choice correct index out of range: ' + inp.correct);
       const texts = inp.options.map(o => (o.html !== undefined ? o.html : String(o)));
       if (new Set(texts).size !== texts.length) fail(where, 'choice has duplicate options', texts.join(' | '));
-      if (texts.some(t => /undefined|NaN/.test(t))) fail(where, 'choice option contains undefined/NaN');
+      if (texts.some(t => /undefined|\bNaN\b/.test(t))) fail(where, 'choice option contains undefined/NaN');
       // If options carry a `right` flag, exactly one must be true and it must
       // be the one `correct` points at.
       if (inp.options.some(o => o && typeof o === 'object' && 'right' in o)) {
@@ -137,7 +137,7 @@ function checkQuestion(where, q) {
       if (!Array.isArray(inp.lines) || inp.lines.length < 2) return fail(where, 'spot needs 2+ lines');
       if (!isInt(inp.wrong) || inp.wrong < 0 || inp.wrong >= inp.lines.length)
         fail(where, 'spot wrong index out of range: ' + inp.wrong);
-      if (inp.lines.some(l => /undefined|NaN/.test(l))) fail(where, 'spot line contains undefined/NaN');
+      if (inp.lines.some(l => /undefined|\bNaN\b/.test(l))) fail(where, 'spot line contains undefined/NaN');
       const uniq = new Set(inp.lines);
       if (uniq.size !== inp.lines.length) fail(where, 'spot has two identical lines');
       break;

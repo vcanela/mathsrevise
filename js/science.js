@@ -136,8 +136,11 @@ const Sci = (() => {
    * solid, liquid, gas.
    */
   function choice(rng, o) {
-    const opts = [{ html: o.right, right: true }, ...o.wrong.map(w => ({ html: w, right: false }))];
-    const options = o.keepOrder ? opts : rng.shuffle(opts);
+    // `options` lists every option in its natural order (acidic, neutral,
+    // alkaline), with `right` among them; they are shown in that order.
+    const opts = o.options ? o.options.map(x => ({ html: x, right: x === o.right }))
+                           : [{ html: o.right, right: true }, ...o.wrong.map(w => ({ html: w, right: false }))];
+    const options = o.options || o.keepOrder ? opts : rng.shuffle(opts);
     return {
       prompt: o.prompt, note: o.note, tip: o.tip, hints: o.hints, tag: o.tag, draw: o.draw, diagram: o.diagram,
       input: { kind: 'choice', options, correct: options.findIndex(x => x.right), wide: o.wide !== false },
@@ -1606,4 +1609,128 @@ const SciDia = (() => {
   }
 
   Object.assign(SciDia, { shellsOf, bohr, atomParts, place, periodic, PT_SYMBOLS: SYMBOLS, circuit, sankey });
+})();
+
+
+// ── More Years 9 and 10 diagrams: pH, waves and fluids ──────────────────────
+
+(() => {
+  const INK = 'var(--dia-ink)', MUTED = 'var(--dia-muted)', ACC = 'var(--dia-accent)';
+
+  // Universal indicator colours, pH 0 to 14. These are the indicator's own
+  // colours, so they do not change with the page's light or dark theme.
+  const UI = ['#d7191c', '#e8412c', '#f26b30', '#f7942f', '#fbb72f', '#f2d53a', '#cde23f', '#7cc242',
+              '#3fae5a', '#2e9e8f', '#2f7fc1', '#3460b0', '#4b479c', '#5d3a8e', '#6a2c80'];
+
+  /** The pH scale as universal indicator colours, with optional lettered marks: [{ pH, label }]. */
+  function phScale(d, o) {
+    o = o || {};
+    const x0 = 14, x1 = d.w - 14, w = (x1 - x0) / 15, y = o.marks && o.marks.length ? 34 : 14, hgt = 22;
+    UI.forEach((c, i) => {
+      d.add('rect', { x: (x0 + i * w).toFixed(2), y, width: (w + 0.4).toFixed(2), height: hgt, fill: c });
+      d.text([x0 + (i + 0.5) * w, y + hgt + 11], String(i), { size: 10, fill: INK, bold: false });
+    });
+    d.add('rect', { x: x0, y, width: x1 - x0, height: hgt, fill: 'none', stroke: INK, 'stroke-width': 1.2 });
+    const ly = y + hgt + 30;
+    d.text([x0, ly], 'acidic', { size: 10.5, anchor: 'start', fill: MUTED });
+    d.text([x0 + 7.5 * w, ly], 'neutral', { size: 10.5, fill: MUTED });
+    d.text([x1, ly], 'alkaline', { size: 10.5, anchor: 'end', fill: MUTED });
+    for (const mk of o.marks || []) {
+      const x = x0 + (mk.pH + 0.5) * w;
+      SciDia.arrow(d, [x, 8], [x, y - 3], { colour: INK, width: 1.4, head: 5 });
+      d.text([x + 9, 13], mk.label, { size: 11.5, anchor: 'start' });
+    }
+  }
+
+  /** A sine wave from x0 to x1 about the line y: `cycles` whole waves of amplitude `amp`. */
+  function sine(d, x0, x1, y, cycles, amp, o) {
+    o = o || {};
+    const n = 160, pts = [];
+    for (let i = 0; i <= n; i++) {
+      const x = x0 + (x1 - x0) * i / n;
+      pts.push(`${i ? 'L' : 'M'} ${x.toFixed(2)} ${(y - amp * Math.sin(2 * Math.PI * cycles * i / n)).toFixed(2)}`);
+    }
+    d.add('path', { d: pts.join(' '), fill: 'none', stroke: o.colour || 'var(--brand)', 'stroke-width': o.width || 2.2 });
+  }
+
+  /** A double-headed arrow, for a measured distance. */
+  function span(d, a, b, colour) {
+    SciDia.arrow(d, a, b, { colour, width: 1.3, head: 5 });
+    SciDia.arrow(d, b, a, { colour, width: 1.3, head: 5 });
+  }
+
+  /**
+   * A transverse wave with numbered markers for a label question, or plain.
+   * o: { cycles, markers: ['wavelength', 'amplitude', 'crest', 'trough'] (in marker order) }.
+   */
+  function wave(d, o) {
+    o = o || {};
+    const x0 = 16, x1 = d.w - 16, y = d.h / 2 + 6, amp = Math.min(38, d.h / 2 - 22), cycles = o.cycles || 2;
+    d.line([x0, y], [x1, y], { stroke: MUTED, width: 1, dash: '4 3' });
+    sine(d, x0, x1, y, cycles, amp);
+    const lam = (x1 - x0) / cycles;
+    const crest = [x0 + lam / 4, y - amp], trough = [x0 + lam * 1.75, y + amp];
+    const spots = {
+      wavelength: { at: [x0 + lam * 0.75, y - amp - 12], draw: () => span(d, [x0 + lam / 4, y - amp - 8], [x0 + lam * 1.25, y - amp - 8], ACC) },
+      amplitude:  { at: [x0 + lam * 1.25 + 16, y - amp / 2], draw: () => span(d, [x0 + lam * 1.25, y], [x0 + lam * 1.25, y - amp], ACC) },
+      crest:      { at: [crest[0] - 22, crest[1] - 6], to: crest },
+      trough:     { at: [trough[0] + 24, trough[1] + 4], to: trough },
+      rest:       { at: [x1 - 10, y - 14], to: [x1 - 30, y] }
+    };
+    (o.markers || []).forEach((name, i) => {
+      const s = spots[name];
+      if (s.draw) s.draw();
+      if (s.to) d.line(s.at, s.to, { stroke: MUTED, width: 1 });
+      d.add('circle', { cx: s.at[0], cy: s.at[1], r: 8, fill: 'var(--surface)', stroke: INK, 'stroke-width': 1.2 });
+      d.text(s.at, String(i + 1), { size: 10.5 });
+    });
+  }
+
+  /** Two waves, A above B, drawn to the same scale: { a: { cycles, amp }, b: { cycles, amp } }. */
+  function twoWaves(d, o) {
+    const x0 = 30, x1 = d.w - 12, h = d.h / 2;
+    [['A', o.a, h / 2], ['B', o.b, h + h / 2]].forEach(([lab, w, y]) => {
+      d.line([x0, y], [x1, y], { stroke: MUTED, width: 1, dash: '4 3' });
+      sine(d, x0, x1, y, w.cycles, w.amp);
+      d.text([12, y], lab, { size: 13 });
+    });
+  }
+
+  /** A longitudinal wave: lines bunched into compressions and spread into rarefactions. */
+  function longitudinal(d, o) {
+    o = o || {};
+    const x0 = 14, x1 = d.w - 14, cycles = o.cycles || 3, n = 48;
+    const lam = (x1 - x0) / cycles, step = (x1 - x0) / n;
+    const top = 14, bot = d.h - (o.markers ? 34 : 14);
+    for (let i = 0; i <= n; i++) {
+      const rest = x0 + i * step;
+      const x = rest - 1.3 * step * Math.sin(2 * Math.PI * (rest - x0) / lam);
+      d.line([x, top], [x, bot], { stroke: 'var(--brand)', width: 1.6 });
+    }
+    if (o.markers) {
+      // Compressions sit where the displacement pattern bunches the lines: at the start of each wavelength.
+      const marks = { compression: [x0 + lam, bot + 16], rarefaction: [x0 + lam * 1.5, bot + 16] };
+      o.markers.forEach((name, i) => {
+        const at = marks[name];
+        d.line([at[0], bot + 8], [at[0], bot], { stroke: MUTED, width: 1 });
+        d.add('circle', { cx: at[0], cy: at[1], r: 8, fill: 'var(--surface)', stroke: INK, 'stroke-width': 1.2 });
+        d.text(at, String(i + 1), { size: 10.5 });
+      });
+    }
+  }
+
+  /** A tank of water with lettered points at given depths: marks [{ x (0–1), depth (0–1), label }]. */
+  function tank(d, marks) {
+    const x0 = 30, x1 = d.w - 30, top = 16, bot = d.h - 14, water = top + 10;
+    d.add('rect', { x: x0, y: water, width: x1 - x0, height: bot - water, fill: 'var(--brand)', 'fill-opacity': 0.16 });
+    d.line([x0, top], [x0, bot], { width: 2 }); d.line([x1, top], [x1, bot], { width: 2 }); d.line([x0, bot], [x1, bot], { width: 2 });
+    d.line([x0, water], [x1, water], { stroke: 'var(--brand-ink)', width: 1.2 });
+    for (const mk of marks) {
+      const p = [x0 + 14 + mk.x * (x1 - x0 - 28), water + 8 + mk.depth * (bot - water - 18)];
+      d.dot(p, { r: 3.5, fill: ACC });
+      d.text([p[0] + 8, p[1]], mk.label, { size: 12, anchor: 'start' });
+    }
+  }
+
+  Object.assign(SciDia, { phScale, UI_COLOURS: UI, wave, twoWaves, longitudinal, tank });
 })();

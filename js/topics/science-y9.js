@@ -500,7 +500,7 @@
           const spec = par ? { kind: 'parallel', branches: ls.map(l => [l]), supply: [cellOf(rng.pick([1.5, 3, 6]))] }
                            : { kind: 'series', loop: ls, supply: [cellOf(rng.pick([1.5, 3, 6]))] };
           return C(rng, { prompt: `How are the ${n} lamps connected?`, diagram: { w: 280, h: par ? 170 : 120 }, draw: d => SciDia.circuit(d, spec),
-            right: par ? 'In parallel' : 'In series', wrong: [par ? 'In series' : 'In parallel'], keepOrder: true, wide: false,
+            right: par ? 'In parallel' : 'In series', options: ['In series', 'In parallel'], wide: false,
             explain: par ? 'Each lamp is on its own branch: there are several paths for the current. That is parallel.'
                          : 'There is only one path, through every lamp in turn. That is series.' });
         })] },
@@ -723,6 +723,639 @@
             right: 'Unlike charges attract', wrong: ['Like charges attract', 'The balloon is magnetic', 'The hair is lighter than the balloon'], wide: false,
             explain: 'The hair (positive) is attracted to the balloon (negative). Each hair also repels the others, all being positive.' })
         ] }
+    ]
+  });
+
+
+  // ═══ 9.2 Acids, bases and gas tests ═══════════════════════════════════════
+  // Knowledge: Acids and bases; Identification tests for common substances
+  // (Chemical change, Year 9, p. 25).
+  // Practices: choose how to determine pH; indicators, including natural
+  // ones; connect pH with uses; safety with corrosive substances; use
+  // standard tests; draw conclusions from properties.
+
+  const PH_ITEMS = [
+    ['stomach acid', 1], ['lemon juice', 2], ['vinegar', 3], ['orange juice', 4], ['black coffee', 5], ['milk', 6],
+    ['pure water', 7], ['blood', 7], ['baking soda solution', 9], ['toothpaste', 9], ['soapy water', 10],
+    ['ammonia cleaner', 11], ['oven cleaner', 13], ['drain cleaner', 14]
+  ];
+  /** What universal indicator looks like across the scale, as words. */
+  const UI_WORD = pH => (pH <= 2 ? 'red' : pH <= 4 ? 'orange' : pH <= 6 ? 'yellow' : pH === 7 ? 'green' : pH <= 10 ? 'blue' : 'purple');
+  const kindOf = pH => (pH < 7 ? 'acidic' : pH === 7 ? 'neutral' : 'alkaline');
+  const GAS_TESTS = [
+    ['hydrogen', 'A lit splint held at the mouth of the tube goes out with a squeaky pop'],
+    ['oxygen', 'A glowing splint relights'],
+    ['carbon dioxide', 'Bubbled through limewater, it turns the limewater milky'],
+    ['water', 'It turns blue cobalt chloride paper pink']
+  ];
+
+  Sci.topic({
+    id: 's9e2', unit: 'atoms-reactions',
+    title: 'Acids, Bases and Gas Tests',
+    blurb: 'Acids and bases, the pH scale and indicators, and the tests that identify hydrogen, oxygen, carbon dioxide and water.',
+    hint: 'pH below 7 is acidic, 7 is neutral, above 7 is alkaline; the lower the pH, the more acidic. Litmus turns red in acid and blue in alkali. ' +
+          'Gas tests: hydrogen pops, oxygen relights a glowing splint, carbon dioxide turns limewater milky, water turns cobalt chloride paper pink.',
+
+    learn: [
+      { id: 'props', title: 'Acids and bases',
+        text: Sci.table(['', 'Acids', 'Bases'], [['Taste (never test this!)', 'sour', 'bitter'], ['Feel', '', 'slippery'], ['Safety', 'can be corrosive', 'can be corrosive'],
+                ['Examples', 'hydrochloric, sulfuric, nitric acid', 'metal oxides, hydroxides, carbonates, bicarbonates, ammonia']]) +
+              '<p>Acids and bases have opposite properties. A base that dissolves in water is an <strong>alkali</strong>.</p>' },
+      { id: 'ph', title: 'The pH scale', wide: true, diagram: { w: 330, h: 80 },
+        draw(d) { SciDia.phScale(d); },
+        text: '<p>pH measures how acidic or alkaline a solution is. Below 7 is acidic, 7 is neutral, above 7 is alkaline. <strong>Lower pH means more acidic.</strong></p>' },
+      { id: 'indicators', title: 'Indicators',
+        text: '<ul><li><strong>Litmus</strong>: red in acid, blue in alkali. It tells acid from alkali, but not how strong.</li>' +
+              '<li><strong>Universal indicator</strong> shows a colour for each pH: red, orange, yellow, green (7), blue, purple.</li>' +
+              '<li>Natural indicators work too: red cabbage juice is red in acid, purple near neutral, green to yellow in alkali.</li>' +
+              '<li>A <strong>pH meter</strong> gives a number, more precisely than a colour.</li></ul>' },
+      { id: 'everyday', title: 'pH in everyday life',
+        text: Sci.table(['Substance', 'pH'], [['stomach acid', '1'], ['lemon juice', '2'], ['vinegar', '3'], ['pure water', '7'], ['baking soda solution', '9'], ['soapy water', '10'], ['drain cleaner', '14']]) +
+              '<p>Antacids are weak bases that cancel extra stomach acid; gardeners spread lime (a base) on soil that is too acidic.</p>' },
+      { id: 'gases', title: 'Testing for gases and water',
+        text: Sci.table(['Substance', 'Test', 'Result'], [['hydrogen', 'lit splint', 'squeaky pop'], ['oxygen', 'glowing splint', 'relights'],
+                ['carbon dioxide', 'limewater', 'turns milky'], ['water', 'blue cobalt chloride paper', 'turns pink']]) +
+              '<p>Hydrogen, oxygen and carbon dioxide are all colourless and odourless, so they can only be told apart by testing.</p>' },
+      { id: 'safety', title: 'Working safely',
+        text: '<ul><li>Wear safety glasses; acids and alkalis can both be corrosive.</li><li>Use the most dilute solution that does the job.</li>' +
+              '<li>Spilled on skin: wash with plenty of running water and tell the teacher.</li><li>At home, keep cleaners in their labelled bottles, out of children’s reach.</li></ul>' }
+    ],
+
+    examples: [
+      {
+        title: 'Example 1: reading pH',
+        diagram: { w: 330, h: 100 }, draw(d) { SciDia.phScale(d, { marks: [{ pH: 3, label: 'vinegar' }, { pH: 10, label: 'soap' }] }); },
+        steps: ['Vinegar has pH 3: below 7, so acidic. Universal indicator turns orange.', 'Soapy water has pH 10: above 7, so alkaline. Universal indicator turns blue.'],
+        result: 'Vinegar is acidic, soapy water alkaline'
+      },
+      {
+        title: 'Example 2: identifying a gas',
+        steps: ['Marble chips fizz in acid. Is the gas hydrogen, oxygen or carbon dioxide? It looks the same as any of them.',
+                'Bubble it through limewater: the limewater turns milky.', 'Only carbon dioxide does that.'],
+        result: 'The gas is carbon dioxide'
+      }
+    ],
+
+    slots: [
+      { name: 'Acidic or alkaline?', learn: 'everyday',
+        items: [rng => Sci.sort(rng, {
+          prompt: 'Sort these into acidic and alkaline.', bins: ['Acidic', 'Alkaline'], pick: 6,
+          items: PH_ITEMS.filter(([, p]) => p !== 7).map(([text, p]) => ({ text, bin: p < 7 ? 0 : 1 })),
+          explain: 'Stomach acid, lemon juice, vinegar, orange juice, coffee and milk are acidic (pH below 7). Baking soda, toothpaste, soap and the cleaners are alkaline.'
+        })] },
+
+      { name: 'Reading pH', learn: 'ph',
+        items: [Sci.gen(rng => {
+          const pH = rng.int(0, 14);
+          return C(rng, { prompt: `A solution has a pH of ${pH}. It is…`, right: kindOf(pH), options: ['acidic', 'neutral', 'alkaline'], wide: false,
+            explain: pH === 7 ? 'pH 7 is neutral.' : `pH ${pH} is ${pH < 7 ? 'below' : 'above'} 7, so it is ${kindOf(pH)}.` });
+        })] },
+
+      { name: 'Most acidic, most alkaline', learn: 'ph',
+        items: [Sci.gen(rng => {
+          // Four substances with four different pH values.
+          const four = [];
+          for (const x of rng.shuffle(PH_ITEMS)) if (four.length < 4 && !four.some(y => y[1] === x[1])) four.push(x);
+          const acid = rng.chance();
+          const best = four.reduce((b, x) => ((acid ? x[1] < b[1] : x[1] > b[1]) ? x : b));
+          return C(rng, { prompt: `Which of these is the most <strong>${acid ? 'acidic' : 'alkaline'}</strong>?` + Sci.table(['Substance', 'pH'], four.map(([n, p]) => [n, String(p)])),
+            right: best[0], wrong: four.filter(x => x !== best).map(x => x[0]), wide: false,
+            explain: acid ? `The lowest pH is the most acidic: ${best[0]}, pH ${best[1]}.` : `The highest pH is the most alkaline: ${best[0]}, pH ${best[1]}.` });
+        })] },
+
+      { name: 'Universal indicator', learn: 'indicators',
+        items: [Sci.gen(rng => {
+          const pH = rng.pick([1, 3, 5, 7, 9, 12]);
+          const col = UI_WORD(pH);
+          const opts = ['strongly acidic (pH 0–2)', 'weakly acidic (pH 3–6)', 'neutral (pH 7)', 'alkaline (pH 8 or more)'];
+          const right = pH <= 2 ? opts[0] : pH <= 6 ? opts[1] : pH === 7 ? opts[2] : opts[3];
+          return C(rng, { prompt: `Universal indicator turns <strong>${col}</strong> in a solution. Use the scale: the solution is…`,
+            diagram: { w: 330, h: 80 }, draw: d => SciDia.phScale(d), right, options: opts,
+            explain: `${col[0].toUpperCase() + col.slice(1)} is around pH ${pH <= 2 ? '0 to 2' : pH <= 4 ? '3 to 4' : pH <= 6 ? '5 to 6' : pH === 7 ? '7' : pH <= 10 ? '8 to 10' : '11 to 14'}.` });
+        })] },
+
+      { name: 'Litmus', learn: 'indicators',
+        items: [
+          rng => C(rng, { prompt: 'Blue litmus paper is dipped in lemon juice. It…', right: 'turns red', wrong: ['stays blue', 'turns green', 'turns purple'], wide: false,
+                          explain: 'Lemon juice is acidic, and litmus is red in acid.' }),
+          rng => C(rng, { prompt: 'Red litmus paper is dipped in a solution of drain cleaner. It…', right: 'turns blue', wrong: ['stays red', 'turns yellow', 'turns orange'], wide: false,
+                          explain: 'Drain cleaner is alkaline, and litmus is blue in alkali.' }),
+          rng => C(rng, { prompt: 'Red litmus and blue litmus are both dipped in pure water. What happens?', right: 'Neither changes colour', wrong: ['Both turn red', 'Both turn blue', 'They swap colours'],
+                          explain: 'Pure water is neutral, so litmus does not change.' }),
+          rng => C(rng, { prompt: 'Two acids both turn blue litmus red. What can litmus <strong>not</strong> tell you?', right: 'Which acid is stronger', wrong: ['That they are acids', 'That they are not alkalis', 'That they are not neutral'],
+                          explain: 'Litmus only tells acid from alkali. Universal indicator or a pH meter shows how acidic.' })
+        ] },
+
+      { name: 'Properties of acids and bases', learn: 'props',
+        items: [
+          rng => C(rng, { prompt: 'Which of these is a common <strong>acid</strong>?', right: rng.pick(['hydrochloric acid', 'sulfuric acid', 'nitric acid']), wrong: ['sodium hydroxide', 'ammonia', 'calcium carbonate'], wide: false,
+                          explain: 'Hydrochloric, sulfuric and nitric acids are common acids. The others are bases.' }),
+          rng => C(rng, { prompt: 'Which of these is a <strong>base</strong>?', right: rng.pick(['sodium hydroxide', 'calcium carbonate', 'magnesium oxide', 'ammonia']), wrong: ['hydrochloric acid', 'vinegar', 'lemon juice'], wide: false,
+                          explain: 'Metal oxides, hydroxides, carbonates and bicarbonates, and ammonia, are bases.' }),
+          rng => C(rng, { prompt: 'What is an alkali?', right: 'A base that dissolves in water', wrong: ['An acid that dissolves in water', 'Any substance with pH 7', 'A gas given off by acids'],
+                          explain: 'Bases that dissolve in water are called alkalis.' }),
+          rng => C(rng, { prompt: 'Which property do some acids and some bases share?', right: 'They can be corrosive', wrong: ['They taste sour', 'They feel slippery', 'They turn litmus blue'],
+                          explain: 'Both can be corrosive. Sour taste is typical of acids, a bitter taste and slippery feel of bases.' }),
+          rng => C(rng, { prompt: 'Soap feels slippery and tastes bitter. It is probably…', right: 'a base', wrong: ['an acid', 'neutral', 'a gas'], wide: false,
+                          explain: 'A slippery feel and bitter taste are properties of bases.' })
+        ] },
+
+      { name: 'Gas tests', learn: 'gases',
+        items: [rng => {
+          const rows = rng.sample(GAS_TESTS, 3);
+          return Sci.match(rng, 'Match each substance to the test that identifies it.', rows.map(([g, t]) => [g, t]),
+            'Hydrogen pops; oxygen relights a glowing splint; carbon dioxide turns limewater milky; water turns cobalt chloride paper pink.', { learn: 'gases' });
+        }] },
+
+      { name: 'Identify the gas', learn: 'gases',
+        items: GAS_TESTS.map(([g, t]) => rng => C(rng, { prompt: `A colourless gas is collected and tested. ${t}. What is it?`,
+          right: g, wrong: GAS_TESTS.map(x => x[0]).filter(x => x !== g), wide: false,
+          explain: `${t}: that is the test for ${g}.` })) },
+
+      { name: 'pH at work', learn: 'everyday',
+        items: [
+          rng => C(rng, { prompt: 'Why does an antacid tablet help with indigestion caused by too much stomach acid?', right: 'It is a weak base that cancels out some of the acid',
+            wrong: ['It is an acid that adds to the stomach acid', 'It is neutral, so it dilutes the acid', 'It turns the acid into a gas'],
+            explain: 'Antacids are mild bases: they react with excess acid and raise the pH.' }),
+          rng => C(rng, { prompt: 'A farmer finds the soil is too acidic for the crop. What should they spread on it?', right: 'Lime, a base', wrong: ['Vinegar, an acid', 'More water only', 'Lemon juice'],
+            explain: 'Lime is a base: it neutralises some of the acid and raises the soil’s pH.' }),
+          rng => C(rng, { prompt: 'Why do oven and drain cleaners need warning labels, even though they are not acids?', right: 'Strong alkalis are corrosive too', wrong: ['All cleaners are acids', 'They are neutral', 'They give off oxygen'],
+            explain: 'Strong bases (pH 13 to 14) are as corrosive as strong acids.' })
+        ] },
+
+      { name: 'Working safely', learn: 'safety',
+        items: [
+          rng => C(rng, { prompt: 'Dilute acid splashes onto your hand. What should you do first?', right: 'Wash it with plenty of running water and tell the teacher',
+            wrong: ['Wipe it off with a paper towel and carry on', 'Add some alkali to neutralise it', 'Wait to see whether it stings'],
+            explain: 'Running water dilutes and removes it quickly. Adding another chemical can make things worse.' }),
+          rng => C(rng, { prompt: 'Why should you wear safety glasses when using acids and alkalis?', right: 'Both can be corrosive, and eyes are easily damaged', wrong: ['Only to protect against heat', 'Because the solutions are bright colours', 'They are only needed for acids'],
+            explain: 'Strong acids and strong alkalis can both damage eyes.' }),
+          rng => C(rng, { prompt: 'Which is the safest choice for an investigation that works with either?', right: 'A dilute solution', wrong: ['A concentrated solution', 'The strongest acid available', 'An unlabelled bottle'], wide: false,
+            explain: 'Use the most dilute solution that does the job: it is less corrosive.' })
+        ] },
+
+      // ── Challenge set.
+      { challenge: 'only', name: 'Choosing a method', learn: 'indicators',
+        items: [
+          rng => C(rng, { prompt: 'You need to know whether a pool’s water is pH 7.2 or 7.6. What is the best method?', right: 'A pH meter', wrong: ['Litmus paper', 'Universal indicator', 'Red cabbage juice'], wide: false,
+            explain: 'Only a pH meter gives a precise number; indicator colours cannot separate 7.2 from 7.6.' }),
+          rng => C(rng, { prompt: 'You only need to know whether a cleaning product is acidic or alkaline. What is enough?', right: 'Litmus paper', wrong: ['A pH meter calibrated to 0.01', 'A thermometer', 'A glowing splint'], wide: false,
+            explain: 'Litmus tells acid from alkali, which is all you need here.' }),
+          rng => C(rng, { prompt: 'A solution is deeply coloured purple, so an indicator colour would be hard to see. What should you use?', right: 'A pH meter', wrong: ['Universal indicator', 'Litmus paper', 'Red cabbage juice'], wide: false,
+            explain: 'A coloured solution hides indicator colours; a meter reads pH electrically.' })
+        ] },
+
+      { challenge: 'only', name: 'A natural indicator', learn: 'indicators',
+        items: [Sci.gen(rng => {
+          const table = [['red', 'acidic (pH 1–3)'], ['purple', 'about neutral (pH 6–7)'], ['blue-green', 'alkaline (pH 8–11)'], ['yellow', 'strongly alkaline (pH 12–14)']];
+          const k = rng.int(0, 3);
+          const sub = [['lemon juice', 'tap water', 'baking soda solution', 'drain cleaner'], ['vinegar', 'milk', 'soapy water', 'oven cleaner']][rng.int(0, 1)];
+          return C(rng, { prompt: 'Red cabbage juice was added to some known solutions:' + Sci.table(['pH', 'Colour'], [['2', 'red'], ['7', 'purple'], ['10', 'blue-green'], ['13', 'yellow']]) +
+                           `It turns <strong>${table[k][0]}</strong> in an unknown solution. The unknown is most likely…`,
+            right: sub[k], wrong: sub.filter((_, i) => i !== k), wide: false,
+            explain: `${table[k][0]} matches ${table[k][1]}, which fits ${sub[k]}.` });
+        })] },
+
+      { challenge: 'only', name: 'Drawing conclusions', learn: 'gases',
+        items: [
+          rng => C(rng, { prompt: 'A gas is tested: a glowing splint does <strong>not</strong> relight, a lit splint goes out without a pop, and limewater turns milky. What is it?',
+            right: 'carbon dioxide', wrong: ['oxygen', 'hydrogen', 'water vapour'], wide: false,
+            explain: 'Only one test is positive: limewater, which identifies carbon dioxide. (It also puts out flames.)' }),
+          rng => C(rng, { prompt: 'Magnesium ribbon fizzes in hydrochloric acid. A lit splint at the mouth of the tube gives a squeaky pop. What can you conclude?',
+            right: 'The gas is hydrogen', wrong: ['The gas is oxygen', 'The gas is carbon dioxide', 'No gas was made'], wide: false,
+            explain: 'The squeaky pop is the test for hydrogen. Metals such as magnesium give hydrogen with acids.' }),
+          rng => C(rng, { prompt: 'A clear liquid from a reaction turns blue cobalt chloride paper pink. What does this show?',
+            right: 'It contains water', wrong: ['It is pure water', 'It is an acid', 'It is an alkali'], wide: false,
+            explain: 'Cobalt chloride shows water is present, not that the liquid is pure water.' })
+        ] },
+
+      { challenge: 'only', name: 'Changing the pH', learn: 'ph',
+        items: [
+          rng => C(rng, { prompt: 'An acid of pH 2 is diluted a lot with water. Its pH…', right: 'rises towards 7, but stays below it', wrong: ['falls below 2', 'rises above 7', 'stays exactly 2'],
+            explain: 'Water makes the acid less concentrated, so less acidic: the pH moves up towards 7. Water alone cannot make it alkaline.' }),
+          rng => C(rng, { prompt: 'Alkali is slowly added to an acid containing universal indicator. What colour change do you see?', right: 'Red, then orange and yellow, then green',
+            wrong: ['Green, then red', 'Purple, then blue, then green', 'No change until the end, then red'],
+            explain: 'The pH rises as the acid is used up, so the colour moves along the scale from red towards green (neutral).' }),
+          rng => C(rng, { prompt: 'Which solution is more acidic: pH 3 or pH 5?', right: 'pH 3', wrong: ['pH 5', 'They are equally acidic', 'You cannot tell from pH'], wide: false,
+            explain: 'Lower pH means more acidic.' })
+        ] },
+
+      { challenge: 'only', name: 'Safety in context', learn: 'safety',
+        items: [
+          rng => C(rng, { prompt: 'Why should cleaning products never be mixed, or poured into old drink bottles?',
+            right: 'They can react dangerously, and someone could drink them by mistake', wrong: ['It makes them stronger cleaners', 'Plastic bottles are acidic', 'There is no real risk'],
+            explain: 'Mixing can release harmful gases, and an unlabelled drink bottle invites accidental poisoning.' }),
+          rng => C(rng, { prompt: 'In a workplace, what tells workers how to handle a corrosive substance safely?', right: 'Its label and safety data sheet', wrong: ['Its colour', 'Its smell', 'How old the bottle is'],
+            explain: 'Hazard labels and safety data sheets give the risks and the protective equipment needed.' })
+        ] }
+    ]
+  });
+
+
+  // ═══ 9.4 Motion and forces ════════════════════════════════════════════════
+  // Knowledge: Motion and forces (Motion and forces, Year 9, pp. 26–27).
+  // Practices: variables for a motion experiment; position–time graphs;
+  // net force from free-body diagrams; reliability of results.
+
+  /** Points along a curve, for a speeding-up or slowing-down section of an x–t graph. */
+  const curve = (t0, t1, x0, x1, speedingUp) => Array.from({ length: 21 }, (_, i) => {
+    const f = i / 20;
+    return [t0 + (t1 - t0) * f, x0 + (x1 - x0) * (speedingUp ? f * f : 1 - (1 - f) * (1 - f))];
+  });
+  const XT = { xLabel: 'Time (s)', yLabel: 'Position (m)' };
+
+  Sci.topic({
+    id: 's9e4', unit: 'electricity-forces',
+    title: 'Motion and Forces',
+    blurb: 'Net force, balanced and unbalanced forces, and what position–time graphs say about motion.',
+    hint: 'Add forces in the same direction; subtract forces in opposite directions. Zero net force: the object stays still or keeps a constant speed ' +
+          'in a straight line. Unbalanced: its motion changes. On a position–time graph: flat is stopped, straight is constant speed, steeper is faster, curved is changing speed.',
+
+    learn: [
+      { id: 'newton', title: 'Forces',
+        text: '<p>A force is a push or a pull, measured in <strong>newtons (N)</strong>, named for Isaac Newton, who developed the laws of motion.</p>' },
+      { id: 'net', title: 'Net force', diagram: { w: 260, h: 110 },
+        draw(d) { SciDia.forceDiagram(d, { left: 30, right: 80 }); },
+        text: '<p>The <strong>net force</strong> is all the forces combined. Opposite directions subtract: 80 − 30 = <strong>50 N to the right</strong>. Same direction adds.</p>' },
+      { id: 'balanced', title: 'Balanced forces',
+        text: '<p>When the net force is <strong>zero</strong>, an object at rest stays at rest, and a moving object keeps moving at a <strong>constant speed in a straight line</strong>.</p>' },
+      { id: 'unbalanced', title: 'Unbalanced forces',
+        text: '<p>When the net force is not zero, the motion changes: the object speeds up, slows down or changes direction. A larger unbalanced force changes it more in the same time: a trolley pushed harder speeds up more quickly.</p>' },
+      { id: 'xt', title: 'Position–time graphs', wide: true, diagram: { w: 300, h: 190 },
+        draw(d) { SciDia.graph(d, { xMax: 10, yMax: 40, xStep: 2, yStep: 10, ...XT,
+          series: [{ points: [[0, 0], [2, 10], [4, 20]] }, { points: [[4, 20], [6, 20]], dots: false }, { points: curve(6, 10, 20, 40, true), dots: false }] }); },
+        text: '<ul><li><strong>Straight sloping line</strong>: constant speed. Steeper is faster.</li><li><strong>Flat line</strong>: stationary.</li>' +
+              '<li><strong>Curve</strong>: changing speed; getting steeper means speeding up.</li></ul><p>Here: steady 5 m/s, stopped from 4 s to 6 s, then speeding up.</p>' },
+      { id: 'variables', title: 'A good motion experiment',
+        text: '<ul><li><strong>Independent</strong> variable: what you change (the height of a ramp).</li><li><strong>Dependent</strong>: what you measure (the time to roll down).</li>' +
+              '<li><strong>Controlled</strong>: what you keep the same (the trolley, the ramp’s length and surface).</li><li>Repeat and average to make results more reliable.</li></ul>' }
+    ],
+
+    examples: [
+      {
+        title: 'Example 1: net force',
+        diagram: { w: 260, h: 150 }, draw(d) { SciDia.forceDiagram(d, { left: 120, right: 200, up: 50, down: 50 }); },
+        steps: ['Up and down: 50 N each way, so they balance.', 'Left and right: 200 − 120 = 80 N, towards the larger force.'],
+        result: 'Net force: 80 N to the right, so the box speeds up to the right'
+      },
+      {
+        title: 'Example 2: reading a position–time graph',
+        diagram: { w: 300, h: 190 },
+        draw(d) { SciDia.graph(d, { xMax: 10, yMax: 30, xStep: 2, yStep: 10, ...XT, series: [{ points: [[0, 0], [4, 20], [7, 20], [10, 30]] }] }); },
+        steps: ['0 to 4 s: a straight line, rising 20 m in 4 s: a constant 5 m/s.', '4 to 7 s: flat, so stationary.', '7 to 10 s: straight, but less steep: 10 m in 3 s, slower than before.'],
+        result: 'Steady, stopped, then steady but slower'
+      }
+    ],
+
+    slots: [
+      { name: 'Calculate the net force', learn: 'net',
+        items: [Sci.gen((rng, diff) => {
+          const a = rng.int(2, 20) * 10, b = rng.intExcept(2, 20, [a / 10]) * 10;
+          const vert = diff !== 'core';
+          const v = rng.int(3, 12) * 10;
+          const forces = { left: a, right: b, ...(vert ? { up: v, down: v } : {}) };
+          return { prompt: 'What is the size of the net force on the box?', diagram: { w: 260, h: vert ? 160 : 110 }, draw: d => SciDia.forceDiagram(d, forces),
+                   input: { kind: 'number', answer: Math.abs(a - b), suffix: 'N', width: 70 },
+                   explain: (vert ? 'Up and down balance. ' : '') + `Opposite forces subtract: ${Math.max(a, b)} − ${Math.min(a, b)} = ${Math.abs(a - b)} N, towards the ${a > b ? 'left' : 'right'}.` };
+        })] },
+
+      { name: 'Which way?', learn: 'net',
+        items: [Sci.gen(rng => {
+          const k = rng.int(0, 2), a = rng.int(2, 15) * 10;
+          const b = k === 2 ? a : rng.intExcept(2, 15, [a / 10]) * 10;
+          const forces = { left: a, right: b };
+          const right = a === b ? 'There is no net force: they balance' : a > b ? 'To the left' : 'To the right';
+          return C(rng, { prompt: 'Which way does the net force act?', diagram: { w: 260, h: 110 }, draw: d => SciDia.forceDiagram(d, forces),
+            right, wrong: ['To the left', 'To the right', 'There is no net force: they balance', 'Upwards'].filter(x => x !== right).slice(0, 3), wide: false,
+            explain: a === b ? `Both are ${a} N, so the net force is zero.` : `The larger force is ${Math.max(a, b)} N to the ${a > b ? 'left' : 'right'}, so the net force is that way.` });
+        })] },
+
+      { name: 'Balanced or unbalanced?', learn: 'balanced',
+        items: [
+          ...[['A car drives along a straight motorway at a steady 100 km/h.', true], ['A book rests on a table.', true], ['A skydiver falls at a constant speed.', true],
+              ['A trolley speeds up after being pushed.', false], ['A cyclist brakes and slows down.', false], ['A netball is thrown and starts moving.', false]]
+            .map(([s, bal]) => rng => C(rng, { learn: bal ? 'balanced' : 'unbalanced', prompt: s + ' Are the forces on it balanced?',
+              right: bal ? 'Balanced: the net force is zero' : 'Unbalanced: there is a net force', options: ['Balanced: the net force is zero', 'Unbalanced: there is a net force'],
+              explain: bal ? 'Staying still, or moving at a constant speed in a straight line, means the net force is zero.' : 'Its speed is changing, so there must be a net force.' }))
+        ] },
+
+      { name: 'What happens next?', learn: 'balanced',
+        items: [
+          rng => C(rng, { prompt: 'A hockey puck slides across smooth ice. Imagine no friction at all: no net force acts on it. What does it do?', right: 'Keeps moving at the same speed in a straight line',
+            wrong: ['Slows down and stops', 'Speeds up', 'Curves to one side'], explain: 'Zero net force on a moving object: it keeps a constant speed in a straight line.' }),
+          rng => C(rng, { prompt: 'A parked car has no net force on it. What does it do?', right: 'Stays at rest', wrong: ['Starts rolling slowly', 'Speeds up', 'Moves at a constant speed'], wide: false,
+            explain: 'An object at rest with zero net force stays at rest.' }),
+          rng => C(rng, { learn: 'unbalanced', prompt: 'A moving cyclist stops pedalling. Friction and air resistance give a net force backwards. What happens?', right: 'The cyclist slows down',
+            wrong: ['The cyclist keeps a constant speed', 'The cyclist speeds up', 'The cyclist stops instantly'], explain: 'A net force against the motion slows it down.' }),
+          rng => C(rng, { learn: 'unbalanced', prompt: 'A rowing crew pulls harder, so the forward force is bigger than the drag. What happens?', right: 'The boat speeds up',
+            wrong: ['The boat keeps a constant speed', 'The boat slows down', 'The boat stops'], wide: false, explain: 'A net force forwards makes it speed up.' })
+        ] },
+
+      { name: 'Bigger forces, bigger changes', learn: 'unbalanced',
+        items: [
+          rng => C(rng, { learn: 'newton', prompt: 'In what unit is force measured?', right: 'newtons (N)', wrong: ['kilograms (kg)', 'metres per second (m/s)', 'joules (J)'], wide: false,
+                          explain: 'Force is measured in newtons, named after Isaac Newton, who developed the laws of motion.' }),
+          rng => C(rng, { prompt: 'Two identical trolleys are pushed for the same time. Trolley A gets a 10 N push, trolley B a 20 N push. Which speeds up more quickly?', right: 'Trolley B',
+            wrong: ['Trolley A', 'They speed up equally', 'Neither: pushing does not change speed'], wide: false, explain: 'A larger unbalanced force causes a larger change in motion in the same time.' }),
+          rng => C(rng, { prompt: 'A footballer kicks a ball softly, then much harder. Why does the hard kick send it off faster?', right: 'A larger force changes its motion more',
+            wrong: ['The ball is lighter the second time', 'A soft kick does not apply a force', 'Air resistance disappears'], explain: 'A bigger unbalanced force makes a bigger change in speed over the same short time.' })
+        ] },
+
+      { name: 'What the graph shows', learn: 'xt',
+        items: [Sci.gen(rng => {
+          const k = rng.int(0, 3);
+          const series = [[{ points: [[0, 15], [10, 15]] }], [{ points: [[0, 0], [10, 30]] }], [{ points: curve(0, 10, 0, 30, true), dots: false }], [{ points: curve(0, 10, 0, 30, false), dots: false }]][k];
+          const opts = ['It is stationary', 'It moves at a constant speed', 'It is speeding up', 'It is slowing down'];
+          return C(rng, { prompt: 'What is the object doing?', diagram: { w: 280, h: 180 }, draw: d => SciDia.graph(d, { xMax: 10, yMax: 30, xStep: 2, yStep: 10, ...XT, series }),
+            right: opts[k], options: opts,
+            explain: ['A flat line: its position is not changing.', 'A straight sloping line: the same distance every second.', 'The curve gets steeper: it covers more distance each second.', 'The curve gets flatter: it covers less distance each second.'][k] });
+        })] },
+
+      { name: 'Which is faster?', learn: 'xt',
+        items: [Sci.gen(rng => {
+          const a = rng.int(2, 4) * 10, b = rng.intExcept(1, 4, [a / 10]) * 10;
+          return C(rng, { prompt: 'Two runners, A and B. Which is faster?', diagram: { w: 280, h: 180 },
+            draw: d => SciDia.graph(d, { xMax: 10, yMax: 40, xStep: 2, yStep: 10, ...XT, series: [{ points: [[0, 0], [10, a]], label: 'A' }, { points: [[0, 0], [10, b]], label: 'B' }] }),
+            right: a > b ? 'A' : 'B', wrong: [a > b ? 'B' : 'A', 'Neither: they have the same speed'], wide: false,
+            explain: `${a > b ? 'A' : 'B'}’s line is steeper: it goes ${Math.max(a, b)} m in 10 s, against ${Math.min(a, b)} m.` });
+        })] },
+
+      { name: 'When was it stopped?', learn: 'xt',
+        items: [Sci.gen(rng => {
+          const t1 = rng.int(1, 4) * 2, t2 = t1 + rng.pick([2, 4]);
+          const x1 = rng.int(1, 3) * 10;
+          const pts = [[0, 0], [t1, x1], [t2, x1], [Math.min(t2 + 4, 14), Math.min(x1 + 10 * rng.int(1, 2), 40)]];
+          const right = `From ${t1} s to ${t2} s`;
+          const wrong = [`From 0 s to ${t1} s`, `From ${t2} s to ${pts[3][0]} s`, `At ${t1} s only`];
+          return C(rng, { prompt: 'During which time was the object stationary?', diagram: { w: 300, h: 180 },
+            draw: d => SciDia.graph(d, { xMax: 14, yMax: 40, xStep: 2, yStep: 10, ...XT, series: [{ points: pts }] }), right, wrong, wide: false,
+            explain: `The line is flat from ${t1} s to ${t2} s: the position stays at ${x1} m.` });
+        })] },
+
+      { name: 'Speed from the graph', learn: 'xt',
+        items: [Sci.gen(rng => {
+          const v = rng.int(1, 5), t = rng.pick([4, 5, 8, 10]), x = v * t;
+          return { prompt: 'What is the object’s speed?', diagram: { w: 280, h: 180 },
+                   draw: d => SciDia.graph(d, { xMax: 10, yMax: Math.max(10, Math.ceil(x / 10) * 10), xStep: 2, ...XT, series: [{ points: [[0, 0], [t, x]] }] }),
+                   input: { kind: 'number', answer: v, suffix: 'm/s', width: 70 },
+                   explain: `It moves ${x} m in ${t} s: speed = distance ÷ time = ${x} ÷ ${t} = ${v} m/s.` };
+        })] },
+
+      { name: 'Planning the experiment', learn: 'variables',
+        items: [
+          rng => C(rng, { prompt: 'Sam rolls a trolley down a ramp at different heights and times how long it takes. What is the <strong>independent</strong> variable?', right: 'The height of the ramp',
+            wrong: ['The time taken', 'The mass of the trolley', 'The length of the ramp'], wide: false, explain: 'The independent variable is the one Sam changes on purpose.' }),
+          rng => C(rng, { prompt: 'Sam rolls a trolley down a ramp at different heights and times how long it takes. What is the <strong>dependent</strong> variable?', right: 'The time taken',
+            wrong: ['The height of the ramp', 'The trolley', 'The stopwatch'], wide: false, explain: 'The dependent variable is the one Sam measures.' }),
+          rng => C(rng, { prompt: 'Sam rolls a trolley down a ramp at different heights. Which must stay the same for a fair test?', right: 'The trolley and the ramp’s length and surface',
+            wrong: ['The height of the ramp', 'The time taken', 'Nothing'], explain: 'Everything except the height is controlled, so only the height can cause the difference.' }),
+          rng => C(rng, { prompt: 'Why should Sam time each height three times and average?', right: 'To make the results more reliable', wrong: ['To make the trolley faster', 'Because one result is always wrong', 'To change the independent variable'],
+            explain: 'Repeats reduce the effect of random errors, such as reaction time with a stopwatch.' })
+        ] },
+
+      // ── Challenge set.
+      { challenge: 'only', name: 'Find the missing force', learn: 'balanced',
+        items: [Sci.gen(rng => {
+          const a = rng.int(3, 15) * 10, b = rng.int(1, 8) * 10;
+          return { prompt: `A sled moves at a constant speed in a straight line. It is pulled forward with a force F, against friction of ${a} N and air resistance of ${b} N. What is F?`,
+                   input: { kind: 'number', answer: a + b, suffix: 'N', width: 70 },
+                   explain: `Constant speed in a straight line means the net force is zero, so the forward pull balances both backward forces: ${a} + ${b} = ${a + b} N.` };
+        })] },
+
+      { challenge: 'only', name: 'Several forces', learn: 'net',
+        items: [Sci.gen(rng => {
+          const drive = rng.int(15, 40) * 100, fr = rng.int(2, 6) * 100, air = rng.int(3, 9) * 100;
+          const net = drive - fr - air;
+          return { prompt: `A car’s engine gives a driving force of ${drive} N. Friction is ${fr} N and air resistance ${air} N, both backwards. What is the net force?`,
+                   input: { kind: 'number', answer: net, suffix: 'N', width: 80 },
+                   explain: `The backward forces add: ${fr} + ${air} = ${fr + air} N. Net: ${drive} − ${fr + air} = ${net} N forwards, so the car speeds up.` };
+        })] },
+
+      { challenge: 'only', name: 'Telling the story', learn: 'xt',
+        items: [
+          rng => C(rng, { prompt: 'Mere walks to the dairy at a steady speed, waits inside, then walks home at the same speed. Which position–time graph fits?',
+            right: 'Straight up, flat, then straight back down to zero', wrong: ['Straight up, flat, then straight up again', 'A curve up, then a curve down', 'Flat, then straight up'],
+            explain: 'Moving away: position rises steadily. Waiting: flat. Walking home: position falls steadily back to the start.' }),
+          rng => C(rng, { prompt: 'A car pulls away from traffic lights, getting faster and faster. What shape is its position–time graph?',
+            right: 'A curve that gets steeper', wrong: ['A straight sloping line', 'A flat line', 'A curve that gets flatter'],
+            explain: 'Speeding up means more distance each second, so the slope increases.' }),
+          rng => C(rng, { prompt: 'A ball rolls along the floor and gradually comes to rest. What shape is its position–time graph?',
+            right: 'A curve that gets flatter, ending flat', wrong: ['A curve that gets steeper', 'A straight line', 'A line going down to zero'],
+            explain: 'Slowing down: less distance each second, so the slope decreases until the line is flat.' })
+        ] },
+
+      { challenge: 'only', name: 'Reliable results', learn: 'variables',
+        items: [
+          rng => C(rng, { prompt: 'Timing a 2-second roll with a hand stopwatch gives quite different results each time. Which change would improve accuracy most?',
+            right: 'Use light gates connected to a timer', wrong: ['Use a bigger stopwatch', 'Time it only once', 'Round each time to the nearest second'],
+            explain: 'Reaction time is a big error compared with 2 s. Light gates remove it.' }),
+          rng => C(rng, { prompt: 'Three times for one height are 2.1 s, 2.2 s and 3.9 s. What should Sam do with 3.9 s?',
+            right: 'Treat it as an outlier: check it, repeat that run, and leave it out of the average if it was a mistake', wrong: ['Include it, because every result counts the same', 'Change the other two to match it', 'Use it as the answer, because it is the largest'],
+            explain: 'A result far from the others suggests a mistake. Repeating it shows whether it is real.' }),
+          rng => C(rng, { prompt: 'Why is a longer ramp easier to time accurately than a very short one?',
+            right: 'The time is longer, so reaction-time errors are a smaller part of it', wrong: ['The trolley goes slower on long ramps', 'Short ramps are always unfair tests', 'Long ramps have no friction'],
+            explain: 'A fixed error of about 0.2 s matters much less in 5 s than in 1 s.' })
+        ] },
+
+      { challenge: 'only', name: 'No force needed to keep going', learn: 'balanced',
+        items: [
+          rng => C(rng, { prompt: 'A space probe far from any planet turns its engines off. What happens to it?', right: 'It keeps moving at a constant speed in a straight line',
+            wrong: ['It slows down and stops', 'It falls back to Earth', 'It speeds up'], explain: 'With no net force, nothing changes its motion. On Earth, friction is what usually slows things.' }),
+          rng => C(rng, { prompt: 'Why does a car need its engine running just to keep a constant speed on a flat road?', right: 'To balance friction and air resistance, so the net force is zero',
+            wrong: ['Because moving objects need a net force to keep moving', 'To make the car speed up', 'Because the road is pulling it backwards with gravity'],
+            explain: 'The engine’s force balances the resistive forces. Constant speed needs zero net force, not a forward net force.' })
+        ] }
+    ]
+  });
+
+
+  // ═══ 9.5 Pressure ═════════════════════════════════════════════════════════
+  // Knowledge: Pressure (Motion and forces, Year 9, p. 27).
+  // Practices: calculate pressure, force and area; justify everyday designs
+  // by contact area; accuracy of measurements.
+
+  const P_SHAPES = [
+    { what: 'a crate', lo: 200, hi: 1200 }, { what: 'a fridge', lo: 400, hi: 1000 }, { what: 'a statue', lo: 1000, hi: 6000 }, { what: 'a stack of books', lo: 50, hi: 300 }
+  ];
+
+  Sci.topic({
+    id: 's9e5', unit: 'electricity-forces',
+    title: 'Pressure',
+    blurb: 'How much force acts on each square metre: why knives are sharp and snowshoes are wide.',
+    hint: 'Pressure = force ÷ area. With force in newtons and area in m², pressure is in pascals (Pa), which is N/m². The same force on a smaller area gives a greater pressure. ' +
+          'Rearranged: force = pressure × area, and area = force ÷ pressure.',
+
+    learn: [
+      { id: 'pressure', title: 'Pressure',
+        text: '<p>Pressure is the force acting at right angles to a surface, divided by the area it acts on:</p>' +
+              '<p style="text-align:center">' + m('\\text{pressure} = \\dfrac{\\text{force}}{\\text{area}}') + '</p>' +
+              '<p>Force in newtons (N), area in square metres (m²): pressure in <strong>pascals (Pa)</strong>. 1 Pa = 1 N/m².</p>' },
+      { id: 'area', title: 'Small area, big pressure',
+        text: '<p>For the same force, a <strong>smaller</strong> area gives a <strong>greater</strong> pressure, and a larger area a lower one.</p>' +
+              '<ul><li>High pressure: an axe blade, a knife edge, a drawing pin’s point.</li><li>Low pressure: a hammer face, snowshoes, wide tractor tyres.</li></ul>' },
+      { id: 'rearrange', title: 'Finding force or area',
+        text: '<p>' + m('\\text{force} = \\text{pressure} \\times \\text{area}') + '</p><p>' + m('\\text{area} = \\text{force} \\div \\text{pressure}') + '</p>' },
+      { id: 'units', title: 'Other units',
+        text: '<p>For small areas, N/cm² is handy: 120 N on 4 cm² is 30 N/cm². Keep the units together: newtons and cm² give N/cm²; newtons and m² give Pa.</p>' },
+      { id: 'accuracy', title: 'Measuring well',
+        text: '<p>Measure force with a newton meter (spring balance) and lengths with a ruler, then calculate the area. Small lengths need careful measuring: a 1 mm error on a 1 cm edge is 10%.</p>' }
+    ],
+
+    examples: [
+      {
+        title: 'Example 1: calculating pressure',
+        steps: ['A crate weighs 600 N and rests on a base of 0.5 m².', m('\\text{pressure} = \\dfrac{600}{0.5} = 1200') + ' Pa.'],
+        result: '1200 Pa'
+      },
+      {
+        title: 'Example 2: same force, different area',
+        steps: ['A 700 N person stands in boots with 0.05 m² of sole: ' + m('700 \\div 0.05 = 14\\,000') + ' Pa.',
+                'On snowshoes with 0.35 m²: ' + m('700 \\div 0.35 = 2000') + ' Pa.', 'Seven times the area, one seventh of the pressure: they sink in less.'],
+        result: 'Snowshoes spread the force over a larger area'
+      }
+    ],
+
+    slots: [
+      { name: 'Calculate pressure', learn: 'pressure',
+        items: [Sci.gen((rng, diff) => {
+          const s = rng.pick(P_SHAPES);
+          const A = diff === 'core' ? rng.pick([1, 2, 4, 5]) : rng.pick([0.5, 0.2, 0.25, 2, 4]);
+          const P = rng.int(2, 30) * 50;
+          const F = +(P * A).toFixed(2);
+          return { prompt: `${s.what[0].toUpperCase() + s.what.slice(1)} pushes down with a force of ${Fmt.num(F)} N on an area of ${Fmt.num(A)} m². What pressure does it exert?`,
+                   input: { kind: 'number', answer: P, suffix: 'Pa', width: 90 },
+                   explain: m(`\\text{pressure} = ${F} \\div ${A} = ${P}`) + ' Pa' };
+        })] },
+
+      { name: 'Pressure in N/cm²', learn: 'units',
+        items: [Sci.gen(rng => {
+          const A = rng.int(2, 12), P = rng.int(2, 25);
+          return { prompt: `A force of ${A * P} N acts on an area of ${A} cm². What is the pressure?`,
+                   input: { kind: 'number', answer: P, suffix: 'N/cm²', width: 70 },
+                   explain: `${A * P} ÷ ${A} = ${P} N/cm².` };
+        })] },
+
+      { name: 'Calculate force', learn: 'rearrange',
+        items: [Sci.gen(rng => {
+          const A = rng.pick([0.5, 2, 3, 4, 10]), P = rng.int(2, 20) * 100;
+          return { prompt: `Air pushes on a window of area ${Fmt.num(A)} m² with a pressure of ${P} Pa. What force does it exert on the window?`,
+                   input: { kind: 'number', answer: +(P * A).toFixed(2), suffix: 'N', width: 90 },
+                   explain: m(`\\text{force} = \\text{pressure} \\times \\text{area} = ${P} \\times ${A} = ${Fmt.num(+(P * A).toFixed(2))}`) + ' N' };
+        })] },
+
+      { name: 'Calculate area', learn: 'rearrange',
+        items: [Sci.gen(rng => {
+          const A = rng.pick([2, 4, 5, 10]), P = rng.int(2, 9) * 100;
+          return { prompt: `A load of ${A * P} N exerts a pressure of ${P} Pa on the ground. Over what area is it spread?`,
+                   input: { kind: 'number', answer: A, suffix: 'm²', width: 70 },
+                   explain: m(`\\text{area} = \\text{force} \\div \\text{pressure} = ${A * P} \\div ${P} = ${A}`) + ' m²' };
+        })] },
+
+      { name: 'Which gives more pressure?', learn: 'area',
+        items: [Sci.gen(rng => {
+          const F = rng.int(2, 9) * 100, a = rng.pick([0.1, 0.2, 0.5]), b = rng.pick([1, 2, 4]);
+          const first = rng.chance();
+          const [A1, A2] = first ? [a, b] : [b, a];
+          return C(rng, { prompt: `The same ${F} N box is placed on surface X (contact area ${A1} m²) and on surface Y (contact area ${A2} m²). Where is the pressure greater?`,
+            right: A1 < A2 ? 'On X' : 'On Y', wrong: [A1 < A2 ? 'On Y' : 'On X', 'It is the same: the force is the same'], wide: false,
+            explain: `Same force, smaller area, greater pressure: ${A1 < A2 ? 'X' : 'Y'} has the smaller area.` });
+        })] },
+
+      { name: 'Pressure in everyday life', learn: 'area',
+        items: [
+          ['Why is a knife sharpened to a thin edge?', 'The small area gives a high pressure, so it cuts easily', ['The thin edge makes it lighter', 'A thin edge spreads the force out', 'It reduces the force needed to lift it']],
+          ['Why do snowshoes stop you sinking into soft snow?', 'They spread your weight over a larger area, lowering the pressure', ['They make you lighter', 'They increase the pressure on the snow', 'They melt the snow underneath']],
+          ['Why do tractors that work in soft paddocks have very wide tyres?', 'A larger area gives a lower pressure, so they sink less', ['Wide tyres make the tractor lighter', 'Wide tyres increase the pressure for grip', 'Wide tyres go faster']],
+          ['Why does a drawing pin have a sharp point and a wide flat head?', 'The point gives a high pressure on the board; the head gives a low pressure on your thumb', ['Both ends give the same pressure', 'The head increases the pressure on your thumb', 'The point is to make it lighter']],
+          ['Why is an axe blade thin while a hammer face is broad?', 'The axe needs high pressure to split wood; the hammer spreads its force to push without cutting', ['Hammers are heavier', 'Axes need low pressure', 'They are shaped that way only for looks']]
+        ].map(([q, r, w]) => rng => C(rng, { prompt: q, right: r, wrong: w, explain: 'Pressure = force ÷ area: a small area concentrates a force, a large area spreads it out.' })) },
+
+      { name: 'Units', learn: 'pressure',
+        items: [
+          rng => C(rng, { prompt: 'What is the unit of pressure, when force is in newtons and area in m²?', right: 'pascal (Pa)', wrong: ['newton (N)', 'joule (J)', 'metre (m)'], wide: false,
+                          explain: 'Pressure is measured in pascals: 1 Pa = 1 N/m².' }),
+          rng => C(rng, { prompt: '1 pascal is the same as…', right: '1 newton on each square metre', wrong: ['1 newton on each metre', '1 metre for each newton', '1 kilogram on each square metre'],
+                          explain: '1 Pa = 1 N/m².' }),
+          rng => C(rng, { prompt: 'Which calculation gives a pressure?', right: m('\\text{force} \\div \\text{area}'), wrong: [m('\\text{force} \\times \\text{area}'), m('\\text{area} \\div \\text{force}'), m('\\text{force} + \\text{area}')], wide: false,
+                          explain: 'Pressure is force divided by area.' })
+        ] },
+
+      { name: 'A block on its faces', learn: 'pressure',
+        items: [Sci.gen(rng => {
+          const dims = rng.pick([[0.1, 0.2, 0.5], [0.2, 0.4, 0.5], [0.1, 0.4, 0.5], [0.2, 0.25, 0.5]]);
+          const W = rng.pick([100, 200, 400, 500]);
+          const faces = [[dims[0], dims[1]], [dims[0], dims[2]], [dims[1], dims[2]]];
+          const k = rng.int(0, 2), A = +(faces[k][0] * faces[k][1]).toFixed(4), P = +(W / A).toFixed(2);
+          return { prompt: `A concrete block weighs ${W} N. It measures ${dims.join(' m × ')} m. It rests on its ${faces[k][0]} m × ${faces[k][1]} m face. What pressure does it exert?`,
+                   input: { kind: 'number', answer: P, tol: 0.5, suffix: 'Pa', width: 90 },
+                   explain: `Area = ${faces[k][0]} × ${faces[k][1]} = ${Fmt.num(A)} m². Pressure = ${W} ÷ ${Fmt.num(A)} = ${Fmt.num(P)} Pa.` };
+        })] },
+
+      { name: 'Measuring accurately', learn: 'accuracy',
+        items: [
+          rng => C(rng, { prompt: 'To find the pressure a shoe exerts, which measurements do you need?', right: 'The weight (in newtons) and the area of the sole touching the ground',
+            wrong: ['The weight and the height of the shoe', 'The length of the shoe only', 'The mass in grams only'], explain: 'Pressure needs a force and the area it acts on.' }),
+          rng => C(rng, { prompt: 'The sole of a shoe is an awkward shape. How could you measure its area more accurately?', right: 'Trace it onto 1 cm grid paper and count the squares, including part-squares',
+            wrong: ['Measure only its length', 'Guess by looking', 'Weigh the shoe'], explain: 'Counting grid squares handles an irregular shape; smaller squares make it more accurate.' }),
+          rng => C(rng, { prompt: 'Why is it harder to measure the area of a pin’s point accurately than the area of a table top?', right: 'A tiny measuring error is a large fraction of a tiny length',
+            wrong: ['Pins are made of metal', 'Tables are flat', 'Small areas have no pressure'], explain: 'A 0.1 mm error hardly matters on a metre, but is huge on a 0.2 mm point.' })
+        ] },
+
+      // ── Challenge set.
+      { challenge: 'only', name: 'One foot or two', learn: 'area',
+        items: [Sci.gen(rng => {
+          const W = rng.int(4, 9) * 100, a = rng.pick([0.02, 0.025]);
+          return { prompt: `A ${W} N person stands on two feet, each with ${a} m² of sole touching the ground. What is the pressure when they stand on <strong>one</strong> foot?`,
+                   input: { kind: 'number', answer: +(W / a).toFixed(2), suffix: 'Pa', width: 100 },
+                   explain: `On one foot the whole ${W} N acts on ${a} m²: ${W} ÷ ${a} = ${Fmt.num(+(W / a).toFixed(2))} Pa, twice the pressure on two feet.` };
+        })] },
+
+      { challenge: 'only', name: 'cm² to m²', learn: 'units',
+        items: [Sci.gen(rng => {
+          const cm2 = rng.pick([20, 25, 40, 50, 80, 100, 200]), F = rng.int(1, 9) * 10;
+          const A = cm2 / 10000;
+          return { prompt: `A force of ${F} N acts on ${cm2} cm². What is the pressure in <strong>pascals</strong>? (1 m² = 10 000 cm².)`,
+                   input: { kind: 'number', answer: +(F / A).toFixed(2), suffix: 'Pa', width: 100 },
+                   explain: `${cm2} cm² = ${cm2} ÷ 10 000 = ${A} m². Pressure = ${F} ÷ ${A} = ${Fmt.num(+(F / A).toFixed(2))} Pa.` };
+        })] },
+
+      { challenge: 'only', name: 'How many times more?', learn: 'area',
+        items: [Sci.gen(rng => {
+          const big = rng.pick([0.3, 0.4, 0.6]), small = rng.pick([0.02, 0.03, 0.05]);
+          const ratio = +(big / small).toFixed(2);
+          return { prompt: `A skier’s boots touch the snow over ${small} m²; their two skis over ${big} m². How many times greater is the pressure in boots than on skis?`,
+                   input: { kind: 'number', answer: ratio, tol: 0.01, width: 70 },
+                   explain: `Same force, so the pressure is inversely proportional to the area: ${big} ÷ ${small} = ${Fmt.num(ratio)} times.` };
+        })] },
+
+      { challenge: 'only', name: 'Design for a pressure', learn: 'rearrange',
+        items: [Sci.gen(rng => {
+          const W = rng.int(6, 12) * 100, Pmax = rng.pick([2000, 2500, 4000, 5000]);
+          return { prompt: `Soft snow can bear a pressure of ${Pmax} Pa without a person sinking. A ${W} N hiker wears two snowshoes. What is the smallest total area the snowshoes need?`,
+                   input: { kind: 'number', answer: +(W / Pmax).toFixed(4), tol: 0.0005, decimal: true, suffix: 'm²', width: 80 },
+                   explain: `area = force ÷ pressure = ${W} ÷ ${Pmax} = ${Fmt.num(+(W / Pmax).toFixed(4))} m² (in total, across both shoes).` };
+        })] },
+
+      { challenge: 'only', name: 'Justify the design', learn: 'area',
+        items: [
+          rng => C(rng, { prompt: 'Why is it easier to cross soft snow on two skis than on a single narrow ski?', right: 'Two skis give a larger contact area, so a lower pressure for the same weight',
+            wrong: ['Two skis make you lighter', 'One ski gives a lower pressure', 'Snow pushes back harder on two skis'], explain: 'The weight is the same; doubling the area halves the pressure.' }),
+          rng => C(rng, { prompt: 'A heavy truck has many wheels. Why?', right: 'To spread its weight over a larger area, so the road is under less pressure',
+            wrong: ['To make it go faster', 'To increase the pressure for grip', 'Because each wheel carries no weight'], explain: 'More tyres in contact means more area, so less pressure on the road.' }),
+          rng => C(rng, { prompt: 'Why can a narrow stiletto heel damage a wooden floor that a heavy elephant could walk on without leaving marks?', right: 'The heel’s tiny area gives an enormous pressure',
+            wrong: ['A person weighs more than an elephant', 'Elephants step more gently', 'Wood is harder for elephants'], explain: 'A small force on a tiny area can give a far greater pressure than a large force on a large area.' })
+        ] },
+
+      { challenge: 'only', name: 'Spot the mistake', learn: 'pressure',
+        items: [Sci.gen(rng => {
+          const F = rng.int(2, 9) * 100, A = rng.pick([2, 4, 5]);
+          return Sci.spot(rng, {
+            prompt: `Tama works out the pressure of a ${F} N crate on ${A} m². Which line is wrong?`,
+            lines: [`Pressure = force ÷ area`, `Force = ${F} N, area = ${A} m²`, `Pressure = ${F} × ${A}`, `Pressure = ${F * A} Pa`],
+            wrong: 2,
+            explain: `Tama multiplied instead of dividing. Pressure = ${F} ÷ ${A} = ${F / A} Pa.`
+          });
+        })] }
     ]
   });
 })();
