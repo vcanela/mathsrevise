@@ -51,7 +51,7 @@ const Nav = (() => {
    * One row in a subject's list, with the note that comes out of it: on hover
    * or keyboard focus, or on a first tap where there is no hover.
    */
-  function homeItem({ key, href, icon, name, full, blurb, meta, got }) {
+  function homeItem({ key, href, icon, name, full, blurb, meta, got, tag }) {
     return h('li', { class: 'home-item' },
       h('a', { class: 'home-row', href },
         // Neither Plex face has an angle sign, so that one is drawn.
@@ -59,6 +59,7 @@ const Nav = (() => {
           ? h('span', { class: 'home-icon', html: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13 H13.5 M3 13 L11.5 3.5 M7.5 13 A4.5 4.5 0 0 0 6 9.6"/></svg>' })
           : h('span', { class: 'home-icon' + (/[△→]/.test(icon) ? ' sym' : ''), text: icon }),
         h('span', { class: 'home-name', text: name }),
+        tag ? h('span', { class: 'home-tag', text: tag }) : null,
         got === null ? null : stars(got)),
       h('aside', { class: 'home-note' },
         doodle(key),
@@ -68,10 +69,21 @@ const Nav = (() => {
         h('p', { class: 'home-meta', text: meta })));
   }
 
+  // Science runs two sets of units side by side, Years 7–8 and Years 9–10,
+  // so each science row says which years it is for.
+  function yearTag(u) {
+    if (u.subject !== 'science') return null;
+    const ys = u.exercises.filter(e => !e.soon && e.year).map(e => +e.year);
+    if (!ys.length) return null;
+    const lo = Math.min(...ys), hi = Math.max(...ys);
+    return 'Y' + (lo === hi ? lo : lo + '–' + hi);
+  }
+
   function unitItem(u) {
     const p = Manifest.progress(u.key);
     const live = u.exercises.filter(e => !e.soon).length;
     return homeItem({
+      tag: yearTag(u),
       key: u.key, href: u.page, icon: u.icon,
       name: u.name.replace(/^Unit \d+: /, ''), full: u.name, blurb: u.blurb,
       meta: `${live} ${live === 1 ? 'exercise' : 'exercises'} · ${p.stars} of ${p.max} stars`,
@@ -186,8 +198,9 @@ const Nav = (() => {
       h('details', { class: 'pop pop-about' },
         h('summary', { text: 'What is this?' }),
         h('div', { class: 'pop-note' },
-          h('p', {}, h('strong', { text: 'Revision for maths, science and English, Years 7 and 8, ' }),
-            'with Year 9 challenges when you want more.'),
+          h('p', {}, h('strong', { text: 'Revision for maths, science, English and coding, Years 7 to 10. ' }),
+            'Maths and English are for Years 7 and 8, with Year 9 challenges when you want more. ' +
+            'Science has units for Years 7–8 and for Years 9–10, labelled on each row. Coding is for Years 9 and 10.'),
           h('p', { text: 'Every exercise builds new questions each time you open it, so you can practise the same topic ' +
             'as often as you like. Use the set picker inside an exercise if you want everybody to get the same questions. ' +
             'Diagrams are drawn to scale, so measuring off the picture always agrees with the answer.' }),
