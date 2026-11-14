@@ -19,6 +19,11 @@
 //   set     Python literals that replace the program's own assignments, so a
 //           test can try other values: { distance: '90', time: '2' }
 //   inputs  what input() returns, in order
+//   after   code run after the program, such as calls to the function it
+//           defines; only what this prints is compared: 'print(area(3, 4))'
+//   turtle  true: the turtle records the lines it draws instead of drawing,
+//           and the test passes when they match the model's (or an `alts`
+//           program's), however the loop was written
 //   expect  the output, compared line by line, ignoring trailing spaces
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -58,6 +63,7 @@ const Py = (() => {
    */
   const tryIt = src => `<div class="try"><pre class="code">${highlight(src)}</pre>` +
     `<button type="button" class="tool-btn try-run" data-src="${esc(src)}">&#9654; Run</button>` +
+    (/\bturtle\b/.test(src) ? '<div class="turtle-canvas"></div>' : '') +
     `<pre class="code-out try-out" style="display:none"></pre></div>`;
 
   // ── Running ───────────────────────────────────────────────────────────────
@@ -106,6 +112,9 @@ const Py = (() => {
     const raw = e && e.toString ? e.toString() : String(e);
     const tb = e && e.traceback && e.traceback[0];
     const line = tb ? tb.lineno : (/line (\d+)/.exec(raw) || [])[1];
+    if (/printed too much/.test(raw)) {
+      return { name: 'Stopped', line: null, text: 'The program printed so much that it was stopped. Is there a loop that never ends?' };
+    }
     let text = FRIENDLY[name] || raw.replace(/^\w+: /, '').replace(/ on line \d+$/, '');
     if (name === 'NameError') {
       const who = /name '([^']+)'/.exec(raw);
@@ -114,6 +123,8 @@ const Py = (() => {
     }
     return { name: name === 'TimeLimitError' ? 'Stopped' : name, line: line ? Number(line) : null, text };
   }
+
+  const MAX_OUT = 20000;
 
   // Skulpt is one interpreter per page, so programs take turns.
   let queue = Promise.resolve();
@@ -129,11 +140,26 @@ const Py = (() => {
       if (!available()) { resolve({ out: '', error: { name: 'Unavailable', line: null, text: 'Python could not load. Check the internet connection and reload the page.' } }); return; }
       let out = '';
       const answers = o.inputs ? o.inputs.slice() : null;
+      // A program that uses the turtle draws in o.turtle (an element), at
+      // full speed, starting from a clean screen every run.
+      const drawing = !!(o.turtle && /\bturtle\b/.test(src));
+      if (drawing) {
+        try { if (Sk.TurtleGraphics && Sk.TurtleGraphics.reset) Sk.TurtleGraphics.reset(); } catch (_) {}
+        try { if (Sk.sysmodules) Sk.sysmodules.mp$del_subscript(new Sk.builtin.str('turtle')); } catch (_) {}
+        o.turtle.innerHTML = '';
+        Sk.TurtleGraphics = { target: o.turtle, width: 380, height: 300, animate: false };
+      }
       Sk.configure({
         __future__: Sk.python3,
-        execLimit: o.limit || LIMIT,
+        execLimit: o.limit || (drawing ? 4 * LIMIT : LIMIT),
         yieldLimit: 100,
-        output: t => { out += t; if (o.onOut) o.onOut(t); },
+        // A loop that never ends but prints would flood the page long before
+        // the time limit, so too much output stops the program too.
+        output: t => {
+          out += t;
+          if (out.length > MAX_OUT) throw new Sk.builtin.RuntimeError('printed too much');
+          if (o.onOut) o.onOut(t);
+        },
         read: f => {
           if (!Sk.builtinFiles || Sk.builtinFiles.files[f] === undefined) throw new Error("File not found: '" + f + "'");
           return Sk.builtinFiles.files[f];
@@ -169,11 +195,113 @@ const Py = (() => {
     return [...extra, ...lines].join('\n');
   }
 
+  // ── The turtle under test ─────────────────────────────────────────────────
+  // Under Check, `turtle` is this small stand-in: nothing is drawn; every
+  // line the pen draws is recorded, its ends rounded to whole steps, so two
+  // programs that draw the same picture in different ways record the same set.
+  const TURTLE = [
+    'import math',
+    '_segs = set()',
+    'class _Pen:',
+    '    def __init__(self):',
+    '        self._x = 0.0',
+    '        self._y = 0.0',
+    '        self._h = 0.0',
+    '        self._on = True',
+    '    def _line(self, nx, ny):',
+    '        if self._on:',
+    '            a = (int(round(self._x)), int(round(self._y)))',
+    '            b = (int(round(nx)), int(round(ny)))',
+    '            if a != b:',
+    '                _segs.add((min(a, b), max(a, b)))',
+    '        self._x = nx',
+    '        self._y = ny',
+    '    def forward(self, d):',
+    '        self._line(self._x + d * math.cos(math.radians(self._h)), self._y + d * math.sin(math.radians(self._h)))',
+    '    fd = forward',
+    '    def backward(self, d):',
+    '        self.forward(-d)',
+    '    bk = backward',
+    '    back = backward',
+    '    def left(self, a):',
+    '        self._h = (self._h + a) % 360',
+    '    lt = left',
+    '    def right(self, a):',
+    '        self.left(-a)',
+    '    rt = right',
+    '    def penup(self):',
+    '        self._on = False',
+    '    pu = penup',
+    '    up = penup',
+    '    def pendown(self):',
+    '        self._on = True',
+    '    pd = pendown',
+    '    down = pendown',
+    '    def goto(self, x, y=None):',
+    '        if y is None:',
+    '            x, y = x',
+    '        self._line(x, y)',
+    '    setpos = goto',
+    '    setposition = goto',
+    '    def setheading(self, a):',
+    '        self._h = a % 360',
+    '    seth = setheading',
+    '    def home(self):',
+    '        self.goto(0, 0)',
+    '        self._h = 0.0',
+    '    def __getattr__(self, name):',
+    '        return lambda *a, **k: None',
+    '_pen = _Pen()',
+    'class _Module:',
+    '    def Turtle(self):',
+    '        return _Pen()',
+    '    def Pen(self):',
+    '        return _Pen()',
+    '    def Screen(self):',
+    '        return _Pen()',
+    '    def __getattr__(self, name):',
+    '        return getattr(_pen, name)',
+    'turtle = _Module()'
+  ].join('\n');
+  const TURTLE_NAMES = ('forward fd backward bk back left lt right rt penup pu up pendown pd down goto setpos setposition ' +
+    'setheading seth home color pencolor fillcolor width pensize speed shape begin_fill end_fill hideturtle ht showturtle st ' +
+    'done mainloop exitonclick bgcolor Turtle Screen').split(' ');
+  const SEP = '\u0001';
+
+  /** The program a test runs: its values set, the turtle recording, calls added after. */
+  function caseSource(src, t) {
+    let code = withValues(src, t.set);
+    if (t.turtle) {
+      const star = /^[ \t]*from[ \t]+turtle[ \t]+import[ \t]+\*[ \t]*$/m.test(code);
+      code = code.replace(/^[ \t]*(import[ \t]+turtle|from[ \t]+turtle[ \t]+import[ \t]+\*)[ \t]*$/gm, '');
+      code = TURTLE + '\n' + (star ? TURTLE_NAMES.map(n => `${n} = turtle.${n}`).join('\n') + '\n' : '') +
+             code + '\nprint(sorted(_segs))';
+    }
+    if (t.after) code += `\nprint("${SEP}")\n` + t.after;
+    return code;
+  }
+  /** The part of a test run's output that is compared. */
+  const caseOutput = (out, t) => (t.after ? (String(out).split(SEP + '\n')[1] || '') : out);
+
+  /** What a test expects: written in it, or what the model (or another right answer) records. */
+  async function expected(t, spec) {
+    if (typeof t.expect === 'string') return [t.expect];
+    const progs = [spec.model, ...(spec.alts || [])];
+    const outs = [];
+    for (const prog of progs) {
+      const res = await run(caseSource(prog, t), { inputs: t.inputs || [] });
+      outs.push(caseOutput(res.out, t));
+    }
+    return outs;
+  }
+
   /** Run a program against its tests, stopping at the first that fails. */
-  async function test(src, tests) {
+  async function test(src, tests, spec) {
     for (const t of tests) {
-      const res = await run(withValues(src, t.set), { inputs: t.inputs || [] });
-      if (res.error || norm(res.out) !== norm(t.expect)) return { pass: false, failed: { test: t, got: res.out, error: res.error } };
+      const want = await expected(t, spec || {});
+      const res = await run(caseSource(src, t), { inputs: t.inputs || [] });
+      const got = caseOutput(res.out, t);
+      if (res.error || !want.some(w => norm(got) === norm(w))) return { pass: false, failed: { test: t, got, error: res.error, want: want[0] } };
     }
     return { pass: true };
   }
@@ -242,6 +370,7 @@ const Py = (() => {
     box.addEventListener('input', keep);
 
     const out = h('pre', { class: 'code-out', 'aria-live': 'polite', style: 'display:none' });
+    const canvas = h('div', { class: 'turtle-canvas', style: 'display:none' });
     const status = h('div', { class: 'code-status' });
     const runBtn = h('button', { type: 'button', class: 'tool-btn code-run', html: '&#9654; Run', title: 'Run (Ctrl+Enter)' });
     const checkBtn = h('button', { type: 'button', class: 'qsubmit sort-check', html: '&#10003; Check' });
@@ -263,12 +392,19 @@ const Py = (() => {
       out.style.display = '';
       out.textContent = '';
       status.innerHTML = '';
+      const turtle = /\bturtle\b/.test(box.value);
+      canvas.style.display = turtle ? '' : 'none';
       const res = await run(box.value, {
+        turtle: turtle ? canvas : null,
         onOut: t => out.appendChild(document.createTextNode(t)),
         ask: askIn(out)
       });
       if (res.error) showError(res.error);
-      else if (!out.textContent) out.appendChild(h('span', { class: 'code-note', text: '(The program ran, but printed nothing.)' }));
+      else if (!out.textContent) {
+        // A drawing is the result, so an empty console under it is just hidden.
+        if (turtle && canvas.querySelector('canvas')) out.style.display = 'none';
+        else out.appendChild(h('span', { class: 'code-note', text: '(The program ran, but printed nothing.)' }));
+      }
       setBusy(false);
     }
 
@@ -277,7 +413,7 @@ const Py = (() => {
       if (busy || passed) return;
       setBusy(true);
       status.innerHTML = '<p class="code-note">Checking…</p>';
-      const res = await test(box.value, spec.tests || []);
+      const res = await test(box.value, spec.tests || [], spec);
       if (res.pass) {
         passed = true;
         status.innerHTML = '';
@@ -288,15 +424,26 @@ const Py = (() => {
       fails++;
       const f = res.failed;
       const given = Object.entries(f.test.set || {}).map(([k, v]) => `${k} = ${v}`)
-        .concat((f.test.inputs || []).map(v => `input ${JSON.stringify(v)}`));
+        .concat((f.test.inputs || []).map(v => `input ${JSON.stringify(v)}`))
+        .concat(f.test.after ? [f.test.after.replace(/\n/g, '; ')] : []);
       status.innerHTML = '';
-      status.appendChild(h('p', { class: 'code-verdict', html: '<strong>Not yet</strong>' +
-        (given.length ? `With ${given.map(g => inline(g)).join(', ')}, the program should print:` : 'The program should print:') }));
-      status.appendChild(h('pre', { class: 'code-out-static', text: f.test.expect || '(nothing)' }));
-      if (f.error) status.appendChild(h('p', { class: 'code-note', text: `Instead it stopped with ${f.error.name}: ${f.error.text}` }));
-      else {
-        status.appendChild(h('p', { class: 'code-note', text: 'It printed:' }));
-        status.appendChild(h('pre', { class: 'code-out-static', text: f.got || '(nothing)' }));
+      if (f.test.turtle) {
+        // A drawing cannot be shown as text: say how it differs instead.
+        const count = s => (String(s).match(/\(\(/g) || []).length;
+        status.appendChild(h('p', { class: 'code-verdict', html: '<strong>Not yet</strong>' + (f.error
+          ? `The program stopped with ${f.error.name}: ${f.error.text}`
+          : `Your turtle drew ${count(f.got)} ${count(f.got) === 1 ? 'line' : 'lines'}; the drawing asked for has ${count(f.want)}` +
+            (count(f.got) === count(f.want) ? ', but they are not in the same places. Check the angles and the lengths.' : '.')) +
+          (given.length ? ` (With ${given.map(g => inline(g)).join(', ')}.)` : '') }));
+      } else {
+        status.appendChild(h('p', { class: 'code-verdict', html: '<strong>Not yet</strong>' +
+          (given.length ? `With ${given.map(g => inline(g)).join(', ')}, the program should print:` : 'The program should print:') }));
+        status.appendChild(h('pre', { class: 'code-out-static', text: f.want || '(nothing)' }));
+        if (f.error) status.appendChild(h('p', { class: 'code-note', text: `Instead it stopped with ${f.error.name}: ${f.error.text}` }));
+        else {
+          status.appendChild(h('p', { class: 'code-note', text: 'It printed:' }));
+          status.appendChild(h('pre', { class: 'code-out-static', text: f.got || '(nothing)' }));
+        }
       }
       status.appendChild(h('p', { class: 'code-note', text: 'Change the program and check again. Run it as often as you like.' }));
       setBusy(false);
@@ -311,7 +458,7 @@ const Py = (() => {
 
     return {
       node: h('div', { class: 'code' }, box,
-        h('div', { class: 'code-foot' }, runBtn, checkBtn, resetBtn), out, status),
+        h('div', { class: 'code-foot' }, runBtn, checkBtn, resetBtn), canvas, out, status),
       filled: () => passed,
       focus: () => box.focus(),
       lock() { box.readOnly = true; checkBtn.disabled = true; resetBtn.disabled = true; },
@@ -329,16 +476,20 @@ const Py = (() => {
       btn.disabled = true;
       box.style.display = '';
       box.textContent = '';
-      const res = await run(btn.dataset.src, { onOut: t => box.appendChild(document.createTextNode(t)), ask: askIn(box) });
+      const res = await run(btn.dataset.src, { onOut: t => box.appendChild(document.createTextNode(t)), ask: askIn(box),
+        turtle: btn.parentElement.querySelector('.turtle-canvas') });
       if (res.error) {
         const err = document.createElement('span');
         err.className = 'code-err';
         err.textContent = (box.textContent ? '\n' : '') + `${res.error.name}${res.error.line ? ' on line ' + res.error.line : ''}: ${res.error.text}`;
         box.appendChild(err);
-      } else if (!box.textContent) box.textContent = '(The program printed nothing.)';
+      } else if (!box.textContent) {
+        if (btn.parentElement.querySelector('.turtle-canvas')) box.style.display = 'none';
+        else box.textContent = '(The program printed nothing.)';
+      }
       btn.disabled = false;
     });
   }
 
-  return { LIMIT, highlight, block, inline, output, tryIt, run, test, norm, withValues, describe, available };
+  return { LIMIT, highlight, block, inline, output, tryIt, run, test, norm, withValues, caseSource, caseOutput, expected, describe, available };
 })();

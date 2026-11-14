@@ -187,7 +187,7 @@ function checkQuestion(where, q) {
       if (!inp.key || !/^[a-z0-9-]+$/.test(inp.key)) fail(where, 'code needs a key of lower-case letters, digits and hyphens: ' + inp.key);
       if (!inp.model || !String(inp.model).trim()) fail(where, 'code needs a model program');
       if (!Array.isArray(inp.tests) || !inp.tests.length) fail(where, 'code needs at least one test');
-      else inp.tests.forEach((t, i) => { if (typeof t.expect !== 'string') fail(where, `code test ${i + 1} has no expected output`); });
+      else inp.tests.forEach((t, i) => { if (!t.turtle && typeof t.expect !== 'string') fail(where, `code test ${i + 1} has no expected output`); });
       break;
     }
     case 'write': {

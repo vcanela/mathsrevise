@@ -209,10 +209,10 @@ const Manifest = (() => {
       challengeNote: 'Challenge questions: the same ideas, taken to a high standard.',
       blurb: 'Repeating, collecting and reusing: programs that do real work.',
       exercises: [
-        { id: 'cl5', code: 'C5', slug: 'while-loops', title: 'While Loops', tag: 'Repeat until something changes', years: '9–10', soon: true },
-        { id: 'cl6', code: 'C6', slug: 'for-range', title: 'For Loops and range', tag: 'Counting, tables and turtle patterns', years: '9–10', soon: true },
-        { id: 'cl7', code: 'C7', slug: 'lists', title: 'Lists', tag: 'Collections, indexing, searching', years: '9–10', soon: true },
-        { id: 'cl8', code: 'C8', slug: 'functions', title: 'Functions', tag: 'def, parameters and return', years: '9–10', soon: true }
+        { id: 'cl5', code: 'C5', slug: 'while-loops', title: 'While Loops', tag: 'Repeat until something changes', years: '9–10', challenge: true },
+        { id: 'cl6', code: 'C6', slug: 'for-range', title: 'For Loops and range', tag: 'Counting, tables and turtle patterns', years: '9–10', challenge: true },
+        { id: 'cl7', code: 'C7', slug: 'lists', title: 'Lists', tag: 'Collections, indexing, searching', years: '9–10', challenge: true },
+        { id: 'cl8', code: 'C8', slug: 'functions', title: 'Functions', tag: 'def, parameters and return', years: '9–10', challenge: true }
       ]
     }
   ];

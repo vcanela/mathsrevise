@@ -115,13 +115,14 @@ outcomes PO4 to PO5 (*Technology in the New Zealand Curriculum*; the PDF and the
 paper behind it are in `reference/`): programs with inputs, outputs, sequence, selection with
 comparative and logical operators, variables of different data types and iteration, with an
 organised approach to testing and debugging. Codes run C1 to C8 across two units, Python Basics
-(C1–C4) and Loops, Lists and Functions (C5–C8). Python Basics is written: C1 Output and Strings,
-C2 Variables and Types, C3 Input and Calculation and C4 Decisions. C5 to C8 are listed as coming
-soon.
+(C1–C4) and Loops, Lists and Functions (C5–C8): C1 Output and Strings, C2 Variables and Types,
+C3 Input and Calculation, C4 Decisions, C5 While Loops, C6 For Loops and range (with turtle
+drawing), C7 Lists and C8 Functions. All eight are written.
 
 Programs run in the page with **Skulpt**, pinned to 1.2.0 and loaded deferred from jsDelivr on
 coding exercise pages only (`js/python.js` wraps it). A program that runs for more than three
-seconds is stopped. Error messages keep Python's own names, with a plain-English line added.
+seconds, or prints more than 20,000 characters, is stopped (so a loop that never ends is caught
+either way). Error messages keep Python's own names, with a plain-English line added.
 
 Each exercise has two sets. The main set is a **walk-through** for a student meeting Python for
 the first time: one idea per question, seen running before it is predicted, then changed. Code in
@@ -136,7 +137,12 @@ taken, as Unit 6 does. Outside coding pages, such as the daily mix, Skulpt is fe
 time Run is pressed. The new `code` question is an editor
 with Run and Check: Check runs the program against hidden tests, which can set the program's
 variables to other values (`set`) and answer `input()` (`inputs`), so typing the answer in does
-not pass. A failed check is not final: it scores 15, 12, 10 or 8 by how many checks it took.
+not pass. A test can also call the student's function after the program (`after`, as in
+`print(double(4))`), so a function that prints instead of returning fails with "8, None". A
+**turtle** program is marked by what it draws: under Check, `import turtle` is a stand-in that
+records each line drawn, rounded to whole units, and the set of lines must match the model's (or
+an `alts` program's, such as the mirror image), so any loop that draws the right picture passes.
+Under Run it draws on a real canvas with Skulpt's turtle. A failed check is not final: it scores 15, 12, 10 or 8 by how many checks it took.
 Code questions stay out of the daily mix.
 
 Skulpt is not quite real Python: `41 / 5` prints `8.199999999999999`, `round(2.675, 2)` gives
@@ -144,7 +150,9 @@ Skulpt is not quite real Python: `41 / 5` prints `8.199999999999999`, `round(2.6
 is a SyntaxError rather than an IndentationError. Questions steer round these (dividing by 2, 4 or
 8; `:.2f` rather than `round`; the explanations name both errors). So **`node tools/check-coding.js`** runs every program a question
 shows through both Skulpt and `python3`, and fails unless both agree with the answer; it also
-checks every model program passes its tests and every starter program does not. The first run
+checks every model program passes its tests and every starter program does not, and that each
+turtle model draws the same lines in both. Its real Python has the same three seconds and output
+cap as the page. The first run
 fetches Skulpt from the pinned address into `tools/.cache/` and confirms its checksum.
 
 **Not seen recently.** In free practice and the daily mix, each science slot prefers items the
@@ -190,6 +198,7 @@ js/
     science-y7.js       Year 7 science
     science-y8.js       Year 8 science
     coding-basics.js    Coding: Python Basics (C1 to C4)
+    coding-loops.js     Coding: Loops, Lists and Functions (C5 to C8)
 tools/
   check-topics.js       generates ~200k questions and checks them (node)
   check-paper.js        builds ~3,000 timed papers and checks their sections and marks (node)

@@ -1675,3 +1675,10 @@ code.out { font-family: var(--font-mono); background: var(--code-bg); padding: 0
 .try pre.code { margin: 0; }
 .try-run { margin-top: 0.45rem; font-size: 0.82rem; padding: 0.3rem 0.85rem; }
 .try-out { margin-top: 0.45rem; }
+
+/* Where a turtle program draws: a sheet of paper under the code. */
+.turtle-canvas:not(:empty) {
+  display: block; width: fit-content; max-width: 100%; margin: 0.5rem 0; background: #fffdf7;
+  border: 1px solid var(--line, #d8d2c4); border-radius: var(--radius-s); overflow: hidden; line-height: 0;
+}
+.turtle-canvas canvas { max-width: 100%; height: auto; }

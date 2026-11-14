@@ -65,11 +65,23 @@ global.localStorage = { getItem: () => null, setItem() {} };
 
 // ── Real Python ─────────────────────────────────────────────────────────────
 const CPYTHON = `
-import sys, json, io, contextlib, traceback
+import sys, json, io, contextlib, traceback, signal
+# The same limits as the page: 3 seconds, and no flood of output. Either stops
+# the program, reported as 'Stopped'.
+class _Stop(Exception):
+    pass
+def _alarm(signum, frame):
+    raise _Stop()
+signal.signal(signal.SIGALRM, _alarm)
+class _Capped(io.StringIO):
+    def write(self, s):
+        if self.tell() + len(s) > 20000:
+            raise _Stop()
+        return super().write(s)
 cases = json.load(sys.stdin)
 results = []
 for c in cases:
-    buf = io.StringIO()
+    buf = _Capped()
     answers = list(c.get('inputs') or [])
     def fake_input(prompt=''):
         return answers.pop(0) if answers else ''
@@ -77,10 +89,16 @@ for c in cases:
     err, line = None, None
     try:
         code = compile(c['code'], '<stdin>', 'exec')
-        with contextlib.redirect_stdout(buf):
-            exec(code, env)
+        signal.setitimer(signal.ITIMER_REAL, 3)
+        try:
+            with contextlib.redirect_stdout(buf):
+                exec(code, env)
+        finally:
+            signal.setitimer(signal.ITIMER_REAL, 0)
     except SyntaxError as e:
         err, line = type(e).__name__, e.lineno
+    except _Stop:
+        err = 'Stopped'
     except Exception as e:
         err = type(e).__name__
         frames = [f for f in traceback.extract_tb(e.__traceback__) if f.filename == '<stdin>']
@@ -172,19 +190,23 @@ const sameError = (got, want) => got === want || (want === 'SyntaxError' && /^(I
     const sig = JSON.stringify([t.spec.model, t.spec.tests, t.spec.starter]);
     if (seen.has(sig)) continue;
     seen.add(sig);
-    const model = await Py.test(t.spec.model, t.spec.tests);
+    const model = await Py.test(t.spec.model, t.spec.tests, t.spec);
     if (!model.pass) fail(t.where, 'Skulpt: the model fails its own test: ' + JSON.stringify(model.failed.got || model.failed.error));
-    const starter = await Py.test(t.spec.starter || '', t.spec.tests);
+    const starter = await Py.test(t.spec.starter || '', t.spec.tests, t.spec);
     if (starter.pass) fail(t.where, 'the starter program already passes, so the task asks nothing');
     for (const test of t.spec.tests) {
-      cpCases.push({ code: Py.withValues(t.spec.model, test.set), inputs: test.inputs || [] });
-      cpWho.push({ where: t.where, expect: test.expect });
+      // A turtle test expects what the model records; real Python must record the same.
+      const want = (await Py.expected(test, t.spec))[0];
+      if (test.turtle && !/\(\(/.test(want)) fail(t.where, 'the model draws nothing under test: ' + JSON.stringify(want));
+      cpCases.push({ code: Py.caseSource(t.spec.model, test), inputs: test.inputs || [] });
+      cpWho.push({ where: t.where, expect: want, test });
     }
   }
   runCPython(cpCases).forEach((r, i) => {
     const w = cpWho[i];
+    const got = Py.caseOutput(r.out, w.test);
     if (r.error) fail(w.where, 'Python: the model raises ' + r.error);
-    else if (Py.norm(r.out) !== Py.norm(w.expect)) fail(w.where, `Python: the model prints ${JSON.stringify(r.out)}, expected ${JSON.stringify(w.expect)}`);
+    else if (Py.norm(got) !== Py.norm(w.expect)) fail(w.where, `Python: the model prints ${JSON.stringify(got)}, expected ${JSON.stringify(w.expect)}`);
   });
 
   console.log(`Checked ${questions} questions (${SEEDS} seeds): ${programs.length} distinct programs and ${seen.size} programming tasks, each in Skulpt and Python ${spawnSync('python3', ['--version']).stdout.toString().trim().replace('Python ', '')}.`);
