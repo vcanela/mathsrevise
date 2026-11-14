@@ -1085,4 +1085,629 @@
         ] }
     ]
   });
+
+
+  // ═══ 10.6 The water cycle ═════════════════════════════════════════════════
+  // Knowledge: The water cycle (Earth and space, Year 10, pp. 27–28).
+  // Practices: data on water storage; model the water cycle.
+
+  const SPHERES = [['atmosphere', 'the layer of gases around Earth'], ['hydrosphere', 'all the water: oceans, rivers, lakes, ice, groundwater'],
+                   ['geosphere', 'the rocks and soil of the solid Earth'], ['biosphere', 'all living things']];
+
+  Sci.topic({
+    id: 's10e6', unit: 'earth-systems',
+    title: 'The Water Cycle',
+    blurb: 'How a fixed amount of water moves through the air, land, sea and living things, and how that shapes weather.',
+    hint: 'The Sun’s energy evaporates water from oceans, lakes, soil and living things (transpiration from plants). Cooling water vapour condenses into droplets: clouds. ' +
+          'Droplets or ice too heavy to stay up fall as precipitation. Water also freezes and melts. The total amount of water on Earth is fixed.',
+
+    learn: [
+      { id: 'spheres', title: 'Earth’s spheres',
+        text: Sci.table(['Sphere', 'What it is'], SPHERES) + '<p>Water moves through all four.</p>' },
+      { id: 'cycle', title: 'The water cycle', wide: true, diagram: { w: 340, h: 200 },
+        draw(d) { SciDia.waterCycle(d, SciDia.WATER_PARTS); },
+        text: '<p>' + SciDia.WATER_PARTS.map((p, i) => `${i + 1} ${p}`).join(' · ') + '. Water also <strong>freezes</strong> into ice and snow, and <strong>melts</strong> again.</p>' },
+      { id: 'sun', title: 'The Sun drives it',
+        text: '<p>The Sun transfers thermal energy to Earth’s surface, warming air, land and water. Its effect is greatest at the equator (latitude 0°) and decreases towards the poles.</p>' +
+              '<p>That energy evaporates water from rivers, lakes, oceans, soil and organisms.</p>' },
+      { id: 'weather', title: 'Clouds and precipitation',
+        text: '<ul><li>When water vapour in the air cools, it <strong>condenses</strong> into droplets: visible clouds.</li><li><strong>Humidity</strong> is how much water vapour the air holds.</li>' +
+              '<li>Rain, snow, sleet and hail fall when water or ice becomes too heavy to stay in the air.</li></ul>' },
+      { id: 'air', title: 'The atmosphere',
+        text: '<p>A layer of gases, mainly <strong>nitrogen</strong> (about 78%) and <strong>oxygen</strong> (about 21%), with argon, carbon dioxide and a varying amount of water vapour.</p>' },
+      { id: 'finite', title: 'A fixed amount of water',
+        text: '<p>The amount of water on Earth is finite. It cycles through short loops (transpiration, in days) and long ones (glaciers and deep groundwater, for thousands of years). About 97% is salty ocean; most fresh water is ice or groundwater.</p>' }
+    ],
+
+    examples: [
+      {
+        title: 'Example 1: a raindrop’s journey',
+        steps: ['Sun warms the sea: water evaporates.', 'The vapour rises, cools and condenses into a cloud.', 'Droplets join until too heavy: rain falls on a hill and runs off into a river, back to the sea.'],
+        result: 'Evaporation → condensation → precipitation → runoff'
+      },
+      {
+        title: 'Example 2: why the west coast is wet',
+        steps: ['Moist air from the Tasman Sea is pushed up over the Southern Alps.', 'Rising air cools, so its water vapour condenses into clouds.', 'Heavy precipitation falls on the west; the air is drier by the time it reaches Canterbury.'],
+        result: 'Cooling makes vapour condense'
+      }
+    ],
+
+    slots: [
+      { name: 'Label the water cycle', learn: 'cycle',
+        items: [Sci.gen(rng => {
+          const order = rng.sample(SciDia.WATER_PARTS, 4);
+          return Sci.label(rng, { prompt: 'Name each numbered process.', diagram: { w: 340, h: 200 }, draw: d => SciDia.waterCycle(d, order), markers: order, options: SciDia.WATER_PARTS,
+            explain: 'Evaporation rises from the sea; transpiration from the tree; condensation forms the cloud; precipitation falls; runoff flows back to the sea.' });
+        })] },
+
+      { name: 'Name the process', learn: 'cycle',
+        items: [
+          ['Puddles dry up on a sunny afternoon.', 'evaporation'], ['A cold bathroom mirror mists up.', 'condensation'], ['Clouds form as moist air rises over a mountain range.', 'condensation'],
+          ['Hail falls during a thunderstorm.', 'precipitation'], ['Water vapour leaves a kauri tree’s leaves.', 'transpiration'], ['A glacier slowly turns to meltwater in summer.', 'melting'],
+          ['A lake’s surface turns to ice on a frosty night.', 'freezing']
+        ].map(([s, p]) => rng => C(rng, { prompt: `${s} Which process is this?`, right: p, wrong: rng.sample(['evaporation', 'condensation', 'precipitation', 'transpiration', 'melting', 'freezing'].filter(x => x !== p), 3), wide: false,
+          explain: `That is ${p}.` })) },
+
+      { name: 'Earth’s spheres', learn: 'spheres',
+        items: SPHERES.map(([s, d]) => rng => C(rng, { prompt: `Which sphere is ${d}?`, right: s, options: SPHERES.map(x => x[0]), wide: false, explain: `The ${s} is ${d}.` })) },
+
+      { name: 'Clouds and rain', learn: 'weather',
+        items: [
+          rng => C(rng, { prompt: 'How do clouds form?', right: 'Water vapour in the air cools and condenses into tiny droplets', wrong: ['Smoke rises into the sky', 'Water evaporates from clouds', 'The Sun heats the air until it turns white'],
+                          explain: 'Clouds are condensed droplets, not vapour: vapour is invisible.' }),
+          rng => C(rng, { prompt: 'Why does rain fall from a cloud?', right: 'Droplets join and become too heavy to stay in the air', wrong: ['The cloud gets too hot', 'The wind pushes it down', 'Clouds melt'], explain: 'Precipitation happens when water or ice gets too heavy.' }),
+          rng => C(rng, { prompt: 'What does high humidity mean?', right: 'The air holds a lot of water vapour', wrong: ['It is very windy', 'The temperature is low', 'It is raining'], wide: false, explain: 'Humidity measures water vapour in the air.' })
+        ] },
+
+      { name: 'Sunlight and latitude', learn: 'sun',
+        items: [
+          rng => C(rng, { prompt: 'Where on Earth does the Sun warm the surface most?', right: 'Near the equator', wrong: ['Near the poles', 'Everywhere equally', 'At the International Date Line'], wide: false,
+                          explain: 'The Sun’s heating decreases as latitude increases.' }),
+          rng => C(rng, { prompt: 'Why is more water evaporated from tropical oceans than from the Southern Ocean?', right: 'The Sun transfers more thermal energy to the surface near the equator', wrong: ['Tropical oceans are saltier', 'There is more water in the tropics', 'Cold water evaporates faster'],
+                          explain: 'More energy, more evaporation.' })
+        ] },
+
+      { name: 'The atmosphere', learn: 'air',
+        items: [
+          rng => C(rng, { prompt: 'Which gas makes up most of the atmosphere?', right: 'nitrogen', wrong: ['oxygen', 'carbon dioxide', 'water vapour'], wide: false, explain: 'About 78% nitrogen, 21% oxygen.' }),
+          rng => C(rng, { prompt: 'Which part of the atmosphere changes most from day to day and place to place?', right: 'water vapour', wrong: ['nitrogen', 'oxygen', 'argon'], wide: false,
+                          explain: 'Its amount depends on evaporation and condensation, which is why it drives weather.' })
+        ] },
+
+      { name: 'Where the water is', learn: 'finite',
+        items: [
+          rng => C(rng, { prompt: 'About how much of Earth’s water is salty ocean water?', right: 'about 97%', wrong: ['about 50%', 'about 70%', 'about 10%'], wide: false, explain: 'Only about 3% is fresh, and most of that is ice or groundwater.' }),
+          rng => C(rng, { prompt: 'Is new water being made on Earth?', right: 'No: the amount is fixed, and the same water keeps cycling', wrong: ['Yes: rain makes new water', 'Yes: rivers make new water', 'Only in winter'],
+                          explain: 'The amount of water on Earth is finite.' }),
+          rng => C(rng, { prompt: 'Which store holds water for the longest time?', right: 'A glacier', wrong: ['A cloud', 'A leaf', 'A puddle'], wide: false, explain: 'Glaciers and deep groundwater are long-term loops; transpiration is short.' })
+        ] },
+
+      // ── Challenge set.
+      { challenge: 'only', name: 'Stores that slow the cycle', learn: 'finite',
+        items: [
+          rng => C(rng, { prompt: 'In a long cold period, more water is stored as ice on land. What happens to sea level?', right: 'It falls, because less water returns to the sea', wrong: ['It rises', 'It stays the same', 'It falls because the sea freezes'],
+                          explain: 'Water locked in ice sheets is taken out of the faster loops.' }),
+          rng => C(rng, { prompt: 'Pumping groundwater faster than rain can refill it is a problem in some dry regions. Why?', right: 'Groundwater refills very slowly, so the store runs down', wrong: ['Groundwater is salty', 'Groundwater evaporates instantly', 'Pumping creates new water'],
+                          explain: 'Long-term stores take a long time to refill.' })
+        ] },
+
+      { challenge: 'only', name: 'Explaining weather', learn: 'weather',
+        items: [
+          rng => C(rng, { prompt: 'The west coast of the South Island is much wetter than Canterbury. Why?', right: 'Moist westerly air rises over the Southern Alps, cools and drops its water on the west',
+            wrong: ['Canterbury is further from the equator', 'The east coast has more glaciers', 'Rain cannot cross a coastline'], explain: 'Rising air cools, vapour condenses, precipitation falls; the air is drier on the far side.' }),
+          rng => C(rng, { prompt: 'Dew forms on grass on clear, still nights. Why?', right: 'The grass cools, and water vapour condenses on it', wrong: ['Rain falls without clouds', 'Grass gives out water at night only', 'The Moon’s light condenses water'],
+                          explain: 'It is condensation on a cold surface.' })
+        ] },
+
+      { challenge: 'only', name: 'Data on water', learn: 'finite',
+        items: [Sci.gen(rng => {
+          const fresh = rng.pick([2.5, 3]), ice = rng.pick([68, 69]), ground = 100 - ice - 1;
+          return C(rng, { prompt: `About ${fresh}% of Earth’s water is fresh. Of that fresh water, about ${ice}% is ice and ${ground}% groundwater. What does this mean for people?`,
+            right: 'Only a tiny fraction of all water is easily used fresh surface water', wrong: ['Most water is easy to drink', 'Ice is the main drinking water', 'Groundwater is salty'],
+            explain: `Rivers and lakes are only about 1% of the fresh water, which is itself only ${fresh}% of the total.` });
+        })] }
+    ]
+  });
+
+
+  // ═══ 10.7 Plate tectonics ═════════════════════════════════════════════════
+  // Knowledge: Plate tectonics (Earth and space, Year 10, p. 28).
+  // Practices: patterns in earthquake and volcano data; model boundaries;
+  // how plate tectonic theory developed.
+
+  const BOUNDARY = { convergent: 'collide', divergent: 'move apart', transform: 'slide past each other' };
+
+  Sci.topic({
+    id: 's10e7', unit: 'earth-systems',
+    title: 'Plate Tectonics',
+    blurb: 'The moving plates that make mountains, earthquakes and volcanoes, and how the idea was accepted.',
+    hint: 'The lithosphere (crust and rigid upper mantle) is broken into plates, moved by convection currents in the mantle, a few centimetres a year. Plates collide at convergent ' +
+          'boundaries, move apart at divergent ones and slide past at transform ones. Earthquakes happen at all boundaries; volcanoes at convergent and divergent ones and at hotspots.',
+
+    learn: [
+      { id: 'plates', title: 'Tectonic plates',
+        text: '<p>Earth’s <strong>lithosphere</strong>, the crust and the rigid upper mantle, is divided into tectonic plates.</p><p>Thermal energy from Earth’s interior drives <strong>convection currents</strong> in the mantle, which move the plates.</p>' },
+      { id: 'speed', title: 'Slow but huge',
+        text: '<p>Plates move only a few centimetres a year, about as fast as fingernails grow. Over millions of years that builds mountain ranges and opens oceans.</p>' },
+      { id: 'boundaries', title: 'Plate boundaries', wide: true, diagram: { w: 300, h: 100, caption: 'A convergent boundary: plates collide.' },
+        draw(d) { SciDia.plates(d, 'convergent'); },
+        text: Sci.table(['Boundary', 'Plates…', 'For example'], [['convergent', 'collide', 'the North Island’s volcanoes, where the Pacific Plate dives under the Australian Plate'],
+                ['divergent', 'move apart', 'mid-ocean ridges'], ['transform', 'slide past each other', 'the Alpine Fault']]) },
+      { id: 'quakes', title: 'Earthquakes and volcanoes',
+        text: '<ul><li><strong>Earthquakes</strong> happen along all plate boundaries, when built-up stress is suddenly released.</li>' +
+              '<li><strong>Volcanoes</strong> form at convergent and divergent boundaries, and at hotspots in the middle of plates.</li></ul><p>Most cluster in bands such as the Pacific Ring of Fire.</p>' },
+      { id: 'history', title: 'From drift to plates',
+        text: '<p>Alfred Wegener proposed <strong>continental drift</strong> in 1912: the continents fit like a jigsaw and share fossils and rock types. Many scientists rejected it, because he could not explain what moved them. ' +
+              'Evidence from the sea floor in the 1950s and 60s led to the theory of <strong>plate tectonics</strong>, with mantle convection as the driver.</p>' },
+      { id: 'change', title: 'Slow and sudden',
+        text: '<p>Earth’s surface changes over very long timescales, through gradual processes (mountains rising, plates drifting) and sudden events (earthquakes, eruptions).</p>' }
+    ],
+
+    examples: [
+      {
+        title: 'Example 1: how far in a lifetime',
+        steps: ['The Pacific Plate moves about 4 cm a year relative to the Australian Plate.', 'In 80 years: 80 × 4 = 320 cm = 3.2 m.'],
+        result: 'About 3 m in a human lifetime'
+      },
+      {
+        title: 'Example 2: Aotearoa on a boundary',
+        steps: ['The Pacific and Australian Plates meet under New Zealand.', 'In the North Island they converge: volcanoes of the Taupō Volcanic Zone. Through the South Island, the Alpine Fault is a transform boundary, and the Southern Alps rise along it.'],
+        result: 'Earthquakes everywhere; volcanoes in the north'
+      }
+    ],
+
+    slots: [
+      { name: 'Which boundary?', learn: 'boundaries',
+        items: [Sci.gen(rng => {
+          const t = rng.pick(Object.keys(BOUNDARY));
+          return C(rng, { prompt: 'Two plates seen from above. What kind of boundary is this?', diagram: { w: 300, h: 100 }, draw: d => SciDia.plates(d, t),
+            right: t, options: ['convergent', 'divergent', 'transform'], wide: false, explain: `The plates ${BOUNDARY[t]}: a ${t} boundary.` });
+        })] },
+
+      { name: 'Boundaries in words', learn: 'boundaries',
+        items: Object.entries(BOUNDARY).map(([t, v]) => rng => C(rng, { prompt: `At which kind of boundary do plates ${v}?`, right: t, options: ['convergent', 'divergent', 'transform'], wide: false,
+          explain: `Convergent: collide. Divergent: move apart. Transform: slide past.` })) },
+
+      { name: 'What moves the plates?', learn: 'plates',
+        items: [
+          rng => C(rng, { prompt: 'What drives the movement of tectonic plates?', right: 'Convection currents in the mantle, driven by Earth’s internal heat', wrong: ['The Moon’s gravity', 'Ocean waves', 'The wind'],
+                          explain: 'Thermal energy from the interior keeps the mantle slowly circulating.' }),
+          rng => C(rng, { prompt: 'What is the lithosphere?', right: 'The crust and the rigid upper part of the mantle', wrong: ['The liquid outer core', 'The atmosphere', 'Only the ocean floor'], explain: 'It is broken into the plates.' })
+        ] },
+
+      { name: 'How fast?', learn: 'speed',
+        items: [Sci.gen(rng => {
+          const v = rng.int(2, 8), k = rng.int(0, 1);
+          if (k === 0) { const yrs = rng.pick([50, 100, 250, 1000]); return { prompt: `A plate moves ${v} cm a year. How far does it move in ${yrs} years, in metres?`,
+            input: { kind: 'number', answer: v * yrs / 100, tol: 0.001, decimal: true, suffix: 'm', width: 80 }, explain: `${v} × ${yrs} = ${v * yrs} cm = ${num(v * yrs / 100)} m.` }; }
+          return { prompt: `A plate moves ${v} cm a year. How far does it move in one million years, in kilometres? (100 000 cm = 1 km.)`,
+                   input: { kind: 'number', answer: v * 10, suffix: 'km', width: 80 }, explain: `${v} × 1 000 000 = ${v * 1000000} cm = ${v * 10} km.` };
+        })] },
+
+      { name: 'Earthquakes and volcanoes', learn: 'quakes',
+        items: [
+          rng => C(rng, { prompt: 'At which kinds of boundary do earthquakes happen?', right: 'All of them', wrong: ['Only convergent', 'Only divergent', 'Only transform'], wide: false,
+                          explain: 'Stress builds and is released wherever plates meet.' }),
+          rng => C(rng, { prompt: 'Why are there active volcanoes in the North Island but not along the Alpine Fault?', right: 'The North Island sits on a convergent boundary; the Alpine Fault is a transform boundary',
+            wrong: ['The South Island is too cold', 'Volcanoes only form near the equator', 'The Alpine Fault is not a boundary'], explain: 'Volcanoes form at convergent and divergent boundaries, not usually at transform ones.' }),
+          rng => C(rng, { prompt: 'Hawaiʻi has volcanoes in the middle of the Pacific Plate, far from any boundary. Why?', right: 'It sits over a hotspot', wrong: ['It is on a transform boundary', 'The plate is moving apart there', 'It was built by people'], wide: false,
+                          explain: 'Volcanoes also form at hotspots within plates.' }),
+          rng => C(rng, { prompt: 'What causes an earthquake?', right: 'Stress builds up where plates meet and is suddenly released', wrong: ['Volcanoes always erupt first', 'The Moon pulls the ground', 'Heavy rain'], explain: 'The sudden slip releases energy as waves.' })
+        ] },
+
+      { name: 'Aotearoa’s plates', learn: 'boundaries',
+        items: [
+          rng => C(rng, { prompt: 'Which two plates meet under New Zealand?', right: 'The Pacific and Australian Plates', wrong: ['The Eurasian and African Plates', 'The Nazca and Antarctic Plates', 'The Pacific and North American Plates'],
+                          explain: 'New Zealand sits across their boundary.' }),
+          rng => C(rng, { prompt: 'The Alpine Fault runs along the Southern Alps, with the two sides sliding past each other. What kind of boundary is it?', right: 'transform', options: ['convergent', 'divergent', 'transform'], wide: false,
+                          explain: 'Sliding past is transform. Some squeezing together there also pushes the Alps up.' })
+        ] },
+
+      { name: 'Gradual or sudden?', learn: 'change',
+        items: [rng => Sci.sort(rng, {
+          prompt: 'Sort these changes to Earth’s surface.', bins: ['Gradual', 'Sudden'], pick: 6,
+          items: [...['the Southern Alps rising', 'a plate drifting', 'a river carving a valley', 'a glacier grinding rock'].map(text => ({ text, bin: 0 })),
+                  ...['the 2016 Kaikōura earthquake', 'the 1886 Tarawera eruption', 'a landslide', 'a tsunami'].map(text => ({ text, bin: 1 }))],
+          explain: 'Most change is slow and steady, punctuated by sudden events.'
+        })] },
+
+      // ── Challenge set.
+      { challenge: 'only', name: 'Evidence for drift', learn: 'history',
+        items: [
+          rng => C(rng, { prompt: 'Fossils of the same freshwater reptile, Mesosaurus, are found in both South America and southern Africa. Why did Wegener see this as evidence?', right: 'It could not have swum the ocean, so the continents were once joined',
+            wrong: ['It proves the reptile could fly', 'It shows the oceans were fresh water', 'It is not evidence of anything'], explain: 'Matching fossils and rocks across oceans support the continents having been together.' }),
+          rng => C(rng, { prompt: 'Why did many scientists reject continental drift at first?', right: 'Wegener could not explain what force moved the continents', wrong: ['The continents do not fit together', 'There were no matching fossils', 'Wegener was not a scientist'],
+                          explain: 'A theory needs a mechanism. Mantle convection and sea-floor evidence later supplied it.' }),
+          rng => C(rng, { prompt: 'What does the story of plate tectonics show about how science works?', right: 'Ideas can be contested, then accepted when new evidence explains the gaps', wrong: ['The first idea is always right', 'Scientists never change their minds', 'Evidence does not matter'],
+                          explain: 'Discovery, contestation and consolidation of evidence led to consensus.' })
+        ] },
+
+      { challenge: 'only', name: 'The Ring of Fire', learn: 'quakes',
+        items: [rng => C(rng, { prompt: 'Maps show most earthquakes and volcanoes in a ring around the Pacific Ocean. What pattern explains this?', right: 'They line the edges of the Pacific Plate and its neighbours, mostly convergent boundaries',
+          wrong: ['The Pacific Ocean is the deepest', 'They follow the equator', 'They are spread randomly'], explain: 'Plotting earthquake and volcano data reveals the plate boundaries.' })] },
+
+      { challenge: 'only', name: 'Modelling a boundary', learn: 'boundaries',
+        items: [
+          rng => C(rng, { prompt: 'Two blocks of foam are pushed together, and their edges crumple upward. Which boundary and landform does this model?', right: 'A convergent boundary building mountains', wrong: ['A divergent boundary forming an ocean', 'A transform boundary', 'A hotspot volcano'],
+                          explain: 'Collision crumples and lifts the crust.' }),
+          rng => C(rng, { prompt: 'What is a limitation of using two blocks of foam to model plates?', right: 'Real plates move a few centimetres a year over millions of years; the model is instant', wrong: ['Foam is the wrong colour', 'Plates do not touch', 'There are no limitations'],
+                          explain: 'Models compress time and simplify the materials.' })
+        ] }
+    ]
+  });
+
+
+  // ═══ 10.8 DNA, genes and traits ═══════════════════════════════════════════
+  // Knowledge: Determining organism traits (Organism diversity, Year 10, p. 29).
+  // Practices: discrete and continuous variation; diagrams relating DNA,
+  // genes and chromosomes; models of DNA; how understanding developed.
+
+  Sci.topic({
+    id: 's10e8', unit: 'living-body',
+    title: 'DNA, Genes and Traits',
+    blurb: 'How DNA, genes and proteins shape an organism, and how the environment and variation fit in.',
+    hint: 'Nucleus → chromosomes → DNA → genes. A gene is a section of DNA with instructions for a protein; proteins build structures and do jobs, and so determine traits. ' +
+          'Phenotype = what you can observe, from genes and environment together. Discrete traits fall into categories; continuous traits take any value in a range.',
+
+    learn: [
+      { id: 'dna', title: 'DNA',
+        text: '<p><strong>DNA</strong> is a molecule shaped as a <strong>double helix</strong>. It holds the genetic information that controls an organism’s development and functioning.</p>' },
+      { id: 'structure', title: 'From cell to gene',
+        text: '<p>In the nucleus, DNA is organised into <strong>chromosomes</strong>. A <strong>gene</strong> is a section of DNA with the instructions for making a protein, or part of one (for example, insulin).</p>' +
+              '<p style="text-align:center"><strong>cell → nucleus → chromosome → DNA → gene</strong></p>' },
+      { id: 'proteins', title: 'Proteins',
+        text: '<p>Proteins are large molecules made by cells. They build body structures and do jobs: carrying substances, speeding up reactions (<strong>enzymes</strong>), signalling (<strong>hormones</strong>), fighting disease (<strong>antibodies</strong>).</p>' +
+              '<p>Proteins determine traits: keratin makes hair, nails and feathers. When a gene is active its protein is made; when inactive, it is not.</p>' },
+      { id: 'phenotype', title: 'Genes and environment',
+        text: '<p>An organism’s <strong>phenotype</strong>, its observable characteristics, comes from its genome interacting with its environment.</p>' +
+              '<ul><li>Human height depends on genes and nutrition.</li><li>A tuatara’s sex is decided by the temperature of its nest.</li></ul><p>Some traits depend on one gene; most depend on many.</p>' },
+      { id: 'variation', title: 'Variation',
+        text: '<p><strong>Variation</strong> is the differences in a trait among individuals. <strong>Discrete</strong> traits fall into categories (blood group, flower colour). <strong>Continuous</strong> traits can take any value in a range (height, mass).</p>' },
+      { id: 'history', title: 'Discovering the double helix',
+        text: '<p>Rosalind Franklin’s X-ray images of DNA were built on by Maurice Wilkins, and by James Watson and Francis Crick, who described the double helix in 1953.</p>' }
+    ],
+
+    examples: [
+      {
+        title: 'Example 1: from gene to trait',
+        steps: ['A gene in a bird’s skin cells holds the instructions for keratin.', 'When the gene is active, keratin is made and built into feathers.'],
+        result: 'Gene → protein → trait'
+      },
+      {
+        title: 'Example 2: discrete or continuous',
+        steps: ['Blood group: A, B, AB or O, nothing in between.', 'Height: any value in a range, such as 158.3 cm.'],
+        result: 'Blood group is discrete; height is continuous'
+      }
+    ],
+
+    slots: [
+      { name: 'Largest to smallest', learn: 'structure',
+        items: [rng => Sci.order(rng, 'Put these in order from the largest to the smallest.', ['cell', 'nucleus', 'chromosome', 'gene'],
+          'A cell contains a nucleus, which contains chromosomes made of DNA; a gene is one section of that DNA.', { learn: 'structure' })] },
+
+      { name: 'Key words', learn: 'structure',
+        items: [
+          ['A molecule shaped as a double helix, carrying genetic information', 'DNA'], ['A section of DNA with instructions for making a protein', 'gene'],
+          ['A structure in the nucleus that DNA is organised into', 'chromosome'], ['The observable characteristics of an organism', 'phenotype'], ['The differences in a trait among individuals', 'variation']
+        ].map(([def, w], i, all) => rng => C(rng, { prompt: `${def}. What is this?`, right: w, wrong: all.map(x => x[1]).filter(x => x !== w).slice(0, 3), wide: false, explain: `That is the definition of ${w}.` })) },
+
+      { name: 'What proteins do', learn: 'proteins',
+        items: [
+          rng => C(rng, { prompt: 'Which of these is a protein that speeds up chemical reactions in cells?', right: 'an enzyme', wrong: ['a chromosome', 'glucose', 'a gene'], wide: false, explain: 'Enzymes are proteins.' }),
+          rng => C(rng, { prompt: 'Insulin controls blood sugar. What is it, and where do its instructions come from?', right: 'A protein hormone, made from the instructions in a gene', wrong: ['A sugar, made in the lungs', 'A chromosome', 'A fat stored in the liver'],
+                          explain: 'A gene carries the instructions for insulin.' }),
+          rng => C(rng, { prompt: 'Hair, nails and feathers are all mostly made of which protein?', right: 'keratin', wrong: ['insulin', 'cellulose', 'starch'], wide: false, explain: 'Keratin is a structural protein.' }),
+          rng => C(rng, { prompt: 'How do genes affect traits?', right: 'Genes carry instructions for proteins, and proteins build and run the body', wrong: ['Genes are the traits themselves', 'Genes only affect height', 'Genes change daily'],
+                          explain: 'Gene → protein → trait.' })
+        ] },
+
+      { name: 'Discrete or continuous?', learn: 'variation',
+        items: [rng => Sci.sort(rng, {
+          prompt: 'Sort these traits.', bins: ['Discrete (categories)', 'Continuous (a range)'], pick: 6,
+          items: [...['blood group', 'flower colour in peas', 'whether earlobes are attached', 'eye colour category'].map(text => ({ text, bin: 0 })),
+                  ...['height', 'mass', 'hand span', 'length of a kiwi’s beak'].map(text => ({ text, bin: 1 }))],
+          explain: 'Discrete traits have a few distinct options; continuous traits can take any value in a range.'
+        })] },
+
+      { name: 'Genes or environment?', learn: 'phenotype',
+        items: [
+          rng => C(rng, { prompt: 'Two identical twins are raised apart; one is much better fed and grows taller. What does this show?', right: 'Height depends on the environment (nutrition) as well as genes',
+            wrong: ['Height is only genetic', 'Twins have different genes', 'Food changes your DNA'], explain: 'Same genes, different environment, different phenotype.' }),
+          rng => C(rng, { prompt: 'What decides whether a tuatara hatchling is male or female?', right: 'The temperature of the nest', wrong: ['Only its genes', 'The mother’s size', 'The time of year it hatches'], wide: false,
+                          explain: 'In tuatara, nest temperature determines sex, an environmental influence on a trait.' }),
+          rng => C(rng, { prompt: 'What is a phenotype?', right: 'The observable characteristics, resulting from genes and environment together', wrong: ['All of an organism’s DNA', 'A single gene', 'A kind of protein'],
+                          explain: 'Genome + environment → phenotype.' })
+        ] },
+
+      { name: 'One gene or many?', learn: 'phenotype',
+        items: [
+          rng => C(rng, { prompt: 'Why does human height vary smoothly across a huge range, rather than falling into a few groups?', right: 'It is influenced by many genes, plus the environment', wrong: ['It is controlled by one gene', 'It depends only on food', 'Height does not vary'],
+                          explain: 'Many genes each adding a little give continuous variation.' }),
+          rng => C(rng, { prompt: 'A gene is present in a cell, but its protein is not being made. Why might that be?', right: 'The gene is inactive in that cell', wrong: ['The gene has been destroyed', 'Proteins are not made from genes', 'The cell has no DNA'],
+                          explain: 'When a gene is active its protein is made; when inactive, it is not.' })
+        ] },
+
+      { name: 'The double helix', learn: 'history',
+        items: [rng => C(rng, { prompt: 'Whose X-ray images of DNA were key evidence for its double-helix shape?', right: 'Rosalind Franklin', wrong: ['Louis Pasteur', 'Alfred Wegener', 'Isaac Newton'], wide: false,
+          explain: 'Franklin’s work was built on by Wilkins, and by Watson and Crick.' })] },
+
+      // ── Challenge set.
+      { challenge: 'only', name: 'Analysing variation', learn: 'variation',
+        items: [Sci.gen(rng => {
+          const cont = rng.chance();
+          return C(rng, { prompt: cont ? 'A class records everyone’s hand span to the nearest millimetre. Which graph suits the data best, and why?' : 'A class records everyone’s blood group. Which graph suits the data best, and why?',
+            right: cont ? 'A histogram with grouped ranges, because the data is continuous' : 'A bar chart with one bar per group, because the data is discrete',
+            wrong: [cont ? 'A bar chart of four categories' : 'A histogram of ranges', 'A line graph against time', 'A pie chart of every individual value'],
+            explain: cont ? 'Continuous data is grouped into ranges.' : 'Discrete categories each get their own bar.' });
+        })] },
+
+      { challenge: 'only', name: 'Models of DNA', learn: 'dna',
+        items: [
+          rng => C(rng, { prompt: 'A twisted-ladder model shows DNA’s double helix. What is one limitation?', right: 'Real DNA is billions of times smaller and packed tightly into chromosomes', wrong: ['DNA is not a helix', 'Ladders have two sides but DNA has one', 'It shows the wrong colours, which matter'],
+                          explain: 'Every model simplifies: scale and packing are lost here.' }),
+          rng => C(rng, { prompt: 'Why is a diagram of nested shapes (cell, nucleus, chromosome, gene) useful?', right: 'It shows how each structure sits inside the next', wrong: ['It shows the real sizes', 'It shows how proteins work', 'It shows the double helix in detail'],
+                          explain: 'Different models show different relationships.' })
+        ] },
+
+      { challenge: 'only', name: 'How science built the picture', learn: 'history',
+        items: [rng => C(rng, { prompt: 'The double helix model combined Franklin’s X-ray images, Wilkins’s work and Watson and Crick’s model-building. What does this show?', right: 'Discoveries often build on several scientists’ evidence',
+          wrong: ['One person discovered everything alone', 'Models are not used in science', 'X-rays are not evidence'], explain: 'Understanding of DNA developed through exploration, discovery and building on others’ evidence.' })] },
+
+      { challenge: 'only', name: 'Same genes, different cells', learn: 'proteins',
+        items: [rng => C(rng, { prompt: 'Nearly every cell in your body has the same genes, yet a muscle cell and a skin cell are very different. How?', right: 'Different genes are active in each, so they make different proteins',
+          wrong: ['They have different DNA', 'Skin cells have no nucleus', 'Muscle cells are prokaryotic'], explain: 'Which genes are switched on decides which proteins a cell makes.' })] }
+    ]
+  });
+
+
+  // ═══ 10.9 Nerves and thermoregulation ═════════════════════════════════════
+  // Knowledge: Nervous control; Thermoregulation (Life processes, Year 10, p. 30).
+  // Practices: safe experiments on reaction time or thermoregulation;
+  // reliability of data from people; the feedback loop.
+
+  Sci.topic({
+    id: 's10e9', unit: 'living-body',
+    title: 'Nerves and Thermoregulation',
+    blurb: 'How the brain, spinal cord and nerves detect and respond, and how the body keeps its temperature steady.',
+    hint: 'Stimulus → receptor → sensory neuron → brain or spinal cord → motor neuron → effector → response. Cerebrum: thought and voluntary actions; cerebellum: movement and balance; ' +
+          'brainstem: automatic functions. Too hot: sweating and vasodilation. Too cold: shivering and vasoconstriction. Keeping it steady is homeostasis.',
+
+    learn: [
+      { id: 'cns', title: 'The nervous system',
+        text: '<ul><li><strong>Central nervous system</strong>: brain and spinal cord.</li><li><strong>Peripheral nervous system</strong>: nerves outside them.</li></ul>' +
+              '<p>The brain has billions of connected neurons that receive, process and send information.</p>' },
+      { id: 'brain', title: 'Parts of the brain',
+        text: Sci.table(['Region', 'Role'], [['cerebrum', 'conscious thought and voluntary actions'], ['cerebellum', 'coordinating movement and balance'], ['brainstem', 'automatic functions: breathing, heart rate']]) },
+      { id: 'pathway', title: 'Stimulus to response', wide: true,
+        text: '<p style="text-align:center"><strong>stimulus → receptor → sensory neuron → brain or spinal cord → motor neuron → effector → response</strong></p>' +
+              '<p><strong>Receptors</strong> (eyes, skin) detect changes. <strong>Effectors</strong> (muscles, glands) respond. Some actions are voluntary; others, like heartbeat and reflexes, are automatic.</p>' },
+      { id: 'thermo', title: 'Thermoregulation', diagram: { w: 300, h: 190 },
+        draw(d) { SciDia.cycle(d, ['temperature changes', 'receptors detect it', 'brain coordinates', 'effectors respond', 'temperature returns to normal'], { size: 10 }); },
+        text: '<p>Temperature receptors in the skin and brain detect changes; the brain coordinates a response through the nervous system. This keeps body temperature in a narrow range: an example of <strong>homeostasis</strong>.</p>' },
+      { id: 'hotcold', title: 'Too hot, too cold',
+        text: Sci.table(['', 'Response', 'Effect'], [['Too hot', 'sweating; vasodilation (skin blood vessels widen)', 'more thermal energy lost'],
+                ['Too cold', 'shivering; vasoconstriction (skin blood vessels narrow)', 'less energy lost, and more generated']]) },
+      { id: 'testing', title: 'Testing on people',
+        text: '<p>A ruler-drop test measures reaction time: the further the ruler falls before it is caught, the slower the reaction. Results from people vary with tiredness, practice and distraction, so repeat, use several people, and keep conditions the same. Experiments must be safe and ethical: people agree to take part and can stop.</p>' }
+    ],
+
+    examples: [
+      {
+        title: 'Example 1: touching a hot pan',
+        steps: ['Stimulus: heat. Receptors in the skin detect it.', 'Sensory neurons carry the signal to the spinal cord, which sends one straight back along motor neurons.', 'Effector: arm muscles pull the hand away, before you even feel the pain.'],
+        result: 'A reflex: fast and automatic'
+      },
+      {
+        title: 'Example 2: after a run',
+        steps: ['Body temperature rises; receptors detect it; the brain responds.', 'Sweat glands release sweat, which evaporates and carries thermal energy away.', 'Skin blood vessels widen, so the skin flushes and loses more heat.'],
+        result: 'Temperature is brought back down'
+      }
+    ],
+
+    slots: [
+      { name: 'Stimulus to response', learn: 'pathway',
+        items: [rng => Sci.order(rng, 'Put the steps in order, from the stimulus to the response.', ['receptor', 'sensory neuron', 'brain or spinal cord', 'motor neuron', 'effector'],
+          'Receptor detects; sensory neuron carries it in; brain or spinal cord processes; motor neuron carries it out; effector responds.', { learn: 'pathway' })] },
+
+      { name: 'Parts of the brain', learn: 'brain',
+        items: [
+          ['Keeping your heart beating while you sleep', 'brainstem'], ['Solving a maths problem', 'cerebrum'], ['Keeping your balance on a skateboard', 'cerebellum'],
+          ['Breathing without thinking about it', 'brainstem'], ['Deciding to raise your hand', 'cerebrum'], ['Coordinating a smooth throw', 'cerebellum']
+        ].map(([s, r]) => rng => C(rng, { prompt: `${s}: which part of the brain mainly controls this?`, right: r, options: ['cerebrum', 'cerebellum', 'brainstem'], wide: false,
+          explain: { cerebrum: 'The cerebrum handles conscious thought and voluntary actions.', cerebellum: 'The cerebellum coordinates movement and balance.', brainstem: 'The brainstem runs automatic functions.' }[r] })) },
+
+      { name: 'Central or peripheral?', learn: 'cns',
+        items: [rng => Sci.sort(rng, {
+          prompt: 'Sort these into the two parts of the nervous system.', bins: ['Central nervous system', 'Peripheral nervous system'], pick: 5,
+          items: [...['the brain', 'the spinal cord'].map(text => ({ text, bin: 0 })), ...['nerves in the arm', 'nerves in the fingertips', 'nerves to the leg muscles', 'nerves from the eyes'].map(text => ({ text, bin: 1 }))],
+          explain: 'The central nervous system is the brain and spinal cord; all other nerves are peripheral.'
+        })] },
+
+      { name: 'Receptors and effectors', learn: 'pathway',
+        items: [
+          rng => C(rng, { prompt: 'Which of these is a receptor?', right: 'the eye', wrong: ['a leg muscle', 'a sweat gland', 'the spinal cord'], wide: false, explain: 'Receptors detect stimuli; eyes detect light.' }),
+          rng => C(rng, { prompt: 'Which of these is an effector?', right: 'a muscle', wrong: ['the ear', 'skin temperature receptors', 'a sensory neuron'], wide: false, explain: 'Effectors, muscles or glands, produce the response.' }),
+          rng => C(rng, { prompt: 'What does a motor neuron do?', right: 'Carries signals from the brain or spinal cord to an effector', wrong: ['Carries signals from a receptor to the brain', 'Detects stimuli', 'Stores memories'],
+                          explain: 'Sensory neurons carry signals in; motor neurons carry them out.' })
+        ] },
+
+      { name: 'Voluntary or automatic?', learn: 'pathway',
+        items: [rng => Sci.sort(rng, {
+          prompt: 'Sort these responses.', bins: ['Voluntary', 'Automatic'], pick: 6,
+          items: [...['kicking a ball', 'writing your name', 'choosing to stand up', 'waving to a friend'].map(text => ({ text, bin: 0 })),
+                  ...['your heartbeat', 'blinking when something flies at your eye', 'pulling your hand from a hot pan', 'your pupils narrowing in bright light'].map(text => ({ text, bin: 1 }))],
+          explain: 'Voluntary actions are chosen; automatic responses, including reflexes, happen without thinking.'
+        })] },
+
+      { name: 'Too hot or too cold?', learn: 'hotcold',
+        items: [
+          ['sweating', 'cool'], ['shivering', 'warm'], ['vasodilation: skin blood vessels widen', 'cool'], ['vasoconstriction: skin blood vessels narrow', 'warm']
+        ].map(([r, e]) => rng => C(rng, { prompt: `What is the effect of ${r}?`, right: e === 'cool' ? 'It cools the body by increasing thermal energy loss' : 'It warms the body by reducing energy loss or generating thermal energy',
+          options: ['It cools the body by increasing thermal energy loss', 'It warms the body by reducing energy loss or generating thermal energy'],
+          explain: e === 'cool' ? 'Sweating and vasodilation help the body lose heat.' : 'Shivering generates heat; vasoconstriction keeps warm blood away from the skin.' })) },
+
+      { name: 'Homeostasis', learn: 'thermo',
+        items: [
+          rng => C(rng, { prompt: 'What is homeostasis?', right: 'Keeping conditions inside the body stable', wrong: ['Making the body grow', 'Fighting infection', 'Digesting food'], wide: false, explain: 'Thermoregulation is one example.' }),
+          rng => C(rng, { prompt: 'Where are the temperature receptors that detect changes in body temperature?', right: 'In the skin and the brain', wrong: ['Only in the stomach', 'Only in the muscles', 'In the hair'], explain: 'They feed information to the brain, which coordinates the response.' }),
+          rng => C(rng, { prompt: 'Why is it called a feedback loop?', right: 'The response changes the temperature, which is detected again, so the response adjusts', wrong: ['It only happens once', 'Food is fed back to the cells', 'The brain is not involved'],
+                          explain: 'Detect, respond, detect again: continual adjustment.' })
+        ] },
+
+      // ── Challenge set.
+      { challenge: 'only', name: 'Why reflexes are fast', learn: 'pathway',
+        items: [rng => C(rng, { prompt: 'In a reflex, the signal often goes only to the spinal cord and straight back out. Why is this useful?', right: 'It is faster, protecting you before the brain has time to think',
+          wrong: ['It saves energy for thinking', 'The brain cannot detect pain', 'Reflexes do not use neurons'], explain: 'A shorter path means a quicker response to danger.' })] },
+
+      { challenge: 'only', name: 'Reaction-time data', learn: 'testing',
+        items: [Sci.gen(rng => {
+          const vals = Array.from({ length: 5 }, () => rng.int(14, 22));
+          vals[rng.int(0, 4)] = rng.int(35, 42);
+          const clean = vals.filter(v => v < 30);
+          const mean = +(clean.reduce((s, v) => s + v, 0) / clean.length).toFixed(1);
+          return { prompt: `Ruler-drop distances (cm) for one person: ${vals.join(', ')}. One result was a mistake (they were distracted). Leave it out and find the mean.`,
+                   input: { kind: 'number', answer: mean, tol: 0.06, decimal: true, suffix: 'cm', width: 70 },
+                   explain: `The outlier is ${vals.find(v => v >= 30)}. The rest: ${clean.join(' + ')} = ${clean.reduce((s, v) => s + v, 0)}, ÷ ${clean.length} = ${mean} cm.` };
+        })] },
+
+      { challenge: 'only', name: 'Reliable data from people', learn: 'testing',
+        items: [
+          rng => C(rng, { prompt: 'Reaction times get faster over ten tries. Why might that make results unreliable?', right: 'People improve with practice, so later results are not comparable with earlier ones',
+            wrong: ['Rulers get shorter', 'The first tries are always cheating', 'It makes the results more reliable'], explain: 'Give practice tries first, or compare people at the same stage.' }),
+          rng => C(rng, { prompt: 'Which would make a study of exercise and skin temperature more reliable?', right: 'Testing many people, with the same exercise and the same thermometer', wrong: ['Testing one person once', 'Letting each person pick their exercise', 'Using a different thermometer each time'],
+                          explain: 'More participants and controlled conditions reduce the effect of individual differences.' }),
+          rng => C(rng, { prompt: 'What makes an experiment on people ethical?', right: 'It is safe, people agree to take part and can stop at any time', wrong: ['It is quick', 'Only the scientist knows what is being tested', 'People cannot leave once started'],
+                          explain: 'Safety and informed consent come first.' })
+        ] },
+
+      { challenge: 'only', name: 'Explaining thermoregulation', learn: 'hotcold',
+        items: [
+          rng => C(rng, { prompt: 'Why do you look pale when very cold?', right: 'Vasoconstriction narrows skin blood vessels, keeping warm blood deeper in the body', wrong: ['Your blood turns paler', 'Your skin loses its colour cells', 'Sweating washes the colour out'],
+                          explain: 'Less blood near the surface means less heat lost through the skin.' }),
+          rng => C(rng, { prompt: 'Why is sweating less effective at cooling you on a very humid day?', right: 'Sweat evaporates more slowly when the air already holds a lot of water vapour', wrong: ['You do not sweat on humid days', 'Humid air is colder', 'Sweat cannot evaporate at all in summer'],
+                          explain: 'Cooling comes from evaporation, which humid air slows down.' })
+        ] }
+    ]
+  });
+
+
+  // ═══ 10.10 Ecosystems and water ═══════════════════════════════════════════
+  // Knowledge: Ecosystems and water (Ecosystems, Year 10, p. 31).
+  // Practices: water availability and habitats; data on water movement;
+  // human impacts; kaitiakitanga.
+
+  Sci.topic({
+    id: 's10e10', unit: 'earth-systems',
+    title: 'Ecosystems and Water',
+    blurb: 'How water and nutrients cycle through living things and soil, and how people harm or restore ecosystems.',
+    hint: 'Ecosystems depend on water and nutrients cycling between organisms and their surroundings. Plants take in water through roots and lose it by transpiration. ' +
+          'Decomposers recycle nutrients. Forests, wetlands and soils slow runoff and reduce erosion. Drought, drainage and pollution reduce stability and biodiversity.',
+
+    learn: [
+      { id: 'cycles', title: 'Materials cycle',
+        text: '<p>Ecosystems depend on water and nutrients moving continuously between organisms and the physical environment. The availability of fresh water shapes where organisms live, how they behave and whether they survive.</p>' },
+      { id: 'plants', title: 'Water in plants',
+        text: '<p>Plants take in water through their roots and use it for photosynthesis, growth and transporting materials. <strong>Transpiration</strong> releases water vapour from leaves, affecting local humidity and weather.</p>' +
+              '<p><strong>Soil</strong> stores water and dissolved nutrients, supporting plant growth.</p>' },
+      { id: 'decomposers', title: 'Decomposers',
+        text: '<p>Micro-organisms in soil and water break down dead organisms and waste. <strong>Decomposition</strong> returns nutrients to the environment for plants to reuse.</p>' },
+      { id: 'regulate', title: 'Forests, wetlands and soil',
+        text: '<p>They regulate water: slowing runoff, letting more water soak in (infiltration), and reducing erosion. Wetlands, forests and grasslands each have different patterns of water, and so different organisms.</p>' },
+      { id: 'harm', title: 'Disruption',
+        text: '<p>Drought, drainage and pollution disrupt water and can reduce an ecosystem’s stability and biodiversity. Aotearoa has drained about 90% of its original wetlands.</p>' },
+      { id: 'restore', title: 'Restoration and kaitiakitanga',
+        text: '<p>People can help ecosystems regenerate through conservation, restoration and long-term management, guided by <strong>kaitiakitanga</strong>, guardianship of the environment. Predator-free sanctuaries, wetland replanting and marine reserves are examples.</p>' }
+    ],
+
+    examples: [
+      {
+        title: 'Example 1: a kina barren',
+        steps: ['Snapper and crayfish eat kina. Heavy fishing removes many of them.', 'Kina numbers explode and graze the kelp forest down to bare rock.', 'In marine reserves, predators recover, kina fall, and kelp grows back.'],
+        result: 'Removing one part of an ecosystem can change all of it'
+      },
+      {
+        title: 'Example 2: a cleared hillside',
+        steps: ['Forest is cleared from a steep hillside.', 'Rain runs off faster instead of soaking in; soil washes into the stream.'],
+        result: 'More runoff, erosion and muddy water downstream'
+      }
+    ],
+
+    slots: [
+      { name: 'Water in plants', learn: 'plants',
+        items: [
+          rng => C(rng, { prompt: 'How do most plants take in water?', right: 'Through their roots', wrong: ['Through their leaves only', 'Through their flowers', 'From the air at night'], wide: false, explain: 'Roots absorb water from the soil.' }),
+          rng => C(rng, { prompt: 'What do plants use water for?', right: 'Photosynthesis, growth and transporting materials', wrong: ['Only to stay cool', 'Only to make flowers', 'Nothing: they store it'], explain: 'Water is a reactant in photosynthesis and carries substances through the plant.' }),
+          rng => C(rng, { prompt: 'How does a large forest affect local humidity?', right: 'Transpiration adds water vapour, raising humidity', wrong: ['It removes all water vapour', 'It has no effect', 'It makes the air saltier'], explain: 'Transpiration contributes water vapour to the atmosphere.' })
+        ] },
+
+      { name: 'Decomposers', learn: 'decomposers',
+        items: [
+          rng => C(rng, { prompt: 'What do decomposers such as bacteria and fungi do?', right: 'Break down dead organisms and waste, returning nutrients to the soil', wrong: ['Make glucose by photosynthesis', 'Eat only living plants', 'Remove water from the soil'],
+                          explain: 'Decomposition recycles nutrients for reuse.' }),
+          rng => C(rng, { prompt: 'What would happen in a forest with no decomposers?', right: 'Dead material would pile up and nutrients would not return to the soil', wrong: ['Plants would grow faster', 'Nothing would change', 'Water would stop flowing'],
+                          explain: 'Without decomposition, nutrients stay locked in dead matter.' })
+        ] },
+
+      { name: 'Soil and water', learn: 'regulate',
+        items: [
+          rng => C(rng, { prompt: 'Why does a forested catchment flood less than a cleared one after the same storm?', right: 'Trees and soil slow runoff and let more water soak in', wrong: ['Trees make it rain less', 'Forests are always uphill', 'Cleared land holds more water'],
+                          explain: 'Forests, wetlands and soils slow runoff and increase infiltration.' }),
+          rng => C(rng, { prompt: 'How do wetlands protect rivers downstream?', right: 'They act like a sponge, slowing and storing water and trapping sediment', wrong: ['They speed up the flow', 'They add salt to the water', 'They have no effect'],
+                          explain: 'Wetlands regulate water movement and reduce erosion.' }),
+          rng => C(rng, { prompt: 'What does soil store that plants need?', right: 'Water and dissolved nutrients', wrong: ['Sunlight', 'Oxygen made by plants', 'Glucose'], wide: false, explain: 'Soil supports plant growth and ecosystem productivity.' })
+        ] },
+
+      { name: 'Water and where organisms live', learn: 'cycles',
+        items: [rng => Sci.sort(rng, {
+          prompt: 'Sort these by the habitat they suit best.', bins: ['Wet (wetland)', 'Dry (open grassland)'], pick: 6,
+          items: [...['raupō (bulrush)', 'flax (harakeke) in swampy ground', 'eels', 'mātātā (fernbird)'].map(text => ({ text, bin: 0 })),
+                  ...['tussock grasses in dry hill country', 'skinks basking on sunny rocks', 'grasshoppers in dry grass', 'lizards that shelter under stones'].map(text => ({ text, bin: 1 }))],
+          explain: 'Water availability is one of the strongest influences on which organisms live where.'
+        })] },
+
+      { name: 'Disruption', learn: 'harm',
+        items: [
+          rng => C(rng, { prompt: 'A wetland is drained for farmland. What is the likely effect on biodiversity?', right: 'It falls, because wetland species lose their habitat', wrong: ['It rises', 'It is unchanged', 'Only the farm animals are affected'],
+                          explain: 'Drainage removes the water those organisms depend on.' }),
+          rng => C(rng, { prompt: 'Fertiliser runs off farms into a lake, and algae bloom. Why is this harmful?', right: 'When the algae die, decomposers use up oxygen, and fish and invertebrates die', wrong: ['Algae are poisonous to all plants', 'Fertiliser makes water salty', 'The lake dries out'],
+                          explain: 'Pollution upsets the balance of the ecosystem.' }),
+          rng => C(rng, { prompt: 'How might a long drought affect a stream ecosystem?', right: 'Less water and warmer, lower-oxygen pools: fewer organisms survive', wrong: ['More fish, because there is less water', 'No effect on the animals', 'More rain'],
+                          explain: 'Disruption to water reduces stability and biodiversity.' })
+        ] },
+
+      { name: 'Restoration', learn: 'restore',
+        items: [
+          rng => C(rng, { prompt: 'Which action supports ecosystem regeneration?', right: 'Fencing a stream and planting native trees along its banks', wrong: ['Draining the stream', 'Removing all plants from the banks', 'Letting stock graze in the water'],
+                          explain: 'Riparian planting shades the water, filters runoff and reduces erosion.' }),
+          rng => C(rng, { prompt: 'What is kaitiakitanga?', right: 'Guardianship and care of the environment', wrong: ['A kind of fishing net', 'A law about farming', 'The study of weather'], wide: false, explain: 'It guides long-term care of resources.' }),
+          rng => C(rng, { prompt: 'Why do predator-free sanctuaries such as Zealandia help native birds?', right: 'They remove introduced predators, so birds can breed safely', wrong: ['They feed the birds every day', 'They keep birds in cages', 'They stop all rain'],
+                          explain: 'Removing a pressure lets populations recover.' })
+        ] },
+
+      // ── Challenge set.
+      { challenge: 'only', name: 'Kina barrens', learn: 'harm',
+        items: [rng => C(rng, { prompt: 'In some reefs around Aotearoa, kelp forests have become bare “kina barrens”. Which chain of events explains this?', right: 'Fishing removed kina predators (snapper, crayfish), kina numbers rose, and they grazed the kelp away',
+          wrong: ['Warm water killed the kina', 'Kelp ate the kina', 'Kina numbers fell, so the kelp died'], explain: 'Changing one population can cascade through an ecosystem. Marine reserves show the reverse.' })] },
+
+      { challenge: 'only', name: 'Reading water data', learn: 'regulate',
+        items: [Sci.gen(rng => {
+          const f = rng.int(15, 30), c = rng.int(55, 80);
+          return C(rng, { prompt: `After the same storm, ${f}% of the rain ran straight off a forested catchment, and ${c}% off a cleared one. What can you conclude?`,
+            right: 'The forest let much more water soak in, reducing runoff and flood risk', wrong: ['Clearing land reduces flooding', 'Forests make more rain fall', 'The difference is too small to matter'],
+            explain: `${c - f} percentage points more runoff from the cleared catchment: forests slow runoff and increase infiltration.` });
+        })] },
+
+      { challenge: 'only', name: 'Predicting change', learn: 'cycles',
+        items: [
+          rng => C(rng, { prompt: 'Ngā tohu o te taiao and monitoring show a stream’s mayfly larvae disappearing as it gets muddier. What does this predict?', right: 'The stream’s health is declining; sensitive species are the first to go',
+            wrong: ['The stream is getting healthier', 'Mayflies prefer mud', 'Nothing about the stream'], explain: 'Sensitive organisms are indicators of ecosystem health.' }),
+          rng => C(rng, { prompt: 'A farm wetland is restored by blocking a drain. Over the next ten years, what would you predict?', right: 'Water levels rise and wetland plants and birds return', wrong: ['The area dries out', 'No organisms ever return', 'The soil turns to sand'],
+                          explain: 'Restoring water lets the wetland ecosystem regenerate.' })
+        ] },
+
+      { challenge: 'only', name: 'Global examples', learn: 'harm',
+        items: [rng => C(rng, { prompt: 'Coral reefs and rainforests both hold huge biodiversity. What do threats to them have in common?', right: 'Human activity changes their conditions faster than organisms can adapt',
+          wrong: ['They are both threatened by too much shade', 'Neither can be protected', 'They only affect one species each'], explain: 'Warming seas, pollution and clearing all disrupt conditions; protection and restoration can help.' })] }
+    ]
+  });
 })();

@@ -56,12 +56,16 @@ that keep the year (9.1, 10.2) and a ★ Challenge set on every exercise. Both u
 Atoms and Reactions (9.1 Atoms and the Periodic Table, 9.2 Acids, Bases and Gas Tests, 10.1
 Bonding, Formulas and Equations, 10.2 Types of Reaction) and Electricity, Waves and Forces (9.3
 Electric Circuits, 9.4 Motion and Forces, 9.5 Pressure, 10.3 Waves, Sound and Light, 10.4 Force,
-Mass and Acceleration, 10.5 Fluids and Buoyancy). Earth Systems and The Living Body are still to
-be added. They bring new diagrams in `js/science.js`: Bohr diagrams and a labelled atom, the
+Mass and Acceleration, 10.5 Fluids and Buoyancy), Earth Systems (9.6 The Solar System, 10.6 The
+Water Cycle, 10.7 Plate Tectonics, 9.10 Ecosystem Conditions, 10.10 Ecosystems and Water) and The
+Living Body (9.7 Cell Structure and Function, 9.8 Disease and Immunity, 10.8 DNA, Genes and
+Traits, 9.9 Diffusion, Photosynthesis and Respiration, 10.9 Nerves and Thermoregulation).
+Ecosystems sits in Earth Systems because its Year 10 heading is about water. They bring new diagrams in `js/science.js`: Bohr diagrams and a labelled atom, the
 first four periods of the periodic table, circuit diagrams (series or parallel, with ammeters,
 voltmeters and switches, drawn from a description so a meter shows exactly the reading the
 question uses), energy transfer (Sankey) diagrams drawn to scale, the pH scale in universal
-indicator colours, transverse and longitudinal waves, and a tank of water. Chemical equations are
+indicator colours, transverse and longitudinal waves, a tank of water, a bacterium, diffusion across a membrane, a
+labelled water cycle and plate boundaries seen from above. Chemical equations are
 balanced in `fill` boxes, one per coefficient. The curriculum does not ask for V = IR, the wave
 equation or moles at this level, so neither do the questions. `Sci.choice` takes `options` for
 answers with a natural order (acidic, neutral, alkaline), shown in that order whichever is right.
@@ -213,8 +217,8 @@ js/
     problems.js         unit 6, problem solving
     science-y7.js       Year 7 science
     science-y8.js       Year 8 science
-    science-y9.js       Year 9 science (9.1 to 9.5)
-    science-y10.js      Year 10 science (10.1 to 10.5)
+    science-y9.js       Year 9 science (9.1 to 9.10)
+    science-y10.js      Year 10 science (10.1 to 10.10)
     coding-basics.js    Coding: Python Basics (C1 to C4)
     coding-loops.js     Coding: Loops, Lists and Functions (C5 to C8)
 tools/

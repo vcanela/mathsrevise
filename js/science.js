@@ -1734,3 +1734,112 @@ const SciDia = (() => {
 
   Object.assign(SciDia, { phScale, UI_COLOURS: UI, wave, twoWaves, longitudinal, tank });
 })();
+
+
+// ── Years 9 and 10 diagrams: cells, diffusion, the water cycle, plates ─────
+
+(() => {
+  const INK = 'var(--dia-ink)', MUTED = 'var(--dia-muted)', ACC = 'var(--dia-accent)';
+
+  /** A numbered (or named) marker with a leader line to the point it labels. */
+  function marker(d, at, to, text) {
+    d.line(at, to, { stroke: MUTED, width: 1 });
+    if (String(text).length <= 2) {
+      d.add('circle', { cx: at[0], cy: at[1], r: 8, fill: 'var(--surface)', stroke: INK, 'stroke-width': 1.2 });
+      d.text(at, String(text), { size: 10.5 });
+    } else d.text([at[0], at[1] - 7], String(text), { size: 10.5 });
+  }
+
+  const BACTERIUM_PARTS = ['cell membrane', 'cytoplasm', 'genetic material'];
+  /** A bacterium: no nucleus, its genetic material loose in the cytoplasm. labels: { part: marker text }. */
+  function bacterium(d, labels) {
+    labels = labels || {};
+    const cx = d.w / 2, cy = d.h / 2 + 6, w = 170, h = 74;
+    d.add('rect', { x: cx - w / 2, y: cy - h / 2, width: w, height: h, rx: h / 2, fill: 'var(--cytoplasm)', stroke: INK, 'stroke-width': 1.6 });
+    // A loop of DNA, tangled: a closed wobbly curve.
+    const pts = [];
+    for (let i = 0; i <= 60; i++) {
+      const a = i / 60 * 2 * Math.PI;
+      const r = 20 + 6 * Math.sin(5 * a) + 3 * Math.cos(3 * a);
+      pts.push(`${i ? 'L' : 'M'} ${(cx + 1.6 * r * Math.cos(a)).toFixed(1)} ${(cy + 0.8 * r * Math.sin(a)).toFixed(1)}`);
+    }
+    d.add('path', { d: pts.join(' ') + ' Z', fill: 'none', stroke: ACC, 'stroke-width': 1.8 });
+    // A tail (flagellum).
+    d.add('path', { d: `M ${cx + w / 2} ${cy} q 14 -10 28 0 t 28 0`, fill: 'none', stroke: INK, 'stroke-width': 1.3 });
+    const spots = {
+      'cell membrane':    [[cx - w / 2 + 14, cy - h / 2 + 8], [cx - w / 2 - 6, cy - h / 2 - 14]],
+      'cytoplasm':        [[cx - w / 2 + 30, cy + 14], [cx - w / 2 - 6, cy + h / 2 + 16]],
+      'genetic material': [[cx + 1.6 * 20, cy - 4], [cx + w / 2 - 10, cy - h / 2 - 16]]
+    };
+    for (const [part, text] of Object.entries(labels)) marker(d, spots[part][1], spots[part][0], text);
+  }
+
+  /**
+   * Particles either side of a membrane (dashed). Positions come from a fixed
+   * pattern, not chance, so the picture is the same every time it is drawn.
+   */
+  function diffusion(d, o) {
+    const x0 = 12, x1 = d.w - 12, mid = d.w / 2, top = 12, bot = d.h - 26;
+    d.add('rect', { x: x0, y: top, width: x1 - x0, height: bot - top, rx: 4, fill: 'var(--dia-fill)', stroke: INK, 'stroke-width': 1.4 });
+    d.line([mid, top], [mid, bot], { stroke: INK, width: 1.6, dash: '5 4' });
+    const place = (n, xa, xb, seed) => {
+      for (let i = 0; i < n; i++) {
+        const fx = ((i * 0.618 + seed * 0.31) % 1), fy = ((i * 0.382 + seed * 0.17 + i * i * 0.013) % 1);
+        d.add('circle', { cx: (xa + 8 + fx * (xb - xa - 16)).toFixed(1), cy: (top + 8 + fy * (bot - top - 16)).toFixed(1), r: 3.6, fill: 'var(--brand)', 'fill-opacity': 0.85 });
+      }
+    };
+    place(o.left, x0, mid, 1); place(o.right, mid, x1, 2);
+    d.text([(x0 + mid) / 2, bot + 13], o.labels ? o.labels[0] : 'A', { size: 11.5 });
+    d.text([(mid + x1) / 2, bot + 13], o.labels ? o.labels[1] : 'B', { size: 11.5 });
+  }
+
+  const WATER_PARTS = ['evaporation', 'condensation', 'precipitation', 'transpiration', 'runoff'];
+  /** The water cycle, with each process an arrow carrying a numbered marker. markers: names in number order. */
+  function waterCycle(d, markers) {
+    const W = d.w, H = d.h, sea = H - 34;
+    // Land on the left rising to a hill, sea on the right.
+    d.add('path', { d: `M 0 ${H} L 0 ${sea - 50} Q 50 ${sea - 80} 100 ${sea - 40} L ${W * 0.55} ${sea} L ${W * 0.55} ${H} Z`, fill: 'var(--surface-2)', stroke: INK, 'stroke-width': 1.3 });
+    d.add('rect', { x: W * 0.55, y: sea, width: W * 0.45, height: H - sea, fill: 'var(--brand)', 'fill-opacity': 0.25 });
+    d.line([W * 0.55, sea], [W, sea], { stroke: 'var(--brand-ink)', width: 1.3 });
+    // A tree, a cloud and the Sun.
+    const tx = 70, ty = sea - 62;
+    d.line([tx, ty], [tx, ty + 22], { stroke: INK, width: 2.2 });
+    d.add('circle', { cx: tx, cy: ty - 6, r: 12, fill: 'var(--dia-known)', 'fill-opacity': 0.5, stroke: INK, 'stroke-width': 1 });
+    const cl = [W * 0.42, 34];
+    for (const [dx, dy, r] of [[-22, 4, 13], [0, -4, 17], [22, 4, 13]]) d.add('circle', { cx: cl[0] + dx, cy: cl[1] + dy, r, fill: 'var(--surface)', stroke: INK, 'stroke-width': 1.2 });
+    d.add('circle', { cx: W - 26, cy: 26, r: 13, fill: '#f2c94c', stroke: INK, 'stroke-width': 1 });
+    for (const dx of [-24, -12, 12]) d.line([cl[0] + dx, 58], [cl[0] + dx - 4, 70], { stroke: 'var(--brand)', width: 1.2 });
+    const arrows = {
+      evaporation:   { from: [W * 0.78, sea - 6], to: [W * 0.62, 52], at: [W * 0.74, sea - 60] },
+      condensation:  { from: [W * 0.6, 42], to: [cl[0] + 36, 34], at: [W * 0.58, 16], short: true },
+      precipitation: { from: [cl[0] - 6, 56], to: [cl[0] - 22, sea - 58], at: [cl[0] + 14, 92] },
+      transpiration: { from: [tx + 6, ty - 20], to: [cl[0] - 40, 44], at: [tx + 10, 48] },
+      runoff:        { from: [110, sea - 30], to: [W * 0.53, sea - 4], at: [W * 0.32, sea - 4] }
+    };
+    for (const k of WATER_PARTS) {
+      const a = arrows[k];
+      SciDia.arrow(d, a.from, a.to, { colour: 'var(--brand-ink)', width: 1.6, head: 6 });
+    }
+    (markers || []).forEach((k, i) => {
+      const a = arrows[k], m = [(a.from[0] + a.to[0]) / 2, (a.from[1] + a.to[1]) / 2];
+      marker(d, a.at, m, i + 1);
+    });
+  }
+
+  /** Two tectonic plates seen from above, with arrows showing how they move at their boundary. */
+  function plates(d, type) {
+    const mid = d.w / 2, top = 18, bot = d.h - 18, x0 = 16, x1 = d.w - 16;
+    d.add('rect', { x: x0, y: top, width: mid - x0 - 2, height: bot - top, fill: 'var(--surface-2)', stroke: INK, 'stroke-width': 1.3 });
+    d.add('rect', { x: mid + 2, y: top, width: x1 - mid - 2, height: bot - top, fill: 'var(--dia-fill)', stroke: INK, 'stroke-width': 1.3 });
+    d.line([mid, top - 6], [mid, bot + 6], { stroke: ACC, width: 2.2, dash: type === 'transform' ? null : '6 4' });
+    const y = (top + bot) / 2, L = 40;
+    const go = (from, to) => SciDia.arrow(d, from, to, { colour: INK, width: 2.4, head: 8 });
+    if (type === 'convergent') { go([mid - 70, y], [mid - 70 + L, y]); go([mid + 70, y], [mid + 70 - L, y]); }
+    else if (type === 'divergent') { go([mid - 30, y], [mid - 30 - L, y]); go([mid + 30, y], [mid + 30 + L, y]); }
+    else { go([mid - 40, y + L / 2], [mid - 40, y - L / 2]); go([mid + 40, y - L / 2], [mid + 40, y + L / 2]); }
+    d.text([(x0 + mid) / 2, top + 12], 'Plate A', { size: 10.5, fill: MUTED });
+    d.text([(mid + x1) / 2, top + 12], 'Plate B', { size: 10.5, fill: MUTED });
+  }
+
+  Object.assign(SciDia, { BACTERIUM_PARTS, bacterium, diffusion, WATER_PARTS, waterCycle, plates });
+})();

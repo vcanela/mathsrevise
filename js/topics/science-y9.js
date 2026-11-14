@@ -1358,4 +1358,778 @@
         })] }
     ]
   });
+
+
+  // ═══ 9.6 The Solar System ═════════════════════════════════════════════════
+  // Knowledge: The Solar System (Earth and space, Year 9, pp. 27–28).
+  // Practices: pattern seeking to explain categories; scale models; strengths
+  // and limits of models; how technology advanced understanding; units (AU).
+
+  const PLANETS = [
+    ['Mercury', 0.39, 4880, 'rocky'], ['Venus', 0.72, 12100, 'rocky'], ['Earth', 1, 12760, 'rocky'], ['Mars', 1.52, 6790, 'rocky'],
+    ['Jupiter', 5.2, 142980, 'gas giant'], ['Saturn', 9.5, 120540, 'gas giant'], ['Uranus', 19.2, 51120, 'ice giant'], ['Neptune', 30.1, 49530, 'ice giant']
+  ];
+  const AU_KM = 150;   // million km
+  const SPACE_OBJECTS = [
+    ['star', 'A massive object that gives out its own light'],
+    ['planet', 'A large object that orbits a star and reflects the star’s light'],
+    ['moon', 'A roughly spherical natural satellite that orbits a planet'],
+    ['dwarf planet', 'A roughly spherical object orbiting the Sun that has not cleared its orbital path'],
+    ['asteroid', 'A small rocky body, mostly found between Mars and Jupiter'],
+    ['comet', 'An icy body orbiting the Sun that can grow a glowing coma and tail near it']
+  ];
+
+  Sci.topic({
+    id: 's9e6', unit: 'earth-systems',
+    title: 'The Solar System',
+    blurb: 'The Sun and everything bound to it: planets, moons, dwarf planets, asteroids and comets, and how we found out.',
+    hint: 'A star gives out light; planets and moons reflect it. The planets from the Sun: Mercury, Venus, Earth, Mars (rocky), Jupiter, Saturn (gas giants), ' +
+          'Uranus, Neptune (ice giants). 1 AU is the average Earth–Sun distance, about 150 million km. Further from the Sun, less solar radiation.',
+
+    learn: [
+      { id: 'place', title: 'Our place',
+        text: '<p>The Solar System is part of the <strong>Milky Way</strong> galaxy, one of billions of galaxies in the universe.</p>' +
+              '<p>It is the Sun and everything held to it by gravity: planets, moons, dwarf planets, asteroids and comets.</p>' },
+      { id: 'objects', title: 'Kinds of objects', wide: true,
+        text: Sci.table(['Object', 'What it is'], SPACE_OBJECTS.map(([a, b]) => [a, b])) +
+              '<p>The Sun is a star; Earth is a planet that orbits it. The Moon is visible because it reflects sunlight, by day as well as by night.</p>' },
+      { id: 'planets', title: 'The planets',
+        text: Sci.table(['Planet', 'Distance (AU)', 'Type'], PLANETS.map(([n, au, , t]) => [n, String(au), t])) +
+              '<p>Four rocky planets, then two gas giants, then two ice giants.</p>' },
+      { id: 'au', title: 'The astronomical unit',
+        text: '<p>1 <strong>astronomical unit (AU)</strong> is the average distance from Earth to the Sun, about 150 million km. Jupiter is 5.2 AU from the Sun: 5.2 × 150 = 780 million km.</p>' },
+      { id: 'radiation', title: 'Distance and sunlight',
+        text: '<p>The amount of solar radiation a planet receives depends on its distance from the Sun: the further away, the less. That is a big part of why Mercury is scorching and Neptune frozen.</p>' },
+      { id: 'meteors', title: 'Meteors and meteorites',
+        text: '<p>A <strong>meteor</strong> is matter from space entering Earth’s atmosphere and heating up: a “shooting star”. If part reaches the ground, it is a <strong>meteorite</strong>, which can be evidence about how the Solar System formed.</p>' },
+      { id: 'technology', title: 'How we know',
+        text: '<ul><li>Observation by eye, then <strong>telescopes</strong>.</li><li>Analysing the <strong>electromagnetic radiation</strong> objects give out or reflect, to learn their conditions and surfaces.</li>' +
+              '<li>Spacecraft, with and without crews; <strong>landers</strong> see surfaces up close and bring back samples.</li></ul><p>Understanding grew with technology and with scientists reaching consensus.</p>' }
+    ],
+
+    examples: [
+      {
+        title: 'Example 1: using AU',
+        steps: ['Mars is 1.52 AU from the Sun.', '1 AU ≈ 150 million km, so 1.52 × 150 = 228 million km.'],
+        result: 'About 228 million km'
+      },
+      {
+        title: 'Example 2: sorting by pattern',
+        steps: ['Ceres is round and orbits the Sun, in the asteroid belt among many other bodies.', 'Round and orbiting the Sun, but it has not cleared its orbital path.'],
+        result: 'Ceres is a dwarf planet'
+      }
+    ],
+
+    slots: [
+      { name: 'What is it?', learn: 'objects',
+        items: SPACE_OBJECTS.map(([name, desc]) => rng => C(rng, { prompt: `${desc}. What is it called?`, right: name,
+          wrong: rng.sample(SPACE_OBJECTS.map(x => x[0]).filter(x => x !== name), 3), wide: false, explain: `That describes a ${name}.` })) },
+
+      { name: 'Planets in order', learn: 'planets',
+        items: [Sci.gen(rng => {
+          const start = rng.int(0, 3), seq = PLANETS.slice(start, start + 5).map(p => p[0]);
+          return Sci.order(rng, 'Put these planets in order, starting with the one <strong>closest</strong> to the Sun.', seq,
+            'From the Sun: ' + PLANETS.map(p => p[0]).join(', ') + '.', { learn: 'planets' });
+        })] },
+
+      { name: 'Rocky, gas giant or ice giant?', learn: 'planets',
+        items: [rng => Sci.sort(rng, {
+          prompt: 'Sort the planets by type.', bins: ['Rocky', 'Gas giant', 'Ice giant'], pick: 6,
+          items: PLANETS.map(([n, , , t]) => ({ text: n, bin: ['rocky', 'gas giant', 'ice giant'].indexOf(t) })),
+          explain: 'Mercury, Venus, Earth and Mars are rocky; Jupiter and Saturn are gas giants; Uranus and Neptune are ice giants.'
+        })] },
+
+      { name: 'Light from the Sun', learn: 'objects',
+        items: [
+          rng => C(rng, { prompt: 'Why can we see the Moon?', right: 'It reflects light from the Sun', wrong: ['It gives out its own light', 'It reflects light from the Earth only', 'It glows because it is hot'],
+                          explain: 'The Moon is not a light source: it reflects sunlight.' }),
+          rng => C(rng, { prompt: 'Which of these gives out its own light?', right: 'The Sun', wrong: ['The Moon', 'Venus', 'A comet’s nucleus'], wide: false,
+                          explain: 'The Sun is a star. Planets and moons reflect its light.' }),
+          rng => C(rng, { prompt: 'Can the Moon be seen during the day?', right: 'Yes: it reflects sunlight whenever it is above the horizon on the sunlit side', wrong: ['No, never', 'Only during an eclipse', 'Only in winter'],
+                          explain: 'The Moon can be observed by day and by night.' })
+        ] },
+
+      { name: 'Distances in AU', learn: 'au',
+        items: [Sci.gen(rng => {
+          const [n, au] = rng.pick(PLANETS.filter(p => p[0] !== 'Earth'));
+          return { prompt: `${n} is ${au} AU from the Sun. About how far is that in millions of kilometres? (1 AU ≈ 150 million km.)`,
+                   input: { kind: 'number', answer: +(au * AU_KM).toFixed(1), tol: 0.5, decimal: true, suffix: 'million km', width: 80 },
+                   explain: `${au} × 150 = ${num(au * AU_KM)} million km.` };
+        })] },
+
+      { name: 'Further away, less sunlight', learn: 'radiation',
+        items: [Sci.gen(rng => {
+          const [a, b] = rng.sample(PLANETS, 2);
+          const near = a[1] < b[1] ? a : b;
+          return C(rng, { prompt: `Which receives more solar radiation per square metre: ${a[0]} or ${b[0]}?`, right: near[0], wrong: [near === a ? b[0] : a[0], 'They receive the same'], wide: false,
+            explain: `${near[0]} is closer to the Sun (${near[1]} AU), and the closer a planet, the more solar radiation it receives.` });
+        })] },
+
+      { name: 'Asteroids, comets and meteors', learn: 'meteors',
+        items: [
+          rng => C(rng, { prompt: 'Where are most asteroids found?', right: 'In the asteroid belt between Mars and Jupiter', wrong: ['Between Earth and Venus', 'Beyond Neptune only', 'Orbiting the Moon'],
+                          explain: 'Most asteroids, small rocky bodies, orbit between Mars and Jupiter.' }),
+          rng => C(rng, { prompt: 'Why does a comet grow a glowing coma and tail as it nears the Sun?', right: 'It is icy, and the Sun’s energy turns some of the ice to gas and dust',
+            wrong: ['It catches fire', 'It collides with planets', 'It reflects light from Earth'], explain: 'Comets are icy bodies; near the Sun they release gas and dust.' }),
+          rng => C(rng, { prompt: 'What is the difference between a meteor and a meteorite?', right: 'A meteor is the streak as it heats up in the atmosphere; a meteorite is the part that reaches the ground',
+            wrong: ['They are the same thing', 'A meteorite is the streak; a meteor reaches the ground', 'Meteors come from the Moon; meteorites from Mars'], explain: 'Meteorites can be studied for evidence about how the Solar System formed.' })
+        ] },
+
+      { name: 'Galaxies and the universe', learn: 'place',
+        items: [
+          rng => C(rng, { prompt: 'Put these in order from smallest to largest.', right: 'Earth, Solar System, Milky Way, universe', wrong: ['Solar System, Earth, Milky Way, universe', 'Earth, Milky Way, Solar System, universe', 'Milky Way, Solar System, Earth, universe'],
+                          explain: 'Earth is one planet of the Solar System, which is part of the Milky Way galaxy, one of billions in the universe.' }),
+          rng => C(rng, { prompt: 'What is the Milky Way?', right: 'The galaxy our Solar System is part of', wrong: ['Another name for the Solar System', 'The only galaxy in the universe', 'A comet’s tail'],
+                          explain: 'The Milky Way is our galaxy, one of billions.' })
+        ] },
+
+      { name: 'How we found out', learn: 'technology',
+        items: [
+          rng => C(rng, { prompt: 'How can scientists find out what a distant planet’s atmosphere contains without going there?', right: 'By analysing the electromagnetic radiation it gives out or reflects',
+            wrong: ['By listening for sound from it', 'By weighing it', 'By guessing from its colour in a photo only'], explain: 'The radiation coming from an object carries information about its conditions and surface.' }),
+          rng => C(rng, { prompt: 'What can a lander do that a telescope cannot?', right: 'See the surface in close detail and collect samples', wrong: ['See further into space', 'Observe from Earth', 'Measure the Sun’s distance'],
+                          explain: 'Landing allows close-up study and samples brought back for testing.' }),
+          rng => C(rng, { prompt: 'Which came first in humans learning about the Solar System?', right: 'Observing the sky by eye', wrong: ['Space probes', 'Radio telescopes', 'Landers bringing back samples'], wide: false,
+                          explain: 'Observation by eye came first, then telescopes, then spacecraft.' })
+        ] },
+
+      // ── Challenge set.
+      { challenge: 'only', name: 'Is it a planet?', learn: 'objects',
+        items: [
+          rng => C(rng, { prompt: 'Pluto is round and orbits the Sun, but shares its region with many other icy bodies. How is it classified, and why?', right: 'A dwarf planet: it has not cleared its orbital path',
+            wrong: ['A planet: it is round', 'A moon: it is small', 'An asteroid: it is rocky'], explain: 'Round and orbiting the Sun are not enough: a planet has cleared its path of other objects.' }),
+          rng => C(rng, { prompt: 'Ganymede is larger than Mercury, but it is not a planet. Why?', right: 'It orbits Jupiter, so it is a moon', wrong: ['It is too cold', 'It has not cleared its path', 'It gives out its own light'],
+                          explain: 'An object orbiting a planet is a moon, whatever its size.' })
+        ] },
+
+      { challenge: 'only', name: 'A scale model', learn: 'au',
+        items: [Sci.gen(rng => {
+          const scale = rng.pick([2, 5, 10]), [n, au] = rng.pick(PLANETS.filter(p => p[1] >= 1.5));
+          return { prompt: `In a school-field model of the Solar System, 1 AU is ${scale} m. How far from the “Sun” should ${n} (${au} AU) be placed?`,
+                   input: { kind: 'number', answer: +(au * scale).toFixed(2), tol: 0.01, decimal: true, suffix: 'm', width: 80 },
+                   explain: `${au} × ${scale} = ${num(au * scale)} m.` };
+        })] },
+
+      { challenge: 'only', name: 'Patterns in data', learn: 'planets',
+        items: [
+          rng => C(rng, { prompt: 'Looking at the table of planets, what pattern separates the rocky planets from the others?' + Sci.table(['Planet', 'AU', 'Diameter (km)'], PLANETS.map(([n, au, dkm]) => [n, String(au), dkm.toLocaleString('en-NZ')])),
+            right: 'The rocky planets are the four closest to the Sun, and they are much smaller', wrong: ['The rocky planets are the furthest from the Sun', 'Planets get bigger steadily the further they are', 'There is no pattern'],
+            explain: 'All four within about 1.5 AU are small and rocky; the four beyond are giants.' })
+        ] },
+
+      { challenge: 'only', name: 'Models of the Solar System', learn: 'au',
+        items: [
+          rng => C(rng, { prompt: 'A classroom poster shows all eight planets in a row, close together and similar in size. What is its main limitation?', right: 'Neither sizes nor distances are to scale: the real gaps are enormous',
+            wrong: ['It shows the planets in the wrong order', 'It shows too many planets', 'It has no limitations'], explain: 'If the sizes were to scale, the distances would not fit on any poster, and the other way round.' }),
+          rng => C(rng, { prompt: 'Why is it hard to make one model that shows both the sizes and the distances in the Solar System to the same scale?', right: 'The distances are huge compared with the sizes, so the planets would be specks far apart',
+            wrong: ['The planets keep changing size', 'Nobody knows the distances', 'The Sun is smaller than the planets'], explain: 'At a scale where Earth is a peppercorn, it is about 25 m from a 20 cm Sun.' })
+        ] },
+
+      { challenge: 'only', name: 'Light travel time', learn: 'au',
+        items: [Sci.gen(rng => {
+          const [n, au] = rng.pick(PLANETS.filter(p => p[1] > 1));
+          return { prompt: `Sunlight takes about 8 minutes to travel 1 AU. About how many minutes does it take to reach ${n} (${au} AU)?`,
+                   input: { kind: 'number', answer: +(au * 8).toFixed(1), tol: 1, decimal: true, suffix: 'minutes', width: 80 },
+                   explain: `${au} × 8 ≈ ${num(au * 8)} minutes.` };
+        })] }
+    ]
+  });
+
+
+  // ═══ 9.7 Cell structure and function ══════════════════════════════════════
+  // Knowledge: Cell structure and function (Organism diversity, Year 9, p. 29).
+  // Practices: compare the size, scale and structures of cells from images;
+  // how technology contributed to understanding cells.
+
+  const ORGANELLES = [
+    ['nucleus', 'Holds the genetic material (DNA), the instructions for how the cell is built and works'],
+    ['cell membrane', 'Controls what enters and leaves the cell'],
+    ['cytoplasm', 'Where many of the cell’s chemical reactions happen'],
+    ['mitochondria', 'Break down glucose in cellular respiration'],
+    ['cell wall', 'Gives a plant cell strength and shape'],
+    ['chloroplasts', 'Use sunlight to make glucose by photosynthesis'],
+    ['vacuole', 'A fluid-filled space that stores water and nutrients']
+  ];
+
+  Sci.topic({
+    id: 's9e7', unit: 'living-body',
+    title: 'Cell Structure and Function',
+    blurb: 'Prokaryotic and eukaryotic cells, what each organelle does, and how small cells really are.',
+    hint: 'Prokaryotes (bacteria) have no nucleus: their genetic material is loose in the cytoplasm. Eukaryotes (animals, plants, fungi) have a nucleus and other organelles, ' +
+          'including mitochondria for respiration. Plant cells also have a cell wall, chloroplasts and a large vacuole. 1 mm = 1000 µm.',
+
+    learn: [
+      { id: 'organelles', title: 'Organelles', wide: true,
+        text: '<p>Organelles are structures inside cells with specialised jobs.</p>' + Sci.table(['Organelle', 'Job'], ORGANELLES) },
+      { id: 'pro', title: 'Prokaryotes', diagram: { w: 300, h: 130, caption: 'A bacterium: no nucleus.' },
+        draw(d) { SciDia.bacterium(d, Object.fromEntries(SciDia.BACTERIUM_PARTS.map(p => [p, p]))); },
+        text: '<p><strong>Prokaryotic</strong> cells have genetic material that is <strong>not</strong> inside a nucleus. Prokaryotes, such as bacteria, are single-celled, with genetic material, a cell membrane and cytoplasm.</p>' },
+      { id: 'eu', title: 'Eukaryotes',
+        text: '<p><strong>Eukaryotic</strong> cells have their genetic material inside a nucleus, and other organelles too: cell membrane, cytoplasm, mitochondria. Animals, plants and fungi are eukaryotes, single-celled or multicellular.</p>' },
+      { id: 'plant', title: 'Plant cells', diagram: { w: 300, h: 200 },
+        draw(d) { SciDia.cell(d, 'plant', Object.fromEntries(SciDia.PLANT_PARTS.map((p, i) => [p, String(i + 1)]))); },
+        text: '<p>Plant cells are eukaryotic and also have a <strong>cell wall</strong>, <strong>chloroplasts</strong> and a <strong>large vacuole</strong> (animal cells have small ones, or none).</p>' +
+              '<p>' + SciDia.PLANT_PARTS.map((p, i) => `${i + 1} ${p}`).join(' · ') + '</p>' },
+      { id: 'scale', title: 'How small?',
+        text: '<p>Cells are measured in <strong>micrometres</strong> (µm): 1 mm = 1000 µm.</p>' +
+              Sci.table(['Thing', 'Typical size'], [['a bacterium', '1–5 µm'], ['a human cheek cell', 'about 60 µm'], ['a plant leaf cell', 'about 100 µm'], ['a full stop', 'about 500 µm']]) },
+      { id: 'technology', title: 'Seeing cells',
+        text: '<p>Light microscopes first showed cells in the 1600s. Electron microscopes, from the 1930s, magnify far more and revealed the detail of organelles such as mitochondria.</p>' }
+    ],
+
+    examples: [
+      {
+        title: 'Example 1: prokaryote or eukaryote?',
+        steps: ['A cell from pond water has a nucleus, chloroplasts and a cell wall.', 'A nucleus means eukaryotic; chloroplasts and a cell wall suggest a plant-like cell.'],
+        result: 'Eukaryotic, plant-like (an alga)'
+      },
+      {
+        title: 'Example 2: comparing sizes',
+        steps: ['A cheek cell is about 60 µm across; a bacterium about 2 µm.', '60 ÷ 2 = 30.'],
+        result: 'The cheek cell is about 30 times wider'
+      }
+    ],
+
+    slots: [
+      { name: 'Label a plant cell', learn: 'plant',
+        items: [Sci.gen(rng => {
+          const order = rng.sample(SciDia.PLANT_PARTS, 4);
+          return Sci.label(rng, { prompt: 'Name each numbered part of this plant cell.', diagram: { w: 300, h: 200 },
+            draw: d => SciDia.cell(d, 'plant', Object.fromEntries(order.map((p, i) => [p, String(i + 1)]))), markers: order, options: SciDia.PLANT_PARTS,
+            explain: 'Cell wall outside, membrane just inside it; the large vacuole in the middle; chloroplasts are the small green bodies; the nucleus sits in the cytoplasm.' });
+        })] },
+
+      { name: 'Label a bacterium', learn: 'pro',
+        items: [Sci.gen(rng => {
+          const order = rng.shuffle(SciDia.BACTERIUM_PARTS);
+          return Sci.label(rng, { prompt: 'Name each numbered part of this bacterium.', diagram: { w: 300, h: 130 },
+            draw: d => SciDia.bacterium(d, Object.fromEntries(order.map((p, i) => [p, String(i + 1)]))), markers: order, options: [...SciDia.BACTERIUM_PARTS, 'nucleus'],
+            explain: 'The membrane is the outer boundary; the cytoplasm fills the cell; the tangled loop is its genetic material. There is no nucleus.' });
+        })] },
+
+      { name: 'What does it do?', learn: 'organelles',
+        items: ORGANELLES.map(([name, job]) => rng => C(rng, { prompt: `${job}. Which part of the cell is this?`, right: name,
+          wrong: rng.sample(ORGANELLES.map(x => x[0]).filter(x => x !== name), 3), wide: false, explain: `That is the job of the ${name}.` })) },
+
+      { name: 'Prokaryote or eukaryote?', learn: 'pro',
+        items: [rng => Sci.sort(rng, {
+          prompt: 'Sort these cells.', bins: ['Prokaryotic', 'Eukaryotic'], pick: 6,
+          items: [...['a bacterium that causes strep throat', 'a bacterium in yoghurt', 'a soil bacterium', 'a cyanobacterium in a pond'].map(text => ({ text, bin: 0 })),
+                  ...['a human muscle cell', 'a yeast cell', 'a cell from a pōhutukawa leaf', 'a mushroom cell', 'a red alga cell', 'a tuatara skin cell'].map(text => ({ text, bin: 1 }))],
+          explain: 'Bacteria are prokaryotes: no nucleus. Animals, plants, fungi (yeast, mushrooms) and algae are eukaryotes.'
+        })] },
+
+      { name: 'The difference', learn: 'eu',
+        items: [
+          rng => C(rng, { prompt: 'What is the key difference between prokaryotic and eukaryotic cells?', right: 'Eukaryotic cells keep their genetic material inside a nucleus; prokaryotic cells do not',
+            wrong: ['Only prokaryotic cells have genetic material', 'Only eukaryotic cells have a cell membrane', 'Prokaryotic cells are always bigger'], explain: 'Both have genetic material, a membrane and cytoplasm; only eukaryotes have a nucleus.' }),
+          rng => C(rng, { prompt: 'Which of these is found in <strong>both</strong> prokaryotic and eukaryotic cells?', right: 'cell membrane', wrong: ['nucleus', 'mitochondria', 'chloroplasts'], wide: false,
+                          explain: 'Every cell has a membrane, cytoplasm and genetic material.' }),
+          rng => C(rng, { prompt: 'A single-celled organism has no nucleus. What is it most likely to be?', right: 'a bacterium', wrong: ['a yeast', 'an amoeba', 'a plant cell'], wide: false,
+                          explain: 'No nucleus means prokaryotic: a bacterium.' })
+        ] },
+
+      { name: 'Plant or animal?', learn: 'plant',
+        items: [
+          rng => C(rng, { prompt: 'Which organelle would you find in a leaf cell but <strong>not</strong> in a human cell?', right: 'chloroplast', wrong: ['nucleus', 'mitochondria', 'cell membrane'], wide: false,
+                          explain: 'Chloroplasts (and a cell wall) are found in plant cells, not animal cells.' }),
+          rng => C(rng, { prompt: 'Why do plant root cells have mitochondria but no chloroplasts?', right: 'They are underground with no light, but still need to respire', wrong: ['Roots make glucose from soil', 'Mitochondria and chloroplasts are the same', 'Root cells are prokaryotic'],
+                          explain: 'Every living cell respires; only cells that get light need chloroplasts.' }),
+          rng => C(rng, { prompt: 'How do vacuoles in plant and animal cells compare?', right: 'Large in plant cells, small in animal cells', wrong: ['Large in animal cells, small in plant cells', 'Only animal cells have them', 'They are the same size'],
+                          explain: 'The large plant vacuole stores water and helps keep the cell firm.' })
+        ] },
+
+      { name: 'Mitochondria', learn: 'organelles',
+        items: [
+          rng => C(rng, { prompt: 'What happens in mitochondria?', right: 'Glucose is broken down to release energy (cellular respiration)', wrong: ['Glucose is made from sunlight', 'DNA is stored', 'Water is stored'],
+                          explain: 'Mitochondria carry out respiration. Chloroplasts make glucose.' }),
+          rng => C(rng, { prompt: 'Muscle cells have many more mitochondria than most cells. Why?', right: 'Muscles need a lot of energy, released by respiration', wrong: ['Muscles store DNA', 'Muscles make glucose', 'Muscles have no nucleus'],
+                          explain: 'More mitochondria means more respiration, so more energy for contraction.' })
+        ] },
+
+      { name: 'Units of size', learn: 'scale',
+        items: [Sci.gen(rng => {
+          const k = rng.int(0, 1);
+          if (k === 0) { const mm = rng.pick([0.1, 0.05, 0.2, 0.5, 0.02]); return { prompt: `A cell is ${mm} mm wide. How wide is it in micrometres (µm)?`,
+            input: { kind: 'number', answer: +(mm * 1000).toFixed(2), suffix: 'µm', width: 80 }, explain: `1 mm = 1000 µm, so ${mm} × 1000 = ${num(mm * 1000)} µm.` }; }
+          const um = rng.pick([20, 50, 100, 250, 400]);
+          return { prompt: `A cell is ${um} µm wide. How wide is it in millimetres?`, input: { kind: 'number', answer: um / 1000, tol: 0.0001, decimal: true, suffix: 'mm', width: 80 },
+                   explain: `${um} ÷ 1000 = ${num(um / 1000)} mm.` };
+        })] },
+
+      { name: 'Which is bigger?', learn: 'scale',
+        items: [Sci.gen(rng => {
+          const a = rng.int(2, 10) * 10, b = rng.pick([1, 2, 5]);
+          return { prompt: `A human cell is ${a} µm across and a bacterium ${b} µm. How many times wider is the human cell?`, input: { kind: 'number', answer: a / b, tol: 0.01, decimal: true, width: 70 },
+                   explain: `${a} ÷ ${b} = ${num(a / b)} times.` };
+        })] },
+
+      // ── Challenge set.
+      { challenge: 'only', name: 'Magnification', learn: 'scale',
+        items: [Sci.gen(rng => {
+          const real = rng.pick([20, 25, 40, 50, 80]), mag = rng.pick([100, 200, 400, 500]);
+          const img = real * mag / 1000;
+          return { prompt: `A photo taken through a microscope at ×${mag} shows a cell ${num(img)} mm wide. How wide is the real cell, in µm?`,
+                   input: { kind: 'number', answer: real, tol: 0.5, suffix: 'µm', width: 70 },
+                   explain: `Real size = image size ÷ magnification = ${num(img)} ÷ ${mag} = ${num(img / mag)} mm = ${real} µm.` };
+        })] },
+
+      { challenge: 'only', name: 'Technology and cells', learn: 'technology',
+        items: [
+          rng => C(rng, { prompt: 'Mitochondria were seen with light microscopes, but their inner folded structure was only seen in the 1950s. What made the difference?', right: 'The electron microscope, which magnifies far more',
+            wrong: ['Better stains on the same microscopes', 'Larger cells being discovered', 'Computers'], explain: 'Technology set the limit: electron microscopes resolve details far smaller than light can.' }),
+          rng => C(rng, { prompt: 'Before microscopes, why did nobody know that living things are made of cells?', right: 'Most cells are far too small to see with the naked eye', wrong: ['Cells did not exist yet', 'Cells are transparent to microscopes', 'People thought it was obvious'],
+                          explain: 'A typical cell is around 50 µm, a twentieth of a millimetre.' })
+        ] },
+
+      { challenge: 'only', name: 'Identify the cell', learn: 'eu',
+        items: [
+          rng => C(rng, { prompt: 'A cell has a nucleus, a cell wall and a large vacuole, but no chloroplasts. Where might it come from?', right: 'A plant root', wrong: ['A leaf', 'A human muscle', 'A bacterium'], wide: false,
+                          explain: 'Plant features without chloroplasts: a plant cell kept from light, such as in a root.' }),
+          rng => C(rng, { prompt: 'A cell has a cell wall but no nucleus. What is it?', right: 'A bacterium', wrong: ['A plant cell', 'A fungus cell', 'An animal cell'], wide: false,
+                          explain: 'Many bacteria have a cell wall too, but no nucleus marks them as prokaryotic.' })
+        ] },
+
+      { challenge: 'only', name: 'Specialised cells', learn: 'organelles',
+        items: [
+          rng => C(rng, { prompt: 'Palisade cells near the top of a leaf are packed with chloroplasts. Why there?', right: 'That is where most light reaches, for photosynthesis', wrong: ['To store water', 'To protect the leaf from insects', 'To make the leaf heavier'],
+                          explain: 'Structure matches function: chloroplasts are where the light is.' }),
+          rng => C(rng, { prompt: 'Red blood cells have no nucleus, leaving more room for carrying oxygen. Are they prokaryotic?', right: 'No: they come from eukaryotic cells and are part of a eukaryotic organism', wrong: ['Yes: no nucleus means prokaryotic', 'Yes: they are bacteria', 'No: they are plant cells'],
+                          explain: 'Prokaryote describes single-celled organisms such as bacteria. A red blood cell loses its nucleus as it matures.' })
+        ] }
+    ]
+  });
+
+
+  // ═══ 9.8 Disease and immunity ═════════════════════════════════════════════
+  // Knowledge: Disease and immunity (Organism diversity, Year 9, p. 29).
+  // Practices: patterns in the spread of disease; compare prevention
+  // strategies using evidence; judge public information about disease.
+
+  const PATHOGENS = [['influenza (flu)', 'virus'], ['measles', 'virus'], ['COVID-19', 'virus'], ['strep throat', 'bacterium'], ['tuberculosis', 'bacterium'],
+                     ['malaria', 'protist'], ['myrtle rust (in plants)', 'fungus'], ['athlete’s foot', 'fungus']];
+
+  Sci.topic({
+    id: 's9e8', unit: 'living-body',
+    title: 'Disease and Immunity',
+    blurb: 'Pathogens and how they spread, the body’s defences, and how vaccines and hygiene protect us.',
+    hint: 'Infectious diseases are caused by pathogens (bacteria, viruses, protists, fungi) and spread; non-infectious ones are not. Non-specific defences: skin, hair, cilia, tears, saliva, ' +
+          'stomach acid, the microbiome. The immune system’s white blood cells recognise pathogens, some making antibodies. Vaccines train it without causing illness.',
+
+    learn: [
+      { id: 'pathogens', title: 'Pathogens',
+        text: '<p>Infectious diseases are caused by <strong>pathogens</strong>:</p>' + Sci.table(['Pathogen', 'Example disease'], [['bacteria', 'strep throat, tuberculosis'], ['viruses', 'influenza, measles'], ['protists', 'malaria'], ['fungi', 'myrtle rust, athlete’s foot']]) },
+      { id: 'spread', title: 'How they spread',
+        text: '<ul><li>Bodily fluids (blood, saliva).</li><li>Contaminated items: door handles, food, water.</li><li>Airborne particles: influenza from coughs; myrtle rust spores on the wind.</li></ul>' +
+              '<p>Managed by <strong>hygiene</strong> (hand washing), <strong>quarantine</strong> (keeping the infected or exposed apart) and other preventive measures.</p>' },
+      { id: 'noninf', title: 'Non-infectious disease',
+        text: '<p>Non-infectious diseases are not caused by pathogens and do not spread between people: type 2 diabetes, heart disease, most cancers.</p>' },
+      { id: 'defences', title: 'First lines of defence',
+        text: '<ul><li><strong>Physical barriers</strong>: skin, nose hair, cilia (tiny hairs sweeping mucus out of the airways).</li><li><strong>Chemical defences</strong>: tears, saliva, stomach acid.</li>' +
+              '<li>The <strong>microbiome</strong>: helpful microbes that crowd out harmful ones.</li></ul><p>These are non-specific: they act against any pathogen.</p>' },
+      { id: 'immune', title: 'The immune system',
+        text: '<p><strong>White blood cells</strong> recognise and respond to pathogens. Some specialised white blood cells make <strong>antibodies</strong>, which target one particular pathogen.</p>' },
+      { id: 'vaccines', title: 'Vaccines',
+        text: '<p>A vaccine stimulates the immune system to build a protective response without causing the illness, so a later infection is fought off quickly.</p>' },
+      { id: 'germ', title: 'Germ theory',
+        text: '<p>Louis Pasteur and Robert Koch established <strong>germ theory</strong>: micro-organisms cause disease. Pasteur later extended vaccination to other diseases.</p>' }
+    ],
+
+    examples: [
+      {
+        title: 'Example 1: infectious or not?',
+        steps: ['Measles spreads from person to person through the air.', 'It is caused by a virus, a pathogen.'],
+        result: 'Infectious: a viral disease'
+      },
+      {
+        title: 'Example 2: reading spread data',
+        steps: ['Cases each week: 4, 8, 16, 32.', 'Each week the number doubles.'],
+        result: 'Without action, about 64 next week'
+      }
+    ],
+
+    slots: [
+      { name: 'Which pathogen?', learn: 'pathogens',
+        items: [Sci.gen(rng => {
+          const [dis, kind] = rng.pick(PATHOGENS);
+          return C(rng, { prompt: `What kind of pathogen causes ${dis}?`, right: kind, options: ['bacterium', 'virus', 'protist', 'fungus'], wide: false,
+            explain: `${dis[0].toUpperCase() + dis.slice(1)} is caused by a ${kind}.` });
+        })] },
+
+      { name: 'Infectious or not?', learn: 'noninf',
+        items: [rng => Sci.sort(rng, {
+          prompt: 'Sort these diseases.', bins: ['Infectious', 'Non-infectious'], pick: 6,
+          items: [...['influenza', 'measles', 'strep throat', 'tuberculosis', 'malaria', 'COVID-19'].map(text => ({ text, bin: 0 })),
+                  ...['type 2 diabetes', 'heart disease', 'asthma', 'skin cancer', 'scurvy (lack of vitamin C)'].map(text => ({ text, bin: 1 }))],
+          explain: 'Infectious diseases are caused by pathogens and spread. Non-infectious diseases are not caused by pathogens and do not spread between people.'
+        })] },
+
+      { name: 'How it spreads', learn: 'spread',
+        items: [
+          rng => C(rng, { prompt: 'How does influenza mainly spread?', right: 'Through droplets in the air from coughs and sneezes', wrong: ['Through mosquito bites', 'Through eating sugar', 'It does not spread'], wide: false,
+                          explain: 'Flu is an airborne viral disease.' }),
+          rng => C(rng, { prompt: 'Myrtle rust is spreading through pōhutukawa and other myrtle plants in Aotearoa. How do its spores mostly travel?', right: 'On the wind, and on clothing, tools and vehicles',
+            wrong: ['Through the plants’ roots only', 'In rainwater only', 'They cannot move between plants'], explain: 'It is a fungus whose tiny spores are airborne and also carried on contaminated items.' }),
+          rng => C(rng, { prompt: 'Why should you wash your hands after touching a door handle in a hospital?', right: 'Pathogens can survive on contaminated items and pass to your hands', wrong: ['Door handles are poisonous', 'To remove viruses that live only on skin', 'It only matters for food'],
+                          explain: 'Contaminated items are one of the main ways infectious disease spreads.' })
+        ] },
+
+      { name: 'Hygiene and quarantine', learn: 'spread',
+        items: [
+          rng => C(rng, { prompt: 'What is quarantine?', right: 'Keeping people, animals or plants that may be infected apart from others', wrong: ['A vaccine for travellers', 'A medicine that kills viruses', 'Washing with soap'],
+                          explain: 'Separation stops a pathogen reaching new hosts.' }),
+          rng => C(rng, { prompt: 'Why does Aotearoa New Zealand check arriving travellers’ shoes and bags for soil and plant material?', right: 'To stop pathogens and pests reaching our plants and animals',
+            wrong: ['To check for dust allergies', 'To collect soil samples', 'To weigh luggage'], explain: 'Biosecurity is a form of quarantine at the border.' }),
+          rng => C(rng, { prompt: 'Which habit best reduces the spread of colds?', right: 'Washing hands with soap and coughing into your elbow', wrong: ['Taking antibiotics', 'Sharing water bottles', 'Wearing warm clothes'],
+                          explain: 'Hygiene cuts transmission. (Antibiotics do not work on viruses.)' })
+        ] },
+
+      { name: 'Body defences', learn: 'defences',
+        items: [
+          rng => Sci.sort(rng, {
+            prompt: 'Sort these defences.', bins: ['Physical barrier', 'Chemical defence'], pick: 6,
+            items: [...['unbroken skin', 'hairs in the nose', 'cilia in the airways', 'mucus trapping dust'].map(text => ({ text, bin: 0 })), ...['tears', 'saliva', 'stomach acid'].map(text => ({ text, bin: 1 }))],
+            explain: 'Physical barriers block or trap pathogens; tears, saliva and stomach acid contain chemicals that kill them.'
+          })
+        ] },
+
+      { name: 'What does it do?', learn: 'defences',
+        items: [
+          rng => C(rng, { prompt: 'What do cilia in your airways do?', right: 'Sweep mucus with trapped microbes up and out', wrong: ['Make antibodies', 'Digest food', 'Produce tears'], explain: 'Cilia are tiny hairs that beat to move mucus.' }),
+          rng => C(rng, { prompt: 'How does stomach acid help protect you?', right: 'It kills many pathogens swallowed with food', wrong: ['It makes antibodies', 'It stops you coughing', 'It traps dust'], explain: 'Stomach acid is a chemical defence.' }),
+          rng => C(rng, { prompt: 'How does your gut microbiome help you?', right: 'Helpful microbes take up space and food that harmful ones would use', wrong: ['It makes your stomach acidic', 'It is a kind of white blood cell', 'It does nothing'],
+                          explain: 'The microbiome is part of the non-specific defences.' })
+        ] },
+
+      { name: 'The immune system', learn: 'immune',
+        items: [
+          rng => C(rng, { prompt: 'What do white blood cells do?', right: 'Recognise and respond to pathogens', wrong: ['Carry oxygen', 'Clot the blood', 'Digest food'], wide: false, explain: 'They are the core of the immune system.' }),
+          rng => C(rng, { prompt: 'What are antibodies?', right: 'Proteins made by specialised white blood cells that target a particular pathogen', wrong: ['Antibiotic medicines', 'A kind of bacteria', 'Cells in the skin'],
+                          explain: 'Each antibody fits one particular pathogen.' }),
+          rng => C(rng, { prompt: 'Why is the immune system called a <strong>specific</strong> defence, unlike skin?', right: 'It recognises and targets particular pathogens', wrong: ['It only works in the skin', 'It works the same on every pathogen', 'It is only in children'],
+                          explain: 'Skin blocks everything; antibodies are made for one pathogen.' })
+        ] },
+
+      { name: 'Vaccines', learn: 'vaccines',
+        items: [
+          rng => C(rng, { prompt: 'How does a vaccine protect you?', right: 'It trains your immune system to respond to a pathogen without making you ill', wrong: ['It kills every pathogen in your body', 'It is an antibiotic', 'It makes your skin thicker'],
+                          explain: 'If the real pathogen arrives later, your immune system responds fast.' }),
+          rng => C(rng, { prompt: 'Who extended vaccination to more diseases and, with Robert Koch, established germ theory?', right: 'Louis Pasteur', wrong: ['Isaac Newton', 'Ernest Rutherford', 'Rosalind Franklin'], wide: false, learn: 'germ',
+                          explain: 'Pasteur and Koch showed that micro-organisms cause disease.' }),
+          rng => C(rng, { learn: 'germ', prompt: 'What is germ theory?', right: 'The theory that micro-organisms cause disease', wrong: ['The theory that bad air causes disease', 'The theory that all germs are helpful', 'The theory that disease is inherited'],
+                          explain: 'It replaced older ideas such as “bad air”.' })
+        ] },
+
+      { name: 'Spread in numbers', learn: 'spread',
+        items: [Sci.gen(rng => {
+          const start = rng.int(2, 6), f = rng.pick([2, 3]);
+          const seq = [start, start * f, start * f * f, start * f ** 3];
+          return { prompt: `New cases of an infectious disease each week: ${seq.join(', ')}. If the pattern continues, how many new cases next week?`,
+                   input: { kind: 'number', answer: start * f ** 4, width: 80 }, explain: `Each week is ${f} times the last: ${seq[3]} × ${f} = ${start * f ** 4}.` };
+        })] },
+
+      // ── Challenge set.
+      { challenge: 'only', name: 'Comparing prevention', learn: 'vaccines',
+        items: [
+          rng => C(rng, { prompt: 'In one region, measles cases fell from about 300 a year to fewer than 5 after most children were vaccinated. What does this evidence suggest?', right: 'Vaccination was highly effective at preventing measles',
+            wrong: ['Measles became non-infectious', 'Hand washing alone stopped measles', 'The data proves nothing about vaccines'], explain: 'A large, lasting fall that follows high vaccine coverage is strong evidence, especially when repeated in many places.' }),
+          rng => C(rng, { prompt: 'Why is quarantine used early in an outbreak of a new disease, before a vaccine exists?', right: 'Separating infected people slows the spread while no vaccine is available',
+            wrong: ['It is more effective than any vaccine', 'It cures the disease', 'It trains the immune system'], explain: 'Different strategies suit different stages: quarantine and hygiene buy time.' })
+        ] },
+
+      { challenge: 'only', name: 'Judging health claims', learn: 'germ',
+        items: [
+          rng => C(rng, { prompt: 'A social media post says a herbal tea “cures all viral infections”. Which is the best way to judge it?', right: 'Look for evidence from controlled studies and trusted health organisations',
+            wrong: ['Count how many likes it has', 'Try it once and see', 'Trust it if the tea is natural'], explain: 'Check the source, look for bias (is someone selling it?) and for evidence from proper studies.' }),
+          rng => C(rng, { prompt: 'Why do antibiotics not help with a cold?', right: 'Colds are caused by viruses, and antibiotics act on bacteria', wrong: ['Colds are non-infectious', 'Antibiotics only work on fungi', 'Colds are caused by bacteria that are too small'],
+                          explain: 'Using antibiotics wrongly also helps bacteria become resistant.' })
+        ] },
+
+      { challenge: 'only', name: 'Why the second time is easier', learn: 'immune',
+        items: [rng => C(rng, { prompt: 'Someone who had chickenpox as a child usually does not catch it again. Why?', right: 'Their immune system remembers the pathogen and makes antibodies quickly',
+          wrong: ['The virus no longer exists', 'Their skin got thicker', 'Chickenpox is not infectious'], explain: 'The first infection, or a vaccine, leaves the immune system ready for a fast response.' })] },
+
+      { challenge: 'only', name: 'Patterns in outbreaks', learn: 'spread',
+        items: [
+          rng => C(rng, { prompt: 'Cases in a school rise sharply on Monday, a week after a weekend camp most cases attended. What is the most likely explanation?', right: 'The pathogen spread at the camp, and symptoms took a few days to appear',
+            wrong: ['The disease is non-infectious', 'Mondays cause disease', 'The cases are unrelated'], explain: 'Patterns in time and place point to where transmission happened.' }),
+          rng => C(rng, { prompt: 'In 1854, John Snow mapped cholera deaths in London and found they clustered round one water pump. What did this suggest?', right: 'The disease was spreading through contaminated water',
+            wrong: ['The disease was spread by bad air', 'People near the pump were older', 'The pump was a coincidence'], explain: 'Mapping cases is how patterns in the spread of disease are found.' })
+        ] }
+    ]
+  });
+
+
+  // ═══ 9.9 Diffusion, photosynthesis and respiration ════════════════════════
+  // Knowledge: Diffusion; Photosynthesis; Cellular respiration (Life
+  // processes, Year 9, p. 30).
+  // Practices: testable questions; observe and record (starch tests, light
+  // and dark); model with diagrams; interpret findings.
+
+  Sci.topic({
+    id: 's9e9', unit: 'living-body',
+    title: 'Diffusion, Photosynthesis and Respiration',
+    blurb: 'How particles spread, how plants make glucose, and how every cell releases energy from it.',
+    hint: 'Diffusion: particles move from higher to lower concentration. Photosynthesis: carbon dioxide + water → glucose + oxygen, using light, in chloroplasts. ' +
+          'Respiration: glucose + oxygen → carbon dioxide + water, releasing energy, in every living cell. Iodine turns blue-black where there is starch.',
+
+    learn: [
+      { id: 'diffusion', title: 'Diffusion', diagram: { w: 260, h: 110, caption: 'Particles diffuse from A, where they are more concentrated, to B.' },
+        draw(d) { SciDia.diffusion(d, { left: 18, right: 4 }); },
+        text: '<p><strong>Diffusion</strong> is the movement of particles from an area of higher concentration to an area of lower concentration. Oxygen and carbon dioxide move into and out of cells this way.</p>' },
+      { id: 'photo', title: 'Photosynthesis',
+        text: '<p>Plants, algae and some bacteria use light to make glucose:</p><p style="text-align:center"><strong>carbon dioxide + water → glucose + oxygen</strong><br><small>(light, in chloroplasts)</small></p>' },
+      { id: 'glucose', title: 'What glucose is used for',
+        text: '<ul><li>Respiration, to release energy.</li><li>Stored as <strong>starch</strong>.</li><li>Built into <strong>cellulose</strong> for cell walls.</li></ul>' },
+      { id: 'leaves', title: 'Leaves',
+        text: '<p>Leaves are adapted for photosynthesis: thin, so gases diffuse in and out quickly, and full of chloroplasts that capture light.</p>' },
+      { id: 'resp', title: 'Respiration',
+        text: '<p>In every living cell, mostly in mitochondria:</p><p style="text-align:center"><strong>glucose + oxygen → carbon dioxide + water</strong><br><small>(releases chemical energy)</small></p><p>The energy is used for life processes. Carbon dioxide and water are waste.</p>' },
+      { id: 'starch', title: 'Testing a leaf for starch',
+        text: '<p>Boil the leaf to kill it, soak it in hot ethanol to remove the green, rinse, then add iodine. <strong>Blue-black</strong> means starch: photosynthesis happened there. Orange-brown means no starch.</p>' }
+    ],
+
+    examples: [
+      {
+        title: 'Example 1: light or dark',
+        steps: ['One plant is kept in the dark for two days; another in the light.', 'Iodine turns the light-grown leaf blue-black and leaves the dark one orange-brown.'],
+        result: 'Light is needed for photosynthesis, which made the starch'
+      },
+      {
+        title: 'Example 2: two processes, reversed',
+        steps: ['Photosynthesis takes in carbon dioxide and water and gives out glucose and oxygen.', 'Respiration takes in glucose and oxygen and gives out carbon dioxide and water.'],
+        result: 'The products of one are the reactants of the other'
+      }
+    ],
+
+    slots: [
+      { name: 'Which way?', learn: 'diffusion',
+        items: [Sci.gen(rng => {
+          const hi = rng.int(14, 22), lo = rng.int(2, 6), leftHigh = rng.chance();
+          const [l, r] = leftHigh ? [hi, lo] : [lo, hi];
+          return C(rng, { prompt: 'The membrane lets these particles through. Which way will most of them diffuse?', diagram: { w: 260, h: 110 }, draw: d => SciDia.diffusion(d, { left: l, right: r }),
+            right: leftHigh ? 'From A to B' : 'From B to A', options: ['From A to B', 'From B to A', 'They will not move'], wide: false,
+            explain: `Particles diffuse from higher concentration (${leftHigh ? 'A' : 'B'}, ${hi} particles) to lower (${leftHigh ? 'B' : 'A'}, ${lo}).` });
+        })] },
+
+      { name: 'Diffusion around us', learn: 'diffusion',
+        items: [
+          rng => C(rng, { prompt: 'In the lungs, oxygen moves from the air sacs into the blood. Why?', right: 'There is a higher concentration of oxygen in the air sacs than in the blood', wrong: ['The blood pushes it in', 'Oxygen is heavier than blood', 'There is more oxygen in the blood'],
+                          explain: 'Oxygen diffuses down its concentration gradient into the blood.' }),
+          rng => C(rng, { prompt: 'Why does carbon dioxide leave your cells?', right: 'Respiration makes it, so its concentration is higher inside cells than in the blood', wrong: ['Cells push it out with muscles', 'It is lighter than oxygen', 'It is attracted to the lungs'],
+                          explain: 'It diffuses from higher (cells) to lower (blood) concentration.' }),
+          rng => C(rng, { prompt: 'A bottle of perfume is opened in the corner of a room. Soon it can be smelled everywhere. Why?', right: 'Its particles diffuse from where they are concentrated to where they are not',
+            wrong: ['The perfume particles are pushed by light', 'The air particles carry the smell in one direction only', 'Your nose pulls the particles towards you'], explain: 'That is diffusion.' })
+        ] },
+
+      { name: 'The photosynthesis equation', learn: 'photo',
+        items: [
+          rng => C(rng, { prompt: 'Which word equation shows photosynthesis?', right: 'carbon dioxide + water → glucose + oxygen', wrong: ['glucose + oxygen → carbon dioxide + water', 'oxygen + water → glucose + carbon dioxide', 'glucose + water → oxygen + starch'],
+                          explain: 'Photosynthesis uses carbon dioxide and water, with light, to make glucose and oxygen.' }),
+          rng => C(rng, { prompt: 'Which gas do plants release in photosynthesis?', right: 'oxygen', wrong: ['carbon dioxide', 'nitrogen', 'hydrogen'], wide: false, explain: 'Oxygen is a product of photosynthesis.' }),
+          rng => C(rng, { prompt: 'What does a plant need, as well as carbon dioxide and water, to photosynthesise?', right: 'light', wrong: ['oxygen', 'glucose', 'soil'], wide: false, explain: 'Light provides the energy.' }),
+          rng => C(rng, { prompt: 'Where in a plant cell does photosynthesis happen?', right: 'In the chloroplasts', wrong: ['In the vacuole', 'In the nucleus', 'In the cell wall'], wide: false, explain: 'Chloroplasts capture light.' })
+        ] },
+
+      { name: 'The respiration equation', learn: 'resp',
+        items: [
+          rng => C(rng, { prompt: 'Which word equation shows aerobic respiration?', right: 'glucose + oxygen → carbon dioxide + water', wrong: ['carbon dioxide + water → glucose + oxygen', 'glucose → oxygen + water', 'oxygen + water → glucose'],
+                          explain: 'Respiration breaks glucose down using oxygen, releasing energy.' }),
+          rng => C(rng, { prompt: 'Which living things respire?', right: 'All of them: plants, animals, fungi and bacteria', wrong: ['Only animals', 'Only plants', 'Only things with lungs'], wide: false,
+                          explain: 'Every living cell needs energy, so every living cell respires. Plants respire day and night.' }),
+          rng => C(rng, { prompt: 'Why do we breathe out more carbon dioxide than we breathe in?', right: 'Our cells make it as waste in respiration', wrong: ['Our lungs make it from oxygen', 'Air contains no carbon dioxide', 'We swallow it with food'],
+                          explain: 'Carbon dioxide and water are the waste products of respiration.' })
+        ] },
+
+      { name: 'Using glucose', learn: 'glucose',
+        items: [
+          rng => C(rng, { prompt: 'A potato is full of starch. Where did it come from?', right: 'Glucose made by photosynthesis in the leaves, stored as starch', wrong: ['It was absorbed from the soil', 'It was made by respiration', 'It came from rainwater'],
+                          explain: 'Glucose can be stored as starch, here in the tuber.' }),
+          rng => C(rng, { prompt: 'What do plants build from glucose to make their cell walls?', right: 'cellulose', wrong: ['starch', 'protein', 'chlorophyll'], wide: false, explain: 'Cellulose is built from glucose.' })
+        ] },
+
+      { name: 'Leaves for the job', learn: 'leaves',
+        items: [
+          rng => C(rng, { prompt: 'Why are most leaves thin?', right: 'So gases can diffuse in and out quickly', wrong: ['So they fall off easily', 'To store more water', 'To keep out light'], explain: 'Carbon dioxide and oxygen do not have far to diffuse.' }),
+          rng => C(rng, { prompt: 'Why are leaves broad and flat?', right: 'To capture as much light as possible', wrong: ['To stop rain', 'To store starch', 'To shade the roots only'], explain: 'A large surface catches more light for the chloroplasts.' })
+        ] },
+
+      { name: 'The starch test', learn: 'starch',
+        items: [
+          rng => C(rng, { prompt: 'Iodine is added to a leaf that has been in bright light. It turns blue-black. What does this show?', right: 'The leaf contains starch, so it has been photosynthesising',
+            wrong: ['The leaf has no starch', 'The leaf is dead', 'The leaf contains oxygen'], explain: 'Blue-black with iodine means starch.' }),
+          rng => C(rng, { prompt: 'A variegated leaf is green in the middle and white at the edges. After the starch test, where is it blue-black?', right: 'Only the green part', wrong: ['Only the white part', 'All over', 'Nowhere'], wide: false,
+                          explain: 'Only the green parts have chlorophyll in chloroplasts, so only they photosynthesise.' }),
+          rng => C(rng, { prompt: 'Why is the leaf soaked in hot ethanol before iodine is added?', right: 'To remove the green colour, so the colour change shows clearly', wrong: ['To add starch', 'To feed the leaf', 'To make the iodine stronger'],
+                          explain: 'The chlorophyll would hide the blue-black colour.' })
+        ] },
+
+      { name: 'Testable questions', learn: 'photo',
+        items: [
+          rng => C(rng, { prompt: 'Which is a testable question about photosynthesis?', right: 'Does the amount of light affect how many oxygen bubbles pondweed gives off per minute?',
+            wrong: ['Are plants beautiful?', 'Why do people like green plants?', 'Is photosynthesis important?'], explain: 'A testable question names something to change and something to measure.' }),
+          rng => C(rng, { prompt: 'Pondweed gives off bubbles of oxygen in light. Leo moves a lamp closer and counts bubbles each minute. What is he changing?', right: 'The light intensity (distance of the lamp)',
+            wrong: ['The number of bubbles', 'The type of pondweed', 'The water temperature'], explain: 'Distance from the lamp is the independent variable; bubbles per minute the dependent.' })
+        ] },
+
+      // ── Challenge set.
+      { challenge: 'only', name: 'Light and dark', learn: 'starch',
+        items: [
+          rng => C(rng, { prompt: 'A plant is kept in the dark for 48 hours, then one leaf is tested with iodine. It stays orange-brown. Why?', right: 'With no light, it made no glucose, and used up its stored starch in respiration',
+            wrong: ['Iodine does not work in the dark', 'The leaf had too much oxygen', 'It stopped respiring'], explain: 'This is why plants are de-starched before an experiment: any starch found later must be new.' }),
+          rng => C(rng, { prompt: 'Part of a leaf is covered with foil, and the plant is left in sunlight. After the starch test, the covered part is orange-brown. What does this show?', right: 'Light is needed for photosynthesis',
+            wrong: ['Foil makes starch', 'Carbon dioxide is not needed', 'The leaf is dead under the foil'], explain: 'The rest of the leaf is a control: same leaf, same day, only the light differs.' })
+        ] },
+
+      { challenge: 'only', name: 'Day and night', learn: 'resp',
+        items: [
+          rng => C(rng, { prompt: 'At night, a plant takes in oxygen and gives out carbon dioxide. Why?', right: 'It respires all the time, but photosynthesises only in light', wrong: ['It photosynthesises in reverse at night', 'Plants only respire at night', 'Leaves absorb oxygen to keep warm'],
+                          explain: 'In daylight photosynthesis usually outweighs respiration; at night only respiration happens.' }),
+          rng => C(rng, { prompt: 'Why is it said that photosynthesis and respiration are a cycle?', right: 'The products of each are the reactants of the other', wrong: ['They both happen in mitochondria', 'They both need light', 'They both make glucose'],
+                          explain: 'Carbon dioxide and water ⇄ glucose and oxygen.' })
+        ] },
+
+      { challenge: 'only', name: 'Faster diffusion', learn: 'diffusion',
+        items: [
+          rng => C(rng, { prompt: 'A drop of food colouring spreads faster in hot water than in cold. Why?', right: 'The particles move faster at a higher temperature', wrong: ['Hot water has fewer particles', 'Colouring dissolves only in hot water', 'Cold water is denser so stops all movement'],
+                          explain: 'The particle model: more thermal energy, faster particles, faster diffusion.' }),
+          rng => C(rng, { prompt: 'Two cubes of jelly, one small and one large, are put in coloured water. Why does colour reach the centre of the small one first?', right: 'The distance to the centre is shorter',
+            wrong: ['The small cube is a different jelly', 'Large cubes stop diffusion', 'Colour moves only into small objects'], explain: 'Diffusion over short distances is quick, which is why cells are small and leaves thin.' })
+        ] },
+
+      { challenge: 'only', name: 'Interpreting results', learn: 'photo',
+        items: [Sci.gen(rng => {
+          const base = rng.int(2, 4);
+          const rows = [[6, base * 8], [12, base * 4], [25, base * 2], [50, base]].map(([cm, n]) => [String(cm), String(n)]);
+          return C(rng, { prompt: 'Pondweed bubbles per minute with a lamp at different distances:' + Sci.table(['Lamp distance (cm)', 'Bubbles per minute'], rows) + 'What do the results show?',
+            right: 'The closer the lamp (more light), the faster photosynthesis', wrong: ['Further from the lamp, faster photosynthesis', 'Light makes no difference', 'Bubbles are carbon dioxide from respiration'],
+            explain: 'More light gives more oxygen bubbles: light is a requirement for photosynthesis, and more of it speeds it up.' });
+        })] }
+    ]
+  });
+
+
+  // ═══ 9.10 Ecosystem conditions ════════════════════════════════════════════
+  // Knowledge: Ecosystem conditions (Ecosystems, Year 9, p. 31).
+  // Practices: sample with quadrats and transects; measure abiotic factors;
+  // recognise patterns in distribution and abundance.
+
+  Sci.topic({
+    id: 's9e10', unit: 'earth-systems',
+    title: 'Ecosystem Conditions',
+    blurb: 'Living and non-living factors, why different places hold different life, and how to sample it.',
+    hint: 'Biotic factors are living or recently living; abiotic factors are air, water, temperature, light and minerals. Similar conditions support similar organisms. ' +
+          'Quadrats count organisms in squares; a transect samples along a line, to see how life changes with conditions. Mean = total ÷ number of quadrats.',
+
+    learn: [
+      { id: 'factors', title: 'Biotic and abiotic',
+        text: '<p><strong>Biotic</strong> factors: living or recently living things (plants, animals, fungi, leaf litter).</p><p><strong>Abiotic</strong> factors: air, water, temperature, light, minerals in the soil.</p>' },
+      { id: 'conditions', title: 'Conditions decide who lives there',
+        text: '<p>Places with different rainfall, temperature or plant cover support different organisms. Similar conditions hold similar organisms:</p>' +
+              '<ul><li>mosses in damp, shaded places</li><li>cacti in hot, dry places</li><li>grasses in open, bright places</li><li>worms in moist soil rich in organic matter</li></ul>' },
+      { id: 'sampling', title: 'Sampling',
+        text: '<ul><li>A <strong>quadrat</strong> is a square frame: count or estimate cover of organisms inside it, in several places chosen at random.</li>' +
+              '<li>A <strong>transect</strong> is a line across a changing area (shore to dunes): sample at regular points along it.</li>' +
+              '<li>Measure abiotic factors at the same points: light meter, thermometer, soil moisture.</li></ul>' },
+      { id: 'tohu', title: 'Mātauranga Māori and ngā tohu o te taiao',
+        text: '<p>Indigenous knowledge systems, including mātauranga Māori, rest on long-term observation of patterns in the environment. <strong>Ngā tohu o te taiao</strong>, signs of the natural world, mark seasonal change and ecosystem health: when the kōwhai flowers, the kina are fat and ready to gather.</p>' }
+    ],
+
+    examples: [
+      {
+        title: 'Example 1: estimating a population',
+        steps: ['Five 1 m² quadrats on a 200 m² lawn hold 4, 6, 3, 5 and 7 daisies.', 'Mean = (4 + 6 + 3 + 5 + 7) ÷ 5 = 5 per m².', '5 × 200 = 1000.'],
+        result: 'About 1000 daisies'
+      },
+      {
+        title: 'Example 2: a transect up a sand dune',
+        steps: ['Near the sea: sandhoppers in the damp wrack line; almost no plants.', 'Further up: marram grass, in dry, bright, wind-blown sand.', 'Conditions change along the line, and so do the organisms.'],
+        result: 'Distribution follows the abiotic factors'
+      }
+    ],
+
+    slots: [
+      { name: 'Biotic or abiotic?', learn: 'factors',
+        items: [rng => Sci.sort(rng, {
+          prompt: 'Sort these factors in a forest ecosystem.', bins: ['Biotic', 'Abiotic'], pick: 6,
+          items: [...['tūī', 'fallen leaves', 'fungi on a log', 'kauri trees', 'earthworms', 'possums'].map(text => ({ text, bin: 0 })),
+                  ...['rainfall', 'temperature', 'light reaching the ground', 'minerals in the soil', 'wind', 'soil water'].map(text => ({ text, bin: 1 }))],
+          explain: 'Living or recently living (including leaf litter) is biotic; physical conditions are abiotic.'
+        })] },
+
+      { name: 'Where would it live?', learn: 'conditions',
+        items: [
+          ['moss', 'A damp, shaded bank under trees', ['An open, sunny sand dune', 'A hot, dry rock face', 'A bare car park']],
+          ['a cactus', 'A hot, dry desert', ['A wet, shaded forest floor', 'A pond', 'A cold, wet bog']],
+          ['earthworms', 'Moist soil rich in rotting leaves', ['Dry sand', 'Bare rock', 'Salty beach sand']],
+          ['grasses', 'An open, bright paddock', ['Deep shade under a dense forest canopy', 'Inside a cave', 'Under a log']]
+        ].map(([o, r, w]) => rng => C(rng, { prompt: `Where would you most expect to find ${o}?`, right: r, wrong: w, explain: 'Organisms are found where the conditions suit them.' })) },
+
+      { name: 'Similar conditions, similar life', learn: 'conditions',
+        items: [
+          rng => C(rng, { prompt: 'Ferns and mosses grow in damp, shady gullies in both Fiordland and the Waitākere Ranges. What explains this?', right: 'Similar physical conditions support similar organisms',
+            wrong: ['The plants were all planted by people', 'Mosses only grow in New Zealand', 'Ferns follow mosses'], explain: 'Damp shade suits them wherever it is found.' }),
+          rng => C(rng, { prompt: 'A south-facing (shady) slope has different plants from a north-facing (sunny) slope on the same hill. Which factor most likely explains it?', right: 'Light and temperature', wrong: ['The age of the hill', 'Which way the wind blows the birds', 'Nothing: it is chance'],
+                          explain: 'In the Southern Hemisphere, north-facing slopes get more sun.' })
+        ] },
+
+      { name: 'Mean per quadrat', learn: 'sampling',
+        items: [Sci.gen(rng => {
+          const n = rng.pick([4, 5]), counts = Array.from({ length: n }, () => rng.int(0, 12));
+          const tot = counts.reduce((s, v) => s + v, 0);
+          return { prompt: `Counts of a snail in ${n} quadrats: ${counts.join(', ')}. What is the mean number per quadrat?`, input: { kind: 'number', answer: +(tot / n).toFixed(2), tol: 0.01, decimal: true, width: 70 },
+                   explain: `Total ${tot} ÷ ${n} quadrats = ${num(tot / n)}.` };
+        })] },
+
+      { name: 'Estimating a population', learn: 'sampling',
+        items: [Sci.gen(rng => {
+          const mean = rng.int(2, 9), area = rng.pick([50, 100, 200, 400, 1000]);
+          return { prompt: `A survey of 1 m² quadrats finds a mean of ${mean} clover plants per m². The field is ${area} m². Estimate the clover population.`,
+                   input: { kind: 'number', answer: mean * area, width: 90 }, explain: `${mean} per m² × ${area} m² = ${mean * area}.` };
+        })] },
+
+      { name: 'Choosing a method', learn: 'sampling',
+        items: [
+          rng => C(rng, { prompt: 'You want to see how plants change from the high-tide line to the top of a sand dune. Which method suits best?', right: 'A transect, with quadrats at regular distances along it',
+            wrong: ['One quadrat in the middle', 'Counting every plant on the dune', 'Quadrats placed only where plants look interesting'], explain: 'A transect follows the change in conditions.' }),
+          rng => C(rng, { prompt: 'Why should quadrats on a lawn be placed at random?', right: 'To avoid bias from choosing spots that look interesting', wrong: ['To make it quicker', 'Because random is always more accurate than counting all', 'So the quadrats do not overlap'],
+                          explain: 'Choosing places by eye tends to over- or under-count.' }),
+          rng => C(rng, { prompt: 'Which instrument measures an abiotic factor on the forest floor?', right: 'A light meter', wrong: ['A quadrat', 'A pooter for catching insects', 'A field guide to birds'], wide: false,
+                          explain: 'Light meters, thermometers and soil moisture probes measure abiotic factors.' })
+        ] },
+
+      { name: 'Ngā tohu o te taiao', learn: 'tohu',
+        items: [
+          rng => C(rng, { prompt: 'What are ngā tohu o te taiao?', right: 'Signs in the natural world that show seasonal change and ecosystem health', wrong: ['Weather forecasts on TV', 'Laws about fishing', 'Names of the planets'],
+                          explain: 'They come from long-term observation, part of mātauranga Māori.' }),
+          rng => C(rng, { prompt: 'In one well-known tohu, when the kōwhai flowers, what does that signal?', right: 'The kina are fat and ready to gather', wrong: ['Winter is starting', 'It will rain tomorrow', 'The tūī are leaving'], wide: false,
+                          explain: 'One seasonal event in the ecosystem signals another.' }),
+          rng => C(rng, { prompt: 'Why can long-term observation, as in mātauranga Māori, reveal patterns a single field trip cannot?', right: 'Many patterns only show up over years and seasons', wrong: ['One field trip always gives the full picture', 'Patterns never change', 'Observation is less reliable than one measurement'],
+                          explain: 'Repeated observation over a long time picks up seasonal and long-term change.' })
+        ] },
+
+      // ── Challenge set.
+      { challenge: 'only', name: 'Patterns along a transect', learn: 'sampling',
+        items: [Sci.gen(rng => {
+          const pts = [[0, 2], [5, 9], [10, 25], [15, 40], [20, 55]];
+          return C(rng, { prompt: 'Along a transect from the beach into the dunes, marram grass cover was measured:', diagram: { w: 280, h: 180 },
+            draw: d => SciDia.graph(d, { xMax: 20, yMax: 60, xStep: 5, yStep: 20, xLabel: 'Distance from the sea (m)', yLabel: 'Marram cover (%)', series: [{ points: pts }] }),
+            right: 'Marram cover increases further from the sea', wrong: ['Marram cover decreases further from the sea', 'There is no pattern', 'Marram grows best in the wave zone'],
+            explain: 'Near the sea, salt spray and waves make it hard for plants to grow; further up, marram thrives in dry, bright sand.' });
+        })] },
+
+      { challenge: 'only', name: 'Leaf litter and open ground', learn: 'conditions',
+        items: [rng => C(rng, { prompt: 'Students find many more slaters and beetles under leaf litter than on bare, open ground nearby. Which explanation fits best?',
+          right: 'Leaf litter is damper, cooler, darker and provides food', wrong: ['Insects are scared of soil', 'The open ground had been counted wrongly', 'Leaf litter is abiotic'],
+          explain: 'Abiotic conditions (moisture, temperature, light) and food decide where invertebrates live.' })] },
+
+      { challenge: 'only', name: 'Better sampling', learn: 'sampling',
+        items: [
+          rng => C(rng, { prompt: 'Two groups sample the same field. One uses 3 quadrats, the other 20. Whose estimate is likely to be more reliable, and why?', right: 'The 20-quadrat group: more samples reduce the effect of unusual patches',
+            wrong: ['The 3-quadrat group: fewer mistakes', 'They are equally reliable', 'Neither: quadrats cannot estimate populations'], explain: 'Larger samples give a mean closer to the true value.' }),
+          rng => C(rng, { prompt: 'Light meter readings vary a lot as clouds pass. How can students make their light data more reliable?', right: 'Take readings at all sites at about the same time, and repeat them',
+            wrong: ['Take one reading at noon only', 'Ignore the clouds', 'Measure temperature instead'], explain: 'Control timing and repeat measurements.' })
+        ] }
+    ]
+  });
 })();

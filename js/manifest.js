@@ -174,6 +174,34 @@ const Manifest = (() => {
         { id: 's10e5', slug: 'fluids-buoyancy', title: 'Fluids and Buoyancy', tag: 'Pressure in fluids, hydraulics, floating', strand: 'Motion and forces', challenge: true }
       ]
     },
+    {
+      key: 'earth-systems', subject: 'science', short: 'Earth Systems', name: 'Earth Systems', icon: 'G',
+      topicFiles: ['science-y9', 'science-y10'],
+      challengeName: 'Challenge set', challengeTag: 'Challenge',
+      challengeNote: 'Challenge questions: the same ideas, taken to a high standard.',
+      blurb: 'The Solar System, the water cycle, plate tectonics, and the ecosystems water and soil support.',
+      exercises: [
+        { id: 's9e6', slug: 'solar-system', title: 'The Solar System', tag: 'Planets, moons, asteroids, comets, AU', strand: 'Earth and space', challenge: true },
+        { id: 's10e6', slug: 'water-cycle', title: 'The Water Cycle', tag: 'Evaporation, condensation, the atmosphere, weather', strand: 'Earth and space', challenge: true },
+        { id: 's10e7', slug: 'plate-tectonics', title: 'Plate Tectonics', tag: 'Plates, boundaries, earthquakes, volcanoes', strand: 'Earth and space', challenge: true },
+        { id: 's9e10', slug: 'ecosystem-conditions', title: 'Ecosystem Conditions', tag: 'Biotic and abiotic factors, sampling, ngā tohu o te taiao', strand: 'Ecosystems', challenge: true },
+        { id: 's10e10', slug: 'ecosystems-water', title: 'Ecosystems and Water', tag: 'Water, soil, decomposers, restoration', strand: 'Ecosystems', challenge: true }
+      ]
+    },
+    {
+      key: 'living-body', subject: 'science', short: 'The Living Body', name: 'The Living Body', icon: 'L',
+      topicFiles: ['science-y9', 'science-y10'],
+      challengeName: 'Challenge set', challengeTag: 'Challenge',
+      challengeNote: 'Challenge questions: the same ideas, taken to a high standard.',
+      blurb: 'Cells, disease and immunity, how cells get energy, DNA and traits, and the nervous system.',
+      exercises: [
+        { id: 's9e7', slug: 'cells-microscopes', title: 'Cell Structure and Function', tag: 'Prokaryotes, eukaryotes, organelles, scale', strand: 'Organism diversity', challenge: true },
+        { id: 's9e8', slug: 'disease-immunity', title: 'Disease and Immunity', tag: 'Pathogens, defences, vaccines, germ theory', strand: 'Organism diversity', challenge: true },
+        { id: 's10e8', slug: 'dna-traits', title: 'DNA, Genes and Traits', tag: 'Chromosomes, proteins, variation', strand: 'Organism diversity', challenge: true },
+        { id: 's9e9', slug: 'photosynthesis-respiration', title: 'Diffusion, Photosynthesis and Respiration', tag: 'Moving particles, making and using glucose', strand: 'Life processes', challenge: true },
+        { id: 's10e9', slug: 'nerves-thermoregulation', title: 'Nerves and Thermoregulation', tag: 'Brain, neurons, reflexes, body temperature', strand: 'Life processes', challenge: true }
+      ]
+    },
 
     // ── English ─────────────────────────────────────────────────────────────
     // Phase 3 (Years 7–8) of English Years 0–10 (2025, in effect 2026), by
