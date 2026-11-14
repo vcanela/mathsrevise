@@ -726,4 +726,526 @@
         })] }
     ]
   });
+
+
+  // ═══ C3 Input and Calculation ═══════════════════════════════════════════════
+
+  Sci.topic({
+    id: 'cb3', unit: 'basics', untimed: true,
+    title: 'Input and Calculation',
+    blurb: 'Asking the user with input(), turning what they type into numbers, and calculating with them.',
+    hint: 'input() waits for the user to type, and always gives back text. Wrap it in int() for a whole number or float() for a decimal before ' +
+          'doing maths. Python follows the order of operations: brackets, then **, then * / // %, then + and −.',
+
+    learn: [
+      { id: 'input', title: 'input() asks the user',
+        text: '<p><code>input()</code> pauses the program and waits for the user to type and press Enter. What they type comes back, to be stored:</p>' +
+              P('name = input("What is your name? ")\nprint("Kia ora", name)') + '<p>The text in the brackets is the question shown to the user.</p>' },
+      { id: 'text', title: 'What comes back is text',
+        text: '<p>Whatever the user types, input() gives back <strong>text</strong> (a str), even if it looks like a number.</p>' +
+              Sci.table(['The user types 5', 'Prints'], [[I('print(a + a)'), '55 (text joined)'], [I('print(int(a) + int(a))'), '10 (numbers added)']]) },
+      { id: 'convert', title: 'Turning text into numbers',
+        text: Sci.table(['Code', 'Gives'], [[I('int(input("Age? "))'), 'a whole number'], [I('float(input("Height? "))'), 'a decimal number']]) +
+              '<p>If the user types something that is not a number, such as <em>ten</em>, Python stops with a <strong>ValueError</strong>.</p>' },
+      { id: 'ops', title: 'Maths in Python',
+        text: Sci.table(['Sign', 'Means', 'Example'], [['+ − *', 'add, subtract, times', I('3 * 4') + ' is 12'], ['/', 'divide (always a float)', I('7 / 2') + ' is 3.5'],
+                ['//', 'whole times it divides', I('7 // 2') + ' is 3'], ['%', 'the remainder', I('7 % 2') + ' is 1'], ['**', 'to the power of', I('2 ** 3') + ' is 8']]) },
+      { id: 'order', title: 'Order of operations',
+        text: '<p>Python works things out in the same order as maths: <strong>brackets</strong> first, then <strong>**</strong>, then <strong>* / // %</strong> from left to right, then <strong>+ −</strong>.</p>' +
+              P('print(2 + 3 * 4)\nprint((2 + 3) * 4)') + '<p>prints 14, then 20.</p>' },
+      { id: 'format', title: 'Extension: two decimal places', wide: true,
+        text: '<p>In an f-string, <code>:.2f</code> after a value shows it with exactly two decimal places, as money is written:</p>' +
+              P('cost = 3 * 2.5\nprint(f"Total: ${cost:.2f}")') + '<p>prints <code>Total: $7.50</code>. The $ before the brackets is just a dollar sign.</p>' }
+    ],
+
+    examples: [
+      {
+        title: 'Example 1: asking for a number',
+        steps: [P('n = input("Type a number: ")\nprint(n * 2)'),
+                'If the user types 4, this prints <code>44</code>: n is the text "4", and * repeats text.',
+                'Wrap input() in int() to get a number: ' + I('n = int(input("Type a number: "))') + ' and it prints 8.']
+      },
+      {
+        title: 'Example 2: a tiny calculator',
+        steps: [P('a = int(input("First number? "))\nb = int(input("Second number? "))\nprint(a + b)'),
+                'Each input() asks once, in order, top to bottom.',
+                'Both answers are converted with int(), so + adds them.']
+      }
+    ],
+
+    slots: [
+      // ── The walk-through.
+
+      // 1 · See input() run.
+      { name: 'Asking a question', learn: 'input',
+        items: [Sci.gen(rng => {
+          const nm = rng.pick(['Tama', 'Mere', 'Leo', 'Priya', 'Ana']);
+          const code = 'name = input("What is your name? ")\nprint("Kia ora", name)';
+          const ans = `Kia ora ${nm}`;
+          return py(out(rng, { prompt: `Run this program. When it asks, type <strong>${nm}</strong> and press Enter. What does the last line print?` + Py.tryIt(code), answer: ans,
+            hints: ['Press ▶ Run, click in the box that appears in the dark output, type the name, and press Enter.', 'name stores what was typed, and print shows Kia ora, a space, then the name.'],
+            explain: 'input() waits for the user, and what they type is stored in name. The last line prints it after Kia ora.' }),
+            { code, inputs: [nm], output: ans });
+        })] },
+
+      // 2 · Predict it.
+      { name: 'Predict it', learn: 'input',
+        items: [Sci.gen(rng => {
+          const food = rng.pick(['pizza', 'sushi', 'hangi', 'nachos', 'curry']);
+          const code = 'food = input("Favourite food? ")\nprint("I like", food, "too!")';
+          const ans = `I like ${food} too!`;
+          return py(out(rng, { prompt: `The user types <strong>${food}</strong>. What does the last line print?` + P(code), answer: ans,
+            hints: ['food stores what the user typed.', 'The commas put a space between each part.'],
+            explain: `food holds ${food}, so the program prints I like, ${food}, then too!, with spaces between.` }),
+            { code, inputs: [food], output: ans });
+        })] },
+
+      // 3 · What comes back is text.
+      { name: 'Input is text', learn: 'text',
+        items: [Sci.gen(rng => {
+          const n = rng.int(2, 9);
+          const code = 'a = input("Type a number: ")\nprint(a + a)';
+          return py(out(rng, { prompt: `Run this, and type <strong>${n}</strong>. What does it print? It may not be what you expect.` + Py.tryIt(code), answer: `${n}${n}`, width: 100,
+            hints: ['Run it and type the number when it asks.', `input() gives back text: "${n}". Adding two pieces of text joins them.`],
+            explain: `input() always gives text, so a is "${n}", and "${n}" + "${n}" joins them: ${n}${n}.` }),
+            { code, inputs: [String(n)], output: `${n}${n}` });
+        })] },
+
+      // 4 · int() turns it into a number.
+      { name: 'Convert with int()', learn: 'convert',
+        items: [Sci.gen(rng => {
+          const n = rng.int(2, 9);
+          const code = 'a = int(input("Type a number: "))\nprint(a + a)';
+          return py(out(rng, { prompt: `Now with <code>int()</code> around the input. Run it, and type <strong>${n}</strong>. What does it print?` + Py.tryIt(code), answer: String(2 * n), width: 100,
+            hints: ['Run it and type the number when it asks.', 'int() turns the text into a whole number, so + adds.'],
+            explain: `int() turns "${n}" into the number ${n}, so a + a is ${2 * n}.` }),
+            { code, inputs: [String(n)], output: String(2 * n) });
+        })] },
+
+      // 5 · Predict: int() or not?
+      { name: 'Predict: int() or not?', learn: 'convert',
+        items: [Sci.gen(rng => {
+          const n = rng.int(2, 9), k = rng.int(2, 3), conv = rng.chance();
+          const code = conv ? `n = int(input("Number? "))\nprint(n * ${k})` : `n = input("Number? ")\nprint(n * ${k})`;
+          const ans = conv ? String(n * k) : String(n).repeat(k);
+          return py(out(rng, { prompt: `The user types <strong>${n}</strong>. What does this print?` + P(code), answer: ans, width: 120,
+            hints: ['Is input() wrapped in int()?', 'With int(), * multiplies. Without it, n is text, and * repeats the text.'],
+            explain: conv ? `int() makes n the number ${n}, so * ${k} multiplies: ${n * k}.` : `Without int(), n is the text "${n}", so * ${k} repeats it: ${ans}.` }),
+            { code, inputs: [String(n)], output: ans });
+        })] },
+
+      // 6 · Powers.
+      { name: 'Powers', learn: 'ops',
+        items: [Sci.gen(rng => {
+          const a = rng.int(2, 9), p = rng.pick([2, 3]);
+          const code = `print(${a} ** ${p})`;
+          return py(out(rng, { prompt: '<code>**</code> means “to the power of”. Run it. What does it print?' + Py.tryIt(code), answer: String(a ** p), width: 100,
+            hints: ['Run it first.', `${a} ** ${p} means ${Array(p).fill(a).join(' × ')}.`],
+            explain: `${a} ** ${p} is ${a} to the power of ${p}: ${Array(p).fill(a).join(' × ')} = ${a ** p}.` }), { code, output: String(a ** p) });
+        })] },
+
+      // 7 · Order of operations.
+      { name: 'Order of operations', learn: 'order',
+        items: [Sci.gen(rng => {
+          const a = rng.int(2, 9), b = rng.int(2, 6), c = rng.int(2, 6), br = rng.chance();
+          const code = br ? `print((${a} + ${b}) * ${c})` : `print(${a} + ${b} * ${c})`;
+          const ans = String(br ? (a + b) * c : a + b * c);
+          return py(out(rng, { prompt: 'What will this print?' + P(code), answer: ans, width: 100,
+            hints: ['Python uses the same order as maths: brackets first, then ×, then +.', br ? `The brackets come first: ${a} + ${b} = ${a + b}.` : `The * comes first: ${b} × ${c} = ${b * c}.`],
+            explain: br ? `Brackets first: ${a} + ${b} = ${a + b}, then × ${c} = ${ans}.` : `× before +: ${b} × ${c} = ${b * c}, then + ${a} = ${ans}.` }), { code, output: ans });
+        })] },
+
+      // 8 · Change one thing.
+      { name: 'Change one thing', learn: 'convert',
+        items: [rng => ({
+          prompt: 'This program doubles the number the user types. Change it so it <strong>triples</strong> the number instead. Run it to try, then ✓ Check.',
+          input: { kind: 'code', key: 'cb3-triple', starter: 'n = int(input("Number? "))\nprint(n * 2)', model: 'n = int(input("Number? "))\nprint(n * 3)',
+                   tests: [{ inputs: ['4'], expect: '12' }, { inputs: ['10'], expect: '30' }] },
+          hints: ['Which number in the program does the doubling?', 'Change * 2 to * 3. The checker types in its own numbers.'],
+          explain: 'Only the 2 needed to change:' + P('n = int(input("Number? "))\nprint(n * 3)')
+        })] },
+
+      // 9 · Fix it.
+      { name: 'Fix it', learn: 'text',
+        items: [rng => ({
+          prompt: 'This program should print how old the user will be next year, but it stops with an error. Fix it, then ✓ Check.',
+          input: { kind: 'code', key: 'cb3-fix', starter: 'age = input("How old are you? ")\nprint(age + 1)', model: 'age = int(input("How old are you? "))\nprint(age + 1)',
+                   tests: [{ inputs: ['14'], expect: '15' }, { inputs: ['9'], expect: '10' }] },
+          hints: ['Press ▶ Run, type an age, and read the error: a TypeError.', 'age is text. Wrap input() in int() so it becomes a number.'],
+          explain: 'input() gives text, and + cannot add 1 to text. int() fixes it:' + P('age = int(input("How old are you? "))\nprint(age + 1)')
+        })] },
+
+      // 10 · Make it.
+      { name: 'Make it: add two numbers', learn: 'convert',
+        items: [rng => ({
+          prompt: 'Write a program that asks for two whole numbers, one at a time, then prints their sum. Print only the sum: the checker types in its own numbers.',
+          input: { kind: 'code', key: 'cb3-sum', starter: '# Ask for two numbers, then print their sum\n',
+                   model: 'a = int(input("First number? "))\nb = int(input("Second number? "))\nprint(a + b)',
+                   tests: [{ inputs: ['3', '4'], expect: '7' }, { inputs: ['10', '25'], expect: '35' }, { inputs: ['0', '0'], expect: '0' }] },
+          hints: ['You need two input() lines, one for each number, each wrapped in int().', 'Store them in two variables, such as a and b, then print(a + b).'],
+          explain: 'One way to do it:' + P('a = int(input("First number? "))\nb = int(input("Second number? "))\nprint(a + b)') +
+                   'The questions inside input() are not checked, so they can say anything.'
+        })] },
+
+      // ── Challenge set: the same ideas, taken to a high standard.
+
+      { challenge: 'only', name: 'Decimals from input', learn: 'convert',
+        items: [Sci.gen(rng => {
+          const h0 = rng.int(1, 9), k = rng.pick([2, 4]);
+          const code = `x = float(input("Length? "))\nprint(x * ${k})`;
+          const ans = pf((h0 + 0.5) * k);
+          return py(out(rng, { prompt: `The user types <strong>${h0}.5</strong>. What does this print?` + P(code), answer: ans, width: 120,
+            explain: 'float() turns the text into a decimal number, and a float times a whole number is still a float, so it keeps its decimal point.' }),
+            { code, inputs: [`${h0}.5`], output: ans });
+        })] },
+
+      { challenge: 'only', name: 'Read the error', learn: 'convert',
+        items: [
+          ['n = int(input("Number? "))', 'ten', 'ValueError', 'int() can only convert text that looks like a whole number.'],
+          ['n = int(input("Number? "))', '2.5', 'ValueError', 'int() cannot convert text with a decimal point. float() can.'],
+          ['n = input("Number? ")\nprint(n + 2)', '4', 'TypeError', 'n is text, so + cannot add the number 2 to it.'],
+          ['n = int(input("Number? ")\nprint(n)', '4', 'SyntaxError', 'The first line is missing a closing bracket: int( and input( both need closing.'],
+          ['n = input("Number? ")\nprint(n * 2)', '4', 'No error', 'n is the text "4", and * repeats text: it prints 44.', '44'],
+          ['n = float(input("Number? "))\nprint(n + 2)', '2.5', 'No error', 'float() makes 2.5 a number, so it prints 4.5.', '4.5']
+        ].map(([code, typed, ans, why, output]) => rng => py(whichError(code, ans, why, {
+          options: ['SyntaxError', 'TypeError', 'ValueError', 'No error'],
+          prompt: `What happens when this runs and the user types <strong>${typed}</strong>?` + P(code) }),
+          ans === 'No error' ? { code, inputs: [typed], output } : { code, inputs: [typed], error: ans })) },
+
+      { challenge: 'only', name: 'Sharing out', learn: 'ops',
+        items: [Sci.gen(rng => {
+          const p = rng.int(3, 6), s = rng.int(2 * p + 1, 6 * p);
+          const code = 'slices = int(input("Slices? "))\npeople = int(input("People? "))\nprint(slices // people, slices % people)';
+          const ans = `${Math.floor(s / p)} ${s % p}`;
+          return py(out(rng, { prompt: `The user types <strong>${s}</strong>, then <strong>${p}</strong>. What does this print?` + P(code), answer: ans, width: 120,
+            explain: `// gives how many whole slices each person gets (${Math.floor(s / p)}); % gives how many are left over (${s % p}).` }),
+            { code, inputs: [String(s), String(p)], output: ans });
+        })] },
+
+      { challenge: 'only', name: 'Order of operations', learn: 'order',
+        items: [Sci.gen(rng => {
+          const a = rng.int(10, 40), b = rng.int(2, 5), c = rng.int(2, 3), d = rng.int(3, 7);
+          const forms = [
+            [`print(${a} - ${b} * ${c} ** 2)`, a - b * c ** 2, `** first: ${c} ** 2 = ${c ** 2}; then × ${b} = ${b * c ** 2}; then ${a} − ${b * c ** 2}.`],
+            [`print((${a} - ${b}) * ${c})`, (a - b) * c, `Brackets first: ${a} − ${b} = ${a - b}; then × ${c}.`],
+            [`print(${a} * ${b} % ${d})`, (a * b) % d, `* and % have the same priority, so left to right: ${a} × ${b} = ${a * b}, then the remainder after dividing by ${d}.`]
+          ];
+          const [code, v, why] = rng.pick(forms);
+          return py(out(rng, { prompt: 'What does this print?' + P(code), answer: String(v), width: 100, explain: why }), { code, output: String(v) });
+        })] },
+
+      { challenge: 'only', name: 'Put it in order', learn: 'convert',
+        items: [Sci.gen(rng => {
+          const c = rng.pick([10, 20, 25, 30, 35]);
+          const seq = ['c = float(input("Celsius? "))', 'f = c * 9 / 5', 'f = f + 32', 'print(c, "C is", f, "F")'];
+          const ans = `${pf(c)} C is ${pf(c * 9 / 5 + 32)} F`;
+          return py(Sci.order(rng, `Put these lines in order. When the user types <strong>${c}</strong>, the program should print:` + O(ans), seq.map(l => I(l)),
+            'Each line needs what the line before it made: c must be asked for before f is worked out, and f is finished (+ 32) before it is printed.'),
+            { code: seq.join('\n'), inputs: [String(c)], output: ans });
+        })] },
+
+      { challenge: 'only', name: 'Trace with input', learn: 'order',
+        items: [Sci.gen(rng => {
+          const n = rng.int(2, 9);
+          const lines = ['a = int(input("Number? "))', 'b = a * 3', 'a = b - a', 'print(a, b)'];
+          const traced = ['a = int(input("Number? "))', 'print(a)', 'b = a * 3', 'print(b)', 'a = b - a', 'print(a)'].join('\n');
+          return py({
+            prompt: `The user types <strong>${n}</strong>. What is stored after each line?` + P(lines.join('\n')),
+            input: { kind: 'fill', parts: [
+              { text: 'After line 1, a =' }, { input: { answer: n, width: 60 } },
+              { text: 'line 2, b =' }, { input: { answer: 3 * n, width: 60 } },
+              { text: 'line 3, a =' }, { input: { answer: 2 * n, width: 60 } }] },
+            explain: `a = ${n}; b = ${n} × 3 = ${3 * n}; a = ${3 * n} − ${n} = ${2 * n}. Line 3 uses the a from line 1, then replaces it.`
+          }, { code: traced, inputs: [String(n)], output: [n, 3 * n, 2 * n].join('\n') });
+        })] },
+
+      { challenge: 'only', name: 'Make it: hours and minutes', learn: 'ops',
+        items: [rng => ({
+          prompt: 'Write a program that asks for a number of minutes and prints it as hours and minutes, exactly like this for 135:' + O('2 h 15 min'),
+          input: { kind: 'code', key: 'cb3-hours', starter: '# Ask for minutes, then print hours and minutes\n',
+                   model: 'total = int(input("Minutes? "))\nprint(total // 60, "h", total % 60, "min")',
+                   tests: [{ inputs: ['135'], expect: '2 h 15 min' }, { inputs: ['60'], expect: '1 h 0 min' }, { inputs: ['59'], expect: '0 h 59 min' }] },
+          hints: ['// 60 gives the whole hours.', '% 60 gives the minutes left over. A comma between the parts puts the spaces in.'],
+          explain: 'One way to do it:' + P('total = int(input("Minutes? "))\nprint(total // 60, "h", total % 60, "min")')
+        })] },
+
+      { challenge: 'only', name: 'Make it: average', learn: 'order',
+        items: [rng => ({
+          prompt: 'Write a program that asks for three whole numbers and prints their average, exactly like this for 3, 4 and 5:' + O('Average: 4.0'),
+          input: { kind: 'code', key: 'cb3-average', starter: '# Ask for three numbers, then print their average\n',
+                   model: 'a = int(input("First? "))\nb = int(input("Second? "))\nc = int(input("Third? "))\nprint("Average:", (a + b + c) / 3)',
+                   tests: [{ inputs: ['3', '4', '5'], expect: 'Average: 4.0' }, { inputs: ['10', '20', '30'], expect: 'Average: 20.0' }, { inputs: ['1', '2', '6'], expect: 'Average: 3.0' }] },
+          hints: ['Three input() lines, each with int().', 'Add them in brackets before dividing: (a + b + c) / 3. Without the brackets, only c is divided.'],
+          explain: 'One way to do it:' + P('a = int(input("First? "))\nb = int(input("Second? "))\nc = int(input("Third? "))\nprint("Average:", (a + b + c) / 3)') +
+                   'The brackets matter: a + b + c / 3 divides only c.'
+        })] },
+
+      { challenge: 'only', name: 'Extension: two decimal places', learn: 'format',
+        items: [Sci.gen(rng => {
+          const n = rng.int(2, 6), p = rng.pick([1.5, 2.25, 2.5, 3.75, 0.5, 4.25]);
+          const code = `cost = ${n} * ${p}\nprint(f"Total: \${cost:.2f}")`;
+          const ans = `Total: $${(n * p).toFixed(2)}`;
+          return py(out(rng, { tag: EXT, prompt: 'What does this print?' + P(code), answer: ans, width: 200,
+            explain: `cost is ${n} × ${p} = ${n * p}. :.2f shows it with exactly two decimal places, and the $ is printed as it is.` }), { code, output: ans });
+        })] }
+    ]
+  });
+
+
+  // ═══ C4 Decisions ═══════════════════════════════════════════════════════════
+
+  Sci.topic({
+    id: 'cb4', unit: 'basics', untimed: true,
+    title: 'Decisions',
+    blurb: 'Comparisons that are True or False, and if, elif and else to choose what a program does.',
+    hint: 'A comparison (==, !=, <, >, <=, >=) gives True or False. if runs its indented lines only when its test is True; else runs when it is ' +
+          'False; elif adds more tests, and the first True one wins. The if line ends in a colon, and the lines inside are indented by four spaces.',
+
+    learn: [
+      { id: 'compare', title: 'Comparisons',
+        text: Sci.table(['Code', 'Asks'], [[I('x == 5'), 'is x equal to 5?'], [I('x != 5'), 'is x not equal to 5?'], [I('x < 5') + ' ' + I('x > 5'), 'less than, greater than'],
+                [I('x <= 5') + ' ' + I('x >= 5'), 'or equal to']]) + '<p>Each one gives <code>True</code> or <code>False</code>. One = stores; two == asks.</p>' },
+      { id: 'if', title: 'if',
+        text: P('age = 14\nif age >= 13:\n    print("Teenager")\nprint("Done")') +
+              '<p>The indented line runs only when the test is True. <code>Done</code> is not indented, so it always runs.</p>' },
+      { id: 'else', title: 'else',
+        text: P('if score >= 50:\n    print("Pass")\nelse:\n    print("Try again")') + '<p>Exactly one of the two runs.</p>' },
+      { id: 'elif', title: 'elif',
+        text: P('if score >= 80:\n    print("Excellence")\nelif score >= 65:\n    print("Merit")\nelse:\n    print("Keep going")') +
+              '<p>Tests are tried from the top, and the <strong>first</strong> True one wins: the rest are skipped.</p>' },
+      { id: 'logic', title: 'and, or, not',
+        text: Sci.table(['Code', 'True when'], [[I('x > 3 and x < 10'), 'both are true'], [I('x < 3 or x > 10'), 'at least one is true'], [I('not x == 5'), 'x == 5 is false']]) },
+      { id: 'indent', title: 'The colon and the indent', wide: true,
+        text: '<p>An <code>if</code>, <code>elif</code> or <code>else</code> line ends in a <strong>colon</strong>. The lines that belong to it are <strong>indented</strong>: four spaces (the editor adds them after a colon).</p>' +
+              '<p>Forget the colon or the indent and Python stops with a <strong>SyntaxError</strong> (real Python may call a missing indent an <strong>IndentationError</strong>).</p>' }
+    ],
+
+    examples: [
+      {
+        title: 'Example 1: if and else',
+        steps: [P('temp = 28\nif temp > 25:\n    print("Hot day")\nelse:\n    print("Not so hot")'),
+                'The test <code>temp > 25</code> is 28 > 25: True.',
+                'So the first indented line runs, and the else part is skipped. It prints <code>Hot day</code>.']
+      },
+      {
+        title: 'Example 2: the first True test wins',
+        steps: [P('score = 85\nif score >= 50:\n    print("Achieved")\nelif score >= 80:\n    print("Excellence")'),
+                '85 >= 50 is True, so it prints <code>Achieved</code> and skips the rest.',
+                'Put the hardest test first: <code>score >= 80</code> before <code>score >= 50</code>.']
+      }
+    ],
+
+    slots: [
+      // ── The walk-through.
+
+      // 1 · True or False.
+      { name: 'True or False?', learn: 'compare',
+        items: [Sci.gen(rng => {
+          const a = rng.int(1, 20), b = rng.intExcept(1, 20, [a]);
+          const code = `print(${a} > ${b})`;
+          const ans = a > b ? 'True' : 'False';
+          return py(out(rng, { prompt: 'A comparison gives True or False. Run it. What does it print?' + Py.tryIt(code), answer: ans, width: 100,
+            hints: ['Run it first.', `${a} > ${b} asks: is ${a} greater than ${b}?`],
+            explain: `${a} is ${a > b ? '' : 'not '}greater than ${b}, so it prints ${ans}. True and False have capital letters.` }), { code, output: ans });
+        })] },
+
+      // 2 · == asks.
+      { name: 'Is it equal?', learn: 'compare',
+        items: [Sci.gen(rng => {
+          const a = rng.int(2, 9), same = rng.chance(), b = same ? a : rng.intExcept(2, 9, [a]);
+          const code = `x = ${a}\nprint(x == ${b})`;
+          const ans = same ? 'True' : 'False';
+          return py(out(rng, { prompt: 'One = stores a value; two == ask whether two things are equal. Run it. What does it print?' + Py.tryIt(code), answer: ans, width: 100,
+            hints: ['Run it first.', `x holds ${a}. x == ${b} asks: is ${a} equal to ${b}?`],
+            explain: `x holds ${a}, and ${a} ${same ? 'is' : 'is not'} equal to ${b}, so it prints ${ans}.` }), { code, output: ans });
+        })] },
+
+      // 3 · Predict comparisons.
+      { name: 'Predict: comparisons', learn: 'compare',
+        items: [Sci.gen(rng => {
+          const a = rng.int(2, 9), b = rng.pick([a, a + 1, a - 1]);
+          const [op, test, words] = rng.pick([['<=', a <= b, 'less than or equal to'], ['>=', a >= b, 'greater than or equal to'], ['!=', a !== b, 'not equal to'], ['<', a < b, 'less than']]);
+          const code = `print(${a} ${op} ${b})`;
+          const ans = test ? 'True' : 'False';
+          return py(out(rng, { prompt: 'What will this print?' + P(code), answer: ans, width: 100,
+            hints: [`${op} means ${words}.`, `Is ${a} ${words} ${b}?`],
+            explain: `${a} ${op} ${b} asks whether ${a} is ${words} ${b}: ${ans}.` }), { code, output: ans });
+        })] },
+
+      // 4 · A first if.
+      { name: 'Your first if', learn: 'if',
+        items: [Sci.gen(rng => {
+          const n = rng.int(13, 17);
+          const code = `age = ${n}\nif age >= 13:\n    print("Teenager")\nprint("Done")`;
+          return py(C(rng, { prompt: 'Run this program. Which shows what it printed?' + Py.tryIt(code), right: O('Teenager\nDone'),
+            wrong: [O('Done'), O('Teenager'), O('Done\nTeenager')],
+            hints: ['Press ▶ Run and compare the dark box with the answers.', `${n} >= 13 is True, so the indented line runs. Done is not indented, so it always runs.`],
+            explain: `The test ${n} >= 13 is True, so the indented line prints Teenager. Then Done, which is not indented, always prints.` }),
+            { code, output: 'Teenager\nDone' });
+        })] },
+
+      // 5 · When the test is False.
+      { name: 'When the test is False', learn: 'if',
+        items: [Sci.gen(rng => {
+          const n = rng.int(9, 12);
+          const code = `age = ${n}\nif age >= 13:\n    print("Teenager")\nprint("Done")`;
+          return py(C(rng, { prompt: 'Same program, a different age. What will it print?' + P(code), right: O('Done'),
+            wrong: [O('Teenager\nDone'), O('Teenager'), 'Nothing at all'],
+            hints: [`Is ${n} >= 13?`, 'When the test is False, the indented line is skipped. The last line is not indented, so it still runs.'],
+            explain: `${n} >= 13 is False, so the indented line is skipped. Done is not part of the if, so it prints.` }),
+            { code, output: 'Done' });
+        })] },
+
+      // 6 · if and else.
+      { name: 'if and else', learn: 'else',
+        items: [Sci.gen(rng => {
+          const sc = rng.pick([rng.int(20, 49), rng.int(50, 95)]);
+          const code = `score = ${sc}\nif score >= 50:\n    print("Pass")\nelse:\n    print("Try again")`;
+          const ans = sc >= 50 ? 'Pass' : 'Try again';
+          return py(out(rng, { prompt: 'Run it. What does it print?' + Py.tryIt(code), answer: ans,
+            hints: ['Run it first.', `Is ${sc} >= 50? If yes, the first part runs; if not, the else part does.`],
+            explain: `${sc} >= 50 is ${sc >= 50}, so ${sc >= 50 ? 'the if part' : 'the else part'} runs: ${ans}. Exactly one of the two runs.` }), { code, output: ans });
+        })] },
+
+      // 7 · Change the condition.
+      { name: 'Change the test', learn: 'else',
+        items: [rng => {
+          const starter = 'score = 55\nif score >= 50:\n    print("Pass")\nelse:\n    print("Try again")';
+          const model = starter.replace('>= 50', '>= 60');
+          return {
+            prompt: 'The pass mark has gone up from 50 to <strong>60</strong>. Change the program so 60 or more passes. The checker will try other scores. Run it to try, then ✓ Check.',
+            input: { kind: 'code', key: 'cb4-mark', starter, model,
+                     tests: [{ set: { score: '55' }, expect: 'Try again' }, { set: { score: '60' }, expect: 'Pass' }, { set: { score: '75' }, expect: 'Pass' }, { set: { score: '40' }, expect: 'Try again' }] },
+            hints: ['Which number is the pass mark?', 'Change 50 to 60 in the if line. Keep the >= so that exactly 60 passes.'],
+            explain: 'Only the test needed to change:' + P(model)
+          };
+        }] },
+
+      // 8 · The colon and the indent.
+      { name: 'Colon and indent', learn: 'indent',
+        items: [
+          ['age = 15\nif age > 12\n    print("Teenager")', 'The if line is missing its colon at the end.'],
+          ['age = 15\nif age > 12:\nprint("Teenager")', 'The line after the if is not indented, so Python cannot tell it belongs to the if.']
+        ].map(([code, why]) => rng => py(whichError(code, 'SyntaxError', why + ' Real Python may call a missing indent an IndentationError.', {
+          options: ['SyntaxError', 'NameError', 'TypeError'],
+          prompt: 'This program has a mistake. Run it. What is the error called?' + Py.tryIt(code),
+          hints: ['Press ▶ Run and read the first word of the error.', 'Look at the end of the if line, and at the start of the line after it.'] }),
+          { code, error: 'SyntaxError' })) },
+
+      // 9 · Fix it.
+      { name: 'Fix it', learn: 'indent',
+        items: [
+          ['age = 15\nif age > 12\n    print("Teenager")', 'Add a colon at the end of the if line.'],
+          ['age = 15\nif age > 12:\nprint("Teenager")', 'Indent the print line by four spaces, so it belongs to the if.']
+        ].map(([starter, why]) => rng => ({
+          prompt: 'This program should print <code>Teenager</code> when age is more than 12, and nothing otherwise. It has a mistake. Fix it, then ✓ Check.',
+          input: { kind: 'code', key: 'cb4-fix', starter, model: 'age = 15\nif age > 12:\n    print("Teenager")',
+                   tests: [{ set: { age: '15' }, expect: 'Teenager' }, { set: { age: '10' }, expect: '' }] },
+          hints: ['Press ▶ Run to see the error and its line.', why],
+          explain: why + P('age = 15\nif age > 12:\n    print("Teenager")')
+        })) },
+
+      // 10 · Make it.
+      { name: 'Make it: odd or even', learn: 'else',
+        items: [rng => ({
+          prompt: 'Write a program that asks for a whole number, then prints <code>Even</code> if it is even, or <code>Odd</code> if it is not.',
+          input: { kind: 'code', key: 'cb4-even', starter: '# Ask for a number, then print Even or Odd\n',
+                   model: 'n = int(input("Number? "))\nif n % 2 == 0:\n    print("Even")\nelse:\n    print("Odd")',
+                   tests: [{ inputs: ['4'], expect: 'Even' }, { inputs: ['7'], expect: 'Odd' }, { inputs: ['0'], expect: 'Even' }, { inputs: ['13'], expect: 'Odd' }] },
+          hints: ['A number is even when dividing by 2 leaves no remainder: n % 2 == 0.', 'Use if … else, with print("Even") under the if and print("Odd") under the else.'],
+          explain: 'One way to do it:' + P('n = int(input("Number? "))\nif n % 2 == 0:\n    print("Even")\nelse:\n    print("Odd")')
+        })] },
+
+      // ── Challenge set: the same ideas, taken to a high standard.
+
+      { challenge: 'only', name: 'elif', learn: 'elif',
+        items: [Sci.gen(rng => {
+          const sc = rng.pick([rng.int(30, 49), rng.int(50, 64), rng.int(65, 79), rng.int(80, 100)]);
+          const code = `score = ${sc}\nif score >= 80:\n    print("Excellence")\nelif score >= 65:\n    print("Merit")\nelif score >= 50:\n    print("Achieved")\nelse:\n    print("Not achieved")`;
+          const ans = sc >= 80 ? 'Excellence' : sc >= 65 ? 'Merit' : sc >= 50 ? 'Achieved' : 'Not achieved';
+          return py(out(rng, { prompt: 'What does this print?' + P(code), answer: ans, width: 160,
+            explain: 'The tests are tried from the top, and the first True one wins.' }), { code, output: ans });
+        })] },
+
+      { challenge: 'only', name: 'and, or, not', learn: 'logic',
+        items: [Sci.gen(rng => {
+          const x = rng.int(1, 15);
+          const [expr, v] = rng.pick([[`x > 3 and x < 10`, x > 3 && x < 10], [`x < 5 or x > 12`, x < 5 || x > 12], [`not x == ${x}`, false],
+                                      [`x % 2 == 0 and x > 6`, x % 2 === 0 && x > 6], [`x != 7 or x == 7`, true]]);
+          const code = `x = ${x}\nprint(${expr})`;
+          const ans = v ? 'True' : 'False';
+          return py(out(rng, { prompt: 'What does this print?' + P(code), answer: ans, width: 100,
+            explain: 'and needs both sides True; or needs at least one; not turns True into False and back.' }), { code, output: ans });
+        })] },
+
+      { challenge: 'only', name: 'Order matters', learn: 'elif',
+        items: [Sci.gen(rng => {
+          const sc = rng.int(82, 99);
+          const code = `score = ${sc}\nif score >= 50:\n    print("Achieved")\nelif score >= 65:\n    print("Merit")\nelif score >= 80:\n    print("Excellence")`;
+          return py(C(rng, { prompt: 'This program has its tests in a risky order. What does it print?' + P(code), right: 'Achieved', wrong: ['Excellence', 'Merit', 'Achieved, Merit and Excellence'], wide: false,
+            explain: `${sc} >= 50 is already True, so Achieved prints and the other tests are never tried. Put the hardest test first.` }), { code, output: 'Achieved' });
+        })] },
+
+      { challenge: 'only', name: 'Read the error', learn: 'indent',
+        items: [
+          ['x = 5\nif x = 5:\n    print("five")', 'SyntaxError', 'One = stores a value; a test needs two: ==.'],
+          ['x = 5\nif x > 3\n    print("big")', 'SyntaxError', 'The if line is missing its colon.'],
+          ['x = 5\nIf x > 3:\n    print("big")', 'SyntaxError', 'If with a capital I is not a Python word, so Python cannot read the line.'],
+          ['x = 5\nif x > "3":\n    print("big")', 'TypeError', 'x is a number and "3" is text: they cannot be compared with >.'],
+          ['if score > 50:\n    print("Pass")', 'NameError', 'score was never given a value.'],
+          ['x = 5\nif x == 5:\n    print("five")', 'No error', 'This one is fine: it prints five.', 'five']
+        ].map(([code, ans, why, output]) => rng => py(whichError(code, ans, why), ans === 'No error' ? { code, output } : { code, error: ans })) },
+
+      { challenge: 'only', name: 'Put it in order', learn: 'elif',
+        items: [Sci.gen(rng => {
+          const t = rng.pick([12, 18, 22, 28, 31]);
+          const seq = ['if t > 25:', '    print("Hot")', 'elif t > 15:', '    print("Warm")', 'else:', '    print("Cold")'];
+          const ans = t > 25 ? 'Hot' : t > 15 ? 'Warm' : 'Cold';
+          return py(Sci.order(rng, `The program starts with ${I('t = ' + t)}. Put these lines in order so it prints Hot above 25, Warm above 15, and Cold otherwise.`,
+            seq.map(l => I(l)), 'if comes first and else last; each print goes straight under the test it belongs to, indented.'),
+            { code: `t = ${t}\n` + seq.join('\n'), output: ans });
+        })] },
+
+      { challenge: 'only', name: 'True or False?', learn: 'logic',
+        items: [rng => {
+          const bank = [['x > 5 and x < 10', 1], ['x < 5 or x > 10', 0], ['not x == 7', 0], ['x % 2 == 1', 1], ['x != 7', 0], ['x >= 7', 1],
+                        ['5 < x < 7', 0], ['x == 7 or x == 8', 1]];
+          const q = Sci.sort(rng, { prompt: `With ${I('x = 7')}, is each of these True or False?`, bins: ['False', 'True'],
+            items: bank.map(([e, b]) => ({ text: I(e), bin: b })), pick: 6,
+            explain: 'and needs both sides True; or needs one; not flips the answer; 5 < x < 7 means x is between 5 and 7, not counting either.' });
+          return py(q, bank.map(([e, b]) => ({ code: `x = 7\nprint(${e})`, output: b ? 'True' : 'False' })));
+        }] },
+
+      { challenge: 'only', name: 'Make it: ticket price', learn: 'elif',
+        items: [rng => ({
+          prompt: 'Movie tickets cost $5 for under 13, $7 for 65 and over, and $12 for everyone else. Write a program that asks for an age and prints the price, like this for 30:' + O('Price: $12'),
+          input: { kind: 'code', key: 'cb4-ticket', starter: '# Ask for an age, then print the price\n',
+                   model: 'age = int(input("Age? "))\nif age < 13:\n    print("Price: $5")\nelif age >= 65:\n    print("Price: $7")\nelse:\n    print("Price: $12")',
+                   tests: [['8', '5'], ['12', '5'], ['13', '12'], ['64', '12'], ['65', '7'], ['90', '7']].map(([a, p]) => ({ inputs: [a], expect: `Price: $${p}` })) },
+          hints: ['Three possible prices means if, elif and else.', 'Check the edges: is 13 under 13? Is 65 "65 and over"? The checker tries both.'],
+          explain: 'One way to do it:' + P('age = int(input("Age? "))\nif age < 13:\n    print("Price: $5")\nelif age >= 65:\n    print("Price: $7")\nelse:\n    print("Price: $12")') +
+                   'The checker tries the ages either side of each boundary, where most mistakes hide.'
+        })] },
+
+      { challenge: 'only', name: 'Make it: password', learn: 'else',
+        items: [rng => ({
+          prompt: 'Write a program that asks for a password. If it is exactly <code>kiwi123</code>, print <code>Welcome</code>; otherwise print <code>Wrong password</code>.',
+          input: { kind: 'code', key: 'cb4-password', starter: '# Ask for a password, then check it\n',
+                   model: 'pw = input("Password? ")\nif pw == "kiwi123":\n    print("Welcome")\nelse:\n    print("Wrong password")',
+                   tests: [['kiwi123', 'Welcome'], ['Kiwi123', 'Wrong password'], ['kiwi', 'Wrong password'], ['', 'Wrong password']].map(([p, e]) => ({ inputs: [p], expect: e })) },
+          hints: ['Do not use int() here: a password is text.', 'Compare with == and the password in quote marks: if pw == "kiwi123":'],
+          explain: 'One way to do it:' + P('pw = input("Password? ")\nif pw == "kiwi123":\n    print("Welcome")\nelse:\n    print("Wrong password")') +
+                   'Text comparisons are exact: Kiwi123 with a capital K does not match.'
+        })] },
+
+      { challenge: 'only', name: 'Extension: in', learn: 'logic',
+        items: [Sci.gen(rng => {
+          const w = rng.pick(['kiwi', 'python', 'rugby', 'planet']), c = rng.pick(['i', 'y', 'an', 'ug', 'z', 'k']);
+          const code = `print("${c}" in "${w}")`;
+          const ans = w.includes(c) ? 'True' : 'False';
+          return py(out(rng, { tag: EXT, prompt: 'What does this print?' + P(code), answer: ans, width: 100,
+            explain: `in asks whether the first piece of text appears anywhere inside the second: "${c}" ${w.includes(c) ? 'is' : 'is not'} in "${w}".` }), { code, output: ans });
+        })] }
+    ]
+  });
 })();

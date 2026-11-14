@@ -115,8 +115,9 @@ outcomes PO4 to PO5 (*Technology in the New Zealand Curriculum*; the PDF and the
 paper behind it are in `reference/`): programs with inputs, outputs, sequence, selection with
 comparative and logical operators, variables of different data types and iteration, with an
 organised approach to testing and debugging. Codes run C1 to C8 across two units, Python Basics
-(C1–C4) and Loops, Lists and Functions (C5–C8). C1 Output and Strings and C2 Variables and Types
-are written; the rest are listed as coming soon.
+(C1–C4) and Loops, Lists and Functions (C5–C8). Python Basics is written: C1 Output and Strings,
+C2 Variables and Types, C3 Input and Calculation and C4 Decisions. C5 to C8 are listed as coming
+soon.
 
 Programs run in the page with **Skulpt**, pinned to 1.2.0 and loaded deferred from jsDelivr on
 coding exercise pages only (`js/python.js` wraps it). A program that runs for more than three
@@ -138,8 +139,10 @@ variables to other values (`set`) and answer `input()` (`inputs`), so typing the
 not pass. A failed check is not final: it scores 15, 12, 10 or 8 by how many checks it took.
 Code questions stay out of the daily mix.
 
-Skulpt is not quite real Python: `41 / 5` prints `8.199999999999999`, and a missing bracket is
-reported on the line after it. So **`node tools/check-coding.js`** runs every program a question
+Skulpt is not quite real Python: `41 / 5` prints `8.199999999999999`, `round(2.675, 2)` gives
+2.68 (Python gives 2.67), a missing bracket is reported on the line after it, and a missing indent
+is a SyntaxError rather than an IndentationError. Questions steer round these (dividing by 2, 4 or
+8; `:.2f` rather than `round`; the explanations name both errors). So **`node tools/check-coding.js`** runs every program a question
 shows through both Skulpt and `python3`, and fails unless both agree with the answer; it also
 checks every model program passes its tests and every starter program does not. The first run
 fetches Skulpt from the pinned address into `tools/.cache/` and confirms its checksum.
@@ -186,7 +189,7 @@ js/
     problems.js         unit 6, problem solving
     science-y7.js       Year 7 science
     science-y8.js       Year 8 science
-    coding-basics.js    Coding: Python Basics (C1, C2)
+    coding-basics.js    Coding: Python Basics (C1 to C4)
 tools/
   check-topics.js       generates ~200k questions and checks them (node)
   check-paper.js        builds ~3,000 timed papers and checks their sections and marks (node)

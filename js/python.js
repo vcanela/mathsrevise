@@ -178,6 +178,25 @@ const Py = (() => {
     return { pass: true };
   }
 
+  /**
+   * input() at Run: the prompt appears in the output, with a box to type the
+   * answer into, as in a terminal. Enter sends it.
+   */
+  const askIn = box => prompt => new Promise(resolve => {
+    if (prompt) box.appendChild(document.createTextNode(prompt));
+    const field = document.createElement('input');
+    field.type = 'text'; field.className = 'code-in'; field.setAttribute('aria-label', 'Input for the program');
+    box.appendChild(field);
+    field.focus();
+    field.addEventListener('keydown', ev => {
+      if (ev.key !== 'Enter') return;
+      ev.preventDefault();
+      const v = field.value;
+      field.replaceWith(document.createTextNode(v + '\n'));
+      resolve(v);
+    });
+  });
+
   // ── The code question ─────────────────────────────────────────────────────
   function codeInput(spec) {
     const h = Exercise.h;
@@ -246,19 +265,7 @@ const Py = (() => {
       status.innerHTML = '';
       const res = await run(box.value, {
         onOut: t => out.appendChild(document.createTextNode(t)),
-        ask: prompt => new Promise(resolve => {
-          if (prompt) out.appendChild(document.createTextNode(prompt));
-          const field = h('input', { type: 'text', class: 'code-in', 'aria-label': 'Input for the program' });
-          out.appendChild(field);
-          field.focus();
-          field.addEventListener('keydown', ev => {
-            if (ev.key !== 'Enter') return;
-            ev.preventDefault();
-            const v = field.value;
-            field.replaceWith(document.createTextNode(v + '\n'));
-            resolve(v);
-          });
-        })
+        ask: askIn(out)
       });
       if (res.error) showError(res.error);
       else if (!out.textContent) out.appendChild(h('span', { class: 'code-note', text: '(The program ran, but printed nothing.)' }));
@@ -285,7 +292,7 @@ const Py = (() => {
       status.innerHTML = '';
       status.appendChild(h('p', { class: 'code-verdict', html: '<strong>Not yet</strong>' +
         (given.length ? `With ${given.map(g => inline(g)).join(', ')}, the program should print:` : 'The program should print:') }));
-      status.appendChild(h('pre', { class: 'code-out-static', text: f.test.expect }));
+      status.appendChild(h('pre', { class: 'code-out-static', text: f.test.expect || '(nothing)' }));
       if (f.error) status.appendChild(h('p', { class: 'code-note', text: `Instead it stopped with ${f.error.name}: ${f.error.text}` }));
       else {
         status.appendChild(h('p', { class: 'code-note', text: 'It printed:' }));
@@ -322,7 +329,7 @@ const Py = (() => {
       btn.disabled = true;
       box.style.display = '';
       box.textContent = '';
-      const res = await run(btn.dataset.src, { onOut: t => box.appendChild(document.createTextNode(t)) });
+      const res = await run(btn.dataset.src, { onOut: t => box.appendChild(document.createTextNode(t)), ask: askIn(box) });
       if (res.error) {
         const err = document.createElement('span');
         err.className = 'code-err';

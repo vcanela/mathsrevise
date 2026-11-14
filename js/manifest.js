@@ -199,8 +199,8 @@ const Manifest = (() => {
       exercises: [
         { id: 'cb1', code: 'C1', slug: 'output-strings', title: 'Output and Strings', tag: 'print, quotes, joining and reading errors', years: '9–10', challenge: true },
         { id: 'cb2', code: 'C2', slug: 'variables-types', title: 'Variables and Types', tag: 'Storing values, int, float, str, bool, f-strings', years: '9–10', challenge: true },
-        { id: 'cb3', code: 'C3', slug: 'input-calculation', title: 'Input and Calculation', tag: 'Asking the user, converting what they type', years: '9–10', soon: true },
-        { id: 'cb4', code: 'C4', slug: 'decisions', title: 'Decisions', tag: 'if, elif, else, and, or, not', years: '9–10', soon: true }
+        { id: 'cb3', code: 'C3', slug: 'input-calculation', title: 'Input and Calculation', tag: 'Asking the user, converting what they type, operators', years: '9–10', challenge: true },
+        { id: 'cb4', code: 'C4', slug: 'decisions', title: 'Decisions', tag: 'if, elif, else, and, or, not', years: '9–10', challenge: true }
       ]
     },
     {

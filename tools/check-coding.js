@@ -133,7 +133,7 @@ const sameError = (got, want) => got === want || (want === 'SyntaxError' && /^(I
           return;
         }
         for (const c of q.py || []) {
-          const key = c.code;
+          const key = c.code + '\u0000' + JSON.stringify(c.inputs || []);
           const prev = shown.get(key);
           if (prev && (prev.output !== c.output || prev.error !== c.error)) fail(where, 'the same program expects two different results: ' + JSON.stringify(key));
           shown.set(key, { ...c, where });
