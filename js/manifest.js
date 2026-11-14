@@ -144,6 +144,36 @@ const Manifest = (() => {
       ]
     },
 
+    // Phase 4 (Years 9–10), in units of their own so a Year 7 student opening
+    // Chemistry does not land on ionic bonding. Codes keep the year (9.1, 10.2).
+    {
+      key: 'atoms-reactions', subject: 'science', short: 'Atoms and Reactions', name: 'Atoms and Reactions', icon: 'A',
+      topicFiles: ['science-y9'],
+      challengeName: 'Challenge set', challengeTag: 'Challenge',
+      challengeNote: 'Challenge questions: the same ideas, taken to a high standard.',
+      blurb: 'Atoms, the periodic table, bonding and chemical reactions.',
+      exercises: [
+        { id: 's9e1', slug: 'atoms-periodic-table', title: 'Atoms and the Periodic Table', tag: 'Protons, neutrons, electrons, shells, groups', strand: 'Matter', challenge: true },
+        { id: 's9e2', slug: 'acids-bases', title: 'Acids, Bases and Gas Tests', tag: 'pH, indicators, identifying gases', strand: 'Chemical change', soon: true },
+        { id: 's10e1', slug: 'bonding-equations', title: 'Bonding, Formulas and Equations', tag: 'Ions, covalent bonds, balancing', strand: 'Matter', soon: true },
+        { id: 's10e2', slug: 'reaction-types', title: 'Types of Reaction', tag: 'Combination, combustion, decomposition, neutralisation', strand: 'Chemical change', soon: true }
+      ]
+    },
+    {
+      key: 'electricity-forces', subject: 'science', short: 'Electricity, Waves and Forces', name: 'Electricity, Waves and Forces', icon: 'Ω',
+      topicFiles: ['science-y9'],
+      challengeName: 'Challenge set', challengeTag: 'Challenge',
+      challengeNote: 'Challenge questions: the same ideas, taken to a high standard.',
+      blurb: 'Circuits, motion and acceleration, pressure, and waves.',
+      exercises: [
+        { id: 's9e3', slug: 'circuits', title: 'Electric Circuits', tag: 'Current, voltage, series and parallel', strand: 'Matter, interactions and energy', challenge: true },
+        { id: 's9e4', slug: 'motion-acceleration', title: 'Motion and Acceleration', tag: 'Net force, position–time graphs', strand: 'Motion and forces', soon: true },
+        { id: 's10e3', slug: 'waves', title: 'Waves, Sound and Light', tag: 'Frequency, wavelength, the EM spectrum', strand: 'Matter, interactions and energy', soon: true },
+        { id: 's10e4', slug: 'force-mass-acceleration', title: 'Force, Mass and Acceleration', tag: 'F = ma, free-body diagrams', strand: 'Motion and forces', soon: true },
+        { id: 's10e5', slug: 'pressure-buoyancy', title: 'Pressure and Buoyancy', tag: 'Force on an area, fluids, floating', strand: 'Motion and forces', soon: true }
+      ]
+    },
+
     // ── English ─────────────────────────────────────────────────────────────
     // Phase 3 (Years 7–8) of English Years 0–10 (2025, in effect 2026), by
     // strand. The site practises the knowledge and close-reading skills that
@@ -248,15 +278,15 @@ const Manifest = (() => {
       u.page = `science/${u.key}.html`;
       u.dir  = `science/${u.key}`;
       // A subject draws on both years, so its pages load both topic files.
-      u.topicFiles = ['science-y7', 'science-y8'];
+      u.topicFiles = u.topicFiles || ['science-y7', 'science-y8'];
       for (const ex of u.exercises) {
-        const [, year, n] = /^s(\d)e(\d+)$/.exec(ex.id);
+        const [, year, n] = /^s(\d+)e(\d+)$/.exec(ex.id);
         ex.year  = Number(year);
         ex.label = `${year}.${n}`;
         ex.href  = `${u.dir}/${ex.slug}.html`;
         // Where it used to live, when science was grouped by year. The build
         // leaves a page there that forwards to the new address.
-        ex.old   = `science/year-${year}/exercise-${n}.html`;
+        if (year <= 8) ex.old = `science/year-${year}/exercise-${n}.html`;
       }
     }
     for (const ex of u.exercises) ex.unit = u;

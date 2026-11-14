@@ -287,7 +287,9 @@ const Nav = (() => {
     common.challenge = usual.length > 1 && usual.every(e => e.challenge);
     const facts = [
       u.subject === 'maths' ? u.short : null,
-      live.length && live.every(e => e.year) ? 'Year 7 and Year 8 topics'
+      live.length && live.every(e => e.year)
+        ? [...new Set(live.map(e => e.year))].sort((a, b) => a - b).map(y => 'Year ' + y).join(' and ') + ' topics' +
+          (live.every(e => e.challenge) ? `, each with a ★ ${Manifest.challenge(u).name}` : '')
         : common.year && common.challenge ? `${common.year}, each with a ★ ${Manifest.challenge(u).name}`
         : common.year
     ].filter(Boolean);

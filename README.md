@@ -50,6 +50,17 @@ column. Questions stay inside the knowledge statements: where the curriculum sto
 formula or a term, so do the questions. The curriculum PDF itself sits in `reference/`, which
 is git-ignored and never published.
 
+**Years 9–10** (Phase 4) have units of their own, so a Year 7 student opening Chemistry does not
+land on ionic bonding: **Atoms and Reactions** and **Electricity, Waves and Forces**, with codes
+that keep the year (9.1, 10.2) and a ★ Challenge set on every exercise. Two are written, 9.1
+Atoms and the Periodic Table and 9.3 Electric Circuits; the rest of those units are listed as
+coming soon, and Earth Systems and The Living Body are still to be added. They bring new
+diagrams in `js/science.js`: Bohr diagrams and a labelled atom, the first four periods of the
+periodic table, circuit diagrams (series or parallel, with ammeters, voltmeters and switches,
+drawn from a description so a meter shows exactly the reading the question uses) and energy
+transfer (Sankey) diagrams drawn to scale. The curriculum does not ask for V = IR in Year 9, so
+neither do the questions.
+
 Science questions come in two kinds. **Quantitative** ones (speed, mass, reading a graph) are
 generated with fresh numbers, like the maths. **Conceptual** ones cannot be, so each question
 *slot* holds a pool of authored items testing the same idea; a visit picks one per slot, and
@@ -197,6 +208,7 @@ js/
     problems.js         unit 6, problem solving
     science-y7.js       Year 7 science
     science-y8.js       Year 8 science
+    science-y9.js       Year 9 science (9.1 Atoms and the Periodic Table, 9.3 Electric Circuits)
     coding-basics.js    Coding: Python Basics (C1 to C4)
     coding-loops.js     Coding: Loops, Lists and Functions (C5 to C8)
 tools/

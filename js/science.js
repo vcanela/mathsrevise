@@ -1342,3 +1342,268 @@ const SciDia = (() => {
   Object.assign(SciDia, { note, tag, below, rot, beaker, pureVsMixture, sieve, filtration, decant, evaporation, magnet,
                          flame, heatTransfer, particleSpeed, moonOrbit, solution, concentration, seeing, cycle, nested });
 })();
+
+
+// ── Years 9 and 10 diagrams ─────────────────────────────────────────────────
+// Bohr diagrams, a periodic table, circuit diagrams and energy transfer
+// diagrams. The same rule again: an atom has exactly the electrons its
+// arrangement says, a meter reads what the question says it reads.
+
+(() => {
+  const INK = 'var(--dia-ink)', MUTED = 'var(--dia-muted)', ACC = 'var(--dia-accent)';
+  const RAD = Math.PI / 180;
+
+  // ── Atoms ─────────────────────────────────────────────────────────────────
+  /** The electron arrangement of an atom with z electrons (up to 20): shells of 2, 8, 8, then 2. */
+  const shellsOf = z => {
+    const out = [];
+    for (const cap of [2, 8, 8, 8]) { if (z <= 0) break; out.push(Math.min(cap, z)); z -= cap; }
+    return out;
+  };
+
+  /**
+   * A Bohr diagram: the nucleus with its protons and neutrons written in it,
+   * and each shell a circle with its electrons spaced evenly round it.
+   * o: { p, n, shells (defaults to the arrangement for p), c, nucleus: false
+   * to leave the nucleus blank, markers: [[x, y, text]] for label questions }.
+   */
+  function bohr(d, o) {
+    const shells = o.shells || shellsOf(o.p);
+    const c = o.c || [d.w / 2, d.h / 2];
+    const rN = o.rN || 17;
+    const gap = o.gap || Math.min(15, (Math.min(d.w, d.h) / 2 - rN - 8) / Math.max(1, shells.length));
+    d.add('circle', { cx: c[0], cy: c[1], r: rN, fill: 'var(--dia-fill)', stroke: INK, 'stroke-width': 1.5 });
+    if (o.nucleus !== false) {
+      d.text([c[0], c[1] - 5.5], o.p + 'p', { size: 10 });
+      d.text([c[0], c[1] + 6.5], (o.n === undefined ? '?' : o.n) + 'n', { size: 10 });
+    }
+    shells.forEach((k, i) => {
+      const r = rN + gap * (i + 1);
+      d.circle(c, r, { stroke: MUTED, width: 1.1 });
+      for (let j = 0; j < k; j++) {
+        const a = (-90 + (360 / k) * j + (i % 2 ? 360 / k / 2 : 0)) * RAD;
+        d.add('circle', { cx: (c[0] + r * Math.cos(a)).toFixed(2), cy: (c[1] + r * Math.sin(a)).toFixed(2), r: 3.3,
+                          fill: ACC, stroke: 'var(--surface)', 'stroke-width': 0.8 });
+      }
+    });
+    return { c, rN, gap, outer: rN + gap * shells.length };
+  }
+
+  /** A numbered marker with a leader line to the point it labels. */
+  function marker(d, at, to, n) {
+    d.line(at, to, { stroke: MUTED, width: 1 });
+    d.add('circle', { cx: at[0], cy: at[1], r: 8, fill: 'var(--surface)', stroke: INK, 'stroke-width': 1.2 });
+    d.text(at, String(n), { size: 10.5 });
+  }
+
+  /** A close-up of a small nucleus (protons marked +) inside its shells, with numbered markers. */
+  function atomParts(d, p, n, labels) {
+    const c = [d.w / 2 - 10, d.h / 2 + 4];
+    const shells = shellsOf(p);
+    const rN = 20, gap = 22, br = 5.6;
+    // Pack p + n balls in the nucleus: a centre one and rings round it.
+    const balls = [];
+    const total = p + n;
+    const ring = [[0, 0]];
+    for (let k = 0; k < 6; k++) ring.push([10 * Math.cos(k * 60 * RAD), 10 * Math.sin(k * 60 * RAD)]);
+    for (let k = 0; k < 8; k++) ring.push([17 * Math.cos((k * 45 + 20) * RAD), 17 * Math.sin((k * 45 + 20) * RAD)]);
+    for (let i = 0; i < total && i < ring.length; i++) balls.push(ring[i]);
+    // Protons and neutrons alternate, so both kinds are spread through the nucleus.
+    const isProton = [];
+    for (let i = 0, pp = p, nn = n; i < balls.length; i++) {
+      const pr = (i % 2 === 0 && pp > 0) || nn === 0;
+      isProton.push(pr); if (pr) pp--; else nn--;
+    }
+    d.add('circle', { cx: c[0], cy: c[1], r: rN + 4, fill: 'none', stroke: MUTED, 'stroke-width': 0.8, 'stroke-dasharray': '2 2' });
+    balls.forEach(([x, y], i) => {
+      const isP = isProton[i];
+      d.add('circle', { cx: (c[0] + x).toFixed(2), cy: (c[1] + y).toFixed(2), r: br,
+                        fill: isP ? ACC : 'var(--surface-2)', stroke: INK, 'stroke-width': 0.9 });
+      if (isP) d.text([c[0] + x, c[1] + y + 0.5], '+', { size: 10, fill: 'var(--surface)' });
+    });
+    let electron = null;
+    shells.forEach((k, i) => {
+      const r = rN + 4 + gap * (i + 1);
+      d.circle(c, r, { stroke: MUTED, width: 1.1 });
+      for (let j = 0; j < k; j++) {
+        const a = (-90 + (360 / k) * j + 30) * RAD;
+        const e = [c[0] + r * Math.cos(a), c[1] + r * Math.sin(a)];
+        d.add('circle', { cx: e[0].toFixed(2), cy: e[1].toFixed(2), r: 3.3, fill: 'var(--dia-unknown)' });
+        if (i === shells.length - 1 && j === 0) electron = e;
+      }
+    });
+    // Which ball is a proton, which a neutron: the first of each kind drawn.
+    const kinds = balls.map(([x, y], i) => ({ x, y, p: isProton[i] }));
+    const P = kinds.find(k => k.p), N = kinds.find(k => !k.p);
+    const outer = rN + 4 + gap * shells.length;
+    const spots = {
+      proton:   [[c[0] + P.x, c[1] + P.y], [c[0] - outer - 14, c[1] - 30]],
+      neutron:  [[c[0] + N.x, c[1] + N.y], [c[0] - outer - 14, c[1] + 30]],
+      electron: [electron, [electron[0] + 34, electron[1] - 8]],
+      shell:    [[c[0] + (rN + 4 + gap) * Math.cos(130 * RAD), c[1] + (rN + 4 + gap) * Math.sin(130 * RAD)], [c[0] - outer + 2, c[1] + outer + 4]],
+      nucleus:  [[c[0] + (rN + 4) * Math.cos(-20 * RAD), c[1] + (rN + 4) * Math.sin(-20 * RAD)], [c[0] + outer + 26, c[1] + 24]]
+    };
+    labels.forEach((name, i) => marker(d, spots[name][1], spots[name][0], i + 1));
+  }
+
+  // ── The periodic table ────────────────────────────────────────────────────
+  const SYMBOLS = ['H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl', 'Ar',
+    'K', 'Ca', 'Sc', 'Ti', 'V', 'Cr', 'Mn', 'Fe', 'Co', 'Ni', 'Cu', 'Zn', 'Ga', 'Ge', 'As', 'Se', 'Br', 'Kr'];
+  /** Group (1–18) and period of an element with atomic number z, for z up to 36. */
+  function place(z) {
+    if (z === 1) return { g: 1, p: 1 };
+    if (z === 2) return { g: 18, p: 1 };
+    if (z <= 18) {
+      const p = z <= 10 ? 2 : 3, k = z - (p === 2 ? 2 : 10);   // 1..8 along the period
+      return { g: k <= 2 ? k : k + 10, p };
+    }
+    return { g: z - 18, p: 4 };
+  }
+  const METALS = new Set(['Li', 'Be', 'Na', 'Mg', 'Al', 'K', 'Ca', 'Sc', 'Ti', 'V', 'Cr', 'Mn', 'Fe', 'Co', 'Ni', 'Cu', 'Zn', 'Ga']);
+  const SEMI = new Set(['B', 'Si', 'Ge', 'As']);
+
+  /**
+   * The first four periods. o: { symbols: true, shade: true (metals tinted),
+   * marks: { z: 'A' } (a letter in place of the symbol, highlighted),
+   * groups: true (group numbers along the top), periods: true }.
+   */
+  function periodic(d, o) {
+    o = o || {};
+    const left = o.periods ? 16 : 6, top = o.groups ? 16 : 6;
+    const cw = (d.w - left - 6) / 18, ch = Math.min(22, (d.h - top - 6) / 4);
+    for (let z = 1; z <= 36; z++) {
+      const { g, p } = place(z), s = SYMBOLS[z - 1];
+      const x = left + (g - 1) * cw, y = top + (p - 1) * ch;
+      const mark = o.marks && o.marks[z];
+      const fill = mark ? 'var(--dia-unknown)' : o.shade && METALS.has(s) ? 'var(--surface-2)' : 'var(--surface)';
+      d.add('rect', { x: (x + 0.5).toFixed(2), y: (y + 0.5).toFixed(2), width: (cw - 1).toFixed(2), height: (ch - 1).toFixed(2),
+                      fill, 'fill-opacity': mark ? 0.85 : 1, stroke: o.shade && SEMI.has(s) ? INK : MUTED, 'stroke-width': o.shade && SEMI.has(s) ? 1.1 : 0.7,
+                      'stroke-dasharray': o.shade && SEMI.has(s) ? '2 1.5' : null });
+      const t = mark || (o.symbols !== false ? s : '');
+      if (t) d.text([x + cw / 2, y + ch / 2 + 0.5], t, { size: mark ? 10.5 : Math.min(9, cw * 0.48), fill: mark ? 'var(--surface)' : INK, bold: !!mark });
+    }
+    if (o.groups) for (let g = 1; g <= 18; g++) d.text([left + (g - 0.5) * cw, 8], String(g), { size: 7.5, fill: MUTED, bold: false });
+    if (o.periods) for (let p = 1; p <= 4; p++) d.text([7, top + (p - 0.5) * ch], String(p), { size: 7.5, fill: MUTED, bold: false });
+  }
+
+  // ── Circuits ──────────────────────────────────────────────────────────────
+  // A circuit is drawn on horizontal wires only, so every symbol is drawn one
+  // way round. `gap` is how much wire each symbol replaces either side.
+  const GAP = { lamp: 9, resistor: 12, motor: 9, ammeter: 9, voltmeter: 9, switch: 10, cell: 3, battery: 9 };
+
+  function meter(d, c, letter) {
+    d.add('circle', { cx: c[0], cy: c[1], r: 9, fill: 'var(--surface)', stroke: INK, 'stroke-width': 1.5 });
+    d.text([c[0], c[1] + 0.5], letter, { size: 10.5 });
+  }
+
+  function symbol(d, comp, x, y) {
+    const t = comp.type;
+    if (t === 'lamp') {
+      d.circle([x, y], 9, { width: 1.5 });
+      const k = 9 * Math.SQRT1_2;
+      d.line([x - k, y - k], [x + k, y + k], { width: 1.3 });
+      d.line([x - k, y + k], [x + k, y - k], { width: 1.3 });
+    } else if (t === 'resistor') {
+      d.add('rect', { x: x - 12, y: y - 5, width: 24, height: 10, fill: 'var(--surface)', stroke: INK, 'stroke-width': 1.5 });
+    } else if (t === 'motor') meter(d, [x, y], 'M');
+    else if (t === 'ammeter') meter(d, [x, y], 'A');
+    else if (t === 'voltmeter') meter(d, [x, y], 'V');
+    else if (t === 'switch') {
+      d.dot([x - 10, y], { r: 2.2 }); d.dot([x + 10, y], { r: 2.2 });
+      d.line([x - 10, y], comp.open ? [x + 8, y - 10] : [x + 10, y], { width: 1.6 });
+    } else if (t === 'cell' || t === 'battery') {
+      const plates = t === 'battery' ? [-6, 6] : [0];
+      for (const off of plates) {
+        d.line([x + off - 3, y - 11], [x + off - 3, y + 11], { width: 1.6 });
+        d.line([x + off + 3, y - 6], [x + off + 3, y + 6], { width: 3.2 });
+      }
+      if (t === 'battery') d.line([x - 3, y], [x + 3, y], { width: 1.2, dash: '2 2' });
+    }
+    if (comp.label) d.text([x, y + (t === 'cell' || t === 'battery' ? 20 : 18)], comp.label, { size: 10, fill: comp.unknown ? 'var(--dia-unknown)' : INK });
+  }
+
+  /** A horizontal wire from xa to xb at height y, with its symbols spaced evenly along it. */
+  function wire(d, xa, xb, y, comps) {
+    const n = comps.length;
+    const xs = comps.map((_, i) => xa + (xb - xa) * (i + 1) / (n + 1));
+    let from = xa;
+    comps.forEach((c, i) => {
+      const g = GAP[c.type];
+      d.line([from, y], [xs[i] - g, y], { width: 1.6 });
+      from = xs[i] + g;
+    });
+    d.line([from, y], [xb, y], { width: 1.6 });
+    comps.forEach((c, i) => {
+      symbol(d, c, xs[i], y);
+      // A voltmeter connected across this component, drawn above it.
+      if (c.volt !== undefined) {
+        const g = GAP[c.type] + 12, vy = y - 31;
+        d.line([xs[i] - g, y], [xs[i] - g, vy], { width: 1.3 });
+        d.line([xs[i] - g, vy], [xs[i] - 9, vy], { width: 1.3 });
+        d.line([xs[i] + 9, vy], [xs[i] + g, vy], { width: 1.3 });
+        d.line([xs[i] + g, vy], [xs[i] + g, y], { width: 1.3 });
+        d.dot([xs[i] - g, y], { r: 2.3 }); d.dot([xs[i] + g, y], { r: 2.3 });
+        meter(d, [xs[i], vy], 'V');
+        d.text([xs[i] + g + 4, vy], c.volt, { size: 10, anchor: 'start', fill: c.voltUnknown ? 'var(--dia-unknown)' : INK });
+      }
+    });
+    return xs;
+  }
+
+  /**
+   * A circuit diagram.
+   *   series:   { kind: 'series', loop: [components on the top wire], supply: [bottom wire] }
+   *   parallel: { kind: 'parallel', branches: [[components], …], supply: [bottom wire] }
+   * The supply list holds the cell or battery and anything else in the main
+   * circuit (a switch, an ammeter). A component is { type, label, open, volt }.
+   */
+  function circuit(d, o) {
+    const x0 = 22, x1 = d.w - 22, yBot = d.h - 30;
+    if (o.kind === 'series') {
+      const yTop = o.loop.some(c => c.volt !== undefined) ? 48 : 26;
+      wire(d, x0, x1, yTop, o.loop);
+      wire(d, x0, x1, yBot, o.supply);
+      d.line([x0, yTop], [x0, yBot], { width: 1.6 });
+      d.line([x1, yTop], [x1, yBot], { width: 1.6 });
+      return;
+    }
+    // Branches stacked between two side rails, with room below the last one
+    // for the supply wire and its labels.
+    const nb = o.branches.length;
+    const yTop = o.branches[0].some(c => c.volt !== undefined) ? 48 : 22;
+    const yLast = yBot - 50;
+    const step = nb > 1 ? (yLast - yTop) / (nb - 1) : 0;
+    o.branches.forEach((b, i) => {
+      const y = yTop + step * i;
+      wire(d, x0, x1, y, b);
+      if (i > 0) { d.dot([x0, y], { r: 2.6 }); d.dot([x1, y], { r: 2.6 }); }
+    });
+    d.line([x0, yTop], [x0, yBot], { width: 1.6 });
+    d.line([x1, yTop], [x1, yBot], { width: 1.6 });
+    wire(d, x0, x1, yBot, o.supply);
+  }
+
+  // ── Energy transfer ───────────────────────────────────────────────────────
+  /**
+   * An energy transfer (Sankey) diagram: the input band splits into the useful
+   * output, carried on to the right, and the wasted output, bent downwards.
+   * Band widths are to scale. o: { total, useful, wasted, labels: [in, useful, wasted] }.
+   */
+  function sankey(d, o) {
+    const T = o.total, k = Math.min(56, d.h * 0.42) / T;
+    const hu = Math.max(3, o.useful * k), hw = Math.max(3, o.wasted * k);
+    const y0 = 34, xa = 10, xs = 108, xr = d.w - 26;
+    const band = { fill: 'var(--brand)', 'fill-opacity': 0.22, stroke: 'var(--brand-ink)', 'stroke-width': 1.2 };
+    // One outline: in along the top, out to the right, back, down and round.
+    const yb = d.h - 22;
+    const pts = [[xa, y0], [xr, y0], [xr + 16, y0 + hu / 2], [xr, y0 + hu], [xs + hw, y0 + hu], [xs + hw, yb],
+                 [xs + hw / 2, yb + 14], [xs, yb], [xs, y0 + hu + hw], [xa, y0 + hu + hw]];
+    d.add('polygon', Object.assign({ points: pts.map(p => p.map(v => v.toFixed(1)).join(',')).join(' ') }, band));
+    const [lIn, lUse, lWaste] = o.labels;
+    d.text([xa, y0 - 12], lIn, { size: 10.5, anchor: 'start' });
+    d.text([xr, y0 - 12], lUse, { size: 10.5, anchor: 'end', fill: o.unknown === 1 ? 'var(--dia-unknown)' : INK });
+    d.text([xs + hw + 10, (y0 + hu + hw + yb) / 2 + 6], lWaste, { size: 10.5, anchor: 'start', fill: o.unknown === 2 ? 'var(--dia-unknown)' : INK });
+  }
+
+  Object.assign(SciDia, { shellsOf, bohr, atomParts, place, periodic, PT_SYMBOLS: SYMBOLS, circuit, sankey });
+})();
