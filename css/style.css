@@ -296,14 +296,6 @@ main {
   margin: 0.4rem 0 1.4rem;
   box-shadow: var(--paper-shadow);
 }
-/* The pin: red while today's practice is waiting, green once it is done. */
-.habit::before {
-  content: ''; position: absolute; top: -5px; left: 50%; z-index: 1;
-  width: 18px; height: 18px; margin-left: -9px; border-radius: 50%;
-  background: radial-gradient(circle at 35% 32%, var(--pin-hi) 0 12%, var(--pin) 45%, var(--pin-lo) 100%);
-  box-shadow: 3px 4px 4px rgba(0, 0, 0, .35);
-}
-.habit-done { --pin-hi: #9be0b4; --pin: #2f8a52; --pin-lo: #143d24; }
 
 .habit-title {
   font-family: var(--font-serif);
@@ -375,7 +367,7 @@ main.home { margin-top: 1.2rem; margin-bottom: 1rem; }
 .home-cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.1rem; align-items: start; }
 /* Four subjects side by side need a little more width than a worksheet. */
 .home-head:not(.unit-head), main.home:not(.unit) { max-width: 1180px; }
-@media (max-width: 1060px) { .home-cols:not(.unit-cols) { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 761px) and (max-width: 1060px) { .home-cols:not(.unit-cols) { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .home-col {
   position: relative;
   background: var(--surface); border-radius: 2px;
@@ -388,6 +380,16 @@ main.home { margin-top: 1.2rem; margin-bottom: 1rem; }
   border-bottom: 1.5px solid var(--rule);
 }
 .home-col h2 { font-size: 1.25rem; }
+/* On home the head is a button: it opens and closes the subject on a phone. */
+h2.home-col-head { display: block; }
+.home-col-toggle {
+  display: flex; align-items: baseline; gap: 0.6rem; width: 100%;
+  background: none; border: 0; padding: 0; margin: 0;
+  font: inherit; color: inherit; text-align: left; cursor: default;
+}
+.home-col-toggle:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+.home-col-name { flex: 1; }
+.home-col-chev { display: none; }
 .home-stars { font-family: var(--font-sans); font-size: 0.78rem; color: var(--ink-faint); white-space: nowrap; }
 .home-list { list-style: none; }
 .home-item { position: relative; }
@@ -472,14 +474,21 @@ main.home { margin-top: 1.2rem; margin-bottom: 1rem; }
   .unit-side .home-stars { align-self: flex-start; }
 }
 
-/* On a phone the subjects stack, and a row's note opens in place beneath it. */
+/* On a phone the subjects stack as bars that open to their units with a tap,
+   and a row's note opens in place beneath it, on home and on unit pages. */
 @media (max-width: 760px) {
-  .home-cols { grid-template-columns: minmax(0, 1fr); }
-  .home-note, .home-col:last-child .home-note {
+  .home-cols { grid-template-columns: minmax(0, 1fr); gap: 0.8rem; }
+  .home-col-toggle { cursor: pointer; align-items: center; min-height: 2.2rem; }
+  .home-col-chev { display: inline-block; color: var(--ink-faint); font-size: 0.9rem; transition: transform .15s ease; }
+  .home-col.open .home-col-chev { transform: rotate(90deg); }
+  .home-cols:not(.unit-cols) .home-col:not(.open) .home-list { display: none; }
+  .home-cols:not(.unit-cols) .home-col:not(.open) .home-col-head { border-bottom-color: transparent; padding-bottom: 0; margin-bottom: 0; }
+  .home-col { padding: 0.6rem 0.8rem; }
+  .home-note, .home-col:last-child .home-note, .unit-cols.single .home-col:last-child .home-note {
     position: relative; left: auto; right: auto; top: auto; width: auto;
-    margin: 0.2rem 0.3rem 0.6rem; transform: none; display: none;
+    margin: 0.2rem 0.3rem 0.6rem; transform: none;
   }
-  .home-item.open .home-note { display: block; }
+  .home-item:not(.open) .home-note { display: none; }
   .habit-week { margin-left: 0; }
   .habit-go { flex: 1 1 auto; }
 }
@@ -1483,7 +1492,7 @@ mjx-container[display="true"] { margin: 0.6em 0 !important; }
   body { background: #fff; color: #000; }
   .qcard, .example { break-inside: avoid; box-shadow: none; }
   .help-step, .paper-note, .hint, .learn-card, .passage, .habit { box-shadow: none; transform: none; border: 1px solid #999; }
-  .help-step::after, .paper-note::after, .hint::after, .habit::before, .qcard::after, .example::after { display: none; }
+  .help-step::after, .paper-note::after, .hint::after, .qcard::after, .example::after { display: none; }
   .qcard, .example { border: 1px solid #999; }
   .qmark path { animation: none; stroke-dashoffset: 0; }
   .qmark text { animation: none; opacity: 1; }

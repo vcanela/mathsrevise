@@ -213,16 +213,41 @@ const Nav = (() => {
     root.appendChild(main);
     main.appendChild(Habit.panel(''));
 
+    // On a phone the subjects are a list of bars, each opening to its units
+    // with a tap. Which ones are open is remembered, so coming back from a
+    // unit finds the page as it was left. On a wider screen every subject
+    // is always open and the bars do nothing.
+    const OPEN_KEY = 'mrg_home_open';
+    let opened = [];
+    try { opened = JSON.parse(localStorage.getItem(OPEN_KEY)) || []; } catch (_) {}
+    const hashId = location.hash.slice(1);
+    if (hashId && !opened.includes(hashId)) opened.push(hashId);
+    const saveOpen = () => {
+      try { localStorage.setItem(OPEN_KEY, JSON.stringify(opened)); } catch (_) {}
+    };
+
     const cols = h('div', { class: 'home-cols' });
     for (const s of Manifest.SUBJECTS) {
       const p = Manifest.progress(s.id);
-      const list = h('ul', { class: 'home-list' }, Manifest.units(s.id).map(unitItem),
+      const isOpen = opened.includes(s.id);
+      const list = h('ul', { class: 'home-list', id: s.id + '-units' }, Manifest.units(s.id).map(unitItem),
         s.id === 'maths' ? paperItem() : null);
-      cols.appendChild(h('section', { class: 'home-col', id: s.id },
-        h('div', { class: 'home-col-head' },
-          h('h2', { text: s.name }),
-          h('span', { class: 'home-stars', text: `★ ${p.stars} of ${p.max}` })),
-        list));
+      const toggle = h('button', { type: 'button', class: 'home-col-toggle',
+        'aria-expanded': String(isOpen), 'aria-controls': s.id + '-units' },
+        h('span', { class: 'home-col-name', text: s.name }),
+        h('span', { class: 'home-stars', text: `★ ${p.stars} of ${p.max}` }),
+        h('span', { class: 'home-col-chev', 'aria-hidden': 'true', text: '▸' }));
+      const col = h('section', { class: 'home-col' + (isOpen ? ' open' : ''), id: s.id },
+        h('h2', { class: 'home-col-head' }, toggle),
+        list);
+      toggle.addEventListener('click', () => {
+        const now = !col.classList.contains('open');
+        col.classList.toggle('open', now);
+        toggle.setAttribute('aria-expanded', String(now));
+        opened = opened.filter(id => id !== s.id).concat(now ? [s.id] : []);
+        saveOpen();
+      });
+      cols.appendChild(col);
     }
     main.appendChild(cols);
 

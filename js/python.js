@@ -128,6 +128,7 @@ const Py = (() => {
 
   // Skulpt is one interpreter per page, so programs take turns.
   let queue = Promise.resolve();
+  let waiting = null;          // stops the program waiting for input(), if one is
 
   /**
    * Run a program. `o.inputs` answers input() in order (for tests); without
@@ -136,9 +137,13 @@ const Py = (() => {
    */
   function run(src, o) {
     o = o || {};
+    // Programs run one at a time, so one left waiting for input() would hold
+    // up every Run after it. A new run stops the one that is waiting.
+    if (waiting) waiting();
     const job = queue.then(() => (available() ? null : load())).then(() => new Promise(resolve => {
       if (!available()) { resolve({ out: '', error: { name: 'Unavailable', line: null, text: 'Python could not load. Check the internet connection and reload the page.' } }); return; }
-      let out = '';
+      let out = '', stopped = false;
+      const ask = o.ask && (p => o.ask(p).catch(e => { if (e === STOPPED) stopped = true; throw e; }));
       const answers = o.inputs ? o.inputs.slice() : null;
       // A program that uses the turtle draws in o.turtle (an element), at
       // full speed, starting from a clean screen every run.
@@ -166,10 +171,10 @@ const Py = (() => {
         },
         inputfunTakesPrompt: true,
         // A test answers input() itself; a student types the answer in.
-        inputfun: prompt => answers ? (answers.length ? answers.shift() : '') : (o.ask ? o.ask(prompt) : '')
+        inputfun: prompt => answers ? (answers.length ? answers.shift() : '') : (ask ? ask(prompt) : '')
       });
       Sk.misceval.asyncToPromise(() => Sk.importMainWithBody('<stdin>', false, src, true))
-        .then(() => resolve({ out }), e => resolve({ out, error: describe(e) }));
+        .then(() => resolve({ out }), e => resolve(stopped ? { out, stopped: true } : { out, error: describe(e) }));
     }));
     queue = job.catch(() => {});
     return job;
@@ -310,20 +315,31 @@ const Py = (() => {
    * input() at Run: the prompt appears in the output, with a box to type the
    * answer into, as in a terminal. Enter sends it.
    */
-  const askIn = box => prompt => new Promise(resolve => {
+  const askIn = box => prompt => new Promise((resolve, reject) => {
     if (prompt) box.appendChild(document.createTextNode(prompt));
     const field = document.createElement('input');
     field.type = 'text'; field.className = 'code-in'; field.setAttribute('aria-label', 'Input for the program');
     box.appendChild(field);
     field.focus();
+    const stop = () => {
+      waiting = null;
+      const note = document.createElement('span');
+      note.className = 'code-note';
+      note.textContent = '\n(Stopped, so another program could run.)';
+      field.replaceWith(note);
+      reject(STOPPED);
+    };
+    waiting = stop;
     field.addEventListener('keydown', ev => {
       if (ev.key !== 'Enter') return;
       ev.preventDefault();
+      if (waiting === stop) waiting = null;
       const v = field.value;
       field.replaceWith(document.createTextNode(v + '\n'));
       resolve(v);
     });
   });
+  const STOPPED = new Error('stopped');
 
   // ── The code question ─────────────────────────────────────────────────────
   function codeInput(spec) {
