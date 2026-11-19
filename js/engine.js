@@ -197,8 +197,8 @@ const Exercise = (() => {
       lock:   () => { box.disabled = true; },
       check() {
         let ok, why = null;
-        if (spec.mode === 'factorised') {
-          const r = Algebra.checkFactorised(box.value, spec.answer);
+        if (spec.mode === 'factorised' || spec.mode === 'brackets' || spec.mode === 'expanded') {
+          const r = { factorised: Algebra.checkFactorised, brackets: Algebra.checkBrackets, expanded: Algebra.checkExpanded }[spec.mode](box.value, spec.answer);
           ok = r.ok; why = r.why;
         } else {
           const p = Algebra.tryParse(box.value);

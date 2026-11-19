@@ -516,4 +516,263 @@
         })] }
     ]
   });
+
+  // ═══ R3 Expanding and factorising ═════════════════════════════════════════
+  // Year 10 algebra (p. 41): expanding two brackets, the special products,
+  // factorising quadratics with leading coefficient 1, factorising by
+  // grouping, the zero product property, and solving x² + c = 0. The Year 9
+  // single bracket and common factor come first as a warm-up. The Challenge
+  // set ends with an algebraic proof and one taste of NCEA Level 1: a
+  // quadratic whose leading coefficient is not 1.
+
+  /** ax + b as a string the algebra parser reads. */
+  const lx = (a, b, v) => {
+    v = v || 'x';
+    const A = a === 1 ? v : a === -1 ? '-' + v : a === 0 ? '' : a + v;
+    const B = b === 0 ? '' : b > 0 ? (A ? '+' : '') + b : String(b);
+    return (A + B) || '0';
+  };
+  /** ax² + bx + c as a string the algebra parser reads. */
+  const qx = (a, b, c) => {
+    const parts = [];
+    if (a) parts.push(a === 1 ? 'x^2' : a === -1 ? '-x^2' : a + 'x^2');
+    if (b) parts.push((b > 0 && parts.length ? '+' : '') + (b === 1 ? 'x' : b === -1 ? '-x' : b + 'x'));
+    if (c) parts.push((c > 0 && parts.length ? '+' : '') + c);
+    return parts.join('') || '0';
+  };
+  /** TeX for an expression string, as the algebra engine writes it. */
+  const T = src => Algebra.parse(src).tex();
+  const gcd = (a, b) => { a = Math.abs(a); b = Math.abs(b); while (b) [a, b] = [b, a % b]; return a; };
+  const nz = (rng, lo, hi) => { let v = 0; while (!v) v = rng.int(lo, hi); return v; };
+  const TIP_EXPAND = 'Type powers with ^ (x^2) or use x². No brackets in an expanded answer.';
+  const TIP_BRACKETS = 'Type it with brackets, for example (x + 3)(x − 5).';
+
+  Sci.topic({
+    id: 'mr3', unit: 'reasoning',
+    title: 'Expanding and Factorising',
+    blurb: 'Multiplying out brackets, and putting them back: the algebra behind solving quadratic equations.',
+    hint: 'Expanding: multiply every term in one bracket by every term in the other, then collect like terms. ' +
+          'Factorising x² + bx + c: find two numbers that multiply to c and add to b; they go in the brackets.',
+
+    learn: [
+      { id: 'single', title: 'One bracket, and common factors',
+        text: '<p>Multiply the term outside by every term inside: ' + m('3x(2x - 5) = 6x^2 - 15x') + '.</p>' +
+              '<p>Factorising undoes it: take out the highest common factor of every term, numbers and letters: ' + m('6x^2 - 15x = 3x(2x - 5)') + '.</p>' },
+      { id: 'double', title: 'Two brackets',
+        text: '<p>Multiply each term in the first bracket by each term in the second: four products, then collect like terms.</p>' +
+              '<p>' + m('(x + 3)(x - 5) = x^2 - 5x + 3x - 15 = x^2 - 2x - 15') + '</p>' +
+              '<p>' + m('(2x + 1)(3x - 4) = 6x^2 - 8x + 3x - 4 = 6x^2 - 5x - 4') + '</p>' },
+      { id: 'special', title: 'Special products',
+        text: '<ul><li>Square of a sum: ' + m('(x + a)^2 = x^2 + 2ax + a^2') + '</li>' +
+              '<li>Square of a difference: ' + m('(x - a)^2 = x^2 - 2ax + a^2') + '</li>' +
+              '<li>Difference of two squares: ' + m('(x + a)(x - a) = x^2 - a^2') + '</li></ul>' +
+              '<p>The common mistake: ' + m('(x + 3)^2') + ' is <em>not</em> ' + m('x^2 + 9') + '. It is ' + m('(x+3)(x+3) = x^2 + 6x + 9') + '.</p>' },
+      { id: 'factorise', title: 'Factorising x² + bx + c',
+        text: '<p>Find two numbers that <strong>multiply to c</strong> and <strong>add to b</strong>. They are the numbers in the brackets.</p>' +
+              '<p>' + m('x^2 + 2x - 15') + ': multiply to −15, add to 2: 5 and −3. So ' + m('x^2 + 2x - 15 = (x + 5)(x - 3)') + '.</p>' +
+              '<p>Check by expanding. Signs: if c is positive both numbers have the sign of b; if c is negative, one is positive and one negative.</p>' },
+      { id: 'grouping', title: 'Factorising by grouping',
+        text: '<p>Split the middle term using the two numbers, then factorise each pair:</p>' +
+              '<p>' + m('x^2 + 2x - 8 = x^2 + 4x - 2x - 8 = x(x + 4) - 2(x + 4) = (x - 2)(x + 4)') + '</p>' },
+      { id: 'zero', title: 'Solving with the zero product property',
+        text: '<p>If two things multiply to zero, at least one of them is zero. So if ' + m('(x - 3)(x + 5) = 0') + ', then ' + m('x - 3 = 0') + ' or ' + m('x + 5 = 0') + ': ' + m('x = 3') + ' or ' + m('x = -5') + '.</p>' +
+              '<p>These are where the graph of ' + m('y = (x - 3)(x + 5)') + ' crosses the x-axis. To solve ' + m('x^2 + bx + c = 0') + ', factorise first.</p>' },
+      { id: 'squares', title: 'x² = a number',
+        text: '<p>' + m('x^2 = 25') + ' has two solutions, ' + m('x = 5') + ' and ' + m('x = -5') + ', since both square to 25. ' +
+              m('x^2 = 0') + ' has one, ' + m('x = 0') + '. ' + m('x^2 = -9') + ' has none: no real number squares to a negative.</p>' },
+      { id: 'proof', title: 'Proving with algebra',
+        text: '<p>To show something is true for <em>every</em> number, use a letter. Three consecutive integers are ' + m('n,\\ n + 1,\\ n + 2') + '. Their sum is ' + m('3n + 3 = 3(n + 1)') + ': always 3 times a whole number, so always divisible by 3.</p>' },
+      { id: 'nonmonic', title: 'A taste of NCEA Level 1',
+        text: '<p>When the number in front of ' + m('x^2') + ' is not 1, find two numbers that multiply to ' + m('a \\times c') + ' and add to b, split the middle term, and group.</p>' +
+              '<p>' + m('6x^2 + 7x - 3') + ': ' + m('6 \\times -3 = -18') + ', and 9 and −2 add to 7. ' +
+              m('6x^2 + 9x - 2x - 3 = 3x(2x + 3) - 1(2x + 3) = (3x - 1)(2x + 3)') + '.</p>' }
+    ],
+
+    examples: [
+      {
+        title: 'Example 1: expanding two brackets',
+        steps: [m('(x - 4)(x + 7)'), 'Each term times each term: ' + m('x^2 + 7x - 4x - 28') + '.', 'Collect the x terms: ' + m('x^2 + 3x - 28') + '.'],
+        result: m('x^2 + 3x - 28')
+      },
+      {
+        title: 'Example 2: factorise, then solve',
+        steps: ['Solve ' + m('x^2 - x - 12 = 0') + '.', 'Multiply to −12, add to −1: −4 and 3. So ' + m('(x - 4)(x + 3) = 0') + '.',
+                'One bracket must be zero: ' + m('x = 4') + ' or ' + m('x = -3') + '.'],
+        result: m('x = 4') + ' or ' + m('x = -3')
+      }
+    ],
+
+    slots: [
+      { name: 'Expand one bracket', learn: 'single',
+        items: [Sci.gen(rng => {
+          const k = rng.int(2, 6), a = rng.int(1, 5), b = nz(rng, -9, 9);
+          const ans = qx(k * a, k * b, 0);
+          return { prompt: 'Expand ' + m(`${k}x(${T(lx(a, b))})`) + '.', tip: TIP_EXPAND,
+                   input: { kind: 'expr', mode: 'expanded', answer: ans, prefix: '=' },
+                   explain: m(`${k}x \\times ${a === 1 ? '' : a}x = ${k * a}x^2`) + ' and ' + m(`${k}x \\times ${b < 0 ? `(${b})` : b} = ${k * b}x`) + ', so ' + m(T(ans)) + '.' };
+        })] },
+
+      { name: 'Take out a common factor', learn: 'single',
+        items: [Sci.gen(rng => {
+          const K = rng.int(2, 6), a = rng.int(1, 5); let b = nz(rng, -9, 9);
+          while (gcd(a, b) !== 1) b = nz(rng, -9, 9);
+          const target = qx(K * a, K * b, 0);
+          return { prompt: 'Factorise ' + m(T(target)) + ' completely.', tip: 'Type it with a bracket, for example 3x(2x + 5).',
+                   input: { kind: 'expr', mode: 'factorised', answer: target, prefix: '=', display: m(T(`${K}x`) + '(' + T(lx(a, b)) + ')') },
+                   explain: `Both terms share ${K} and x, so take out ${K}x: ` + m(`${T(target)} = ${K}x(${T(lx(a, b))})`) + '.' };
+        })] },
+
+      { name: 'Expand two brackets', learn: 'double',
+        items: [Sci.gen(rng => {
+          const a = nz(rng, -9, 9), b = nz(rng, -9, 9);
+          const ans = qx(1, a + b, a * b);
+          return { prompt: 'Expand and simplify ' + m(`(${T(lx(1, a))})(${T(lx(1, b))})`) + '.', tip: TIP_EXPAND,
+                   input: { kind: 'expr', mode: 'expanded', answer: ans, prefix: '=' },
+                   explain: m(`x^2 ${b < 0 ? '-' : '+'} ${Math.abs(b)}x ${a < 0 ? '-' : '+'} ${Math.abs(a)}x ${a * b < 0 ? '-' : '+'} ${Math.abs(a * b)}`) + ' = ' + m(T(ans)) + '.' };
+        }), Sci.gen(rng => {
+          const a = rng.int(2, 4), b = nz(rng, -6, 6), c = rng.int(1, 3), d = nz(rng, -6, 6);
+          const ans = qx(a * c, a * d + b * c, b * d);
+          return { prompt: 'Expand and simplify ' + m(`(${T(lx(a, b))})(${T(lx(c, d))})`) + '.', tip: TIP_EXPAND,
+                   input: { kind: 'expr', mode: 'expanded', answer: ans, prefix: '=' },
+                   explain: 'Four products: ' + m(`${a * c}x^2`) + ', ' + m(`${a * d}x`) + ', ' + m(`${b * c}x`) + ' and ' + m(`${b * d}`) + '. Collected: ' + m(T(ans)) + '.' };
+        })] },
+
+      { name: 'Special products', learn: 'special',
+        items: [Sci.gen(rng => {
+          const a = rng.int(1, 9), kind = rng.int(0, 2);
+          const [src, ans, why] = [
+            [`(x + ${a})^2`, qx(1, 2 * a, a * a), 'Square of a sum: ' + m(`x^2 + 2 \\times ${a}x + ${a}^2`)],
+            [`(x - ${a})^2`, qx(1, -2 * a, a * a), 'Square of a difference: ' + m(`x^2 - 2 \\times ${a}x + ${a}^2`)],
+            [`(x + ${a})(x - ${a})`, qx(1, 0, -a * a), 'Difference of two squares: the x terms cancel, leaving ' + m(`x^2 - ${a}^2`)]][kind];
+          return { prompt: 'Expand ' + m(src) + '.', tip: TIP_EXPAND,
+                   input: { kind: 'expr', mode: 'expanded', answer: ans, prefix: '=' },
+                   explain: why + ' = ' + m(T(ans)) + '.' };
+        })] },
+
+      { name: 'Two numbers', learn: 'factorise',
+        items: [Sci.gen(rng => {
+          let p = nz(rng, -9, 9), q = nz(rng, -9, 9);
+          while (p + q === 0 || p === q) q = nz(rng, -9, 9);
+          const b = p + q, c = p * q;
+          const pair = (u, v) => `${u} and ${v}`;
+          const wrong = [pair(-p, -q), pair(p + 1, q - 1), pair(c, 1)].filter(w => w !== pair(p, q) && w !== pair(q, p));
+          return C(rng, { prompt: `To factorise ${m(T(qx(1, b, c)))}, which two numbers do you need?`,
+            right: pair(p, q), wrong: [...new Set(wrong)].slice(0, 3), wide: false,
+            explain: `They must multiply to ${c} and add to ${b}: ${p} × ${q} = ${c} and ${p} + ${q < 0 ? `(${q})` : q} = ${b}.` });
+        })] },
+
+      { name: 'Factorise a quadratic', learn: 'factorise',
+        items: [Sci.gen(rng => {
+          const p = nz(rng, -9, 9), q = nz(rng, -9, 9);
+          const target = qx(1, p + q, p * q);
+          const disp = `(${T(lx(1, p))})(${T(lx(1, q))})`;
+          return { prompt: 'Factorise ' + m(T(target)) + '.', tip: TIP_BRACKETS,
+                   input: { kind: 'expr', mode: 'brackets', answer: target, prefix: '=', display: m(disp) },
+                   explain: `Two numbers that multiply to ${p * q} and add to ${p + q}: ${p} and ${q}. So ` + m(`${T(target)} = ${disp}`) + '.' };
+        })] },
+
+      { name: 'Solve a factorised equation', learn: 'zero',
+        items: [Sci.gen(rng => {
+          let p = nz(rng, -9, 9), q = nz(rng, -9, 9);
+          while (p === q) q = nz(rng, -9, 9);
+          const [lo, hi] = [Math.min(p, q), Math.max(p, q)];
+          return { prompt: 'Solve ' + m(`(${T(lx(1, -p))})(${T(lx(1, -q))}) = 0`) + '. Give the smaller solution first.',
+                   input: { kind: 'fill', parts: [{ text: m('x =') }, { input: { answer: lo, width: 56 } }, { text: 'or ' + m('x =') }, { input: { answer: hi, width: 56 } }] },
+                   explain: 'One bracket must be zero: ' + m(`${T(lx(1, -p))} = 0`) + ' gives ' + m(`x = ${p}`) + ', and ' + m(`${T(lx(1, -q))} = 0`) + ' gives ' + m(`x = ${q}`) + '.' };
+        })] },
+
+      { name: 'How many solutions?', learn: 'squares',
+        items: [Sci.gen(rng => {
+          const kind = rng.int(0, 2), a = rng.int(2, 12);
+          const eq = [`x^2 = ${a * a}`, 'x^2 = 0', `x^2 = -${a * a}`][kind];
+          const opts = [`${m(`x = ${a}`)} and ${m(`x = -${a}`)}`, `Only ${m(`x = ${a}`)}`, `Only ${m('x = 0')}`, 'No real solution'];
+          const right = [opts[0], opts[2], opts[3]][kind];
+          return C(rng, { prompt: `Solve ${m(eq)}.`, right, options: opts, wide: false,
+            explain: [`Both ${a} and −${a} square to ${a * a}.`, 'Only 0 squares to 0.', 'Squares are never negative, so no real number works.'][kind] });
+        })] },
+
+      { name: 'Find the mistake', learn: 'special',
+        items: [
+          Sci.gen(rng => {
+            const a = rng.int(2, 9);
+            return Sci.spot(rng, { prompt: `A student expands ${m(`(x + ${a})^2`)}. Which line is wrong?`,
+              lines: [m(`(x + ${a})^2`), m(`= x^2 + ${a}^2`), m(`= x^2 + ${a * a}`)], wrong: 1,
+              explain: 'Squaring a bracket means multiplying it by itself: ' + m(`(x + ${a})(x + ${a}) = x^2 + ${2 * a}x + ${a * a}`) + '. The middle term is missing.' });
+          }),
+          Sci.gen(rng => {
+            const a = rng.int(2, 7), b = rng.int(2, 9);
+            return Sci.spot(rng, { prompt: `A student expands ${m(`(x - ${a})(x + ${b})`)}. Which line is wrong?`,
+              lines: [m(`(x - ${a})(x + ${b})`), m(`= x^2 + ${b}x - ${a}x + ${a * b}`), m(`= x^2 + ${b - a}x + ${a * b}`)], wrong: 1,
+              explain: m(`-${a} \\times ${b} = -${a * b}`) + ', so the last term is negative: ' + m(T(qx(1, b - a, -a * b))) + '.' });
+          }),
+          Sci.gen(rng => {
+            let p = rng.int(2, 6), q = rng.int(2, 9);
+            while (p === q) q = rng.int(2, 9);
+            return Sci.spot(rng, { prompt: `A student solves ${m(`(x - ${p})(x + ${q}) = 0`)}. Which line is wrong?`,
+              lines: [m(`x - ${p} = 0`) + ' or ' + m(`x + ${q} = 0`), m(`x = ${p}`) + ' or ' + m(`x = ${q}`)], wrong: 1,
+              explain: m(`x + ${q} = 0`) + ' gives ' + m(`x = -${q}`) + ', not ' + m(`x = ${q}`) + '. Check: ' + m(`-${q} + ${q} = 0`) + '.' });
+          })
+        ] },
+
+      // ── Challenge set.
+      { challenge: 'only', name: 'Difference of two squares', learn: 'special',
+        items: [Sci.gen(rng => {
+          const a = rng.int(2, 12), target = qx(1, 0, -a * a);
+          return { prompt: 'Factorise ' + m(T(target)) + '.', tip: TIP_BRACKETS,
+                   input: { kind: 'expr', mode: 'brackets', answer: target, prefix: '=', display: m(`(x + ${a})(x - ${a})`) },
+                   explain: m(`${a * a} = ${a}^2`) + ', so it is a difference of two squares: ' + m(`(x + ${a})(x - ${a})`) + '.' };
+        })] },
+
+      { challenge: 'only', name: 'Factorise, then solve', learn: 'zero',
+        items: [Sci.gen(rng => {
+          let p = nz(rng, -9, 9), q = nz(rng, -9, 9);
+          while (p === q || p === -q) q = nz(rng, -9, 9);
+          const eq = qx(1, -(p + q), p * q);
+          return { prompt: 'Solve ' + m(T(eq) + ' = 0') + '. Give the smaller solution first.',
+                   input: { kind: 'fill', parts: [{ text: m('x =') }, { input: { answer: Math.min(p, q), width: 56 } }, { text: 'or ' + m('x =') }, { input: { answer: Math.max(p, q), width: 56 } }] },
+                   explain: 'Factorise: ' + m(`(${T(lx(1, -p))})(${T(lx(1, -q))}) = 0`) + `, so x = ${p} or x = ${q}. These are where the graph crosses the x-axis.` };
+        })] },
+
+      { challenge: 'only', name: 'Factorising by grouping', learn: 'grouping',
+        items: [Sci.gen(rng => {
+          const p = rng.int(2, 7); let q = -rng.int(1, 6);
+          while (p + q === 0) q = -rng.int(1, 6);
+          const sq = v => (v < 0 ? `- ${-v}` : `+ ${v}`);
+          return Sci.order(rng, `Put these steps for factorising ${m(T(qx(1, p + q, p * q)))} by grouping in order.`, [
+            m(T(qx(1, p + q, p * q))),
+            m(`= x^2 ${sq(p)}x ${sq(q)}x ${sq(p * q)}`),
+            m(`= x(x ${sq(p)}) ${sq(q)}(x ${sq(p)})`),
+            m(`= (x ${sq(q)})(x ${sq(p)})`)
+          ], `Split ${p + q}x into ${p}x and ${q}x (they multiply to ${p * q}), factorise each pair, then take out the common bracket.`);
+        })] },
+
+      { challenge: 'only', name: 'Prove it', learn: 'proof',
+        items: [
+          rng => Sci.order(rng, 'Put the steps of this proof in order: the sum of any three consecutive integers is divisible by 3.', [
+            'Call the smallest integer n, so the three are n, n + 1 and n + 2',
+            'Their sum is n + (n + 1) + (n + 2) = 3n + 3',
+            '3n + 3 = 3(n + 1)',
+            'n + 1 is a whole number, so the sum is 3 times a whole number: divisible by 3'
+          ], 'A proof uses a letter for any integer, simplifies, and shows the result has 3 as a factor.'),
+          rng => Sci.order(rng, 'Put the steps of this proof in order: the difference between the squares of two consecutive integers is always odd.', [
+            'Call the integers n and n + 1',
+            'The difference of their squares is (n + 1)² − n²',
+            '(n + 1)² − n² = n² + 2n + 1 − n² = 2n + 1',
+            '2n is even, so 2n + 1 is always odd'
+          ], 'Expand, simplify, and recognise the form 2n + 1 as an odd number.')
+        ] },
+
+      { challenge: 'only', name: 'A taste of NCEA Level 1', learn: 'nonmonic',
+        items: [Sci.gen(rng => {
+          let a = rng.pick([2, 3]), b = nz(rng, -5, 5), c = rng.pick([1, 2, 3]), d = nz(rng, -5, 5);
+          while (gcd(a, b) !== 1) b = nz(rng, -5, 5);
+          while (gcd(c, d) !== 1) d = nz(rng, -5, 5);
+          const target = qx(a * c, a * d + b * c, b * d);
+          const disp = `(${T(lx(a, b))})(${T(lx(c, d))})`;
+          return { prompt: '<strong>NCEA Level 1 style.</strong> Factorise ' + m(T(target)) + '.', tip: TIP_BRACKETS,
+                   input: { kind: 'expr', mode: 'brackets', answer: target, prefix: '=', display: m(disp) },
+                   explain: `Multiply to ${a * c} × ${b * d < 0 ? `(${b * d})` : b * d} = ${a * c * b * d} and add to ${a * d + b * c}: ${a * d} and ${b * c}. Split the middle term and group: ` + m(disp) + '. Expand to check.' };
+        })] }
+    ]
+  });
 })();

@@ -259,7 +259,10 @@ const Algebra = (() => {
     isZero()          { return this.poly.size === 0; }
   }
 
-  function parse(src) { return new Expression(parseTokens(tokenise(src)), String(src)); }
+  /** Phones offer x² and x³ on the keyboard: read them as x^2 and x^3. */
+  const plain = src => String(src).replace(/²/g, '^2').replace(/³/g, '^3');
+
+  function parse(src) { return new Expression(parseTokens(tokenise(plain(src))), String(src)); }
 
   function toPoly(x) {
     if (x instanceof Expression) return x.poly;
@@ -313,5 +316,34 @@ const Algebra = (() => {
     return { ok: true };
   }
 
-  return { parse, tryParse, equal, polyTex, isFactorised, checkFactorised, Expression, fr };
+  /**
+   * A quadratic factorised into brackets: (x + 2)(x − 4), 2(x + 1)(x + 3),
+   * (x + 3)² or (x + 3)^2. It must expand to the target, be written as a
+   * product of brackets, and no bracket may have a common factor left in it.
+   */
+  const BRACKETS_RE = /^(-?\d*)\(([^()]+)\)(?:\(([^()]+)\)|\^2)$/;
+  function checkBrackets(src, target) {
+    const t = tryParse(src);
+    if (!t.ok) return { ok: false, why: t.error };
+    if (!equal(t.expr, target)) return { ok: false, why: 'That does not expand back to the original.' };
+    const m = BRACKETS_RE.exec(plain(src).replace(/[−–—]/g, '-').replace(/\s+/g, ''));
+    if (!m) return { ok: false, why: 'Write it as a product of brackets, such as (x + 2)(x − 5).' };
+    for (const b of [m[2], m[3]].filter(Boolean)) {
+      let inner;
+      try { inner = parse(b).poly; } catch (_) { return { ok: false, why: 'Check the brackets.' }; }
+      if (inner.size > 1 && polyContent(inner) !== 1) return { ok: false, why: 'Not fully factorised: a bracket still has a common factor.' };
+    }
+    return { ok: true };
+  }
+
+  /** An expanded answer: the right value, with no brackets left in it. */
+  function checkExpanded(src, target) {
+    const t = tryParse(src);
+    if (!t.ok) return { ok: false, why: t.error };
+    if (/[()]/.test(src)) return { ok: false, why: 'Expand it fully: the answer should have no brackets.' };
+    if (!equal(t.expr, target)) return { ok: false, why: null };
+    return { ok: true };
+  }
+
+  return { parse, tryParse, equal, polyTex, isFactorised, checkFactorised, checkBrackets, checkExpanded, Expression, fr };
 })();

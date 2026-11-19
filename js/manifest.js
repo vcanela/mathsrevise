@@ -118,10 +118,11 @@ const Manifest = (() => {
       topicFiles: ['maths-reasoning'], ahead: true, mix: false,
       challengeName: 'Challenge set', challengeTag: 'Challenge',
       challengeNote: 'Challenge questions: the same ideas, taken to a high standard.',
-      blurb: 'Pythagoras and straight-line graphs, with the reasoning written out: Years 9 and 10, on the way to NCEA Level 1.',
+      blurb: 'Pythagoras, straight-line graphs, and expanding and factorising, with the reasoning written out: Years 9 and 10, on the way to NCEA Level 1.',
       exercises: [
         { id: 'mr1', code: 'R1', slug: 'pythagoras', title: 'Pythagoras’ Theorem', tag: 'Finding sides, checking right angles, triples', year: 9, ncea: '1.4', challenge: true },
-        { id: 'mr2', code: 'R2', slug: 'straight-lines', title: 'Straight-Line Graphs', tag: 'Gradient, y-intercept, y = mx + c', year: 10, ncea: '1.4', challenge: true }
+        { id: 'mr2', code: 'R2', slug: 'straight-lines', title: 'Straight-Line Graphs', tag: 'Gradient, y-intercept, y = mx + c', year: 10, ncea: '1.4', challenge: true },
+        { id: 'mr3', code: 'R3', slug: 'expanding-factorising', title: 'Expanding and Factorising', tag: 'Two brackets, quadratics, solving by factorising', year: 10, ncea: '1.4', challenge: true }
       ]
     },
 
