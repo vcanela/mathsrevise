@@ -260,6 +260,10 @@ the unit header.
 | Unit | Exercises | Covers | Leads to |
 |---|---|---|---|
 | Data and Claims (`maths/statistics.html`) | S1 Summarising Data (Year 9), S2 Judging Claims (Year 10) | statistical questions, five-number summary, IQR, box plots, mean or median; samples, bias, sample size, misleading graphs, interpolation and extrapolation | 1.1, 1.3 |
+| Mathematical Reasoning (`maths/reasoning.html`) | R1 Pythagoras’ Theorem (Year 9), R2 Straight-Line Graphs (Year 10) | finding sides, checking right angles, triples, finding the mistake in working, the proof and the distance formula (Challenge); gradient, y-intercept, y = mx + c from a graph or two points | 1.4 |
+
+Trigonometry and simultaneous equations are not in the Years 9–10 curriculum, so the reasoning
+unit leaves them out.
 
 These units are `ahead: true`: built with the `Sci` helpers like science (topic file
 `maths-statistics.js`), laid out at `maths/<key>/<slug>.html`, and kept out of the daily mix

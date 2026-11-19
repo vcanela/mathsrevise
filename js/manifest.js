@@ -113,6 +113,17 @@ const Manifest = (() => {
         { id: 'ms2', code: 'S2', slug: 'judging-claims', title: 'Judging Claims', tag: 'Samples, bias and misleading graphs', year: 10, ncea: '1.3', challenge: true }
       ]
     },
+    {
+      key: 'reasoning', subject: 'maths', short: 'Mathematical Reasoning', name: 'Mathematical Reasoning', icon: 'R',
+      topicFiles: ['maths-reasoning'], ahead: true, mix: false,
+      challengeName: 'Challenge set', challengeTag: 'Challenge',
+      challengeNote: 'Challenge questions: the same ideas, taken to a high standard.',
+      blurb: 'Pythagoras and straight-line graphs, with the reasoning written out: Years 9 and 10, on the way to NCEA Level 1.',
+      exercises: [
+        { id: 'mr1', code: 'R1', slug: 'pythagoras', title: 'Pythagoras’ Theorem', tag: 'Finding sides, checking right angles, triples', year: 9, ncea: '1.4', challenge: true },
+        { id: 'mr2', code: 'R2', slug: 'straight-lines', title: 'Straight-Line Graphs', tag: 'Gradient, y-intercept, y = mx + c', year: 10, ncea: '1.4', challenge: true }
+      ]
+    },
 
     // ── Science ─────────────────────────────────────────────────────────────
     // Topics follow the knowledge headings of Phase 3 (Years 7–8) in the
