@@ -775,4 +775,305 @@
         })] }
     ]
   });
+
+  // ═══ R4 Area, volume and units ════════════════════════════════════════════
+  // Year 9 and 10 measurement (p. 42): areas of parallelograms, trapeziums and
+  // kites; circumference and area of circles, half and quarter circles and
+  // composite shapes; surface area and volume of prisms and cylinders (and
+  // pyramids, in the Challenge set); converting units, squared for area and
+  // cubed for volume; scale factors; significant figures. The 2025 NCEA 1.4
+  // paper asked for volume with mass and unit conversions, so water's
+  // 1 L = 1 kg is here too.
+
+  const PI = Math.PI;
+  /** Accept a π of 3.14 as well as the calculator's, at the precision asked. */
+  const tolFor = v => Math.max(0.051, Math.abs(v) * 0.0012);
+  const ONE_DP = 'Use the π button and round at the end, to 1 decimal place.';
+
+  /** A trapezium (parallel sides a on top and b on the bottom, height h) or a parallelogram (a = b). */
+  function trap(d, o) {
+    const pad = 26, s = Math.min((d.w - 2 * pad) / Math.max(o.b, o.a + o.off), (d.h - 2 * pad) / o.h);
+    const x0 = (d.w - o.b * s) / 2, yB = d.h - pad, yT = yB - o.h * s;
+    const P = [[x0, yB], [x0 + o.b * s, yB], [x0 + (o.off + o.a) * s, yT], [x0 + o.off * s, yT]];
+    d.polygon(P, { fill: 'var(--dia-fill)', width: 1.8 });
+    const hx = x0 + o.off * s;
+    d.line([hx, yT], [hx, yB], { stroke: MUTED, width: 1.2, dash: '4 3' });
+    d.add('path', { d: `M ${hx + 8} ${yB} L ${hx + 8} ${yB - 8} L ${hx} ${yB - 8}`, fill: 'none', stroke: MUTED, 'stroke-width': 1.1 });
+    d.text([(P[2][0] + P[3][0]) / 2, yT - 10], o.labels[0], { size: 12.5 });
+    d.text([(P[0][0] + P[1][0]) / 2, yB + 15], o.labels[1], { size: 12.5 });
+    d.text([hx + 6, (yT + yB) / 2], o.labels[2], { size: 12.5, anchor: 'start' });
+  }
+
+  /** A rectangle w × h with a semicircle on its top edge (diameter w). */
+  function archDia(d, o) {
+    const pad = 24, s = Math.min((d.w - 2 * pad) / o.w, (d.h - 2 * pad) / (o.h + o.w / 2));
+    const W = o.w * s, H = o.h * s, R = W / 2, x0 = (d.w - W) / 2, yB = d.h - pad, yT = yB - H;
+    d.add('path', { d: `M ${x0} ${yB} L ${x0 + W} ${yB} L ${x0 + W} ${yT} A ${R} ${R} 0 0 0 ${x0} ${yT} Z`,
+                    fill: 'var(--dia-fill)', stroke: INK, 'stroke-width': 1.8 });
+    d.line([x0, yT], [x0 + W, yT], { stroke: MUTED, width: 1.1, dash: '4 3' });
+    d.text([x0 + W / 2, yB + 15], o.labels[0], { size: 12.5 });
+    d.text([x0 + W + 6, yB - H / 2], o.labels[1], { size: 12.5, anchor: 'start' });
+  }
+
+  /** A cylinder of radius r and height h, drawn upright, with labels. */
+  function cylDia(d, o) {
+    const pad = 24, s = Math.min((d.w - 2 * pad - 40) / (2 * o.r), (d.h - 2 * pad - 20) / o.h);
+    const R = o.r * s, H = o.h * s, ry = Math.max(6, R * 0.28), cx = d.w / 2 - 14, yT = pad + ry, yB = yT + H;
+    d.add('path', { d: `M ${cx - R} ${yT} L ${cx - R} ${yB} A ${R} ${ry} 0 0 0 ${cx + R} ${yB} L ${cx + R} ${yT}`,
+                    fill: 'var(--dia-fill)', stroke: INK, 'stroke-width': 1.8 });
+    d.add('ellipse', { cx, cy: yT, rx: R, ry, fill: 'var(--dia-fill)', stroke: INK, 'stroke-width': 1.8 });
+    d.add('path', { d: `M ${cx - R} ${yB} A ${R} ${ry} 0 0 1 ${cx + R} ${yB}`, fill: 'none', stroke: MUTED, 'stroke-width': 1.1, 'stroke-dasharray': '4 3' });
+    d.line([cx, yT], [cx + R, yT], { stroke: ACC, width: 1.6 });
+    d.dot([cx, yT], { r: 2.4 });
+    d.text([cx + R / 2, yT - ry - 6], o.labels[0], { size: 12.5 });
+    d.text([cx + R + 8, (yT + yB) / 2], o.labels[1], { size: 12.5, anchor: 'start' });
+  }
+
+  /** A cuboid in oblique view: length across, width back, height up. */
+  function boxDia(d, o) {
+    const pad = 24, k = 0.45;
+    const s = Math.min((d.w - 2 * pad - 30) / (o.l + o.w * k), (d.h - 2 * pad) / (o.h + o.w * k));
+    const L = o.l * s, H = o.h * s, Wx = o.w * s * k, Wy = o.w * s * k;
+    const x0 = (d.w - L - Wx) / 2, yB = d.h - pad;
+    const F = [[x0, yB], [x0 + L, yB], [x0 + L, yB - H], [x0, yB - H]];
+    const B = F.map(([x, y]) => [x + Wx, y - Wy]);
+    d.polygon([F[3], F[2], B[2], B[3]], { fill: 'var(--dia-fill)', width: 1.6 });
+    d.polygon([F[1], B[1], B[2], F[2]], { fill: 'var(--dia-fill)', width: 1.6 });
+    d.polygon(F, { fill: 'var(--dia-fill)', width: 1.8 });
+    d.text([x0 + L / 2, yB + 15], o.labels[0], { size: 12.5 });
+    d.text([x0 + L + Wx / 2 + 8, yB - Wy / 2 + 4], o.labels[1], { size: 12.5, anchor: 'start' });
+    d.text([x0 - 6, yB - H / 2], o.labels[2], { size: 12.5, anchor: 'end' });
+  }
+
+  Sci.topic({
+    id: 'mr4', unit: 'reasoning',
+    title: 'Area, Volume and Units',
+    blurb: 'Areas of circles and composite shapes, the volume and surface area of prisms and cylinders, and converting units: squared for area, cubed for volume.',
+    hint: 'Circle: C = 2πr and A = πr². Prism or cylinder: volume = area of the cross-section × length. 1 cm³ = 1 mL, 1000 cm³ = 1 L, 1 m³ = 1000 L, and 1 L of water has a mass of 1 kg. ' +
+          'Converting area, square the length factor (1 m² = 10 000 cm²); volume, cube it (1 m³ = 1 000 000 cm³).',
+
+    learn: [
+      { id: 'quads', title: 'Parallelograms, trapeziums, kites',
+        diagram: { w: 240, h: 140, caption: 'A trapezium: parallel sides a and b, perpendicular height h.' },
+        draw(d) { trap(d, { a: 5, b: 9, h: 4, off: 1.5, labels: ['a', 'b', 'h'] }); },
+        text: '<ul><li>Parallelogram: ' + m('A = bh') + ', base times <em>perpendicular</em> height. Cut a triangle off one end and move it: a rectangle.</li>' +
+              '<li>Trapezium: ' + m('A = \\tfrac{1}{2}(a + b)h') + ': the mean of the parallel sides times the height.</li>' +
+              '<li>Kite: ' + m('A = \\tfrac{1}{2}xy') + ', half the product of the diagonals.</li></ul>' },
+      { id: 'circle', title: 'Circles',
+        text: '<p>' + m('\\pi = 3.14159\\ldots') + ' is a circle’s circumference divided by its diameter.</p>' +
+              '<ul><li>Circumference: ' + m('C = 2\\pi r = \\pi d') + '</li><li>Area: ' + m('A = \\pi r^2') + '</li></ul>' +
+              '<p>Check whether you are given the radius or the diameter: the radius is half the diameter.</p>' },
+      { id: 'parts', title: 'Half and quarter circles',
+        text: '<p>A semicircle has half the area, ' + m('\\tfrac{1}{2}\\pi r^2') + '. Its perimeter is half the circumference <em>plus the diameter</em>: ' + m('\\pi r + 2r') + '.</p>' +
+              '<p>A quarter circle: area ' + m('\\tfrac{1}{4}\\pi r^2') + ', perimeter ' + m('\\tfrac{1}{2}\\pi r + 2r') + ' (a quarter of the circumference plus two radii).</p>' },
+      { id: 'composite', title: 'Composite shapes',
+        diagram: { w: 200, h: 170, caption: 'A rectangle with a semicircle on top.' },
+        draw(d) { archDia(d, { w: 6, h: 4, labels: ['6 m', '4 m'] }); },
+        text: '<p>Split the shape into pieces you know, find each area, then add (or subtract a hole).</p>' },
+      { id: 'prism', title: 'Volume of a prism or cylinder',
+        text: '<p>A prism has the same cross-section all the way along:</p><p style="text-align:center">' + m('V = A \\times l') + '</p>' +
+              '<ul><li>Cuboid: ' + m('V = lwh') + '</li><li>Triangular prism: ' + m('V = \\tfrac{1}{2}bh \\times l') + '</li><li>Cylinder: ' + m('V = \\pi r^2 h') + '</li></ul>' },
+      { id: 'surface', title: 'Surface area',
+        text: '<p>Add the areas of every face. A net helps you not miss one.</p>' +
+              '<ul><li>Cuboid: ' + m('2(lw + lh + wh)') + '</li><li>Closed cylinder: two circles and a rectangle that wraps round, ' + m('2\\pi r^2 + 2\\pi r h') + '</li></ul>' },
+      { id: 'units', title: 'Converting area and volume',
+        text: Sci.table(['Length', 'Area', 'Volume'], [['1 cm = 10 mm', '1 cm² = 100 mm²', '1 cm³ = 1000 mm³'], ['1 m = 100 cm', '1 m² = 10 000 cm²', '1 m³ = 1 000 000 cm³']]) +
+              '<p>Square the length factor for area and cube it for volume: a 1 m square is 100 cm by 100 cm.</p>' },
+      { id: 'capacity', title: 'Capacity and mass of water',
+        text: '<ul><li>1 cm³ = 1 mL</li><li>1000 cm³ = 1 L</li><li>1 m³ = 1000 L</li><li>1 L of water has a mass of 1 kg; 1 m³ of water, 1 tonne.</li></ul>' },
+      { id: 'scale', title: 'Scaling a shape',
+        text: '<p>Enlarge every length by a scale factor k: perimeters multiply by k, areas by ' + m('k^2') + ', and volumes by ' + m('k^3') + '.</p>' +
+              '<p>Double every length of a box, and it holds 2 × 2 × 2 = 8 times as much.</p>' },
+      { id: 'sigfig', title: 'Significant figures',
+        text: '<p>Count from the first non-zero digit. 0.004 507 has 4 significant figures; to 2 s.f. it is 0.0045. 38 260 to 3 s.f. is 38 300.</p>' +
+              '<p>An answer cannot be more precise than the least precise measurement used, and you round only at the end.</p>' },
+      { id: 'pyramid', title: 'Pyramids',
+        text: '<p>A pyramid holds a third of the prism with the same base and height: ' + m('V = \\tfrac{1}{3} A h') + '.</p>' }
+    ],
+
+    examples: [
+      {
+        title: 'Example 1: a cylinder’s capacity',
+        steps: ['A cylindrical water tank has radius 1.2 m and height 2 m.', m('V = \\pi \\times 1.2^2 \\times 2 = 9.047\\ldots') + ' m³.',
+                '1 m³ = 1000 L, so it holds about 9047 L: a mass of about 9 tonnes of water.'],
+        result: 'About 9050 L'
+      },
+      {
+        title: 'Example 2: converting area',
+        steps: ['A poster is 0.6 m². How many cm² is that?', '1 m² = 100 × 100 = 10 000 cm².', '0.6 × 10 000 = 6000 cm².'],
+        result: '6000 cm²'
+      }
+    ],
+
+    slots: [
+      { name: 'Trapeziums and parallelograms', learn: 'quads',
+        items: [Sci.gen(rng => {
+          const para = rng.chance();
+          const b = rng.int(6, 14), a = para ? b : rng.int(3, b - 2), h = rng.int(3, 9), u = rng.pick(['cm', 'm']);
+          const A = para ? b * h : (a + b) / 2 * h, off = para ? 2 : (b - a) / 2;
+          return { prompt: `Find the area of this ${para ? 'parallelogram' : 'trapezium'}.`, diagram: { w: 240, h: 150 },
+                   draw: d => trap(d, { a, b, h, off, labels: [`${a} ${u}`, `${b} ${u}`, `${h} ${u}`] }),
+                   input: { kind: 'number', answer: A, tol: 0.01, decimal: true, suffix: u + '²', width: 70 },
+                   explain: para ? m(`A = bh = ${b} \\times ${h} = ${A}`) + ` ${u}²: the slanted side is not the height.`
+                                 : m(`A = \\tfrac{1}{2}(${a} + ${b}) \\times ${h} = ${num(A)}`) + ` ${u}².` };
+        })] },
+
+      { name: 'Circumference', learn: 'circle',
+        items: [Sci.gen(rng => {
+          const r = rng.int(2, 15), dia = rng.chance(), C = 2 * PI * r;
+          return { prompt: `A circular garden has ${dia ? 'diameter ' + 2 * r : 'radius ' + r} m. What is its circumference?`, tip: ONE_DP,
+                   input: { kind: 'number', answer: r1(C), tol: tolFor(C), decimal: true, suffix: 'm', width: 80 },
+                   explain: dia ? m(`C = \\pi d = \\pi \\times ${2 * r} = ${C.toFixed(3)}\\ldots`) + ` ≈ ${r1(C)} m.` : m(`C = 2\\pi r = 2 \\times \\pi \\times ${r} = ${C.toFixed(3)}\\ldots`) + ` ≈ ${r1(C)} m.` };
+        })] },
+
+      { name: 'Area of a circle', learn: 'circle',
+        items: [Sci.gen(rng => {
+          const r = rng.int(2, 12), dia = rng.chance(), A = PI * r * r;
+          return { prompt: `A circular hāngī pit has ${dia ? 'diameter ' + 2 * r * 10 + ' cm' : 'radius ' + r * 10 + ' cm'}. What area of ground does it cover, in cm²?`, tip: ONE_DP,
+                   input: { kind: 'number', answer: r1(A * 100), tol: tolFor(A * 100), decimal: true, suffix: 'cm²', width: 90 },
+                   explain: (dia ? `The radius is half the diameter: ${r * 10} cm. ` : '') + m(`A = \\pi r^2 = \\pi \\times ${r * 10}^2 = ${(A * 100).toFixed(2)}\\ldots`) + ` ≈ ${r1(A * 100)} cm².` };
+        })] },
+
+      { name: 'Half and quarter circles', learn: 'parts',
+        items: [Sci.gen(rng => {
+          const r = rng.int(2, 10), half = rng.chance(), perim = rng.chance();
+          const val = perim ? (half ? PI * r + 2 * r : PI * r / 2 + 2 * r) : (half ? PI * r * r / 2 : PI * r * r / 4);
+          const what = half ? 'semicircle' : 'quarter circle';
+          return { prompt: `A ${what} has radius ${r} cm. What is its ${perim ? 'perimeter' : 'area'}?`, tip: ONE_DP,
+                   input: { kind: 'number', answer: r1(val), tol: tolFor(val), decimal: true, suffix: perim ? 'cm' : 'cm²', width: 80 },
+                   explain: perim ? (half ? m(`\\pi \\times ${r} + 2 \\times ${r}`) : m(`\\tfrac{1}{2}\\pi \\times ${r} + 2 \\times ${r}`)) + ` = ${val.toFixed(3)}… ≈ ${r1(val)} cm. Don’t forget the straight edge${half ? '' : 's'}.`
+                                  : (half ? m(`\\tfrac{1}{2}\\pi \\times ${r}^2`) : m(`\\tfrac{1}{4}\\pi \\times ${r}^2`)) + ` = ${val.toFixed(3)}… ≈ ${r1(val)} cm².` };
+        })] },
+
+      { name: 'Composite area', learn: 'composite',
+        items: [Sci.gen(rng => {
+          const w = 2 * rng.int(2, 6), h = rng.int(3, 9), A = w * h + PI * (w / 2) ** 2 / 2;
+          return { prompt: 'A window is a rectangle with a semicircle on top. Find its area.', tip: ONE_DP, diagram: { w: 200, h: 180 },
+                   draw: d => archDia(d, { w, h, labels: [`${w} dm`, `${h} dm`] }),
+                   input: { kind: 'number', answer: r1(A), tol: tolFor(A), decimal: true, suffix: 'dm²', width: 80 },
+                   explain: `Rectangle: ${w} × ${h} = ${w * h}. Semicircle of radius ${w / 2}: ` + m(`\\tfrac{1}{2}\\pi \\times ${w / 2}^2 = ${(PI * (w / 2) ** 2 / 2).toFixed(3)}`) + `. Total ≈ ${r1(A)} dm².` };
+        })] },
+
+      { name: 'Volume of a prism', learn: 'prism',
+        items: [Sci.gen(rng => {
+          const l = rng.int(3, 12), w = rng.int(2, 8), h = rng.int(2, 9);
+          return { prompt: 'Find the volume of this box.', diagram: { w: 240, h: 160 },
+                   draw: d => boxDia(d, { l, w, h, labels: [`${l} cm`, `${w} cm`, `${h} cm`] }),
+                   input: { kind: 'number', answer: l * w * h, suffix: 'cm³', width: 80 },
+                   explain: m(`V = lwh = ${l} \\times ${w} \\times ${h} = ${l * w * h}`) + ' cm³.' };
+        }), Sci.gen(rng => {
+          const b = rng.int(2, 8), h = rng.int(2, 8), l = rng.int(4, 15), A = b * h / 2;
+          return { prompt: `A tent is a triangular prism. Its triangular end has base ${b} m and height ${h} m, and it is ${l} m long. What is its volume?`,
+                   input: { kind: 'number', answer: A * l, tol: 0.01, decimal: true, suffix: 'm³', width: 80 },
+                   explain: `Cross-section: ` + m(`\\tfrac{1}{2} \\times ${b} \\times ${h} = ${num(A)}`) + ' m². ' + m(`V = ${num(A)} \\times ${l} = ${num(A * l)}`) + ' m³.' };
+        })] },
+
+      { name: 'Cylinders and litres', learn: 'capacity',
+        items: [Sci.gen(rng => {
+          const r = rng.int(3, 12), h = rng.int(8, 30), V = PI * r * r * h, L = V / 1000;
+          return { prompt: `A cylindrical pot has radius ${r} cm and height ${h} cm. How many litres does it hold, to 1 decimal place?`, diagram: { w: 200, h: 170 },
+                   draw: d => cylDia(d, { r, h, labels: [`${r} cm`, `${h} cm`] }),
+                   input: { kind: 'number', answer: r1(L), tol: Math.max(0.051, L * 0.0012), decimal: true, suffix: 'L', width: 70 },
+                   explain: m(`V = \\pi \\times ${r}^2 \\times ${h} = ${V.toFixed(1)}`) + ` cm³. 1000 cm³ = 1 L, so ${V.toFixed(1)} ÷ 1000 ≈ ${r1(L)} L.` };
+        })] },
+
+      { name: 'Surface area', learn: 'surface',
+        items: [Sci.gen(rng => {
+          const l = rng.int(3, 12), w = rng.int(2, 8), h = rng.int(2, 9), S = 2 * (l * w + l * h + w * h);
+          return { prompt: 'How much card is needed to make this closed box? Find its surface area.', diagram: { w: 240, h: 160 },
+                   draw: d => boxDia(d, { l, w, h, labels: [`${l} cm`, `${w} cm`, `${h} cm`] }),
+                   input: { kind: 'number', answer: S, suffix: 'cm²', width: 80 },
+                   explain: m(`2(${l} \\times ${w} + ${l} \\times ${h} + ${w} \\times ${h}) = 2(${l * w} + ${l * h} + ${w * h}) = ${S}`) + ' cm².' };
+        }), Sci.gen(rng => {
+          const r = rng.int(2, 9), h = rng.int(4, 20), S = 2 * PI * r * r + 2 * PI * r * h;
+          return { prompt: `A closed tin is a cylinder with radius ${r} cm and height ${h} cm. What is its surface area?`, tip: ONE_DP,
+                   input: { kind: 'number', answer: r1(S), tol: tolFor(S), decimal: true, suffix: 'cm²', width: 90 },
+                   explain: 'Two circles and the wrap-around rectangle: ' + m(`2\\pi \\times ${r}^2 + 2\\pi \\times ${r} \\times ${h} = ${S.toFixed(2)}\\ldots`) + ` ≈ ${r1(S)} cm².` };
+        })] },
+
+      { name: 'Converting area and volume', learn: 'units',
+        items: [Sci.gen(rng => {
+          const [q, from, to, f, why] = rng.pick([
+            [rng.pick([2, 3.5, 0.6, 12]), 'm²', 'cm²', 10000, '1 m² = 100 × 100 = 10 000 cm²'],
+            [rng.pick([4, 25, 7.5, 0.3]), 'cm²', 'mm²', 100, '1 cm² = 10 × 10 = 100 mm²'],
+            [rng.pick([3, 0.5, 12, 2.4]), 'cm³', 'mm³', 1000, '1 cm³ = 10 × 10 × 10 = 1000 mm³'],
+            [rng.pick([2, 0.25, 1.5, 6]), 'm³', 'cm³', 1000000, '1 m³ = 100 × 100 × 100 = 1 000 000 cm³'],
+            [rng.pick([50000, 25000, 120000]), 'cm²', 'm²', 1e-4, '10 000 cm² = 1 m², so divide by 10 000']]);
+          const ans = +(q * f).toPrecision(10);
+          return { prompt: `Convert ${Fmt.num(q)} ${from} to ${to}.`,
+                   input: { kind: 'number', answer: ans, tol: Math.abs(ans) * 1e-9 + 1e-9, decimal: true, suffix: to, width: 110 },
+                   explain: `${why}. ${Fmt.num(q)} ${from} = ${Fmt.num(ans)} ${to}.` };
+        })] },
+
+      { name: 'Water by volume and mass', learn: 'capacity',
+        items: [Sci.gen(rng => {
+          const l = rng.pick([1.2, 1.5, 2, 2.5]), w = rng.pick([0.8, 1, 1.2]), h = rng.pick([0.5, 0.6, 1]);
+          const V = +(l * w * h).toFixed(4), L = +(V * 1000).toFixed(1);
+          return { prompt: `A water trough is a cuboid ${l} m by ${w} m by ${h} m. When full, what mass of water does it hold, in kg?`,
+                   input: { kind: 'number', answer: L, tol: 0.5, decimal: true, suffix: 'kg', width: 80 },
+                   explain: m(`V = ${l} \\times ${w} \\times ${h} = ${num(V)}`) + ` m³ = ${Fmt.num(L)} L. Each litre of water is 1 kg, so ${Fmt.num(L)} kg.` };
+        })] },
+
+      { name: 'Find the mistake', learn: 'units',
+        items: [
+          Sci.gen(rng => {
+            const q = rng.pick([3, 5, 8]);
+            return Sci.spot(rng, { prompt: `A student converts ${q} m² to cm². Which line is wrong?`,
+              lines: ['1 m = 100 cm', `So 1 m² = 100 cm²`, `${q} m² = ${q * 100} cm²`], wrong: 1,
+              explain: `A square metre is 100 cm by 100 cm: 1 m² = 10 000 cm², so ${q} m² = ${Fmt.num(q * 10000)} cm².` });
+          }),
+          Sci.gen(rng => {
+            const dd = 2 * rng.int(3, 9);
+            return Sci.spot(rng, { prompt: `A student finds the area of a circle with diameter ${dd} cm. Which line is wrong?`,
+              lines: [m('A = \\pi r^2'), m(`A = \\pi \\times ${dd}^2`), m(`A = ${(PI * dd * dd).toFixed(1)}`) + ' cm²'], wrong: 1,
+              explain: `The radius is half the diameter, ${dd / 2} cm: ` + m(`A = \\pi \\times ${dd / 2}^2 = ${(PI * dd * dd / 4).toFixed(1)}`) + ' cm².' });
+          })
+        ] },
+
+      // ── Challenge set.
+      { challenge: 'only', name: 'Scale factors', learn: 'scale',
+        items: [Sci.gen(rng => {
+          const k = rng.pick([2, 3, 1.5, 4]), area = rng.chance(), base = rng.pick([12, 20, 40, 50]);
+          const ans = area ? base * k * k : base * k ** 3;
+          return { prompt: `A model ${area ? 'has a surface area of' : 'has a volume of'} ${base} ${area ? 'cm²' : 'cm³'}. Every length is multiplied by ${num(k)}. What is the new ${area ? 'surface area' : 'volume'}?`,
+                   input: { kind: 'number', answer: ans, tol: 0.01, decimal: true, suffix: area ? 'cm²' : 'cm³', width: 90 },
+                   explain: `${area ? 'Area' : 'Volume'} scales by ${area ? m(`k^2 = ${num(k * k)}`) : m(`k^3 = ${num(k ** 3)}`)}: ${base} × ${num(area ? k * k : k ** 3)} = ${num(ans)}.` };
+        })] },
+
+      { challenge: 'only', name: 'Working backwards', learn: 'prism',
+        items: [Sci.gen(rng => {
+          const r = rng.int(3, 10), h = rng.int(5, 25), L = Math.round(PI * r * r * h) / 1000;
+          const hh = L * 1000 / (PI * r * r);
+          return { prompt: `A cylindrical vase has radius ${r} cm and holds ${num(L)} L. How tall is it, to 1 decimal place?`, tip: ONE_DP,
+                   input: { kind: 'number', answer: r1(hh), tol: Math.max(0.051, hh * 0.0012), decimal: true, suffix: 'cm', width: 70 },
+                   explain: `${num(L)} L = ${num(L * 1000)} cm³. ` + m(`h = \\dfrac{V}{\\pi r^2} = \\dfrac{${num(L * 1000)}}{\\pi \\times ${r}^2} = ${hh.toFixed(3)}\\ldots`) + ` ≈ ${r1(hh)} cm.` };
+        })] },
+
+      { challenge: 'only', name: 'Pyramids', learn: 'pyramid',
+        items: [Sci.gen(rng => {
+          const s = rng.int(3, 12), h = 3 * rng.int(2, 8);
+          return { prompt: `A pyramid has a square base of side ${s} m and a height of ${h} m. What is its volume?`,
+                   input: { kind: 'number', answer: s * s * h / 3, suffix: 'm³', width: 80 },
+                   explain: m(`V = \\tfrac{1}{3} \\times ${s}^2 \\times ${h} = ${s * s * h / 3}`) + ' m³: a third of the cuboid with the same base and height.' };
+        })] },
+
+      { challenge: 'only', name: 'Significant figures', learn: 'sigfig',
+        items: [Sci.gen(rng => {
+          const v = rng.pick([38264, 0.004507, 152.86, 9.8152, 0.07049, 4386.2]), sf = rng.pick([2, 3]);
+          const ans = +v.toPrecision(sf);
+          return { prompt: `Round ${Fmt.num(v)} to ${sf} significant figures.`,
+                   input: { kind: 'number', answer: ans, tol: Math.abs(ans) * 1e-9, decimal: true, width: 90 },
+                   explain: `Count ${sf} figures from the first non-zero digit and round: ${Fmt.num(ans)}.` };
+        })] },
+
+      { challenge: 'only', name: 'Filling a tank', learn: 'capacity',
+        items: [Sci.gen(rng => {
+          const r = rng.pick([1, 1.2, 1.5]), h = rng.pick([1.8, 2, 2.4]), rate = rng.pick([20, 25, 40]);
+          const L = PI * r * r * h * 1000, mins = L / rate;
+          return { prompt: `<strong>NCEA Level 1 style.</strong> A cylindrical rainwater tank has radius ${r} m and height ${h} m. A hose fills it at ${rate} L per minute. How many hours does it take to fill, to 1 decimal place?`,
+                   input: { kind: 'number', answer: r1(mins / 60), tol: Math.max(0.051, mins / 60 * 0.0012), decimal: true, suffix: 'h', width: 70 },
+                   explain: m(`V = \\pi \\times ${r}^2 \\times ${h} = ${(L / 1000).toFixed(3)}`) + ` m³ = ${Math.round(L)} L. ${Math.round(L)} ÷ ${rate} = ${mins.toFixed(1)} min = ${(mins / 60).toFixed(2)} h ≈ ${r1(mins / 60)} h.` };
+        })] }
+    ]
+  });
 })();
