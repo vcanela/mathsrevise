@@ -249,6 +249,23 @@ rebuilt. Its exercises are `untimed: true`: the countdown is hidden and points d
 used instead of speed (15 unaided, then 12, 10, 8). The unit is `mix: false` in the manifest,
 so the daily mix never draws from it.
 
+### Looking ahead: Years 9–10 and NCEA Level 1
+
+Units 1–6 are Years 7–8 and show a **Y7–8** label on home. Below them, under "Looking ahead to
+NCEA Level 1", sit Years 9–10 units from Phase 4 of the Mathematics and Statistics Years 0–10
+learning area (November 2026). Each exercise names the NCEA Level 1 standard it leads to
+(`ncea: '1.1'` in the manifest; the four titles are in `Manifest.NCEA`), shown on its note and in
+the unit header.
+
+| Unit | Exercises | Covers | Leads to |
+|---|---|---|---|
+| Data and Claims (`maths/statistics.html`) | S1 Summarising Data (Year 9), S2 Judging Claims (Year 10) | statistical questions, five-number summary, IQR, box plots, mean or median; samples, bias, sample size, misleading graphs, interpolation and extrapolation | 1.1, 1.3 |
+
+These units are `ahead: true`: built with the `Sci` helpers like science (topic file
+`maths-statistics.js`), laid out at `maths/<key>/<slug>.html`, and kept out of the daily mix
+and the timed paper, which are for what students are learning now. Quartiles use the halves
+method on even-sized data sets only, so every common school method gives the same answer.
+
 ## Getting unstuck
 
 Every question has a quiet **Stuck?** button that opens help in two steps: first the rule with

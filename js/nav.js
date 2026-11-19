@@ -72,7 +72,8 @@ const Nav = (() => {
   // Science runs two sets of units side by side, Years 7–8 and Years 9–10,
   // so each science row says which years it is for.
   function yearTag(u) {
-    if (u.subject !== 'science') return null;
+    if (u.years) return 'Y' + u.years;
+    if (u.subject !== 'science' && !u.ahead) return null;
     const ys = u.exercises.filter(e => !e.soon && e.year).map(e => +e.year);
     if (!ys.length) return null;
     const lo = Math.min(...ys), hi = Math.max(...ys);
@@ -200,10 +201,15 @@ const Nav = (() => {
         h('div', { class: 'pop-note' },
           h('p', {}, h('strong', { text: 'Revision for maths, science, English and coding, Years 7 to 10. ' }),
             'Maths and English are for Years 7 and 8, with Year 9 challenges when you want more. ' +
+            'Maths also has Years 9–10 units that look ahead to NCEA Level 1. ' +
             'Science has units for Years 7–8 and for Years 9–10, labelled on each row. Coding is for Years 9 and 10.'),
           h('p', { text: 'Every exercise builds new questions each time you open it, so you can practise the same topic ' +
             'as often as you like. Use the set picker inside an exercise if you want everybody to get the same questions. ' +
             'Diagrams are drawn to scale, so measuring off the picture always agrees with the answer.' }),
+          h('p', {}, h('strong', { text: 'Looking ahead to NCEA Level 1 maths. ' }),
+            'NCEA Level 1 has four maths standards: 1.1 exploring data, 1.2 maths in an Aotearoa or Pacific context, ' +
+            '1.3 interpreting information in the media, and 1.4 mathematical reasoning. The Years 9–10 maths units build towards them, ' +
+            'and each exercise says which standard it leads to. They are worth starting early, but they stay out of the daily mix.'),
           h('p', { text: 'Today’s practice is five questions, about two minutes, mixed across the topics you have seen ' +
             'least recently. Any subject counts, and four days a week is the target.' }),
           h('p', { text: 'Point at a section to see what is in it. Progress is saved in this browser only.' }),
@@ -230,8 +236,13 @@ const Nav = (() => {
     for (const s of Manifest.SUBJECTS) {
       const p = Manifest.progress(s.id);
       const isOpen = opened.includes(s.id);
-      const list = h('ul', { class: 'home-list', id: s.id + '-units' }, Manifest.units(s.id).map(unitItem),
-        s.id === 'maths' ? paperItem() : null);
+      // Maths ends with the units that look ahead to NCEA Level 1, under a
+      // heading of their own, after what students are learning now.
+      const all = Manifest.units(s.id), ahead = all.filter(u => u.ahead);
+      const list = h('ul', { class: 'home-list', id: s.id + '-units' }, all.filter(u => !u.ahead).map(unitItem),
+        s.id === 'maths' ? paperItem() : null,
+        ahead.length ? h('li', { class: 'home-sub', text: 'Looking ahead to NCEA Level 1' }) : null,
+        ahead.map(unitItem));
       const toggle = h('button', { type: 'button', class: 'home-col-toggle',
         'aria-expanded': String(isOpen), 'aria-controls': s.id + '-units' },
         h('span', { class: 'home-col-name', text: s.name }),
@@ -290,6 +301,7 @@ const Nav = (() => {
           h('a', { class: 'tool-btn primary', href }, 'Practise'),
           ex.challenge ? h('a', { class: 'tool-btn', href: href + '?set=challenge' }, '★ ' + Manifest.challenge(ex.unit).name) : null),
         h('p', { text: ex.tag }),
+        ex.ncea ? h('p', { class: 'ncea-note', text: `Leads to NCEA ${ex.ncea}: ${Manifest.NCEA[ex.ncea]}` }) : null,
         h('p', { class: 'home-meta', text: [year, rec.attempts ? `best ${rec.bestScore} pts` : 'not started yet']
           .filter(Boolean).join(' · ').replace(/^./, c => c.toUpperCase()) })));
   }
@@ -324,12 +336,13 @@ const Nav = (() => {
     const usual = live.filter(e => yearOf(e) === common.year);
     common.challenge = usual.length > 1 && usual.every(e => e.challenge);
     const facts = [
-      u.subject === 'maths' ? u.short : null,
+      u.subject === 'maths' && !u.ahead ? u.short : null,
       live.length && live.every(e => e.year)
         ? [...new Set(live.map(e => e.year))].sort((a, b) => a - b).map(y => 'Year ' + y).join(' and ') + ' topics' +
           (live.every(e => e.challenge) ? `, each with a ★ ${Manifest.challenge(u).name}` : '')
         : common.year && common.challenge ? `${common.year}, each with a ★ ${Manifest.challenge(u).name}`
-        : common.year
+        : common.year,
+      live.some(e => e.ncea) ? 'Leads to NCEA Level 1: ' + [...new Set(live.map(e => e.ncea).filter(Boolean))].sort().join(' and ') : null
     ].filter(Boolean);
 
     const p = Manifest.progress(u.key);

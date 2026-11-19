@@ -74,7 +74,7 @@ const Paper = (() => {
     const len = LENGTHS[o.length] || LENGTHS.short;
     const units = (o.units && o.units.length ? o.units : MATHS_UNITS);
     const pool = Manifest.live('maths').filter(ex => ex.unit.mix !== false && units.includes(ex.unit.key) && Topics[ex.id]);
-    const problems = Manifest.live('maths').filter(ex => ex.unit.mix === false && Topics[ex.id]);
+    const problems = Manifest.live('maths').filter(ex => ex.unit.mix === false && !ex.unit.ahead && Topics[ex.id]);
     if (!pool.length || !problems.length) throw new Error('no topics to build a paper from');
 
     // Deal topics from a shuffled deck, so a paper repeats a topic only once

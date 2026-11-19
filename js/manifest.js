@@ -96,6 +96,24 @@ const Manifest = (() => {
       ]
     },
 
+    // ── Maths, looking ahead ────────────────────────────────────────────────
+    // Phase 4 (Years 9–10) of the Mathematics and Statistics Years 0–10
+    // learning area, November 2026: the ground NCEA Level 1 stands on. Each
+    // exercise names the Level 1 standard it leads to (NCEA below). These
+    // units stay out of the daily mix and the timed paper, which are for
+    // what students are learning now.
+    {
+      key: 'statistics', subject: 'maths', short: 'Data and Claims', name: 'Data and Claims', icon: 'S',
+      topicFiles: ['maths-statistics'], ahead: true, mix: false,
+      challengeName: 'Challenge set', challengeTag: 'Challenge',
+      challengeNote: 'Challenge questions: the same ideas, taken to a high standard.',
+      blurb: 'Summarising data and judging the claims made with it: statistics for Years 9 and 10, on the way to NCEA Level 1.',
+      exercises: [
+        { id: 'ms1', code: 'S1', slug: 'summarising-data', title: 'Summarising Data', tag: 'Statistical questions, five-number summary, box plots', year: 9, ncea: '1.1', challenge: true },
+        { id: 'ms2', code: 'S2', slug: 'judging-claims', title: 'Judging Claims', tag: 'Samples, bias and misleading graphs', year: 10, ncea: '1.3', challenge: true }
+      ]
+    },
+
     // ── Science ─────────────────────────────────────────────────────────────
     // Topics follow the knowledge headings of Phase 3 (Years 7–8) in the
     // Science Years 0–10 learning area, August 2026, grouped by subject rather
@@ -276,10 +294,27 @@ const Manifest = (() => {
     }
   ];
 
+  // The NCEA Level 1 Mathematics and Statistics standards the look-ahead
+  // units lead to.
+  const NCEA = {
+    '1.1': 'Explore data using a statistical enquiry process',
+    '1.2': 'Use mathematical methods to explore problems that relate to life in Aotearoa New Zealand or the Pacific',
+    '1.3': 'Interpret and apply mathematical and statistical information in context',
+    '1.4': 'Demonstrate mathematical reasoning'
+  };
+
   // ── Paths ─────────────────────────────────────────────────────────────────
   // Every URL in the site is built here, relative to the site root.
   for (const u of UNITS) {
-    if (u.subject === 'maths') {
+    if (u.subject === 'maths' && u.ahead) {
+      u.page = `maths/${u.key}.html`;
+      u.dir  = `maths/${u.key}`;
+      for (const ex of u.exercises) {
+        ex.label = ex.code;
+        ex.href  = `${u.dir}/${ex.slug}.html`;
+      }
+    } else if (u.subject === 'maths') {
+      u.years = '7–8';
       u.page = `units/unit-${u.key}.html`;
       u.dir  = `exercises/unit-${u.key}`;
       u.topicFiles = [u.topicFile];
@@ -361,5 +396,5 @@ const Manifest = (() => {
     return { stars, max: list.length * 3, started, total: list.length };
   }
 
-  return { SUBJECTS, UNITS, unit, units, subject, live, exercise, count, progress, challenge };
+  return { SUBJECTS, UNITS, NCEA, unit, units, subject, live, exercise, count, progress, challenge };
 })();

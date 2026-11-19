@@ -30,7 +30,7 @@ const SKULPT = ['https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js',
                 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js'];
 
 /** The scripts an exercise in this unit needs, in load order. */
-const scriptsFor = u => [...CORE, ...(u.subject !== 'maths' ? SCIENCE : []),
+const scriptsFor = u => [...CORE, ...(u.subject !== 'maths' || u.ahead ? SCIENCE : []),
   ...(u.subject === 'coding' ? ['python'] : []), ...u.topicFiles.map(f => 'topics/' + f),
   ...(u.subject === 'coding' ? SKULPT : [])];
 
@@ -140,7 +140,7 @@ write('practice.html', shell({
 write('paper.html', shell({
   title: 'Timed Paper · Revision',
   up: '',
-  scripts: [...CORE, ...Manifest.units('maths').flatMap(u => u.topicFiles.map(f => 'topics/' + f)), 'paper'],
+  scripts: [...CORE, ...Manifest.units('maths').filter(u => !u.ahead).flatMap(u => u.topicFiles.map(f => 'topics/' + f)), 'paper'],
   boot: 'Paper.start();'
 }));
 
