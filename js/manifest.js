@@ -126,6 +126,17 @@ const Manifest = (() => {
         { id: 'mr4', code: 'R4', slug: 'area-volume-units', title: 'Area, Volume and Units', tag: 'Circles, prisms, cylinders, converting units', year: 10, ncea: '1.4', challenge: true }
       ]
     },
+    {
+      key: 'contexts', subject: 'maths', short: 'Maths in Context', name: 'Maths in Context', icon: 'P',
+      topicFiles: ['maths-contexts'], ahead: true, mix: false,
+      challengeName: 'Challenge set', challengeTag: 'Challenge',
+      challengeNote: 'Challenge questions: the same ideas, taken to a high standard.',
+      blurb: 'Money, rates and multi-step problems from Aotearoa and the Pacific: plan the steps, keep the units, say what you assumed. Years 9 and 10, on the way to NCEA Level 1.',
+      exercises: [
+        { id: 'mc1', code: 'P1', slug: 'money-rates', title: 'Money and Rates', tag: 'GST, discounts, ratios, exchange rates, interest', year: 9, ncea: '1.2', challenge: true },
+        { id: 'mc2', code: 'P2', slug: 'multi-step', title: 'Multi-Step Problems', tag: 'Chaining steps, units, assumptions', year: 10, ncea: '1.2', challenge: true }
+      ]
+    },
 
     // ── Science ─────────────────────────────────────────────────────────────
     // Topics follow the knowledge headings of Phase 3 (Years 7–8) in the

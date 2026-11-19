@@ -261,6 +261,11 @@ the unit header.
 |---|---|---|---|
 | Data and Claims (`maths/statistics.html`) | S1 Summarising Data (Year 9), S2 Judging Claims (Year 10) | statistical questions, five-number summary, IQR, box plots, mean or median; samples, bias, sample size, misleading graphs, interpolation and extrapolation | 1.1, 1.3 |
 | Mathematical Reasoning (`maths/reasoning.html`) | R1 Pythagoras’ Theorem (Year 9), R2 Straight-Line Graphs (Year 10), R3 Expanding and Factorising (Year 10), R4 Area, Volume and Units (Years 9–10) | finding sides, checking right angles, triples, finding the mistake in working, the proof and the distance formula (Challenge); gradient, y-intercept, y = mx + c from a graph or two points; expanding two brackets, special products, factorising x² + bx + c, solving by the zero product property, grouping and algebraic proof (Challenge), and one NCEA-style non-monic quadratic; trapeziums, circles and composite shapes, prisms and cylinders, surface area, converting area and volume units, capacity and the mass of water, scale factors and significant figures (Challenge) | 1.4 |
+| Maths in Context (`maths/contexts.html`) | P1 Money and Rates (Years 9–10), P2 Multi-Step Problems (Year 10) | GST in and out, discounts and mark-ups, percentage change, ratio sharing, best buys, Pacific exchange rates, simple and month-by-month compound interest; ferry, fuel, paint, rainwater, planting and concrete problems that chain several steps, with ordering the steps, units, assumptions, predictions and checking reasonableness | 1.2 |
+
+NCEA 1.2 is an internal, so Maths in Context trains its parts rather than the assessment:
+chaining four or more processes, units, a logical order (Merit), and assumptions, limitations
+and predictions (Excellence). Exchange rates and prices are set in each question, not live.
 
 Trigonometry and simultaneous equations are not in the Years 9–10 curriculum, so the reasoning
 unit leaves them out.
