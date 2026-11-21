@@ -1697,3 +1697,20 @@ code.out { font-family: var(--font-mono); background: var(--code-bg); padding: 0
   border: 1px solid var(--line, #d8d2c4); border-radius: var(--radius-s); overflow: hidden; line-height: 0;
 }
 .turtle-canvas canvas { max-width: 100%; height: auto; }
+
+/* ── Diagnostic check-in ──────────────────────────────────────────────────── */
+.diag { max-width: 760px; margin: 1.2rem auto 2rem; padding: 0 1rem; }
+.diag-intro { background: var(--surface); box-shadow: var(--sheet-shadow); border-radius: 2px; padding: 1.4rem 1.5rem 1.5rem; }
+.diag-intro h1 { font-size: 1.6rem; margin-bottom: 0.6rem; }
+.diag-intro h2 { font-size: 1.1rem; margin: 1.1rem 0 0.4rem; }
+.diag-intro ul { padding-left: 1.2rem; display: grid; gap: 0.45rem; }
+.diag-intro p { margin-top: 0.6rem; }
+.diag-lead { font-size: 1.05rem; }
+.diag-small { font-size: 0.85rem; color: var(--ink-soft); }
+.diag-actions { display: flex; gap: 0.6rem; justify-content: flex-end; align-items: center; flex-wrap: wrap; margin-top: 1rem; }
+.diag-actions .ans-box { flex: 1 1 12rem; }
+.diag-head { display: flex; justify-content: space-between; gap: 1rem; font-family: var(--font-sans); font-size: 0.85rem; color: var(--ink-soft); margin: 0 0.2rem 0.6rem; }
+.diag-section { font-weight: 600; color: var(--accent-ink); }
+/* No marking is shown: the inputs' own check buttons and any colouring are hidden. */
+.diag-card .qsubmit, .diag-card .sort-check, .diag-card .write-review, .diag-card .write-copy { display: none !important; }
+

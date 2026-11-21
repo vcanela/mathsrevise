@@ -135,6 +135,16 @@ write('practice.html', shell({
   boot: 'Practice.start();'
 }));
 
+// ── Diagnostic ───────────────────────────────────────────────────────────────
+// A one-sitting check-in for one subject (?subject=maths), sent by the teacher
+// and not linked from home. Loads every topic, like the daily mix.
+write('diagnostic.html', shell({
+  title: 'Check-in · Revision',
+  up: '',
+  scripts: [...CORE, ...SCIENCE, 'python', ...ALL_TOPICS, 'diagnostic'],
+  boot: 'Diagnostic.start();'
+}));
+
 // ── Timed paper ──────────────────────────────────────────────────────────────
 // Maths only, so it loads the maths topic files.
 write('paper.html', shell({

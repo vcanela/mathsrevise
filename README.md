@@ -279,6 +279,22 @@ These units are `ahead: true`: built with the `Sci` helpers like science (topic 
 and the timed paper, which are for what students are learning now. Quartiles use the halves
 method on even-sized data sets only, so every common school method gives the same answer.
 
+## Diagnostic check-in
+
+`diagnostic.html?subject=maths` is a one-sitting check of where a student is up to, sent by the
+teacher and not linked from home. It walks a ladder of every topic, easiest first: Units 1–5,
+then the Years 9–10 look-ahead units, then Unit 6. Each topic asks one question at normal
+difficulty, and a harder one only if that was right. Every Units 1–5 topic is always asked; from
+the look-ahead on, six topics in a row missed or skipped ends the sitting (the ceiling). It also
+ends at 30 minutes of time on the page.
+
+Marking is silent: answers are checked so the ladder knows what to ask next, but the student sees
+no marks or solutions. Skips are recorded as skips. Stars, XP and the weekly target are not
+touched. Progress saves to `localStorage` (`mrg_diag_<subject>`), so a reload carries on;
+`&restart=1` starts afresh. At the end the student downloads a plain text file with every
+question, their answer, the correct answer, the worked solution, the time taken, and their
+practice history from the site.
+
 ## Getting unstuck
 
 Every question has a quiet **Stuck?** button that opens help in two steps: first the rule with
