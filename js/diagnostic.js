@@ -31,23 +31,29 @@ const Diagnostic = (() => {
   const KEY = s => 'mrg_diag_' + s;
 
   // ── The ladder ────────────────────────────────────────────────────────────
+  /** An exercise's year: 9 for Year 9, 7 for "7–8", none for maths Units 1–6. */
+  const yearOf = e => e.year || (e.years ? parseInt(e.years, 10) : null);
+
   /**
-   * The topics in the order they are asked. Maths: Units 1–5 in order, then
-   * the look-ahead units by year (Year 9 before Year 10), then Unit 6.
+   * The topics in the order they are asked. First everything for Years 7–8
+   * (maths Units 1–5; science and English by year, Year 7 before Year 8),
+   * then the Years 9–10 topics by year, then maths Unit 6 last. The
+   * Years 9–10 topics and Unit 6 are the stretch, where the ceiling rule
+   * applies.
    */
   function ladder(subject) {
-    const units = Manifest.units(subject);
-    const now = units.filter(u => !u.ahead && u.mix !== false);
-    const ahead = units.filter(u => u.ahead);
-    const puzzles = units.filter(u => !u.ahead && u.mix === false);
-    const live = list => list.flatMap(u => u.exercises.filter(e => !e.soon && window.Topics && window.Topics[e.id]));
-    const aheadEx = live(ahead).map((e, i) => ({ e, i })).sort((a, b) => (a.e.year || 9) - (b.e.year || 9) || a.i - b.i).map(x => x.e);
-    const section = e => (e.unit.ahead ? 'Looking ahead: Years 9–10' : e.unit.mix === false ? 'Problem solving' : e.unit.short || e.unit.name);
-    return [...live(now), ...aheadEx, ...live(puzzles)].map(e => ({ id: e.id, label: e.label, title: e.title, unit: e.unit.name, section: section(e), stretch: !!e.unit.ahead || e.unit.mix === false }));
+    const live = Manifest.units(subject).flatMap(u => u.exercises.filter(e => !e.soon && window.Topics && window.Topics[e.id]));
+    const byYear = list => list.map((e, i) => ({ e, i })).sort((a, b) => (yearOf(a.e) || 0) - (yearOf(b.e) || 0) || a.i - b.i).map(x => x.e);
+    const puzzle = e => e.unit.mix === false && !e.unit.ahead;
+    const stretch = e => !!e.unit.ahead || (yearOf(e) || 0) >= 9;
+    const base = byYear(live.filter(e => !puzzle(e) && !stretch(e)));
+    const upper = byYear(live.filter(e => !puzzle(e) && stretch(e)));
+    const section = e => (puzzle(e) ? 'Problem solving' : stretch(e) ? (subject === 'maths' ? 'Looking ahead: Years 9–10' : 'Years 9–10') : e.unit.short || e.unit.name);
+    return [...base, ...upper, ...live.filter(puzzle)].map(e => ({ id: e.id, label: e.label, title: e.title, unit: e.unit.name, section: section(e), stretch: stretch(e) || puzzle(e) }));
   }
 
   // ── Building one question ─────────────────────────────────────────────────
-  const SKIP_KINDS = ['code'];
+  const SKIP_KINDS = ['code', 'write'];
   const isTagged = q => !!q.tag && /challenge|year 9|extension/i.test(q.tag);
 
   /**
@@ -81,6 +87,23 @@ const Diagnostic = (() => {
     return rng.pick(pool.length ? pool : usable);
   }
 
+  /**
+   * The closing writing piece: one of the site's own writing tasks short
+   * enough for about eight minutes (40 to 60 words asked for), from the
+   * normal sets. The seed brings the same task back after a reload.
+   */
+  const WRITE_MIN = 8;
+  function writingTask(subject, seed) {
+    const rng = new RNG(seed), all = [];
+    if (typeof Sci !== 'undefined') { Sci.memory = false; Sci.challenge = false; }
+    for (const t of ladder(subject)) {
+      let qs = [];
+      try { qs = window.Topics[t.id].generate(new RNG(rng.int(1, 1e9)), 'core'); } catch (_) {}
+      for (const q of qs) if (q && q.input && q.input.kind === 'write' && (q.input.minWords || 40) <= 60) all.push(Object.assign(q, { from: t }));
+    }
+    return all.length ? rng.pick(all) : null;
+  }
+
   // ── Plain text, for the export ────────────────────────────────────────────
   /** HTML (with TeX left as written) to readable text. */
   function plain(html) {
@@ -89,6 +112,18 @@ const Diagnostic = (() => {
     div.innerHTML = String(html)
       .replace(/<br\s*\/?>/gi, '\n').replace(/<\/(p|li|tr|h\d|div)>/gi, '\n').replace(/<(td|th)[^>]*>/gi, ' | ');
     return div.textContent.replace(/\\\(|\\\)/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+  }
+
+  /** A question's text, with a reading passage already in the file replaced by a pointer to it. */
+  function promptText(q, seen) {
+    if (!q.passage) return plain(q.prompt);
+    const div = document.createElement('div');
+    div.innerHTML = q.prompt;
+    if (seen.has(q.passage)) {
+      div.querySelectorAll('.passage').forEach(el => el.replaceWith(document.createTextNode(`[Passage “${q.passage}”: printed in full earlier in this file]`)));
+    }
+    seen.add(q.passage);
+    return plain(div.innerHTML);
   }
 
   /** The question's options, for multiple choice and the like. */
@@ -115,7 +150,11 @@ const Diagnostic = (() => {
     if (k === 'choice') return txt(node.querySelector('.picked'));
     if (k === 'spot') { const rows = [...node.querySelectorAll('li')]; const i = rows.findIndex(r => r.classList.contains('picked')); return i < 0 ? '' : `line ${i + 1}: ${txt(rows[i])}`; }
     if (k === 'order') return [...node.querySelectorAll('.order-slot:not(.empty)')].map((s, i) => `${i + 1}. ${txt(s)}`).join('  ');
-    if (k === 'match') return [...node.querySelectorAll('.match-col:first-child button')].map(b => txt(b)).join(' / ');
+    if (k === 'match') return [...node.querySelectorAll('.match-col:first-child button')].map(b => {
+      const tag = b.querySelector('.pair-tag'), c = b.cloneNode(true);
+      c.querySelectorAll('.pair-tag').forEach(x => x.remove());
+      return `${plain(c.innerHTML)} → ${(tag && tag.textContent) || '(none)'}`;
+    }).join(' / ');
     if (k === 'sort') return [...node.querySelectorAll('.sort-list > *')].map(r => {
       const pick = r.querySelector('.sort-btn.picked');
       const item = r.cloneNode(true); item.querySelectorAll('.sort-btn').forEach(b => b.remove());
@@ -145,13 +184,22 @@ const Diagnostic = (() => {
 
   // ── Page ──────────────────────────────────────────────────────────────────
   const SUBJECT_TEXT = {
-    maths: { name: 'Maths', kit: 'Have a calculator, a pen and some paper ready, just as you would for maths homework.' }
+    maths: { name: 'Maths', what: 'maths',
+             top: 'By the end there are questions from Years 9 and 10, and some from NCEA Level 1.',
+             kit: 'Have a calculator, a pen and some paper ready, just as you would for maths homework.' },
+    science: { name: 'Science', what: 'science',
+               top: 'By the end there are questions from Years 9 and 10, and some that stretch further.',
+               kit: 'Have a pen and some paper ready. A calculator helps for a few questions.' },
+    english: { name: 'English', what: 'English',
+               top: 'By the end there are Year 9 challenge questions, the kind of thing you will meet next year.',
+               kit: 'Have some paper ready for notes. Some questions come with a short passage to read first: take your time with it.',
+               writing: true }
   };
 
   function start() {
     const params = new URLSearchParams(location.search);
     const subject = (params.get('subject') || 'maths').toLowerCase();
-    const info = SUBJECT_TEXT[subject] || { name: Manifest.subject(subject).name, kit: 'Have a pen and some paper ready.' };
+    const info = SUBJECT_TEXT[subject] || { name: Manifest.subject(subject).name, what: Manifest.subject(subject).name, top: '', kit: 'Have a pen and some paper ready.' };
     document.title = `${info.name} check-in · Revision`;
     const root = document.getElementById('app') || document.body;
     root.innerHTML = '';
@@ -177,17 +225,19 @@ const Diagnostic = (() => {
     const go = h('button', { type: 'button', class: 'tool-btn primary', text: 'Start' });
     const card = h('section', { class: 'diag-intro' },
       h('h1', { text: `${info.name}: where are you up to?` }),
-      h('p', { class: 'diag-lead', text: 'This is not a test you can pass or fail. It is a map. It shows your teacher which maths you already have sorted, so your practice time can go on the things that will actually stretch you.' }),
+      h('p', { class: 'diag-lead', text: `This is not a test you can pass or fail. It is a map. It shows your teacher which ${info.what} you already have sorted, so your practice time can go on the things that will actually stretch you.` }),
       h('h2', { text: 'How it works' }),
       h('ul', {},
         h('li', {}, h('strong', { text: 'It starts easy and gets steadily harder. ' }),
-          'By the end there are questions from Years 9 and 10, and some from NCEA Level 1. Nobody is expected to answer them all. Reaching questions you cannot do yet is the whole point: it shows where your edge is.'),
+          `${info.top} Nobody is expected to answer them all. Reaching questions you cannot do yet is the whole point: it shows where your edge is.`),
         h('li', {}, h('strong', { text: 'You will not be told if an answer is right or wrong. ' }),
           'That is on purpose. Give each question your best go, then move on.'),
         h('li', {}, h('strong', { text: 'Skip is a good answer. ' }),
           'If you do not know how to start a question, press Skip. A skip tells your teacher something useful, and it is much better than a wild guess. Nobody will think less of you for it.'),
         h('li', {}, h('strong', { text: 'It takes about 30 minutes, then stops by itself. ' }),
           'It may finish sooner. That is fine too, and it does not mean anything went wrong.'),
+        info.writing ? h('li', {}, h('strong', { text: 'It finishes with a short piece of writing. ' }),
+          `The page will tell you when, and leave you about ${WRITE_MIN} minutes for it. Write the way you would for your teacher in class. The word count shown is a guide, not a rule.`) : null,
         h('li', {}, h('strong', { text: 'Your stars, XP and weekly practice are not affected. ' }),
           'Nothing you do here counts against you anywhere on the site.'),
         h('li', {}, h('strong', { text: 'Your answers are saved as you go. ' }),
@@ -227,9 +277,15 @@ const Diagnostic = (() => {
       if (!document.hidden) st.elapsed += (t - last) / 1000;
       last = t;
       const left = Math.max(0, LIMIT_MIN - st.elapsed / 60);
-      clock.textContent = left > 1 ? `about ${Math.ceil(left)} minutes left` : 'nearly done';
+      if (st.phase === 'writing') {
+        const w = Math.max(0, WRITE_MIN - (st.elapsed - st.shownAt) / 60);
+        clock.textContent = w > 1 ? `about ${Math.ceil(w)} minutes for your writing` : 'finish your last sentence when you are ready';
+      } else clock.textContent = left > 1 ? `about ${Math.ceil(left)} minutes left` : 'nearly done';
       save(subject, st);
-      if (left <= 0) end();
+      // With a writing piece to come, the questions stop early to leave time for it.
+      if (st.phase !== 'writing' && left <= (info.writing ? WRITE_MIN : 0)) {
+        if (info.writing) st.goWrite = true; else end();
+      }
     };
     const timer = setInterval(tick, 1000);
     document.addEventListener('visibilitychange', () => { last = Date.now(); });
@@ -245,7 +301,11 @@ const Diagnostic = (() => {
       finish(main, subject, info, st);
     }
 
+    // Reading passages seen this sitting, so the file prints each one once.
+    const seenPassages = new Set(st.answers.filter(a => a.passage).map(a => a.passage));
+
     function next() {
+      if (info.writing && (st.goWrite || st.phase === 'writing')) return writing();
       // Past the end of the ladder, or the ceiling reached.
       while (st.pos < topics.length) {
         const t = topics[st.pos];
@@ -256,7 +316,50 @@ const Diagnostic = (() => {
         // Nothing usable for this stage: move on.
         st.pos++; st.stage = 1; st.seed = null;
       }
+      if (info.writing) return writing();
       end();
+    }
+
+    /** The closing writing piece, untimed but with a suggested eight minutes. */
+    function writing() {
+      if (st.phase !== 'writing') {
+        st.phase = 'writing'; st.writeSeed = st.writeSeed || ((Math.random() * 2 ** 32) >>> 0); st.shownAt = st.elapsed;
+        save(subject, st);
+      }
+      const q = writingTask(subject, st.writeSeed);
+      if (!q) return end();
+      slot.innerHTML = '';
+      section.textContent = 'Your writing piece';
+      const card = h('article', { class: 'qcard diag-card' });
+      card.appendChild(h('p', { class: 'diag-lead', text: 'Last part: a short piece of writing. Plan for a minute, then write. When you are happy with it, press “I’m finished”.' }));
+      card.appendChild(h('div', { class: 'qhead' }, h('span', { class: 'qnum', text: '✎' }), h('div', { class: 'qtext', html: q.prompt })));
+      // No saved draft from practice pages, and no checklist or model answer afterwards.
+      const spec = Object.assign({}, q.input, { key: undefined });
+      const input = Exercise.Inputs.write(spec);
+      const box = input.node.querySelector('textarea');
+      if (st.draft) box.value = st.draft;
+      box.addEventListener('input', () => { st.draft = box.value; save(subject, st); });
+      card.appendChild(h('div', { class: 'qanswer' }, input.node));
+      const doneBtn = h('button', { type: 'button', class: 'tool-btn primary', text: 'I’m finished →' });
+      const skipBtn = h('button', { type: 'button', class: 'tool-btn', text: 'Skip the writing' });
+      card.appendChild(h('div', { class: 'diag-actions' }, skipBtn, doneBtn));
+      card.addEventListener('ans-submit', ev => ev.stopPropagation(), true);
+      slot.appendChild(card);
+      box.dispatchEvent(new Event('input'));
+      box.focus();
+      const finishWriting = skipped => {
+        const text = skipped ? '' : box.value.trim();
+        st.writing = {
+          title: q.input.title || '', from: q.from ? `${q.from.label} ${q.from.title}` : '', prompt: plain(q.prompt),
+          checklist: (q.input.checklist || []).map(plain), model: plain(q.input.model), text,
+          words: (text.match(/\S+/g) || []).length, minWords: q.input.minWords || 40,
+          seconds: Math.round(st.elapsed - st.shownAt), result: text ? 'written' : 'skipped'
+        };
+        save(subject, st);
+        end();
+      };
+      doneBtn.addEventListener('click', () => finishWriting(false));
+      skipBtn.addEventListener('click', () => finishWriting(true));
     }
 
     function show(t, q) {
@@ -286,6 +389,8 @@ const Diagnostic = (() => {
       const skipBtn = h('button', { type: 'button', class: 'tool-btn', text: 'Skip' });
       card.appendChild(h('div', { class: 'diag-actions' }, skipBtn, nextBtn));
       slot.appendChild(card);
+      // The inputs' cues say "then check": here there is nothing to check.
+      card.querySelectorAll('.spot-cue').forEach(p => { p.textContent = p.textContent.replace(/,?\s*then check\.?$/i, ', then press Next.'); });
       // The inputs' own submit events are for practice pages; here only Next and Skip move on.
       card.addEventListener('ans-submit', ev => ev.stopPropagation(), true);
       card.addEventListener('keydown', ev => {
@@ -306,9 +411,9 @@ const Diagnostic = (() => {
         const labels = svg ? [...svg.querySelectorAll('text')].map(t => t.textContent.trim()).filter(Boolean) : [];
         st.answers.push({
           n, topic: t.id, label: t.label, title: t.title, unit: t.unit, section: t.section, stage: st.stage,
-          kind: q.input.kind, prompt: plain(q.prompt), note: plain(q.note), options: optionsText(q),
+          kind: q.input.kind, prompt: promptText(q, seenPassages), note: plain(q.note), options: optionsText(q),
           diagram: labels.length ? labels.join(', ') : '', given: blank ? '' : given, result: blank ? 'skipped' : q.input.kind === 'write' ? 'written' : ok ? 'right' : 'wrong',
-          correct, explain: plain(q.explain), seconds: Math.round(st.elapsed - st.shownAt)
+          correct, explain: plain(q.explain), seconds: Math.round(st.elapsed - st.shownAt), passage: q.passage || null
         });
         // Up the ladder: right at stage 1 earns the harder question; anything
         // else moves on to the next topic.
@@ -319,7 +424,7 @@ const Diagnostic = (() => {
         }
         st.seed = null;
         save(subject, st);
-        if (st.misses >= STOP_AFTER) return end();
+        if (st.misses >= STOP_AFTER) return info.writing ? writing() : end();
         next();
       };
       nextBtn.addEventListener('click', () => record(false));
@@ -346,7 +451,7 @@ const Diagnostic = (() => {
     L.push(`Topics reached: ${reached.size} of ${topics.length}` + (reached.size < topics.length ? `; not reached: ${topics.filter(t => !reached.has(t.id)).map(t => t.label).join(', ')}` : ''));
     L.push('');
     L.push('How to read this: each topic starts with a question at normal difficulty (stage 1). Only if that was right did a harder one (stage 2) follow.');
-    L.push(`Every Units 1–5 topic is asked. From the look-ahead units on, the sitting stops after ${STOP_AFTER} topics in a row missed or skipped, or at ${LIMIT_MIN} minutes.`);
+    L.push(`Every Years 7–8 topic${subject === 'maths' ? ' (Units 1–5)' : ''} is asked. From the Years 9–10 topics on, the sitting stops after ${STOP_AFTER} topics in a row missed or skipped, or at ${LIMIT_MIN} minutes${info.writing ? `, keeping the last ${WRITE_MIN} minutes for the writing piece` : ''}.`);
     L.push('The student saw no marks during the sitting.');
     L.push('');
     L.push('SUMMARY BY TOPIC');
@@ -370,6 +475,22 @@ const Diagnostic = (() => {
       if (a.explain) L.push('Worked solution: ' + a.explain);
     }
     L.push('──────────────────────────────────────────────────────────');
+    if (info.writing) {
+      const w = st.writing;
+      L.push('');
+      L.push('WRITING PIECE');
+      if (!w) L.push('Not reached.');
+      else {
+        L.push(`Task: ${w.title}${w.from ? ` (from ${w.from})` : ''}`);
+        L.push('Brief: ' + w.prompt);
+        L.push(`Words: ${w.words} (the task suggests at least ${w.minWords}) · time: about ${Math.round(w.seconds / 60)} min · ${w.result.toUpperCase()}`);
+        L.push('Student writing:');
+        L.push(w.text ? w.text.split('\n').map(x => '  ' + x).join('\n') : '  (skipped)');
+        if (w.checklist.length) L.push('Success criteria from the task:\n' + w.checklist.map(c => '  - ' + c).join('\n'));
+        if (w.model) L.push('The site’s model answer (not shown to the student): ' + w.model);
+      }
+      L.push('──────────────────────────────────────────────────────────');
+    }
     L.push('');
     L.push('PRACTICE HISTORY ON THIS DEVICE (from the site, before and outside this check-in)');
     for (const t of topics) {

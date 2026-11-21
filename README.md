@@ -281,12 +281,15 @@ method on even-sized data sets only, so every common school method gives the sam
 
 ## Diagnostic check-in
 
-`diagnostic.html?subject=maths` is a one-sitting check of where a student is up to, sent by the
-teacher and not linked from home. It walks a ladder of every topic, easiest first: Units 1–5,
-then the Years 9–10 look-ahead units, then Unit 6. Each topic asks one question at normal
-difficulty, and a harder one only if that was right. Every Units 1–5 topic is always asked; from
-the look-ahead on, six topics in a row missed or skipped ends the sitting (the ceiling). It also
-ends at 30 minutes of time on the page.
+`diagnostic.html?subject=maths` (or `science`, `english`) is a one-sitting check of where a
+student is up to, sent by the teacher and not linked from home. It walks a ladder of every topic,
+easiest first: the Years 7–8 topics (maths Units 1–5; science and English by year), then the
+Years 9–10 topics, then maths Unit 6. Each topic asks one question at normal
+difficulty, and a harder one only if that was right. Every Years 7–8 topic is always asked; from
+the Years 9–10 topics on, six topics in a row missed or skipped ends the sitting (the ceiling). It also
+ends at 30 minutes of time on the page. English stops its questions at 22 minutes and ends with
+one of the site's short writing tasks (40 to 60 words asked for), with about 8 minutes suggested;
+the file includes the writing, the task's success criteria and the site's model answer.
 
 Marking is silent: answers are checked so the ladder knows what to ask next, but the student sees
 no marks or solutions. Skips are recorded as skips. Stars, XP and the weekly target are not
