@@ -130,7 +130,7 @@ const Diagnostic = (() => {
   function optionsText(q) {
     const s = q.input;
     const L = 'abcdefgh';
-    if (s.kind === 'choice') return s.options.map((o, i) => `  ${L[i]}) ${plain(o.html)}`).join('\n');
+    if (s.kind === 'choice') return s.options.map((o, i) => `  ${L[i]}) ${plain(o && o.html !== undefined ? o.html : o)}`).join('\n');
     if (s.kind === 'spot') return s.lines.map((l, i) => `  line ${i + 1}: ${plain(l)}`).join('\n');
     if (s.kind === 'order') return s.items.map(x => '  - ' + plain(x)).join('\n');
     if (s.kind === 'match') return 'Left: ' + s.left.map(plain).join(' / ') + '\nRight: ' + s.right.map((r, j) => `${s.tags[j]}. ${plain(r)}`).join(' / ');
@@ -140,24 +140,53 @@ const Diagnostic = (() => {
   }
 
   /** What the student gave, read from the answer area as they left it. */
+  /**
+   * A copy of an element with each typeset formula put back as its source,
+   * so a drawn fraction reads 5/6 in the report instead of "56".
+   */
+  function texClone(el) {
+    const copy = el.cloneNode(true);
+    const doc = window.MathJax && MathJax.startup && MathJax.startup.document;
+    if (!doc || !doc.getMathItemsWithin) return copy;
+    const src = new Map();
+    try { doc.getMathItemsWithin(el).forEach(it => src.set(it.typesetRoot, it.math)); } catch (e) { return copy; }
+    const orig = el.querySelectorAll('mjx-container'), dup = copy.querySelectorAll('mjx-container');
+    orig.forEach((m, i) => { if (src.has(m) && dup[i]) dup[i].replaceWith(document.createTextNode(src.get(m))); });
+    return copy;
+  }
+
+  /** The answer row as the student left it: printed text with each box shown as [value]. */
+  function rowText(row) {
+    const box = b => `[${b.value.trim()}]`;
+    return [...row.children].map(c => {
+      if (c.matches('input')) return box(c);
+      if (c.classList.contains('frac-input')) { const b = c.querySelectorAll('input'); return `[${b[0].value.trim()}]/[${b[1].value.trim()}]`; }
+      return plain(texClone(c).innerHTML);
+    }).join(' ').replace(/\s+/g, ' ').trim();
+  }
+
   function givenText(q, node) {
     const k = q.input.kind;
-    const txt = el => (el ? plain(el.innerHTML) : '');
+    const txt = el => (el ? plain(texClone(el).innerHTML) : '');
     if (['fill', 'number', 'expr', 'word'].includes(k)) {
       const vals = [...node.querySelectorAll('input')].map(i => i.value.trim());
-      return vals.every(v => v === '') ? '' : vals.join(' | ');
+      if (vals.every(v => v === '')) return '';
+      const row = node.matches('.ans-row') ? node : node.querySelector('.ans-row');
+      // Text printed beside the boxes (like "4(y − 4) =") is part of the question, so keep it.
+      if (row && row.querySelector('.ans-text')) return rowText(row);
+      return vals.join(' | ');
     }
     if (k === 'choice') return txt(node.querySelector('.picked'));
     if (k === 'spot') { const rows = [...node.querySelectorAll('li')]; const i = rows.findIndex(r => r.classList.contains('picked')); return i < 0 ? '' : `line ${i + 1}: ${txt(rows[i])}`; }
     if (k === 'order') return [...node.querySelectorAll('.order-slot:not(.empty)')].map((s, i) => `${i + 1}. ${txt(s)}`).join('  ');
     if (k === 'match') return [...node.querySelectorAll('.match-col:first-child button')].map(b => {
-      const tag = b.querySelector('.pair-tag'), c = b.cloneNode(true);
+      const tag = b.querySelector('.pair-tag'), c = texClone(b);
       c.querySelectorAll('.pair-tag').forEach(x => x.remove());
       return `${plain(c.innerHTML)} → ${(tag && tag.textContent) || '(none)'}`;
     }).join(' / ');
     if (k === 'sort') return [...node.querySelectorAll('.sort-list > *')].map(r => {
       const pick = r.querySelector('.sort-btn.picked');
-      const item = r.cloneNode(true); item.querySelectorAll('.sort-btn').forEach(b => b.remove());
+      const item = texClone(r); item.querySelectorAll('.sort-btn').forEach(b => b.remove());
       return `${plain(item.innerHTML)} → ${pick ? pick.textContent : '(none)'}`;
     }).join('\n  ');
     if (k === 'label') return [...node.querySelectorAll('select')].map((s, i) => `${i + 1}: ${s.value || '(none)'}`).join(', ');
