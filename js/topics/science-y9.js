@@ -672,7 +672,7 @@
           return { prompt: `${dv.what} transfers ${num(useful)} J of every ${total} J of electrical energy usefully, as ${dv.useful} energy. What is its efficiency?`,
                    diagram: { w: 300, h: 150 }, draw: d => SciDia.sankey(d, { total, useful, wasted: total - useful, labels: [`${total} J electrical`, `${num(useful)} J ${dv.useful.split(' ')[0]}`, `${num(total - useful)} J ${dv.wasted}`] }),
                    input: { kind: 'number', answer: pct, suffix: '%', width: 70 },
-                   explain: `Efficiency = useful energy out ÷ energy in × 100 = ${num(useful)} ÷ ${total} × 100 = ${pct}%. The rest is wasted, mostly as thermal energy.` };
+                   explain: m(`\\text{efficiency} = \\dfrac{\\text{useful energy out}}{\\text{energy in}} \\times 100 = \\dfrac{${useful}}{${total}} \\times 100 = ${pct}\\%`) + `. The rest is wasted, mostly as thermal energy.` };
         })] },
 
       { challenge: 'only', name: 'Planning a fair test', learn: 'materials',
@@ -1098,7 +1098,7 @@
           return { prompt: 'What is the object’s speed?', diagram: { w: 280, h: 180 },
                    draw: d => SciDia.graph(d, { xMax: 10, yMax: Math.max(10, Math.ceil(x / 10) * 10), xStep: 2, ...XT, series: [{ points: [[0, 0], [t, x]] }] }),
                    input: { kind: 'number', answer: v, suffix: 'm/s', width: 70 },
-                   explain: `It moves ${x} m in ${t} s: speed = distance ÷ time = ${x} ÷ ${t} = ${v} m/s.` };
+                   explain: `It moves ${x} m in ${t} s: ` + m(`\\text{speed} = \\dfrac{\\text{distance}}{\\text{time}} = \\dfrac{${x}}{${t}} = ${v}`) + ' m/s.' };
         })] },
 
       { name: 'Planning the experiment', learn: 'variables',
@@ -1182,19 +1182,21 @@
     id: 's9e5', unit: 'electricity-forces',
     title: 'Pressure',
     blurb: 'How much force acts on each square metre: why knives are sharp and snowshoes are wide.',
-    hint: 'Pressure = force ÷ area. With force in newtons and area in m², pressure is in pascals (Pa), which is N/m². The same force on a smaller area gives a greater pressure. ' +
-          'Rearranged: force = pressure × area, and area = force ÷ pressure.',
+    hint: 'Pressure = force/area, P = F/A. With force in newtons and area in m², pressure is in pascals (Pa), which is N/m². The same force on a smaller area gives a greater pressure. ' +
+          'To find force or area, keep the balance: multiply both sides by A to get F = PA, then divide both sides by P to get A = F/P.',
 
     learn: [
       { id: 'pressure', title: 'Pressure',
         text: '<p>Pressure is the force acting at right angles to a surface, divided by the area it acts on:</p>' +
-              '<p style="text-align:center">' + m('\\text{pressure} = \\dfrac{\\text{force}}{\\text{area}}') + '</p>' +
+              '<p style="text-align:center">' + m('\\text{pressure} = \\dfrac{\\text{force}}{\\text{area}}') + ', or ' + m('P = \\dfrac{F}{A}') + '</p>' +
               '<p>Force in newtons (N), area in square metres (m²): pressure in <strong>pascals (Pa)</strong>. 1 Pa = 1 N/m².</p>' },
       { id: 'area', title: 'Small area, big pressure',
         text: '<p>For the same force, a <strong>smaller</strong> area gives a <strong>greater</strong> pressure, and a larger area a lower one.</p>' +
               '<ul><li>High pressure: an axe blade, a knife edge, a drawing pin’s point.</li><li>Low pressure: a hammer face, snowshoes, wide tractor tyres.</li></ul>' },
       { id: 'rearrange', title: 'Finding force or area',
-        text: '<p>' + m('\\text{force} = \\text{pressure} \\times \\text{area}') + '</p><p>' + m('\\text{area} = \\text{force} \\div \\text{pressure}') + '</p>' },
+        text: '<p>Start from ' + m('P = \\dfrac{F}{A}') + ' and do the same to both sides, so the equation stays balanced.</p>' +
+              '<p>Multiply both sides by ' + m('A') + ': ' + m('PA = F') + ', so ' + m('F = PA') + '.</p>' +
+              '<p>Then divide both sides by ' + m('P') + ': ' + m('A = \\dfrac{F}{P}') + '.</p>' },
       { id: 'units', title: 'Other units',
         text: '<p>For small areas, N/cm² is handy: 120 N on 4 cm² is 30 N/cm². Keep the units together: newtons and cm² give N/cm²; newtons and m² give Pa.</p>' },
       { id: 'accuracy', title: 'Measuring well',
@@ -1209,8 +1211,8 @@
       },
       {
         title: 'Example 2: same force, different area',
-        steps: ['A 700 N person stands in boots with 0.05 m² of sole: ' + m('700 \\div 0.05 = 14\\,000') + ' Pa.',
-                'On snowshoes with 0.35 m²: ' + m('700 \\div 0.35 = 2000') + ' Pa.', 'Seven times the area, one seventh of the pressure: they sink in less.'],
+        steps: ['A 700 N person stands in boots with 0.05 m² of sole: ' + m('P = \\dfrac{700}{0.05} = 14\\,000') + ' Pa.',
+                'On snowshoes with 0.35 m²: ' + m('P = \\dfrac{700}{0.35} = 2000') + ' Pa.', 'Seven times the area, one seventh of the pressure: they sink in less.'],
         result: 'Snowshoes spread the force over a larger area'
       }
     ],
@@ -1224,7 +1226,7 @@
           const F = +(P * A).toFixed(2);
           return { prompt: `${s.what[0].toUpperCase() + s.what.slice(1)} pushes down with a force of ${Fmt.num(F)} N on an area of ${Fmt.num(A)} m². What pressure does it exert?`,
                    input: { kind: 'number', answer: P, suffix: 'Pa', width: 90 },
-                   explain: m(`\\text{pressure} = ${F} \\div ${A} = ${P}`) + ' Pa' };
+                   explain: m(`P = \\dfrac{F}{A} = \\dfrac{${F}}{${A}} = ${P}`) + ' Pa' };
         })] },
 
       { name: 'Pressure in N/cm²', learn: 'units',
@@ -1232,7 +1234,7 @@
           const A = rng.int(2, 12), P = rng.int(2, 25);
           return { prompt: `A force of ${A * P} N acts on an area of ${A} cm². What is the pressure?`,
                    input: { kind: 'number', answer: P, suffix: 'N/cm²', width: 70 },
-                   explain: `${A * P} ÷ ${A} = ${P} N/cm².` };
+                   explain: m(`P = \\dfrac{${A * P}}{${A}} = ${P}`) + ' N/cm².' };
         })] },
 
       { name: 'Calculate force', learn: 'rearrange',
@@ -1248,7 +1250,7 @@
           const A = rng.pick([2, 4, 5, 10]), P = rng.int(2, 9) * 100;
           return { prompt: `A load of ${A * P} N exerts a pressure of ${P} Pa on the ground. Over what area is it spread?`,
                    input: { kind: 'number', answer: A, suffix: 'm²', width: 70 },
-                   explain: m(`\\text{area} = \\text{force} \\div \\text{pressure} = ${A * P} \\div ${P} = ${A}`) + ' m²' };
+                   explain: m(`A = \\dfrac{F}{P} = \\dfrac{${A * P}}{${P}} = ${A}`) + ' m²' };
         })] },
 
       { name: 'Which gives more pressure?', learn: 'area',
@@ -1268,7 +1270,7 @@
           ['Why do tractors that work in soft paddocks have very wide tyres?', 'A larger area gives a lower pressure, so they sink less', ['Wide tyres make the tractor lighter', 'Wide tyres increase the pressure for grip', 'Wide tyres go faster']],
           ['Why does a drawing pin have a sharp point and a wide flat head?', 'The point gives a high pressure on the board; the head gives a low pressure on your thumb', ['Both ends give the same pressure', 'The head increases the pressure on your thumb', 'The point is to make it lighter']],
           ['Why is an axe blade thin while a hammer face is broad?', 'The axe needs high pressure to split wood; the hammer spreads its force to push without cutting', ['Hammers are heavier', 'Axes need low pressure', 'They are shaped that way only for looks']]
-        ].map(([q, r, w]) => rng => C(rng, { prompt: q, right: r, wrong: w, explain: 'Pressure = force ÷ area: a small area concentrates a force, a large area spreads it out.' })) },
+        ].map(([q, r, w]) => rng => C(rng, { prompt: q, right: r, wrong: w, explain: m('P = \\dfrac{F}{A}') + ': a small area concentrates a force, a large area spreads it out.' })) },
 
       { name: 'Units', learn: 'pressure',
         items: [
@@ -1276,7 +1278,7 @@
                           explain: 'Pressure is measured in pascals: 1 Pa = 1 N/m².' }),
           rng => C(rng, { prompt: '1 pascal is the same as…', right: '1 newton on each square metre', wrong: ['1 newton on each metre', '1 metre for each newton', '1 kilogram on each square metre'],
                           explain: '1 Pa = 1 N/m².' }),
-          rng => C(rng, { prompt: 'Which calculation gives a pressure?', right: m('\\text{force} \\div \\text{area}'), wrong: [m('\\text{force} \\times \\text{area}'), m('\\text{area} \\div \\text{force}'), m('\\text{force} + \\text{area}')], wide: false,
+          rng => C(rng, { prompt: 'Which calculation gives a pressure?', right: m('\\dfrac{\\text{force}}{\\text{area}}'), wrong: [m('\\text{force} \\times \\text{area}'), m('\\dfrac{\\text{area}}{\\text{force}}'), m('\\text{force} + \\text{area}')], wide: false,
                           explain: 'Pressure is force divided by area.' })
         ] },
 
@@ -1288,7 +1290,7 @@
           const k = rng.int(0, 2), A = +(faces[k][0] * faces[k][1]).toFixed(4), P = +(W / A).toFixed(2);
           return { prompt: `A concrete block weighs ${W} N. It measures ${dims.join(' m × ')} m. It rests on its ${faces[k][0]} m × ${faces[k][1]} m face. What pressure does it exert?`,
                    input: { kind: 'number', answer: P, tol: 0.5, suffix: 'Pa', width: 90 },
-                   explain: `Area = ${faces[k][0]} × ${faces[k][1]} = ${Fmt.num(A)} m². Pressure = ${W} ÷ ${Fmt.num(A)} = ${Fmt.num(P)} Pa.` };
+                   explain: `Area = ${faces[k][0]} × ${faces[k][1]} = ${Fmt.num(A)} m². ` + m(`P = \\dfrac{${W}}{${A}} = ${P}`) + ' Pa.' };
         })] },
 
       { name: 'Measuring accurately', learn: 'accuracy',
@@ -1307,7 +1309,7 @@
           const W = rng.int(4, 9) * 100, a = rng.pick([0.02, 0.025]);
           return { prompt: `A ${W} N person stands on two feet, each with ${a} m² of sole touching the ground. What is the pressure when they stand on <strong>one</strong> foot?`,
                    input: { kind: 'number', answer: +(W / a).toFixed(2), suffix: 'Pa', width: 100 },
-                   explain: `On one foot the whole ${W} N acts on ${a} m²: ${W} ÷ ${a} = ${Fmt.num(+(W / a).toFixed(2))} Pa, twice the pressure on two feet.` };
+                   explain: `On one foot the whole ${W} N acts on ${a} m²: ${m(`P = \\dfrac{${W}}{${a}} = ${+(W / a).toFixed(2)}`)} Pa, twice the pressure on two feet.` };
         })] },
 
       { challenge: 'only', name: 'cm² to m²', learn: 'units',
@@ -1316,7 +1318,7 @@
           const A = cm2 / 10000;
           return { prompt: `A force of ${F} N acts on ${cm2} cm². What is the pressure in <strong>pascals</strong>? (1 m² = 10 000 cm².)`,
                    input: { kind: 'number', answer: +(F / A).toFixed(2), suffix: 'Pa', width: 100 },
-                   explain: `${cm2} cm² = ${cm2} ÷ 10 000 = ${A} m². Pressure = ${F} ÷ ${A} = ${Fmt.num(+(F / A).toFixed(2))} Pa.` };
+                   explain: `${cm2} cm² = ${cm2} ÷ 10 000 = ${A} m². ` + m(`P = \\dfrac{${F}}{${A}} = ${+(F / A).toFixed(2)}`) + ' Pa.' };
         })] },
 
       { challenge: 'only', name: 'How many times more?', learn: 'area',
@@ -1333,7 +1335,7 @@
           const W = rng.int(6, 12) * 100, Pmax = rng.pick([2000, 2500, 4000, 5000]);
           return { prompt: `Soft snow can bear a pressure of ${Pmax} Pa without a person sinking. A ${W} N hiker wears two snowshoes. What is the smallest total area the snowshoes need?`,
                    input: { kind: 'number', answer: +(W / Pmax).toFixed(4), tol: 0.0005, decimal: true, suffix: 'm²', width: 80 },
-                   explain: `area = force ÷ pressure = ${W} ÷ ${Pmax} = ${Fmt.num(+(W / Pmax).toFixed(4))} m² (in total, across both shoes).` };
+                   explain: m(`A = \\dfrac{F}{P} = \\dfrac{${W}}{${Pmax}} = ${+(W / Pmax).toFixed(4)}`) + ' m² (in total, across both shoes).' };
         })] },
 
       { challenge: 'only', name: 'Justify the design', learn: 'area',
@@ -1353,7 +1355,7 @@
             prompt: `Tama works out the pressure of a ${F} N crate on ${A} m². Which line is wrong?`,
             lines: [`Pressure = force ÷ area`, `Force = ${F} N, area = ${A} m²`, `Pressure = ${F} × ${A}`, `Pressure = ${F * A} Pa`],
             wrong: 2,
-            explain: `Tama multiplied instead of dividing. Pressure = ${F} ÷ ${A} = ${F / A} Pa.`
+            explain: `Tama multiplied instead of dividing. ` + m(`P = \\dfrac{F}{A} = \\dfrac{${F}}{${A}} = ${F / A}`) + ' Pa.'
           });
         })] }
     ]
@@ -1671,7 +1673,7 @@
           const img = real * mag / 1000;
           return { prompt: `A photo taken through a microscope at ×${mag} shows a cell ${num(img)} mm wide. How wide is the real cell, in µm?`,
                    input: { kind: 'number', answer: real, tol: 0.5, suffix: 'µm', width: 70 },
-                   explain: `Real size = image size ÷ magnification = ${num(img)} ÷ ${mag} = ${num(img / mag)} mm = ${real} µm.` };
+                   explain: m(`\\text{real size} = \\dfrac{\\text{image size}}{\\text{magnification}} = \\dfrac{${img}}{${mag}} = ${img / mag}`) + ` mm = ${real} µm.` };
         })] },
 
       { challenge: 'only', name: 'Technology and cells', learn: 'technology',

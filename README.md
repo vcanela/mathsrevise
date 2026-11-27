@@ -377,6 +377,12 @@ Topics.u2e9 = {
 
 Use `rng` for every random choice, never `Math.random`, or `?set=N` stops being reproducible.
 
+### How equations are written
+
+- **Keep the balance.** Every step that solves or rearranges an equation does the same thing to both sides, and says so: "Subtract 7 from both sides", "Divide both sides by 3". Never "move it across" or "it changes sign when it crosses the equals sign". This applies to formulas too: from P = F/A, multiply both sides by A to get F = PA.
+- `Fmt.bothSides(k)` writes the step that removes a number ("Subtract 7 from both sides", or "Add 7 to both sides" when k is negative). `Fmt.solveSteps(a, b, c, v)` writes the full balance working for a·v + b = c, leaving out any step that isn't needed.
+- **Fractions, not ÷, in later topics.** In Years 9–10 science and the look-ahead maths units, typeset division as a fraction: `\dfrac{F}{A}`, and with numbers `\dfrac{3600}{1200}`. Plain-text hints, where maths can't be typeset, use a slash: P = F/A. Years 7–8 keep ÷ for arithmetic, and plain arithmetic such as unit conversions and means stays as it is.
+
 ## Testing
 
 All of these checks should pass before committing.

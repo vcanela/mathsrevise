@@ -155,7 +155,7 @@
             marks: [{ from: 0, to: 1, label: deg(known) }, { from: 1, to: 2, label: 'x', unknown: true, r: 34 }]
           }),
           input: { kind: 'spot', lines, wrong: 1 },
-          explain: `<span class="work">Line 2 used 360° instead of 180°. On a straight line \\(x + ${known} = 180\\), so \\(x = ${180 - known}\\).</span>`
+          explain: `<span class="work">Line 2 used 360° instead of 180°. On a straight line \\(x + ${known} = 180\\). Subtract ${known} from both sides: \\(x = ${180 - known}\\).</span>`
         });
       })();
 
@@ -841,7 +841,7 @@
           prompt: `The interior angles of a polygon add to ${deg(180 * (n - 2))}. How many sides does it have?`,
           tip: 'Solve ' + m(`180(n - 2) = ${180 * (n - 2)}`) + ' for ' + m('n') + '.',
           input: { kind: 'number', prefix: m('n') + ' =', answer: n, width: 76 },
-          explain: `<span class="work">\\(${180 * (n - 2)} \\div 180 = ${n - 2}\\), so \\(n - 2 = ${n - 2}\\) and \\(n = ${n}\\).</span>`
+          explain: `<span class="work">Divide both sides by 180: \\(n - 2 = ${n - 2}\\). Add 2 to both sides: \\(n = ${n}\\).</span>`
         });
       })();
 

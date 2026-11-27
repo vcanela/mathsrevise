@@ -406,7 +406,8 @@
           'Let \\(n\\) be the number I thought of. Write that down first.',
           '"Double it and add 7" is \\(2n + 7\\). "The answer is 23" gives the equals sign.',
           'The equation is \\(2n + 7 = 23\\).',
-          'Solve: \\(2n = 16\\), so \\(n = 8\\). Check: \\(2 \\times 8 + 7 = 23\\). ✓'
+          'Solve by keeping the balance. Subtract 7 from both sides: \\(2n = 16\\). Divide both sides by 2: \\(n = 8\\).',
+          'Check: \\(2 \\times 8 + 7 = 23\\). ✓'
         ],
         result: 'Answer: the number is 8'
       }
@@ -438,7 +439,7 @@
       const CONTEXTS = [
         (a, b, n) => ({
           text: `A taxi charges a $${b} flag fall plus $${a} per kilometre. A trip costs $${a * n + b}. How far was it?`,
-          unit: 'km', eq: `${T(a, 'd')} + ${b} = ${a * n + b}`, letter: 'd'
+          unit: 'km', eq: `${T(a, 'd')} + ${b} = ${a * n + b}`, letter: 'd', solve: [a, b, a * n + b]
         }),
         (a, b, n) => ({
           text: `${a} friends share the cost of a present equally. They each pay $${n}, and the wrapping cost another $${b}. What did the present and wrapping cost together?`,
@@ -446,11 +447,11 @@
         }),
         (a, b, n) => ({
           text: `A gym charges $${b} to join plus $${a} a month. Someone has paid $${a * n + b} in total. How many months have they been a member?`,
-          unit: 'months', eq: `${T(a, 'm')} + ${b} = ${a * n + b}`, letter: 'm'
+          unit: 'months', eq: `${T(a, 'm')} + ${b} = ${a * n + b}`, letter: 'm', solve: [a, b, a * n + b]
         }),
         (a, b, n) => ({
           text: `A rectangle is ${b} cm longer than it is wide, and its perimeter is ${2 * (n + n + b)} cm. How wide is it?`,
-          unit: 'cm', eq: `4w + ${2 * b} = ${2 * (n + n + b)}`, letter: 'w'
+          unit: 'cm', eq: `4w + ${2 * b} = ${2 * (n + n + b)}`, letter: 'w', solve: [4, 2 * b, 2 * (n + n + b)]
         })
       ];
 
@@ -462,7 +463,9 @@
           prompt: c.text,
           tip: 'The equation is ' + m(c.eq) + '.',
           input: { kind: 'number', suffix: c.unit === '$' ? null : c.unit, prefix: c.unit === '$' ? '$' : null, answer, width: 84 },
-          explain: `<span class="work">Solving \\(${c.eq}\\) gives ${answer}${c.unit === '$' ? '' : ' ' + c.unit}.</span>`
+          explain: c.solve
+            ? `<span class="work">\\(${c.eq}\\). ${Fmt.solveSteps(...c.solve, c.letter)} So the answer is ${answer} ${c.unit}.</span>`
+            : `<span class="work">Working out \\(${c.eq}\\) gives $${answer}.</span>`
         });
       });
 
@@ -473,7 +476,7 @@
         const items = [
           'Say what the letter stands for: let ' + m('n') + ' be the number',
           'Write the equation: ' + m(`${T(a, 'n')} + ${b} = ${total}`),
-          'Solve it: ' + m(`n = ${n}`),
+          'Solve it, doing the same to both sides: ' + m(`n = ${n}`),
           'Read the answer back against the question and check it makes sense'
         ];
         const order = rng.shuffle([0, 1, 2, 3]);
@@ -498,7 +501,7 @@
           prompt: `Tickets cost $${a} each plus a $${b} booking fee, and the total was $${total}. ` +
                   'Somebody worked out the number of tickets like this.',
           input: { kind: 'spot', lines, wrong: 2 },
-          explain: `<span class="work">Line 3 added the booking fee instead of taking it off. \\(${T(a, 'n')} = ${total - b}\\), so \\(n = ${n}\\).</span>`
+          explain: `<span class="work">Line 3 added the booking fee instead of taking it off. To keep the balance, subtract ${b} from <em>both</em> sides: \\(${T(a, 'n')} = ${total - b}\\). Divide both sides by ${a}: \\(n = ${n}\\).</span>`
         });
       })();
 
@@ -515,8 +518,8 @@
             : 'If the smallest is ' + m('n') + ', the others are ' + m('n + 1') + ' and ' + m('n + 2') + '.',
           input: { kind: 'number', answer: n, width: 78 },
           explain: count === 2
-            ? `<span class="work">\\(n + (n+1) = ${total}\\), so \\(2n + 1 = ${total}\\) and \\(n = ${n}\\).</span>`
-            : `<span class="work">\\(n + (n+1) + (n+2) = ${total}\\), so \\(3n + 3 = ${total}\\) and \\(n = ${n}\\).</span>`
+            ? `<span class="work">\\(n + (n+1) = ${total}\\), so \\(2n + 1 = ${total}\\). ${Fmt.solveSteps(2, 1, total, 'n')}</span>`
+            : `<span class="work">\\(n + (n+1) + (n+2) = ${total}\\), so \\(3n + 3 = ${total}\\). ${Fmt.solveSteps(3, 3, total, 'n')}</span>`
         });
       })();
 
@@ -529,7 +532,7 @@
           tag: 'Challenge',
           tip: 'Call the smaller one ' + m('n') + '. Then the other is ' + m(`n + ${diff2}`) + '.',
           input: { kind: 'number', answer: small, width: 78 },
-          explain: `<span class="work">\\(n + (n + ${diff2}) = ${total}\\), so \\(2n = ${total - diff2}\\) and \\(n = ${small}\\). The other is ${small + diff2}.</span>`
+          explain: `<span class="work">\\(n + (n + ${diff2}) = ${total}\\), so \\(2n + ${diff2} = ${total}\\). ${Fmt.solveSteps(2, diff2, total, 'n')} The other is ${small + diff2}.</span>`
         });
       })();
 
@@ -542,7 +545,7 @@
           tag: 'Challenge',
           tip: 'If the child is ' + m('c') + ', the parent is ' + m(`${times}c`) + '.',
           input: { kind: 'number', suffix: 'years', answer: child, width: 78 },
-          explain: `<span class="work">\\(c + ${times}c = ${total}\\), so \\(${times + 1}c = ${total}\\) and \\(c = ${child}\\). The parent is ${child * times}.</span>`
+          explain: `<span class="work">\\(c + ${times}c = ${total}\\), so \\(${times + 1}c = ${total}\\). ${Fmt.solveSteps(times + 1, 0, total, 'c')} The parent is ${child * times}.</span>`
         });
       })();
 

@@ -9,6 +9,10 @@
   const T = Fmt.term, S = Fmt.sum, m = Fmt.tex;
 
   /** Two distinct letters for a question. */
+  /** The last balance step, left out when the coefficient is already 1. */
+  const divStep = (k, v, x) => k === 1 ? ''
+    : k === -1 ? ` Multiply both sides by −1: \\(${v} = ${Fmt.num(x)}\\).`
+    : ` Divide both sides by ${Fmt.num(k)}: \\(${v} = ${Fmt.num(x)}\\).`;
   const twoVars = rng => rng.sample(['a', 'b', 'c', 'd', 'g', 'h', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y'], 2);
 
   // ═══ 2.1 Collecting like terms ════════════════════════════════════════════
@@ -609,7 +613,7 @@
             answer: [0, 1, 2, 3].map(i => order.indexOf(i)),
             cue: 'Click the steps in the order you would write them. Click one again to take it back.'
           },
-          explain: `<span class="work">Subtract ${b}, then divide by ${a}, then check.</span>`
+          explain: `<span class="work">Subtract ${b} from both sides, then divide both sides by ${a}, then check.</span>`
         });
       })();
 
@@ -648,11 +652,11 @@
             ? d => Dia.balance(d, { lx: a, lc: b, rx: 0, rc: c })
             : undefined,
           input: { kind: 'number', prefix: m(v) + ' =', answer: x, width: 78 },
-          explain: `<span class="work">${b < 0 ? 'Add ' + Math.abs(b) : 'Subtract ' + b} from both sides: \\(${T(a, v)} = ${c - b}\\). Divide by ${a}: \\(${v} = ${Fmt.num(x)}\\).</span>`
+          explain: `<span class="work">${Fmt.bothSides(b)}: \\(${T(a, v)} = ${c - b}\\). Divide both sides by ${a}: \\(${v} = ${Fmt.num(x)}\\).</span>`
         });
       }
 
-      // Q6: spot the mistake — moved the term the wrong way.
+      // Q6: spot the mistake — added to one side instead of subtracting from both.
       (() => {
         const v = rng.pick(['x', 'n', 'y']);
         const a = rng.int(2, 6), x = rng.int(2, 9), b = rng.int(3, 12);
@@ -666,7 +670,7 @@
         out.push({
           prompt: 'Somebody solved ' + m(`${T(a, v)} + ${b} = ${c}`) + ' like this.',
           input: { kind: 'spot', lines, wrong: 1 },
-          explain: `<span class="work">Line 2 added ${b} to the right instead of subtracting it. Moving \\(+${b}\\) across the equals sign makes it \\(-${b}\\), giving \\(${T(a, v)} = ${c - b}\\) and \\(${v} = ${x}\\).</span>`
+          explain: `<span class="work">Line 2 added ${b} to the right instead of subtracting it. To keep the balance, subtract ${b} from <em>both</em> sides: \\(${T(a, v)} + ${b} - ${b} = ${c} - ${b}\\), so \\(${T(a, v)} = ${c - b}\\). Then divide both sides by ${a}: \\(${v} = ${x}\\).</span>`
         });
       })();
 
@@ -679,7 +683,7 @@
           prompt: 'Solve ' + m(`\\frac{${v}}{${a}} ${b < 0 ? '-' : '+'} ${Math.abs(b)} = ${c}`),
           tip: 'Here ' + m(v) + ' is divided by ' + a + ', so the last step multiplies.',
           input: { kind: 'number', prefix: m(v) + ' =', answer: x, width: 78 },
-          explain: `<span class="work">${b < 0 ? 'Add ' + Math.abs(b) : 'Subtract ' + b}: \\(\\frac{${v}}{${a}} = ${c - b}\\). Multiply both sides by ${a}: \\(${v} = ${x}\\).</span>`
+          explain: `<span class="work">${b < 0 ? 'Add ' + Math.abs(b) + ' to' : 'Subtract ' + b + ' from'} both sides: \\(\\frac{${v}}{${a}} = ${c - b}\\). Multiply both sides by ${a}: \\(${v} = ${x}\\).</span>`
         });
       })();
 
@@ -706,7 +710,7 @@
           tag: 'Challenge',
           tip: 'Dividing by a negative number flips the sign of the answer.',
           input: { kind: 'number', prefix: m(v) + ' =', answer: x, width: 78 },
-          explain: `<span class="work">\\(${T(a, v)} = ${Fmt.num(c - b)}\\), then divide by ${a}: \\(${v} = ${Fmt.num(x)}\\).</span>`
+          explain: `<span class="work">${b < 0 ? 'Add ' + Math.abs(b) + ' to' : 'Subtract ' + b + ' from'} both sides: \\(${T(a, v)} = ${Fmt.num(c - b)}\\). Then divide both sides by ${a}: \\(${v} = ${Fmt.num(x)}\\).</span>`
         });
       })();
 
@@ -741,7 +745,7 @@
     id: 'u2e5', unit: 2,
     title: 'Unknowns on Both Sides',
     blurb: 'Equations like ax + b = cx + d: gather the letters on one side first.',
-    hint: 'Move the smaller group of letters across, so the coefficient you are left with is positive. A term changes sign when it crosses the equals sign.',
+    hint: 'Keep the balance: whatever you do to one side, do to the other. Take the smaller group of letters off both sides, so the number of letters left is positive.',
 
     examples: [
       {
@@ -761,7 +765,7 @@
         steps: [
           'The \\(n\\) terms are \\(4n\\) and \\(-2n\\). Add \\(2n\\) to both sides so neither side has a negative: \\(6n - 3 = 9\\).',
           'Add 3 to both sides: \\(6n = 12\\).',
-          'Divide by 6: \\(n = 2\\).'
+          'Divide both sides by 6: \\(n = 2\\).'
         ],
         result: 'Answer: \\(n = 2\\)'
       }
@@ -784,12 +788,15 @@
       (() => {
         const v = rng.pick(['x', 'n', 'y']);
         const x = rng.int(2, 7);
-        const { a, b, c, d } = build(x, 4, 8);
+        // At least 2 letters must be left, or the last step would divide by 1.
+        let e = build(x, 4, 8);
+        while (e.a - e.c < 2) e = build(x, 4, 8);
+        const { a, b, c, d } = e;
         const items = [
           m(`${S([[a, v], [b, '']])} = ${S([[c, v], [d, '']])}`),
           `Take ${m(T(c, v))} from both sides: ${m(`${S([[a - c, v], [b, '']])} = ${d}`)}`,
-          `${b < 0 ? 'Add ' + Math.abs(b) : 'Take ' + b + ' away'}: ${m(`${T(a - c, v)} = ${d - b}`)}`,
-          `Divide by ${a - c}: ${m(`${v} = ${x}`)}`
+          `${Fmt.bothSides(b)}: ${m(`${T(a - c, v)} = ${d - b}`)}`,
+          `Divide both sides by ${a - c}: ${m(`${v} = ${x}`)}`
         ];
         const order = rng.shuffle([0, 1, 2, 3]);
         out.push({
@@ -799,7 +806,7 @@
             items: order.map(i => items[i]),
             answer: [0, 1, 2, 3].map(i => order.indexOf(i))
           },
-          explain: `<span class="work">Letters together first, then numbers, then divide.</span>`
+          explain: `<span class="work">Letters together first, then numbers, then divide: each time doing the same to both sides.</span>`
         });
       })();
 
@@ -819,7 +826,7 @@
           prompt: 'For ' + m(`${S([[big, v], [b, '']])} = ${S([[small, v], [d, '']])}`) +
                   ', which move leaves a <strong>positive</strong> number of ' + m(v) + '?',
           input: { kind: 'choice', options: opts, correct: opts.findIndex(o => o.right), wide: true },
-          explain: `<span class="work">Move the smaller group of letters. Taking ${T(small, v)} off both sides leaves ${T(big - small, v)} on the left.</span>`
+          explain: `<span class="work">Take the smaller group of letters off both sides. Subtracting ${T(small, v)} from both sides leaves ${T(big - small, v)} on the left.</span>`
         });
       })();
 
@@ -834,11 +841,11 @@
           diagram: showBalance ? { w: 270, h: 145 } : undefined,
           draw: showBalance ? dd => Dia.balance(dd, { lx: a, lc: b, rx: c, rc: d }) : undefined,
           input: { kind: 'number', prefix: m(v) + ' =', answer: x, width: 78 },
-          explain: `<span class="work">Take ${T(c, v)} from both sides: \\(${S([[a - c, v], [b, '']])} = ${Fmt.num(d)}\\). Then \\(${T(a - c, v)} = ${Fmt.num(d - b)}\\), so \\(${v} = ${Fmt.num(x)}\\).</span>`
+          explain: `<span class="work">Take ${T(c, v)} from both sides: \\(${S([[a - c, v], [b, '']])} = ${Fmt.num(d)}\\). ${Fmt.bothSides(b)}: \\(${T(a - c, v)} = ${Fmt.num(d - b)}\\).${divStep(a - c, v, x)}</span>`
         });
       }
 
-      // Q6: spot the mistake — sign error crossing the equals sign.
+      // Q6: spot the mistake — added to one side instead of subtracting from both.
       (() => {
         const v = rng.pick(['x', 'n', 'y']);
         const x = rng.int(2, 8);
@@ -853,7 +860,7 @@
         out.push({
           prompt: 'Somebody solved ' + m(`${S([[a, v], [b, '']])} = ${S([[c, v], [d, '']])}`) + ' like this.',
           input: { kind: 'spot', lines, wrong: 1 },
-          explain: `<span class="work">Line 2 added ${T(c, v)} to the left instead of subtracting it. Taking ${T(c, v)} off both sides gives \\(${S([[a - c, v], [b, '']])} = ${d}\\), and \\(${v} = ${x}\\).</span>`
+          explain: `<span class="work">Line 2 added ${T(c, v)} to the left instead of subtracting it. To keep the balance, take ${T(c, v)} off <em>both</em> sides: \\(${S([[a - c, v], [b, '']])} = ${d}\\). Then ${Fmt.bothSides(b).toLowerCase()} and divide both sides by ${a - c}: \\(${v} = ${x}\\).</span>`
         });
       })();
 
@@ -868,7 +875,7 @@
           prompt: 'Solve ' + m(`${S([[a, v], [b, '']])} = ${S([[c, v], [d, '']])}`),
           tip: 'The bigger group of letters is on the right this time.',
           input: { kind: 'number', prefix: m(v) + ' =', answer: x, width: 78 },
-          explain: `<span class="work">Take ${T(a, v)} from both sides: \\(${Fmt.num(b)} = ${S([[c - a, v], [d, '']])}\\), so \\(${T(c - a, v)} = ${Fmt.num(b - d)}\\) and \\(${v} = ${x}\\).</span>`
+          explain: `<span class="work">Take ${T(a, v)} from both sides: \\(${Fmt.num(b)} = ${S([[c - a, v], [d, '']])}\\). ${Fmt.bothSides(d)}: \\(${Fmt.num(b - d)} = ${T(c - a, v)}\\).${divStep(c - a, v, x)}</span>`
         });
       })();
 
@@ -883,7 +890,7 @@
           prompt: 'Solve ' + m(`${S([[a, v], [b, '']])} = ${S([[c, v], [d, '']])}`),
           tag: 'Challenge',
           input: { kind: 'number', prefix: m(v) + ' =', answer: x, width: 78 },
-          explain: `<span class="work">Adding ${T(-c, v)} to both sides gives \\(${S([[a - c, v], [b, '']])} = ${Fmt.num(d)}\\), so \\(${v} = ${x}\\).</span>`
+          explain: `<span class="work">Adding ${T(-c, v)} to both sides gives \\(${S([[a - c, v], [b, '']])} = ${Fmt.num(d)}\\). ${Fmt.bothSides(b)}: \\(${T(a - c, v)} = ${Fmt.num(d - b)}\\).${divStep(a - c, v, x)}</span>`
         });
       })();
 
@@ -904,7 +911,7 @@
             prompt: 'Solve ' + m(`${k1}(${S([[1, v], [p2, '']])}) = ${rhsTotal}`),
             tag: 'Challenge',
             input: { kind: 'number', prefix: m(v) + ' =', answer: x, width: 78 },
-            explain: `<span class="work">Divide by ${k1}: \\(${S([[1, v], [p2, '']])} = ${rhsTotal / k1}\\), so \\(${v} = ${x}\\).</span>`
+            explain: `<span class="work">Divide both sides by ${k1}: \\(${S([[1, v], [p2, '']])} = ${rhsTotal / k1}\\). ${Fmt.bothSides(p2)}: \\(${v} = ${x}\\).</span>`
           });
         } else {
           out.push({
@@ -912,7 +919,7 @@
             tag: 'Challenge',
             tip: 'Expand both brackets first.',
             input: { kind: 'number', prefix: m(v) + ' =', answer: x, width: 78 },
-            explain: `<span class="work">Expanding: \\(${S([[k1, v], [k1 * pp, '']])} = ${S([[k2, v], [k2 * qq, '']])}\\), which gives \\(${v} = ${x}\\).</span>`
+            explain: `<span class="work">Expanding: \\(${S([[k1, v], [k1 * pp, '']])} = ${S([[k2, v], [k2 * qq, '']])}\\). Take ${T(k2, v)} from both sides: \\(${S([[k1 - k2, v], [k1 * pp, '']])} = ${k2 * qq}\\). ${Fmt.bothSides(k1 * pp)}: \\(${T(k1 - k2, v)} = ${k2 * qq - k1 * pp}\\).${divStep(k1 - k2, v, x)}</span>`
           });
         }
       })();
@@ -931,7 +938,7 @@
           tag: 'Challenge',
           tip: 'Write the equation first: ' + m(`${T(a, v)} + ${b} = ${T(c, v)} + ${d}`),
           input: { kind: 'number', prefix: 'The number is', answer: x, width: 78 },
-          explain: `<span class="work">\\(${S([[a, v], [b, '']])} = ${S([[c, v], [d, '']])}\\) gives \\(${T(a - c, v)} = ${d - b}\\), so \\(${v} = ${x}\\).</span>`
+          explain: `<span class="work">\\(${S([[a, v], [b, '']])} = ${S([[c, v], [d, '']])}\\). Take ${T(c, v)} from both sides: \\(${S([[a - c, v], [b, '']])} = ${d}\\). Subtract ${b} from both sides: \\(${T(a - c, v)} = ${d - b}\\).${divStep(a - c, v, x)}</span>`
         });
       })();
 

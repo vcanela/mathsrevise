@@ -52,15 +52,15 @@
               '$115 includes $15 of GST on $100, but 15% of $115 is $17.25.</p>' },
       { id: 'change', title: 'Percentage change',
         text: '<p style="text-align:center">' + m('\\text{percentage change} = \\dfrac{\\text{change}}{\\text{original}} \\times 100') + '</p>' +
-              '<p>From 50 to 75: the change is 25, and ' + m('25 \\div 50 \\times 100 = 50\\%') + '. Always divide by the <em>original</em>.</p>' },
+              '<p>From 50 to 75: the change is 25, and ' + m('\\dfrac{25}{50} \\times 100 = 50\\%') + '. Always divide by the <em>original</em>.</p>' },
       { id: 'ratio', title: 'Sharing in a ratio',
-        text: '<p>To share $600 in the ratio 2 : 3, add the parts: 5. One part is ' + m('600 \\div 5 = 120') + '. So the shares are $240 and $360.</p>' },
+        text: '<p>To share $600 in the ratio 2 : 3, add the parts: 5. One part is ' + m('\\dfrac{600}{5} = 120') + '. So the shares are $240 and $360.</p>' },
       { id: 'unit', title: 'Best buys',
         text: '<p>Compare <strong>unit prices</strong>: price ÷ amount. 2 L for $4.20 is $2.10 per litre; 3 L for $5.70 is $1.90 per litre, the better buy.</p>' +
               '<p>From a price per kilogram: 400 g at $12.50 per kg costs ' + m('0.4 \\times 12.50 = 5') + ' dollars.</p>' },
       { id: 'currency', title: 'Exchange rates',
         text: '<p>If 1 NZD = 1.32 FJD, multiply to change New Zealand dollars into Fijian dollars, and divide to change back:</p>' +
-              '<ul><li>NZ$200 → ' + m('200 \\times 1.32 = 264') + ' FJD</li><li>FJ$66 → ' + m('66 \\div 1.32 = 50') + ' NZD</li></ul>' +
+              '<ul><li>NZ$200 → ' + m('200 \\times 1.32 = 264') + ' FJD</li><li>FJ$66 → ' + m('\\dfrac{66}{1.32} = 50') + ' NZD</li></ul>' +
               '<p>The Cook Islands, Niue and Tokelau use the New Zealand dollar.</p>' },
       { id: 'simple', title: 'Simple interest',
         text: '<p>Interest on the original amount only:</p><p style="text-align:center">' + m('I = P \\times r \\times t') + '</p>' +
@@ -70,7 +70,7 @@
               '<p>$100 at 2.5% a month: after 1 month $102.50; after 2, ' + m('102.50 \\times 1.025 = 105.06') + '; after 3, $107.69.</p>' },
       { id: 'reverse', title: 'Finding the original',
         text: '<p>If 20% of an amount is $30, then 1% is $1.50 and 100% is $150.</p>' +
-              '<p>If a price after 25% off is $90, it is 75% of the original: ' + m('90 \\div 0.75 = 120') + ' dollars.</p>' }
+              '<p>If a price after 25% off is $90, it is 75% of the original: ' + m('0.75 \\times \\text{original} = 90') + '. Divide both sides by 0.75: ' + m('\\text{original} = \\dfrac{90}{0.75} = 120') + ' dollars.</p>' }
     ],
 
     examples: [
@@ -81,7 +81,7 @@
       },
       {
         title: 'Example 2: spending money in Samoa',
-        steps: ['1 NZD = 1.62 WST. A student changes NZ$350 to tālā.', m('350 \\times 1.62 = 567') + ' WST.', 'They bring back 81 WST: ' + m('81 \\div 1.62 = 50') + ' NZD.'],
+        steps: ['1 NZD = 1.62 WST. A student changes NZ$350 to tālā.', m('350 \\times 1.62 = 567') + ' WST.', 'They bring back 81 WST: ' + m('\\dfrac{81}{1.62} = 50') + ' NZD.'],
         result: '567 WST; NZ$50 back'
       }
     ],
@@ -98,7 +98,7 @@
         items: [Sci.gen(rng => {
           const [what, lo, hi] = rng.pick(ITEMS), base = 5 * rng.int(lo / 5, hi / 5), incl = r2(base * 1.15);
           return { prompt: `A ${what} costs ${money(incl)} including GST. What was its price before GST?`, input: cash(base),
-                   explain: m(`${num(incl)} \\div 1.15 = ${base}`) + ` dollars. (Taking 15% off ${money(incl)} would give ${money(incl * 0.85)}: wrong, because the 15% was of the smaller price.)` };
+                   explain: m(`1.15 \\times \\text{price} = ${incl}`) + '. Divide both sides by 1.15: ' + m(`\\text{price} = \\dfrac{${incl}}{1.15} = ${base}`) + ` dollars. (Taking 15% off ${money(incl)} would give ${money(incl * 0.85)}: wrong, because the 15% was of the smaller price.)` };
         })] },
 
       { name: 'Discounts and mark-ups', learn: 'multiplier',
@@ -117,7 +117,7 @@
           const pc = (b - a) / a * 100;
           return { prompt: ctx.replace('%a', a).replace('%b', b) + ' What is the percentage change? (Use a negative number for a decrease.)',
                    input: { kind: 'number', answer: pc, tol: 0.01, decimal: true, suffix: '%', width: 70 },
-                   explain: `Change: ${b} − ${a} = ${b - a}. ` + m(`${b - a} \\div ${a} \\times 100 = ${num(pc)}`) + '%. Divide by the original, ' + a + '.' };
+                   explain: `Change: ${b} − ${a} = ${b - a}. ` + m(`\\dfrac{${b - a}}{${a}} \\times 100 = ${num(pc)}`) + '%. Divide by the original, ' + a + '.' };
         })] },
 
       { name: 'Sharing in a ratio', learn: 'ratio',
@@ -153,7 +153,7 @@
           }
           const back = rng.int(5, 40) * 5;
           return { prompt: `1 NZD = ${rate} ${c.code}. Back from ${c.where}, a student changes ${back} ${c.code} into New Zealand dollars. How much do they get, to the nearest cent?`,
-                   input: cash(back / rate), explain: m(`${back} \\div ${rate} = ${(back / rate).toFixed(4)}`) + ` ≈ ${money(back / rate)}. Changing back into NZ dollars, divide.` };
+                   input: cash(back / rate), explain: m(`\\dfrac{${back}}{${rate}} = ${(back / rate).toFixed(4)}`) + ` ≈ ${money(back / rate)}. Changing back into NZ dollars, divide.` };
         })] },
 
       { name: 'Simple interest', learn: 'simple',
@@ -193,7 +193,7 @@
         items: [Sci.gen(rng => {
           const pc = rng.pick([15, 20, 25, 30, 40]), orig = rng.int(8, 60) * 10, now = r2(orig * (1 - pc / 100));
           return { prompt: `After ${pc}% off, a jacket costs ${money(now)}. What was the original price?`, input: cash(orig),
-                   explain: `${money(now)} is ${100 - pc}% of the original: ` + m(`${num(now)} \\div ${num(1 - pc / 100)} = ${orig}`) + ' dollars.' };
+                   explain: `${money(now)} is ${100 - pc}% of the original: ` + m(`${1 - pc / 100} \\times \\text{original} = ${now}`) + `. Divide both sides by ${1 - pc / 100}: ` + m(`\\text{original} = \\dfrac{${now}}{${1 - pc / 100}} = ${orig}`) + ' dollars.' };
         })] },
 
       { challenge: 'only', name: 'Which deal?', learn: 'simple',
@@ -270,7 +270,7 @@
       {
         title: 'Example: a Cook Strait crossing',
         steps: ['A ferry crosses 92 km at an average 30 km/h, using 1.8 L of fuel per km at $2.40 per L.',
-                'Time: ' + m('92 \\div 30 = 3.067') + ' h, which is 3 h 4 min.',
+                'Time: ' + m('\\dfrac{92}{30} = 3.067') + ' h, which is 3 h 4 min.',
                 'Fuel: ' + m('92 \\times 1.8 = 165.6') + ' L. Cost: ' + m('165.6 \\times 2.40 = 397.44') + ' dollars.',
                 'Assumed: a constant speed, and the same fuel use per km all the way.'],
         result: '3 h 4 min; $397.44'
@@ -283,7 +283,7 @@
           const dkm = rng.pick([92, 96, 88]), v = rng.pick([30, 32, 35, 40]), t = dkm / v;
           return { prompt: `A Cook Strait ferry crosses ${dkm} km at an average speed of ${v} km/h. How long does the crossing take, in minutes, to the nearest minute?`,
                    input: { kind: 'number', answer: Math.round(t * 60), tol: 0.6, suffix: 'min', width: 70 },
-                   explain: steps([m(`t = ${dkm} \\div ${v} = ${t.toFixed(3)}`) + ' h', m(`${t.toFixed(3)} \\times 60 = ${(t * 60).toFixed(1)}`) + ` min ≈ ${Math.round(t * 60)} min (${hm(t)}).`]) };
+                   explain: steps([m(`t = \\dfrac{${dkm}}{${v}} = ${t.toFixed(3)}`) + ' h', m(`${t.toFixed(3)} \\times 60 = ${(t * 60).toFixed(1)}`) + ` min ≈ ${Math.round(t * 60)} min (${hm(t)}).`]) };
         })] },
 
       { name: 'Fuel cost', learn: 'rates',
@@ -363,7 +363,7 @@
       { name: 'Units in the answer', learn: 'rates',
         items: [
           rng => C(rng, { prompt: 'Distance in km is divided by speed in km/h. What unit is the answer in?', right: 'hours', options: ['hours', 'km', 'km/h', 'minutes'], wide: false,
-            explain: m('\\text{km} \\div \\text{km/h} = \\text{h}') + ': the km cancel.' }),
+            explain: m('\\dfrac{\\text{km}}{\\text{km/h}} = \\text{h}') + ': the km cancel.' }),
           rng => C(rng, { prompt: 'Litres per km is multiplied by km, then by dollars per litre. What unit is the answer in?', right: 'dollars', options: ['dollars', 'litres', 'km', 'dollars per km'], wide: false,
             explain: 'L/km × km = L, then L × $/L = $.' }),
           rng => C(rng, { prompt: 'Rainfall in mm is multiplied by roof area in m². What unit is the answer in?', right: 'litres', options: ['litres', 'mm²', 'm³', 'mm'], wide: false,

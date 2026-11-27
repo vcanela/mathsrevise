@@ -233,7 +233,7 @@
         out.push({
           prompt: 'Somebody set up the equation for a triangle like this.',
           input: { kind: 'spot', lines, wrong: 2 },
-          explain: `<span class="work">Line 3 added the plain numbers into the \\(x\\) term. They are not like terms. It should be ${equationTex(e)}, giving \\(x = ${e.x}\\).</span>`
+          explain: `<span class="work">Line 3 added the plain numbers into the \\(x\\) term. They are not like terms. It should be ${equationTex(e)}. ${Fmt.solveSteps(e.coefSum, e.constSum, e.total)}</span>`
         });
       })();
 
@@ -244,7 +244,7 @@
           'Decide what the angles add to: 180°',
           `Write the sum: ${m(`${e.parts.map(p => `(${p.tex})`).join(' + ')} = 180`)}`,
           `Collect like terms: ${equationTex(e)}`,
-          `Solve: ${m(`x = ${e.x}`)}`
+          `Solve, doing the same to both sides: ${m(`x = ${e.x}`)}`
         ];
         const order = rng.shuffle([0, 1, 2, 3]);
         out.push({
@@ -325,7 +325,8 @@
         steps: [
           'They sit on a straight line, so \\((5x + 10) + (4x + 17) = 180\\).',
           'Collect like terms: \\(9x + 27 = 180\\).',
-          'Take 27 off both sides: \\(9x = 153\\), so \\(x = 17\\).',
+          'Subtract 27 from both sides: \\(9x = 153\\). The equation still balances.',
+          'Divide both sides by 9: \\(x = 17\\).',
           'Now turn \\(x\\) back into angles: \\(5(17) + 10 = 95\\) and \\(4(17) + 17 = 85\\).',
           'Check: \\(95 + 85 = 180\\). ✓ If that check fails, the slip is in the algebra, not the geometry.'
         ],
@@ -353,7 +354,7 @@
             ]
           }),
           input: { kind: 'number', prefix: m('x') + ' =', answer: e.x, width: 76 },
-          explain: `<span class="work">${equationTex(e)}, so \\(${T(e.coefSum, 'x')} = ${e.total - e.constSum}\\) and \\(x = ${e.x}\\). The angles are ${e.parts.map(p => deg(p.angle)).join(' and ')}.</span>`
+          explain: `<span class="work">${equationTex(e)}. ${Fmt.solveSteps(e.coefSum, e.constSum, e.total)} The angles are ${e.parts.map(p => deg(p.angle)).join(' and ')}.</span>`
         });
       }
 
@@ -370,7 +371,7 @@
             e.parts.forEach((part, k) => d.angleArc(p, k, { label: part.tex, size: 11, gap: 16 }));
           },
           input: { kind: 'number', prefix: m('x') + ' =', answer: e.x, width: 76 },
-          explain: `<span class="work">${equationTex(e)} gives \\(x = ${e.x}\\). Checking: ${A.map(deg).join(' + ')} = 180°. ✓</span>`
+          explain: `<span class="work">${equationTex(e)}. ${Fmt.solveSteps(e.coefSum, e.constSum, e.total)} Checking: ${A.map(deg).join(' + ')} = 180°. ✓</span>`
         });
       }
 
@@ -399,7 +400,7 @@
               { text: '&nbsp;&nbsp;angle =' }, { input: { answer: A[which], width: 62 } }, { text: '°' }
             ]
           },
-          explain: `<span class="work">${equationTex(e)} gives \\(x = ${e.x}\\). Then \\(${e.parts[which].tex} = ${A[which]}\\)°.</span>`
+          explain: `<span class="work">${equationTex(e)}. ${Fmt.solveSteps(e.coefSum, e.constSum, e.total)} Then \\(${e.parts[which].tex} = ${A[which]}\\)°.</span>`
         });
       }
 
@@ -443,7 +444,7 @@
             d.angleArc(p, 2, { label: deg(apex), colour: 'var(--dia-muted)', size: 11.5 });
           },
           input: { kind: 'number', prefix: m('x') + ' =', answer: x, width: 76 },
-          explain: `<span class="work">The base angles are equal, so \\(${S([[a, 'x'], [b, '']])} = ${base}\\), giving \\(x = ${x}\\).</span>`
+          explain: `<span class="work">The base angles are equal, so \\(${S([[a, 'x'], [b, '']])} = ${base}\\). ${Fmt.solveSteps(a, b, base)}</span>`
         });
       })();
 
@@ -469,7 +470,7 @@
             ]
           }),
           input: { kind: 'number', prefix: m('x') + ' =', answer: x, width: 76 },
-          explain: `<span class="work">\\(${S([[a, 'x'], [b, '']])} = ${S([[c, 'x'], [dd, '']])}\\) gives \\(${T(a - c, 'x')} = ${dd - b}\\), so \\(x = ${x}\\). Both angles are ${deg(ang)}.</span>`
+          explain: `<span class="work">\\(${S([[a, 'x'], [b, '']])} = ${S([[c, 'x'], [dd, '']])}\\). Take ${m(T(c, 'x'))} from both sides: ${m(`${S([[a - c, 'x'], [b, '']])} = ${dd}`)}. ${Fmt.solveSteps(a - c, b, dd)} Both angles are ${deg(ang)}.</span>`
         });
       })();
 
@@ -500,7 +501,7 @@
               { text: '&nbsp;&nbsp;largest =' }, { input: { answer: biggest, width: 62 } }, { text: '°' }
             ]
           },
-          explain: `<span class="work">${equationTex(e)} gives \\(x = ${e.x}\\). The angles come to ${A.map(deg).join(', ')}, so the largest is ${deg(biggest)}.</span>`
+          explain: `<span class="work">${equationTex(e)}. ${Fmt.solveSteps(e.coefSum, e.constSum, e.total)} The angles come to ${A.map(deg).join(', ')}, so the largest is ${deg(biggest)}.</span>`
         });
       })();
 
@@ -575,7 +576,7 @@
           diagram: { w: 230, h: 150 },
           draw: rectDraw(x, x + k, m('x'), m(`x + ${k}`)),
           input: { kind: 'number', prefix: m('x') + ' =', answer: x, width: 76 },
-          explain: `<span class="work">\\(4x + ${2 * k} = ${P}\\), so \\(4x = ${P - 2 * k}\\) and \\(x = ${x}\\). The rectangle is ${x} cm by ${x + k} cm.</span>`
+          explain: `<span class="work">\\(4x + ${2 * k} = ${P}\\). ${Fmt.solveSteps(4, 2 * k, P)} The rectangle is ${x} cm by ${x + k} cm.</span>`
         });
       }
 
@@ -606,7 +607,7 @@
             a.forEach((c, i) => d.sideLabel(p, i, m(S([[c, 'x'], [b[i], '']])), { gap: 15, size: 11.5 }));
           },
           input: { kind: 'number', prefix: m('x') + ' =', answer: x, width: 76 },
-          explain: `<span class="work">\\(${S([[coefSum, 'x'], [constSum, '']])} = ${P}\\), so \\(x = ${x}\\). The sides are ${sides.join(', ')} cm.</span>`
+          explain: `<span class="work">\\(${S([[coefSum, 'x'], [constSum, '']])} = ${P}\\). ${Fmt.solveSteps(coefSum, constSum, P)} The sides are ${sides.join(', ')} cm.</span>`
         });
       })();
 
@@ -633,7 +634,7 @@
               { text: '&nbsp;&nbsp;side =' }, { input: { answer: side, width: 58 } }, { text: 'cm' }
             ]
           },
-          explain: `<span class="work">\\(${P} \\div ${n} = ${side}\\) per side, so \\(${S([[a, 'x'], [b, '']])} = ${side}\\) and \\(x = ${x}\\).</span>`
+          explain: `<span class="work">\\(${P} \\div ${n} = ${side}\\) per side, so \\(${S([[a, 'x'], [b, '']])} = ${side}\\). ${Fmt.solveSteps(a, b, side)}</span>`
         });
       })();
 
@@ -688,7 +689,7 @@
               { text: '&nbsp;&nbsp;length =' }, { input: { answer: a * x + b, width: 62 } }, { text: 'cm' }
             ]
           },
-          explain: `<span class="work">\\(${S([[a, 'x'], [b, '']])} = ${S([[c, 'x'], [dd, '']])}\\) gives \\(${T(a - c, 'x')} = ${dd - b}\\), so \\(x = ${x}\\) and each side is ${a * x + b} cm.</span>`
+          explain: `<span class="work">\\(${S([[a, 'x'], [b, '']])} = ${S([[c, 'x'], [dd, '']])}\\). Take ${m(T(c, 'x'))} from both sides: ${m(`${S([[a - c, 'x'], [b, '']])} = ${dd}`)}. ${Fmt.solveSteps(a - c, b, dd)} So each side is ${a * x + b} cm.</span>`
         });
       })();
 

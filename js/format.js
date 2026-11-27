@@ -73,5 +73,25 @@ const Fmt = (() => {
   /** Common single-letter variables, avoiding the confusing ones. */
   const VARS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 
-  return { term, sum, tex, mSum, mTerm, signed, num, unit, frac, dp, an, polyName, VARS };
+  /**
+   * The balance step that removes a number from one side of an equation:
+   * bothSides(7) is "Subtract 7 from both sides", bothSides(-7) is "Add 7 to both sides".
+   * Equations are always solved by doing the same to both sides, never by
+   * "moving a term across the equals sign".
+   */
+  const bothSides = k => k < 0 ? `Add ${num(-k)} to both sides` : `Subtract ${num(k)} from both sides`;
+
+  /**
+   * The balance steps that solve a·v + b = c, as prose with inline maths:
+   * "Subtract 27 from both sides: \(9x = 153\). Divide both sides by 9: \(x = 17\)."
+   * A step is left out when it is not needed (b is 0, or a is 1).
+   */
+  const solveSteps = (a, b, c, v = 'x') => {
+    const out = [];
+    if (b !== 0) out.push(`${bothSides(b)}: ${tex(`${term(a, v)} = ${c - b}`)}.`);
+    if (a !== 1) out.push(`Divide both sides by ${num(a)}: ${tex(`${v} = ${(c - b) / a}`)}.`);
+    return out.join(' ');
+  };
+
+  return { term, sum, tex, mSum, mTerm, signed, num, unit, frac, dp, an, polyName, bothSides, solveSteps, VARS };
 })();

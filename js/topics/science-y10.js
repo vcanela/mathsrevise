@@ -568,7 +568,7 @@
           const f = rng.int(2, 8), t = rng.int(2, 6);
           const what = rng.pick([['A buoy bobs up and down', 'times'], ['A guitar string is filmed and vibrates', 'times'], ['Crests pass a pier post', 'times']]);
           return { prompt: `${what[0]} ${f * t} ${what[1]} in ${t} seconds. What is the frequency?`, input: { kind: 'number', answer: f, suffix: 'Hz', width: 70 },
-                   explain: `Frequency = oscillations ÷ time = ${f * t} ÷ ${t} = ${f} Hz.` };
+                   explain: m(`\\text{frequency} = \\dfrac{\\text{oscillations}}{\\text{time}} = \\dfrac{${f * t}}{${t}} = ${f}`) + ' Hz.' };
         })] },
 
       { name: 'Transverse or longitudinal?', learn: 'types',
@@ -712,7 +712,7 @@
     id: 's10e4', unit: 'electricity-forces',
     title: 'Force, Mass and Acceleration',
     blurb: 'F = ma: how net force and mass decide acceleration, inertia, and why forces come in pairs.',
-    hint: 'Acceleration is the rate of change of velocity (speed or direction), in m/s². F = ma: net force (N) = mass (kg) × acceleration (m/s²); a = F ÷ m and m = F ÷ a. ' +
+    hint: 'Acceleration is the rate of change of velocity (speed or direction), in m/s². F = ma: net force (N) = mass (kg) × acceleration (m/s²); to find a or m, divide both sides of F = ma by the other one: a = F/m and m = F/a. ' +
           'Use the NET force. More mass, less acceleration for the same force. Every force has an equal and opposite partner acting on the other object.',
 
     learn: [
@@ -721,7 +721,8 @@
               '<p>' + m('a = \\dfrac{\\text{change in speed}}{\\text{time}}') + ': from 0 to 12 m/s in 4 s is 3 m/s², gaining 3 m/s every second.</p>' },
       { id: 'fma', title: 'F = ma',
         text: '<p style="text-align:center">' + m('F = m \\times a') + '</p>' +
-              '<p>Net force in newtons, mass in kilograms, acceleration in m/s². Rearranged: ' + m('a = F \\div m') + ' and ' + m('m = F \\div a') + '.</p>' },
+              '<p>Net force in newtons, mass in kilograms, acceleration in m/s². </p>' +
+              '<p>To find a, keep the balance: divide both sides by ' + m('m') + ', giving ' + m('a = \\dfrac{F}{m}') + '. To find m, divide both sides by ' + m('a') + ' instead: ' + m('m = \\dfrac{F}{a}') + '.</p>' },
       { id: 'mass', title: 'More mass, less acceleration',
         text: '<p>For the same mass, a larger net force gives a larger acceleration. For the same net force, a larger mass accelerates less: an empty trolley speeds up more easily than a full one.</p>' },
       { id: 'inertia', title: 'Inertia',
@@ -732,19 +733,19 @@
               '<p>A swimmer pushes the water backwards; the water pushes the swimmer forwards.</p>' },
       { id: 'fbd', title: 'Free-body diagrams', diagram: { w: 260, h: 150 },
         draw(d) { SciDia.forceDiagram(d, { left: 200, right: 800, up: 600, down: 600 }, { label: '60 kg' }); },
-        text: '<p>Find the net force first: 800 − 200 = 600 N. Then ' + m('a = 600 \\div 60 = 10') + ' m/s².</p>' }
+        text: '<p>Find the net force first: 800 − 200 = 600 N. Then ' + m('a = \\dfrac{600}{60} = 10') + ' m/s².</p>' }
     ],
 
     examples: [
       {
         title: 'Example 1: acceleration from F = ma',
-        steps: ['A 1200 kg car has a net force of 3600 N forwards.', m('a = F \\div m = 3600 \\div 1200 = 3') + ' m/s².'],
+        steps: ['A 1200 kg car has a net force of 3600 N forwards.', m('a = \\dfrac{F}{m} = \\dfrac{3600}{1200} = 3') + ' m/s².'],
         result: '3 m/s² forwards'
       },
       {
         title: 'Example 2: net force first',
         diagram: { w: 260, h: 160 }, draw(d) { SciDia.forceDiagram(d, { up: 15000, down: 10000 }, { label: '1000 kg' }); },
-        steps: ['A 1000 kg rocket: thrust 15 000 N up, weight 10 000 N down.', 'Net force: 15 000 − 10 000 = 5000 N up.', m('a = 5000 \\div 1000 = 5') + ' m/s².'],
+        steps: ['A 1000 kg rocket: thrust 15 000 N up, weight 10 000 N down.', 'Net force: 15 000 − 10 000 = 5000 N up.', m('a = \\dfrac{5000}{1000} = 5') + ' m/s².'],
         result: '5 m/s² upwards'
       }
     ],
@@ -762,14 +763,14 @@
         items: [Sci.gen(rng => {
           const mass = rng.pick([2, 4, 5, 10, 20, 50, 800, 1000]), a = rng.int(1, 8);
           return { prompt: `A net force of ${mass * a} N acts on a ${mass} kg object. What is its acceleration?`, input: { kind: 'number', answer: a, suffix: 'm/s²', width: 70 },
-                   explain: m(`a = F \\div m = ${mass * a} \\div ${mass} = ${a}`) + ' m/s²' };
+                   explain: m(`a = \\dfrac{F}{m} = \\dfrac{${mass * a}}{${mass}} = ${a}`) + ' m/s²' };
         })] },
 
       { name: 'Calculate mass', learn: 'fma',
         items: [Sci.gen(rng => {
           const mass = rng.pick([3, 5, 8, 12, 40, 60, 250]), a = rng.int(2, 6);
           return { prompt: `A net force of ${mass * a} N gives a trolley an acceleration of ${a} m/s². What is its mass?`, input: { kind: 'number', answer: mass, suffix: 'kg', width: 70 },
-                   explain: m(`m = F \\div a = ${mass * a} \\div ${a} = ${mass}`) + ' kg' };
+                   explain: m(`m = \\dfrac{F}{a} = \\dfrac{${mass * a}}{${a}} = ${mass}`) + ' kg' };
         })] },
 
       { name: 'Net force, then acceleration', learn: 'fbd',
@@ -779,7 +780,7 @@
           return { prompt: `The box has a mass of ${mass} kg. What is its acceleration?`, diagram: { w: 260, h: 110 },
                    draw: d => SciDia.forceDiagram(d, { left: back, right: fwd }, { label: mass + ' kg' }),
                    input: { kind: 'number', answer: a, suffix: 'm/s²', width: 70 },
-                   explain: `Net force = ${fwd} − ${back} = ${fwd - back} N. Then a = ${fwd - back} ÷ ${mass} = ${a} m/s².` };
+                   explain: `Net force = ${fwd} − ${back} = ${fwd - back} N. Then ` + m(`a = \\dfrac{${fwd - back}}{${mass}} = ${a}`) + ' m/s².' };
         })] },
 
       { name: 'Acceleration from a change in speed', learn: 'accel',
@@ -787,7 +788,7 @@
           const a = rng.int(1, 6), t = rng.int(2, 8), v0 = rng.pick([0, 0, 2, 4, 5]);
           const v1 = v0 + a * t;
           return { prompt: `A cyclist speeds up from ${v0} m/s to ${v1} m/s in ${t} s. What is the acceleration?`, input: { kind: 'number', answer: a, suffix: 'm/s²', width: 70 },
-                   explain: `Change in speed = ${v1} − ${v0} = ${v1 - v0} m/s, over ${t} s: ${v1 - v0} ÷ ${t} = ${a} m/s².` };
+                   explain: `Change in speed = ${v1} − ${v0} = ${v1 - v0} m/s, over ${t} s: ` + m(`a = \\dfrac{${v1 - v0}}{${t}} = ${a}`) + ' m/s².' };
         })] },
 
       { name: 'What acceleration means', learn: 'accel',
@@ -806,7 +807,7 @@
           rng => C(rng, { prompt: 'A truck and a small car have engines giving the same net force. Which accelerates faster from the lights?', right: 'The small car', wrong: ['The truck', 'They are equal', 'It depends only on the driver'], wide: false,
                           explain: 'The truck’s greater mass means less acceleration for the same force.' }),
           rng => C(rng, { prompt: 'A 2 kg and a 4 kg trolley are pushed with the same net force. How do their accelerations compare?', right: 'The 2 kg trolley’s is twice as big', wrong: ['The 4 kg trolley’s is twice as big', 'They are equal', 'The 2 kg trolley’s is half as big'],
-                          explain: 'a = F ÷ m: half the mass, double the acceleration.' })
+                          explain: m('a = \\dfrac{F}{m}') + ': half the mass, double the acceleration.' })
         ] },
 
       { name: 'Inertia', learn: 'inertia',
@@ -843,7 +844,7 @@
           const mass = rng.pick([500, 1000, 2000]), a = rng.int(2, 8), W = mass * 10, T = W + mass * a;
           return { prompt: `A ${mass} kg rocket has a weight of ${W} N and an engine thrust of ${T} N. What is its acceleration?`, diagram: { w: 260, h: 160 },
                    draw: d => SciDia.forceDiagram(d, { up: T, down: W }, { label: mass + ' kg' }), input: { kind: 'number', answer: a, suffix: 'm/s²', width: 70 },
-                   explain: `Net force = ${T} − ${W} = ${T - W} N up. a = ${T - W} ÷ ${mass} = ${a} m/s².` };
+                   explain: `Net force = ${T} − ${W} = ${T - W} N up. ` + m(`a = \\dfrac{${T - W}}{${mass}} = ${a}`) + ' m/s².' };
         })] },
 
       { challenge: 'only', name: 'Find the driving force', learn: 'fma',
@@ -872,7 +873,7 @@
           return C(rng, { prompt: `A trolley’s acceleration was measured for different net forces. What does the graph show?`, diagram: { w: 280, h: 180 },
             draw: d => SciDia.graph(d, { xMax: 5, yMax: 5 / mass, xStep: 1, xLabel: 'Net force (N)', yLabel: 'Acceleration (m/s²)', series: [{ points: [[0, 0], ...pts] }] }),
             right: 'Acceleration is proportional to net force: doubling the force doubles the acceleration', wrong: ['Acceleration does not depend on force', 'More force gives less acceleration', 'Acceleration doubles each time the force goes up by 1 N'],
-            explain: `A straight line through the origin means proportional. Here a = F ÷ ${mass}, so the trolley’s mass is ${mass} kg.` });
+            explain: `A straight line through the origin means proportional. Here ` + m(`a = \\dfrac{F}{${mass}}`) + `, so the trolley’s mass is ${mass} kg.` });
         })] },
 
       { challenge: 'only', name: 'A fair test of air resistance', learn: 'mass',
@@ -937,7 +938,7 @@
       },
       {
         title: 'Example 2: a hydraulic jack',
-        steps: ['100 N pushes on a 2 cm² piston: pressure = 100 ÷ 2 = 50 N/cm².', 'The same pressure acts on a 40 cm² piston: force = 50 × 40 = 2000 N.', 'Mechanical advantage = 2000 ÷ 100 = 20.'],
+        steps: ['100 N pushes on a 2 cm² piston: ' + m('P = \\dfrac{F}{A} = \\dfrac{100}{2} = 50') + ' N/cm².', 'The same pressure acts on a 40 cm² piston: ' + m('F = PA = 50 \\times 40 = 2000') + ' N.', 'Mechanical advantage: ' + m('\\dfrac{2000}{100} = 20') + '.'],
         result: '2000 N on the large piston'
       }
     ],
@@ -1025,7 +1026,7 @@
           const inF = rng.int(1, 6) * 50, ma = rng.pick([4, 5, 8, 10, 20]);
           const k = rng.int(0, 1);
           if (k === 0) return { prompt: `A hydraulic jack turns an input force of ${inF} N into an output force of ${inF * ma} N. What is its mechanical advantage?`,
-            input: { kind: 'number', answer: ma, width: 70 }, explain: `Mechanical advantage = output ÷ input = ${inF * ma} ÷ ${inF} = ${ma}.` };
+            input: { kind: 'number', answer: ma, width: 70 }, explain: m(`\\text{mechanical advantage} = \\dfrac{\\text{output force}}{\\text{input force}} = \\dfrac{${inF * ma}}{${inF}} = ${ma}`) + '.' };
           return { prompt: `A hydraulic lift has a mechanical advantage of ${ma}. What output force does an input of ${inF} N give?`,
             input: { kind: 'number', answer: inF * ma, suffix: 'N', width: 90 }, explain: `Output = ${ma} × ${inF} = ${inF * ma} N.` };
         })] },
@@ -1035,7 +1036,7 @@
           const a1 = rng.pick([1, 2, 4, 5]), k = rng.pick([5, 10, 20]), a2 = a1 * k, F1 = rng.int(2, 10) * 10;
           return { prompt: `A force of ${F1} N pushes on a ${a1} cm² piston. The output piston has an area of ${a2} cm². What force does it exert?`,
                    input: { kind: 'number', answer: F1 * k, suffix: 'N', width: 90 },
-                   explain: `Pressure = ${F1} ÷ ${a1} = ${num(F1 / a1)} N/cm², the same on both pistons. Output force = ${num(F1 / a1)} × ${a2} = ${F1 * k} N.` };
+                   explain: m(`P = \\dfrac{${F1}}{${a1}} = ${F1 / a1}`) + ` N/cm², the same on both pistons. Output force = ${num(F1 / a1)} × ${a2} = ${F1 * k} N.` };
         })] },
 
       // ── Challenge set.

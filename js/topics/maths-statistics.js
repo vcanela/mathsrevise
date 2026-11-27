@@ -380,7 +380,7 @@
           const md = (lo + x) / 2;
           return { prompt: `Seven numbers: ${list(rng.shuffle(known))}. An eighth number, <em>x</em>, is between ${lo} and ${hi}. The median of all eight is ${num(md)}. What is <em>x</em>?`,
                    input: { kind: 'number', answer: x, width: 70 },
-                   explain: `In order, x is the 5th value, next to ${lo}. Median = (${lo} + x) ÷ 2 = ${num(md)}, so x = 2 × ${num(md)} − ${lo} = ${x}.` };
+                   explain: `In order, x is the 5th value, next to ${lo}. ` + Fmt.tex(`\\dfrac{${lo} + x}{2} = ${md}`) + `. Multiply both sides by 2: ${lo} + x = ${num(2 * md)}. Subtract ${lo} from both sides: x = ${x}.` };
         })] },
 
       { challenge: 'only', name: 'Range and IQR together', learn: 'iqr',
@@ -477,7 +477,7 @@
       {
         title: 'Example 2: a truncated axis',
         steps: ['A graph shows 40 and 50, with the axis starting at 35.', 'The bars are 5 and 15 units tall: the second looks 3 times as big.',
-                'The real increase is 10 out of 40: ' + Fmt.tex('10 \\div 40 = 0.25') + ', a 25% increase.'],
+                'The real increase is 10 out of 40: ' + Fmt.tex('\\dfrac{10}{40} = 0.25') + ', a 25% increase.'],
         result: 'Looks like 3 times as much; really 25% more'
       }
     ],
@@ -586,7 +586,7 @@
           const lo = (r * A - B) / (r - 1);
           return { prompt: `Sales rose from ${A} to ${B}. At what value should a dishonest graph start its vertical axis so the second bar looks ${r} times as tall as the first?`,
                    input: { kind: 'number', answer: lo, width: 70 },
-                   explain: `Bar heights are ${B} − s and ${A} − s. Set ${B} − s = ${r}(${A} − s): s = (${r} × ${A} − ${B}) ÷ ${r - 1} = ${lo}.` };
+                   explain: `Bar heights are ${B} − s and ${A} − s. Set ${B} − s = ${r}(${A} − s) and expand: ${B} − s = ${r * A} − ${r}s. Add ${r}s to both sides and subtract ${B} from both sides: ${r - 1 === 1 ? '' : r - 1}s = ${r * A - B}.${r - 1 === 1 ? '' : ` Divide both sides by ${r - 1}: s = ${lo}.`}` };
         })] },
 
       { challenge: 'only', name: 'Weighing up a claim', learn: 'claims',

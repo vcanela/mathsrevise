@@ -106,7 +106,7 @@
     title: 'Pythagoras’ Theorem',
     blurb: 'In a right-angled triangle, the square on the longest side equals the sum of the squares on the other two. Use it to find a side, and to check for a right angle.',
     hint: 'Find the hypotenuse first: it is opposite the right angle, and the longest side. Then c² = a² + b². To find the hypotenuse, add the squares and take the square root. ' +
-          'To find a shorter side, subtract: a² = c² − b².',
+          'To find a shorter side, subtract b² from both sides: a² = c² − b², then take the square root.',
 
     learn: [
       { id: 'theorem', title: 'The theorem',
@@ -116,11 +116,11 @@
               '<p style="text-align:center">' + m('c^2 = a^2 + b^2') + '</p>' +
               '<p>The square of the hypotenuse equals the sum of the squares of the other two sides.</p>' },
       { id: 'long', title: 'Finding the hypotenuse',
-        text: '<p>Square the two shorter sides, <strong>add</strong>, then take the square root.</p>' +
+        text: '<p>Square the two shorter sides, <strong>add</strong>, then take the square root of both sides.</p>' +
               '<p>' + m('c^2 = 6^2 + 8^2 = 36 + 64 = 100') + ', so ' + m('c = \\sqrt{100} = 10') + '.</p>' },
       { id: 'short', title: 'Finding a shorter side',
-        text: '<p>Square the hypotenuse and the known side, <strong>subtract</strong>, then take the square root.</p>' +
-              '<p>' + m('a^2 = 13^2 - 5^2 = 169 - 25 = 144') + ', so ' + m('a = \\sqrt{144} = 12') + '.</p>' +
+        text: '<p>Start from the theorem and keep the balance: <strong>subtract</strong> the known square from both sides, then take the square root of both sides.</p>' +
+              '<p>' + m('a^2 + 5^2 = 13^2') + '. Subtract ' + m('5^2') + ' from both sides: ' + m('a^2 = 13^2 - 5^2 = 169 - 25 = 144') + ', so ' + m('a = \\sqrt{144} = 12') + '.</p>' +
               '<p>Check: a shorter side must come out less than the hypotenuse.</p>' },
       { id: 'round', title: 'Answers that are not whole numbers',
         text: '<p>Most square roots are not whole: ' + m('\\sqrt{50} = 7.0710\\ldots') + '. Keep the full value on your calculator and round only at the end, here to 7.1.</p>' },
@@ -175,7 +175,7 @@
           return { prompt: 'Find the length of the side marked ?.', diagram: { w: 240, h: 170 },
                    draw: d => rightTri(d, { a, b, flip, labels: [across ? '?' : `${a} ${u}`, across ? `${b} ${u}` : '?', `${c} ${u}`], unknown: across ? 'a' : 'b' }),
                    input: { kind: 'number', answer: want, suffix: u, width: 70 },
-                   explain: `The hypotenuse is ${c} ${u}, so subtract: ` + m(`${c}^2 - ${known}^2 = ${c * c} - ${known * known} = ${want * want}`) + ', and ' + m(`\\sqrt{${want * want}} = ${want}`) + ` ${u}.` };
+                   explain: `The hypotenuse is ${c} ${u}, so ` + m(`?^2 + ${known}^2 = ${c}^2`) + `. Subtract ${known}² from both sides: ` + m(`?^2 = ${c * c} - ${known * known} = ${want * want}`) + '. Take the square root: ' + m(`\\sqrt{${want * want}} = ${want}`) + ` ${u}.` };
         })] },
 
       { name: 'Rounding', learn: 'round',
@@ -210,7 +210,7 @@
           return C(rng, { prompt: 'Which equation finds <em>x</em>?', diagram: { w: 240, h: 170 },
             draw: d => rightTri(d, { a, b, flip, labels: [across ? 'x' : `${a}`, across ? `${b}` : 'x', `${c}`], unknown: across ? 'a' : 'b' }),
             right, wrong: [m(`x^2 = ${c}^2 + ${known}^2`), m(`x = ${c} - ${known}`), m(`x^2 = ${known}^2 - ${c}^2`)],
-            explain: `${c} is the hypotenuse, so ` + m(`x^2 + ${known}^2 = ${c}^2`) + ', which rearranges to ' + right + '.' });
+            explain: `${c} is the hypotenuse, so ` + m(`x^2 + ${known}^2 = ${c}^2`) + '. Subtract ' + m(`${known}^2`) + ' from both sides: ' + right + '.' });
         })] },
 
       { name: 'Is it a right angle?', learn: 'check',
@@ -265,7 +265,7 @@
             const [a, b, c] = triple(rng, 2);
             return Sci.spot(rng, { prompt: `A student finds a shorter side when the hypotenuse is ${c} cm and another side is ${b} cm. Which line is wrong?`,
               lines: ['The hypotenuse is ' + c + ' cm.', m(`x^2 = ${c}^2 + ${b}^2`), m(`x^2 = ${c * c + b * b}`), m(`x = ${num(Math.sqrt(c * c + b * b))}`) + ' cm'], wrong: 1,
-              explain: `To find a shorter side you subtract: ` + m(`x^2 = ${c}^2 - ${b}^2 = ${a * a}`) + `, so x = ${a} cm. The answer ${num(Math.sqrt(c * c + b * b))} cm is longer than the hypotenuse, which cannot be right.` });
+              explain: `The hypotenuse is ${c} cm, so ` + m(`x^2 + ${b}^2 = ${c}^2`) + `. Subtract ${b}² from both sides: ` + m(`x^2 = ${c}^2 - ${b}^2 = ${a * a}`) + `, so x = ${a} cm. The answer ${num(Math.sqrt(c * c + b * b))} cm is longer than the hypotenuse, which cannot be right.` });
           }),
           Sci.gen(rng => {
             const [a, b, c] = triple(rng, 2);
@@ -310,7 +310,7 @@
           'The hypotenuses form a smaller square of side c in the middle',
           'Area of the big square: (a + b)², which expands to a² + 2ab + b²',
           'Area again, in pieces: four triangles 4 × ½ab = 2ab, plus c²',
-          'So a² + 2ab + b² = 2ab + c², and subtracting 2ab gives a² + b² = c²'
+          'So a² + 2ab + b² = 2ab + c², and subtracting 2ab from both sides gives a² + b² = c²'
         ], 'Work out one area two ways, set them equal, then simplify.')] },
 
       { challenge: 'only', name: 'A box’s longest rod', learn: 'long',
@@ -351,7 +351,7 @@
     id: 'mr2', unit: 'reasoning',
     title: 'Straight-Line Graphs',
     blurb: 'Every straight line has a rule y = mx + c: m is how steep it is, c is where it crosses the y-axis. Read them off a graph, and find a line from two points.',
-    hint: 'c is where the line crosses the y-axis (x = 0). For m, pick two points on the line: gradient = rise ÷ run. Going right, a line that goes up has a positive gradient; one that goes down, negative.',
+    hint: 'c is where the line crosses the y-axis (x = 0). For m, pick two points on the line: gradient = rise/run. Going right, a line that goes up has a positive gradient; one that goes down, negative.',
 
     learn: [
       { id: 'rule', title: 'y = mx + c',
@@ -361,7 +361,7 @@
               '<ul><li><strong>m</strong> is the <strong>gradient</strong>: how steep the line is.</li>' +
               '<li><strong>c</strong> is the <strong>y-intercept</strong>: the line crosses the y-axis at ' + m('(0, c)') + '.</li></ul>' +
               '<p>Every point (x, y) on the line makes the rule true.</p>' },
-      { id: 'gradient', title: 'Gradient = rise ÷ run',
+      { id: 'gradient', title: 'Gradient = rise over run',
         text: '<p>Choose two points on the line. Going from left to right:</p>' +
               '<p style="text-align:center">' + m('m = \\dfrac{\\text{rise}}{\\text{run}} = \\dfrac{y_2 - y_1}{x_2 - x_1}') + '</p>' +
               '<p>A rise of 6 over a run of 3 gives m = 2. A fall of 2 over a run of 4 gives m = −½.</p>' },
@@ -376,7 +376,7 @@
               Sci.table(['x', '0', '1', '2', '3'], [['y', '5', '8', '11', '14']]) + '<p>Up 3 each time, starting at 5: ' + m('y = 3x + 5') + '.</p>' },
       { id: 'two', title: 'The equation from two points',
         text: '<ol><li>Find m from the two points.</li><li>Substitute one point and m into ' + m('y = mx + c') + ' and solve for c.</li></ol>' +
-              '<p>Through (1, 5) and (3, 9): ' + m('m = \\dfrac{9-5}{3-1} = 2') + '. Then ' + m('5 = 2 \\times 1 + c') + ', so c = 3: ' + m('y = 2x + 3') + '.</p>' },
+              '<p>Through (1, 5) and (3, 9): ' + m('m = \\dfrac{9-5}{3-1} = 2') + '. Then ' + m('5 = 2 \\times 1 + c') + '. Subtract 2 from both sides: c = 3, so ' + m('y = 2x + 3') + '.</p>' },
       { id: 'context', title: 'Lines in context',
         text: '<p>A taxi charges a $4 flag fall plus $3 per km: ' + m('C = 3d + 4') + '. The gradient is the rate ($3 per km); the intercept is the starting value ($4 before you move).</p>' }
     ],
@@ -384,12 +384,12 @@
     examples: [
       {
         title: 'Example 1: the equation from a graph',
-        steps: ['A line crosses the y-axis at −2 and passes through (3, 4).', 'c = −2.', 'From (0, −2) to (3, 4): rise 6, run 3, so ' + m('m = 6 \\div 3 = 2') + '.'],
+        steps: ['A line crosses the y-axis at −2 and passes through (3, 4).', 'c = −2.', 'From (0, −2) to (3, 4): rise 6, run 3, so ' + m('m = \\dfrac{6}{3} = 2') + '.'],
         result: m('y = 2x - 2')
       },
       {
         title: 'Example 2: through two points',
-        steps: ['Through (−1, 7) and (2, −2).', m('m = \\dfrac{-2 - 7}{2 - (-1)} = \\dfrac{-9}{3} = -3') + '.', 'Substitute (2, −2): ' + m('-2 = -3 \\times 2 + c') + ', so c = 4.'],
+        steps: ['Through (−1, 7) and (2, −2).', m('m = \\dfrac{-2 - 7}{2 - (-1)} = \\dfrac{-9}{3} = -3') + '.', 'Substitute (2, −2): ' + m('-2 = -6 + c') + '. Add 6 to both sides: c = 4.'],
         result: m('y = -3x + 4')
       }
     ],
@@ -485,7 +485,7 @@
           const y1 = p * x1 + c, y2 = p * x2 + c;
           return { prompt: `Find the equation of the line through (${x1}, ${y1}) and (${x2}, ${y2}).`,
                    input: { kind: 'fill', parts: [{ text: m('y =') }, { input: { answer: p, width: 56 } }, { text: m('x\\ +') }, { input: { answer: c, width: 56 } }] },
-                   explain: m(`m = \\dfrac{${y2 - y1}}{${x2 - x1}} = ${p}`) + '. Substitute ' + `(${x2}, ${y2}): ` + m(`${y2} = ${p} \\times ${x2 < 0 ? `(${x2})` : x2} + c`) + `, so c = ${c}. ` + m(rule(p, 1, c)) + '.' };
+                   explain: m(`m = \\dfrac{${y2 - y1}}{${x2 - x1}} = ${p}`) + '. Substitute ' + `(${x2}, ${y2}): ` + m(`${y2} = ${p} \\times ${x2 < 0 ? `(${x2})` : x2} + c`) + `. ${p * x2 === 0 ? 'So' : Fmt.bothSides(p * x2) + ':'} c = ${c}. ` + m(rule(p, 1, c)) + '.' };
         })] },
 
       { challenge: 'only', name: 'Gradient and a point', learn: 'two',
@@ -493,7 +493,7 @@
           const k = rng.pick([2, 3, -2, -4, 5]), c = rng.int(-6, 6), x = rng.int(1, 5);
           return { prompt: `A line has gradient ${k} and passes through (${x}, ${k * x + c}). What is its y-intercept, c?`,
                    input: { kind: 'number', answer: c, width: 60 },
-                   explain: m(`${k * x + c} = ${k} \\times ${x} + c`) + `, so c = ${k * x + c} − ${k * x} = ${c}.` };
+                   explain: m(`${k * x + c} = ${k} \\times ${x} + c`) + `. Subtract ${k * x} from both sides: c = ${k * x + c} − ${k * x} = ${c}.` };
         })] },
 
       { challenge: 'only', name: 'In a straight line?', learn: 'gradient',

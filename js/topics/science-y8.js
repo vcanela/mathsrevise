@@ -1275,7 +1275,7 @@
       {
         id: 'balance', title: 'Balancing a seesaw',
         text: '<p>It balances when weight × distance is the same on both sides.</p>' +
-              '<p>30 kg at 2 m balances 20 kg at ' + m('30 \\times 2 \\div 20 = 3') + ' m. The lighter person sits further out.</p>'
+              '<p>30 kg at 2 m balances 20 kg at d m when ' + m('30 \\times 2 = 20 \\times d') + '. Divide both sides by 20: ' + m('d = \\dfrac{60}{20} = 3') + ' m. The lighter person sits further out.</p>'
       },
       {
         id: 'myths', title: 'Two common mistakes',
@@ -1417,7 +1417,7 @@
             prompt: `${a} (${big} kg) sits ${d1} m from the pivot of a seesaw. How far from the pivot must ${b} (${small} kg) sit on the other side to balance it?`,
             tip: 'The lighter person has to sit further out.',
             input: { kind: 'number', answer: d2, tol: 0.01, decimal: true, suffix: 'm', width: 74 },
-            explain: `For balance, weight × distance must match on both sides: ${m(`${big} \\times ${d1} = ${small} \\times d`)}, so ${m(`d = ${big * d1} \\div ${small} = ${d2}`)} m.`
+            explain: `For balance, weight × distance must match on both sides: ${m(`${big} \\times ${d1} = ${small} \\times d`)}, that is ${m(`${big * d1} = ${small}d`)}. Divide both sides by ${small}: ${m(`d = \\dfrac{${big * d1}}{${small}} = ${d2}`)} m.`
           };
         })]
       },
